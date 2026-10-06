@@ -1,0 +1,46 @@
+{
+  "name": "@elmenov-softworks/typographist-solid",
+  "version": "0.1.0",
+  "description": "Typography components for Solid.",
+  "type": "module",
+  "author": "Alex Elmenov",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Elmenov-Softworks/typographist.git",
+    "directory": "packages/typographist-solid"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "nx": {
+    "name": "typographist-solid",
+    "tags": [
+      "npm-public"
+    ]
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js && vite build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@elmenov-softworks/typographist": "0.1.0"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.9.15"
+  },
+  "devDependencies": {
+    "solid-js": "1.9.15"
+  }
+}
