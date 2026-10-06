@@ -1,0 +1,92 @@
+name: CI and release
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: '0'
+  NX_DAEMON: 'false'
+  NX_NO_CLOUD: 'true'
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    concurrency:
+      group: lint-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+
+  tests:
+    name: tests
+    runs-on: ubuntu-latest
+    concurrency:
+      group: tests-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx vitest run --config tools/release/vitest.config.ts
+      - run: npx nx run-many -t test --projects typographist,typographist-vue,typographist-react,typographist-solid
+
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    concurrency:
+      group: typecheck-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  release:
+    name: release
+    needs: [lint, tests, typecheck]
+    if: github.event_name == 'push' && github.repository == 'Elmenov-Softworks/typographist' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    concurrency:
+      group: typographist-npm-release
+      cancel-in-progress: false
+    env:
+      RELEASE_CHECKS_PASSED: 'true'
+      NPM_CONFIG_PROVENANCE: 'true'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Verify npm supports trusted publishing
+        run: node -e "const [major, minor, patch] = require('node:child_process').execFileSync('npm', ['--version'], {encoding:'utf8'}).trim().split('.').map(Number); if (major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1)))) process.exit(1);"
+      - run: npm ci
+      - run: node tools/release/release.ts

@@ -17,7 +17,15 @@
     "name": "typographist",
     "tags": [
       "npm-public"
-    ]
+    ],
+    "targets": {
+      "nx-release-publish": {
+        "executor": "@nx/js:release-publish",
+        "options": {},
+        "dependsOn": [],
+        "cache": false
+      }
+    }
   },
   "exports": {
     ".": {

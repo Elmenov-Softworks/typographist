@@ -27,6 +27,63 @@
     },
     "test": {
       "cache": true
+    },
+    "nx-release-publish": {
+      "dependsOn": [],
+      "cache": false
+    }
+  },
+  "release": {
+    "groups": {
+      "libraries": {
+        "projects": ["typographist", "typographist-vue", "typographist-react", "typographist-solid"],
+        "projectsRelationship": "fixed"
+      }
+    },
+    "releaseTag": {
+      "pattern": "v{version}",
+      "checkAllBranchesWhen": false
+    },
+    "version": {
+      "currentVersionResolver": "disk",
+      "manifestRootsToUpdate": ["{projectRoot}"],
+      "versionPrefix": "",
+      "preserveMatchingDependencyRanges": false,
+      "adjustSemverBumpsForZeroMajorVersion": false,
+      "git": {
+        "commit": false,
+        "tag": false,
+        "push": false
+      }
+    },
+    "changelog": {
+      "workspaceChangelog": false,
+      "projectChangelogs": {
+        "file": "{projectRoot}/CHANGELOG.md",
+        "createRelease": false,
+        "entryWhenNoChanges": "No code changes.",
+        "renderOptions": {
+          "authors": false,
+          "applyUsernameToAuthors": false
+        }
+      },
+      "automaticFromRef": true,
+      "git": {
+        "commit": false,
+        "tag": false,
+        "push": false
+      }
+    },
+    "conventionalCommits": {
+      "types": {
+        "__INVALID__": {
+          "semverBump": "none",
+          "changelog": {
+            "title": "Changes",
+            "hidden": false
+          }
+        }
+      }
     }
   }
 }
