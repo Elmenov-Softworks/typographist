@@ -1,113 +1,34 @@
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 import { ReleaseClient, releaseChangelog, releaseVersion } from 'nx/release';
 
-import {
-  chooseAction,
-  needsLatestRun,
-  parseRecord,
-  parseRequest,
-  projects,
-  readRegistryIntegrity,
-} from './release-state.ts';
+import { runCommand, runGit } from './command.util.ts';
+import { buildPackages } from './release-packages.ts';
+import { parseRecord, parseRequest } from './release-record.util.ts';
+import { findUnpublishedProjects } from './release-registry.ts';
+import { chooseAction, needsLatestRun } from './release-state.util.ts';
+import { projects } from './release.constants.ts';
 import type { ReleaseRecord } from './release.types.ts';
 
-const run = (command: string, args: string[]) =>
-  execFileSync(command, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] }).trim();
-const git = (...args: string[]) => run('git', args);
-const readJson = (path: string) => {
-  const value: unknown = JSON.parse(readFileSync(path, 'utf8'));
-  return value;
-};
 const recordPath = '.release/latest.json';
 const requestPath = '.release/request.json';
 
-const probe = async (record: ReleaseRecord) => {
-  const missing: string[] = [];
-
-  for (const pkg of record.packages) {
-    const response = await fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg.name)}/${record.version}`);
-    const body: unknown = response.status === 200 ? await response.json() : null;
-    const integrity = readRegistryIntegrity(response.status, body);
-
-    if (integrity === null) {
-      missing.push(pkg.project);
-    } else if (integrity !== pkg.integrity) {
-      throw new Error(`Registry integrity differs for ${pkg.name}@${record.version}.`);
-    }
-  }
-
-  return missing;
-};
-
-const buildPackages = (version: string) => {
-  for (const project of projects) rmSync(`packages/${project}/dist`, { recursive: true, force: true });
-  console.log(run('npx', ['nx', 'run-many', '-t', 'build', '--projects', projects.join(','), '--skip-nx-cache']));
-
-  return projects.map((project) => {
-    const directory = `packages/${project}`;
-    const manifest = readJson(`${directory}/package.json`);
-
-    if (
-      typeof manifest !== 'object' ||
-      manifest === null ||
-      !('name' in manifest) ||
-      manifest.name !== `@elmenov-softworks/${project}` ||
-      !('version' in manifest) ||
-      manifest.version !== version ||
-      ('private' in manifest && manifest.private === true)
-    ) {
-      throw new Error(`Incorrect publication manifest for ${project}.`);
-    }
-
-    for (const entry of ['index.js', 'index.d.ts']) {
-      if (!existsSync(`${directory}/dist/${entry}`)) throw new Error(`Missing ${project}/dist/${entry}.`);
-    }
-
-    if (project !== 'typographist') {
-      if (
-        !('dependencies' in manifest) ||
-        typeof manifest.dependencies !== 'object' ||
-        manifest.dependencies === null ||
-        !('@elmenov-softworks/typographist' in manifest.dependencies) ||
-        manifest.dependencies['@elmenov-softworks/typographist'] !== version
-      ) {
-        throw new Error(`Internal dependency does not match ${version} in ${project}.`);
-      }
-    }
-
-    const temporary = mkdtempSync(join(tmpdir(), 'typographist-pack-'));
-
-    try {
-      const packed: unknown = JSON.parse(
-        run('npm', ['pack', `./${directory}`, '--json', '--pack-destination', temporary]),
-      );
-      if (!Array.isArray(packed)) throw new Error('Invalid npm pack result.');
-      const item: unknown = packed[0];
-      if (typeof item !== 'object' || item === null || !('integrity' in item) || typeof item.integrity !== 'string') {
-        throw new Error('npm pack omitted integrity.');
-      }
-
-      return { project, name: manifest.name, integrity: item.integrity };
-    } finally {
-      rmSync(temporary, { recursive: true, force: true });
-    }
-  });
-};
-
 const publishRecord = async (record: ReleaseRecord, missing: string[]) => {
-  const tagCommit = git('rev-parse', `v${record.version}^{commit}`);
-  const taggedRecord = parseRecord(JSON.parse(git('show', `${tagCommit}:${recordPath}`)));
-  if (JSON.stringify(taggedRecord) !== JSON.stringify(record) || git('rev-parse', `${tagCommit}^`) !== record.source) {
+  const tagCommit = runGit('rev-parse', `v${record.version}^{commit}`);
+  const taggedRecord = parseRecord(JSON.parse(runGit('show', `${tagCommit}:${recordPath}`)));
+
+  if (
+    JSON.stringify(taggedRecord) !== JSON.stringify(record) ||
+    runGit('rev-parse', `${tagCommit}^`) !== record.source
+  ) {
     throw new Error('Release tag, source parent, and durable record disagree.');
   }
 
-  git('switch', '--detach', tagCommit);
-  console.log(run('npm', ['ci']));
+  runGit('switch', '--detach', tagCommit);
+  console.log(runCommand('npm', ['ci']));
+
   const built = buildPackages(record.version);
+
   if (JSON.stringify(built) !== JSON.stringify(record.packages))
     throw new Error('Rebuilt artifacts differ from the recorded release.');
 
@@ -116,12 +37,15 @@ const publishRecord = async (record: ReleaseRecord, missing: string[]) => {
       groups: { libraries: { projects: [project], projectsRelationship: 'fixed' } },
     });
     const result = await publisher.releasePublish({ access: 'public', firstRelease: true });
+
     if (result[project]?.code !== 0)
       throw new Error(`Publication failed for ${project}; rerun to resume this version.`);
   }
 
-  const remaining = await probe(record);
+  const remaining = await findUnpublishedProjects(record);
+
   if (remaining.length > 0) throw new Error(`Release ${record.version} is incomplete: ${remaining.join(', ')}.`);
+
   console.log(`Confirmed all packages published at ${record.version}.`);
 };
 
@@ -137,41 +61,50 @@ const main = async () => {
   }
 
   const source = process.env.GITHUB_SHA;
+
   if (source === undefined) throw new Error('Missing checked source commit.');
-  git('fetch', 'origin', 'master', '--tags');
-  const remoteHead = git('rev-parse', 'origin/master');
-  const remoteFiles = git('ls-tree', '-r', '--name-only', 'origin/master').split('\n');
+
+  runGit('fetch', 'origin', 'master', '--tags');
+  const remoteHead = runGit('rev-parse', 'origin/master');
+  const remoteFiles = runGit('ls-tree', '-r', '--name-only', 'origin/master').split('\n');
   const previous = remoteFiles.includes(recordPath)
-    ? parseRecord(JSON.parse(git('show', `origin/master:${recordPath}`)))
+    ? parseRecord(JSON.parse(runGit('show', `origin/master:${recordPath}`)))
     : null;
-  const releaseCommit = previous === null ? null : git('rev-parse', `v${previous.version}^{commit}`);
+  const releaseCommit = previous === null ? null : runGit('rev-parse', `v${previous.version}^{commit}`);
+
   if (previous !== null && releaseCommit !== null) {
-    const tagged = parseRecord(JSON.parse(git('show', `${releaseCommit}:${recordPath}`)));
+    const tagged = parseRecord(JSON.parse(runGit('show', `${releaseCommit}:${recordPath}`)));
+
     if (
       JSON.stringify(tagged) !== JSON.stringify(previous) ||
-      git('rev-parse', `${releaseCommit}^`) !== previous.source
+      runGit('rev-parse', `${releaseCommit}^`) !== previous.source
     ) {
       throw new Error('Previous release tag and durable record disagree.');
     }
   }
-  const missing = previous === null ? [] : await probe(previous);
+
+  const missing = previous === null ? [] : await findUnpublishedProjects(previous);
   const action = chooseAction({ checksPassed: true, source, remoteHead, releaseCommit, missing });
 
   if (action === 'resume' && previous !== null) {
     await publishRecord(previous, missing);
+
     if (releaseCommit !== null && needsLatestRun(source, releaseCommit, previous.source))
       throw new Error('Older release resumed. Rerun the latest master workflow to release its checked source.');
+
     return;
   }
 
   if (action !== 'prepare') {
     console.log(`Release decision: ${action}.`);
+
     return;
   }
 
-  if (git('rev-parse', 'HEAD') !== source || git('status', '--porcelain') !== '')
+  if (runGit('rev-parse', 'HEAD') !== source || runGit('status', '--porcelain') !== '')
     throw new Error('Release requires a clean checked source snapshot.');
-  const request = existsSync(requestPath) ? parseRequest(readJson(requestPath)) : null;
+
+  const request = existsSync(requestPath) ? parseRequest(JSON.parse(readFileSync(requestPath, 'utf8'))) : null;
   const firstRelease = previous === null;
   const versioned = await releaseVersion({
     specifier: firstRelease ? '0.1.0' : (request ?? 'patch'),
@@ -182,7 +115,9 @@ const main = async () => {
     gitPush: false,
   });
   const version = versioned.workspaceVersion;
+
   if (typeof version !== 'string') throw new Error('Nx did not choose one fixed release version.');
+
   await releaseChangelog({
     version,
     versionData: versioned.projectsVersionData,
@@ -197,7 +132,7 @@ const main = async () => {
   });
 
   console.log(
-    run('npx', [
+    runCommand('npx', [
       'prettier',
       '--write',
       ...projects.flatMap((project) => [`packages/${project}/package.json`, `packages/${project}/CHANGELOG.md`]),
@@ -211,26 +146,33 @@ const main = async () => {
     request,
     packages: buildPackages(version),
   };
-  await probe(record);
+
+  await findUnpublishedProjects(record);
   rmSync(requestPath, { force: true });
   mkdirSync('.release', { recursive: true });
   writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`);
-  console.log(run('npx', ['prettier', recordPath, '--write']));
+  console.log(runCommand('npx', ['prettier', recordPath, '--write']));
+
   const intendedFiles = [
     recordPath,
     'package-lock.json',
     ...projects.flatMap((project) => [`packages/${project}/package.json`, `packages/${project}/CHANGELOG.md`]),
   ];
+
   if (request !== null) intendedFiles.push(requestPath);
-  git('add', '--', ...intendedFiles);
-  const changed = git('diff', '--name-only').split('\n').filter(Boolean);
+
+  runGit('add', '--', ...intendedFiles);
+  const changed = runGit('diff', '--name-only').split('\n').filter(Boolean);
+
   if (changed.length > 0) throw new Error(`Nx changed unexpected files: ${changed.join(', ')}.`);
-  git('config', 'user.name', 'github-actions[bot]');
-  git('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com');
-  git('commit', '-m', `chore(release): ${version}`);
-  git('tag', `v${version}`);
-  git('push', '--atomic', 'origin', 'HEAD:refs/heads/master', `refs/tags/v${version}`);
-  await publishRecord(record, await probe(record));
+
+  runGit('config', 'user.name', 'github-actions[bot]');
+  runGit('config', 'user.email', '41898282+github-actions[bot]@users.noreply.github.com');
+  runGit('commit', '-m', `chore(release): ${version}`);
+  runGit('tag', `v${version}`);
+  runGit('push', '--atomic', 'origin', 'HEAD:refs/heads/master', `refs/tags/v${version}`);
+
+  await publishRecord(record, await findUnpublishedProjects(record));
 };
 
 await main();

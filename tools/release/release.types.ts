@@ -1,4 +1,5 @@
 export type ReleaseRequest = 'minor' | 'major' | null;
+
 export type ReleaseRecord = {
   source: string;
   previousVersion: string | null;

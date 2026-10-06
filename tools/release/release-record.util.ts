@@ -1,6 +1,5 @@
+import { projects } from './release.constants.ts';
 import type { ReleaseRecord } from './release.types.ts';
-
-export const projects = ['typographist', 'typographist-vue', 'typographist-react', 'typographist-solid'] as const;
 
 export const parseRequest = (value: unknown) => {
   if (
@@ -55,10 +54,7 @@ export const parseRecord = (value: unknown) => {
 
   if (
     packages.length !== projects.length ||
-    projects.some(
-      (project, index) =>
-        packages[index]?.project !== project || packages[index].name !== `@elmenov-softworks/${project}`,
-    )
+    packages.some((pkg, index) => pkg.project !== projects[index] || pkg.name !== `@elmenov-softworks/${pkg.project}`)
   ) {
     throw new Error('Recorded release group differs from the configured group.');
   }
@@ -73,39 +69,3 @@ export const parseRecord = (value: unknown) => {
 
   return record;
 };
-
-export const chooseAction = (state: {
-  checksPassed: boolean;
-  source: string;
-  remoteHead: string;
-  releaseCommit: string | null;
-  missing: string[];
-}) => {
-  if (!state.checksPassed) return 'blocked';
-  if (state.releaseCommit !== null && state.missing.length > 0) return 'resume';
-  if (state.source !== state.remoteHead) return 'stale';
-  if (state.source === state.releaseCommit) return 'complete';
-
-  return 'prepare';
-};
-
-export const readRegistryIntegrity = (status: number, value: unknown) => {
-  if (status === 404) return null;
-  if (status !== 200) throw new Error(`npm registry returned HTTP ${String(status)}.`);
-  if (
-    typeof value !== 'object' ||
-    value === null ||
-    !('dist' in value) ||
-    typeof value.dist !== 'object' ||
-    value.dist === null ||
-    !('integrity' in value.dist) ||
-    typeof value.dist.integrity !== 'string'
-  ) {
-    throw new Error('npm registry response has no package integrity.');
-  }
-
-  return value.dist.integrity;
-};
-
-export const needsLatestRun = (source: string, releaseCommit: string, releasedSource: string) =>
-  source !== releaseCommit && source !== releasedSource;
