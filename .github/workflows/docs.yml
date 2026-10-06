@@ -1,0 +1,99 @@
+name: Documentation
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: typographist-documentation
+  cancel-in-progress: false
+
+env:
+  HUSKY: '0'
+  NX_DAEMON: 'false'
+  NX_NO_CLOUD: 'true'
+
+jobs:
+  docs:
+    if: github.repository == 'Elmenov-Softworks/typographist'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Merge the triggering source commit into docs
+        id: source
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          installed_lock=$(git hash-object package-lock.json)
+          selected_node=$(cat .nvmrc)
+          remote_docs=$(git ls-remote --heads origin refs/heads/docs)
+          git fetch origin refs/heads/master:refs/remotes/origin/master
+
+          if [ -n "$remote_docs" ]; then
+            git fetch origin refs/heads/docs:refs/remotes/origin/docs
+            latest_documented_source=$(git merge-base origin/docs origin/master)
+            if [ "$SOURCE_SHA" != "$latest_documented_source" ] && git merge-base --is-ancestor "$SOURCE_SHA" "$latest_documented_source"; then
+              echo 'Skipping a source commit older than the documentation branch.'
+              echo 'generate=false' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            git switch --create docs --track origin/docs
+          else
+            git switch --create docs "$SOURCE_SHA"
+          fi
+
+          git merge --no-edit "$SOURCE_SHA"
+          if [ "$(cat .nvmrc)" != "$selected_node" ]; then
+            echo '::error::The documentation merge changed .nvmrc; the selected runtime no longer matches.'
+            exit 1
+          fi
+          if [ "$(git hash-object package-lock.json)" != "$installed_lock" ]; then
+            npm ci
+          fi
+          echo 'generate=true' >> "$GITHUB_OUTPUT"
+      - name: Build public declarations
+        if: steps.source.outputs.generate == 'true'
+        run: npm run build
+      - name: Generate TypeDoc
+        if: steps.source.outputs.generate == 'true'
+        run: npm run docs
+      - name: Commit and push documentation
+        if: steps.source.outputs.generate == 'true'
+        run: |
+          git add --force -- docs/
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update documentation'
+          fi
+          git push origin HEAD:refs/heads/docs
+      - name: Check Pages configuration
+        if: steps.source.outputs.generate == 'true'
+        uses: actions/configure-pages@v5
+      - name: Upload documentation
+        if: steps.source.outputs.generate == 'true'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs/
+      - name: Publish documentation
+        if: steps.source.outputs.generate == 'true'
+        id: deployment
+        uses: actions/deploy-pages@v4

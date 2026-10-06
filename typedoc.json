@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Typographist",
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/*"],
+  "packageOptions": {
+    "entryPoints": ["src/index.ts"],
+    "readme": "none"
+  },
+  "out": "docs",
+  "readme": "README.md",
+  "cleanOutputDir": false
+}

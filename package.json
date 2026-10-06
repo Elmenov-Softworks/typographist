@@ -21,7 +21,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "docs": "typedoc --options typedoc.json"
   },
   "devDependencies": {
     "nx": "23.2.1",
