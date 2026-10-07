@@ -16,7 +16,8 @@ does not replace either data license.
 From the repository root, regenerate with:
 
 ```sh
-node tools/pattern-data/convert-patterns.ts
+npm run build --workspace=@elmenov-softworks/rules-transformer
+node tools/rules-transformer/regenerate-bundled.ts
 ```
 
 The converter uses the existing development dependency Prettier. It checks the
@@ -31,9 +32,9 @@ offsets; entries without hyphens become explicit no-break exceptions.
 | `hyph-ru.tex`    |     7021 |        184 |                  25 | 2/2            |
 | `hyph-en-us.tex` |     4938 |         14 |                   4 | 2/3            |
 
-The generated tables are frozen. Exported `ru` and `enUS` plugins must be
-explicitly supplied to `prepareKnuthLiang`; importing them does not register
-languages. Normalization requires `Intl.Segmenter` grapheme support and uses
+The generated tables are frozen. `Typographist` registers English (`en`) and
+Russian (`ru`) rules by default; supplying a custom `rules` list replaces them.
+The tables and preparation functions remain internal to the library. Normalization requires `Intl.Segmenter` grapheme support and uses
 NFC plus locale-independent lowercasing. Russian retains `ё`; English supports
 ASCII letters. Unsupported marks, foreign letters, and internal apostrophes
 preserve the whole token.

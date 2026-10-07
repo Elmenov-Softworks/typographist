@@ -1,70 +1,53 @@
-import { createHyphenator, enUS, prepareKnuthLiang, ru } from '@/index.js';
+import { Typographist, TypographistRules } from '@/index.js';
+import { createBundledRules } from '@/rules/bundled/bundled-rules.js';
+import { patterns as ruPatterns, exceptions as ruExceptions } from '@/languages/bundled/ru-data.constants.js';
+import { patterns as enPatterns, exceptions as enExceptions } from '@/languages/bundled/en-us-data.constants.js';
 
-const algorithm = prepareKnuthLiang([ru, enUS]);
-const russian = createHyphenator({ algorithm, defaultLanguage: 'ru' });
-const english = createHyphenator({ algorithm, defaultLanguage: 'en-US' });
+const typographist = new Typographist();
 
 describe('pinned bundled language data', () => {
   it('matches representative words using the pinned patterns', () => {
-    expect(russian.hyphenate('машина ПЕРЕНОС молоко ёлочка')).toBe(
-      'ма\u00ADши\u00ADна ПЕ\u00ADРЕ\u00ADНОС мо\u00ADло\u00ADко ёлоч\u00ADка',
+    expect(typographist.format('машина ПЕРЕНОС молоко ёлочка', 'ru')).toBe(
+      'ма\u00adши\u00adна ПЕ\u00adРЕ\u00adНОС мо\u00adло\u00adко ёлоч\u00adка',
     );
-    expect(english.hyphenate('hyphenation computer representation')).toBe(
-      'hy\u00ADphen\u00ADation com\u00ADputer rep\u00ADre\u00ADsen\u00ADta\u00ADtion',
+    expect(typographist.format('hyphenation computer representation')).toBe(
+      'hy\u00adphen\u00adation com\u00adputer rep\u00adre\u00adsen\u00adta\u00adtion',
     );
   });
 
   it('preserves all converted patterns and source exceptions', () => {
-    expect(ru.patterns).toHaveLength(7021);
-    expect(ru.exceptions).toHaveLength(184);
-    expect(enUS.patterns).toHaveLength(4938);
-    expect(enUS.exceptions).toHaveLength(14);
+    expect(ruPatterns).toHaveLength(7021);
+    expect(ruExceptions).toHaveLength(184);
+    expect(enPatterns).toHaveLength(4938);
+    expect(enExceptions).toHaveLength(14);
   });
 
   it('uses source break and no-break exceptions across case variants', () => {
-    expect(english.hyphenate('table TABLE present')).toBe('ta\u00ADble TA\u00ADBLE present');
-    expect(russian.hyphenate('асбест АСБЕСТ рсфср')).toBe('ас\u00ADбест АС\u00ADБЕСТ рсфср');
-  });
-
-  it('maps a canonical spelling through a user exception', () => {
-    const service = createHyphenator({
-      algorithm,
-      defaultLanguage: 'ru',
-      languages: { ru: { exceptions: [{ word: 'ёлка', positions: [2] }] } },
-    });
-
-    expect(service.hyphenate('е\u0308лка ЁЛКА')).toBe('е\u0308л\u00ADка ЁЛ\u00ADКА');
+    expect(typographist.format('table TABLE present')).toBe('ta\u00adble TA\u00adBLE present');
+    expect(typographist.format('асбест АСБЕСТ рсфср', 'ru')).toBe('ас\u00adбест АС\u00adБЕСТ рсфср');
   });
 
   it('preserves unsupported complete words and protected tokens', () => {
-    const text = 'ма\u0301шина mother\u2011in\u2011law first.last+tag@example-domain.com пе\u00ADренос 😀';
+    const text = 'ма\u0301шина mother\u2011in\u2011law first.last+tag@example-domain.com пе\u00adренос 😀';
 
-    expect(russian.hyphenate(text)).toBe(text);
-    expect(english.hyphenate("don't naïve userName ISO9001")).toBe("don't naïve userName ISO9001");
+    expect(typographist.format(text, 'ru')).toBe(text);
+    expect(typographist.format("don't naïve userName ISO9001")).toBe("don't naïve userName ISO9001");
   });
 
-  it('routes explicit languages and never applies region fallback', () => {
-    const service = createHyphenator({
-      algorithm,
-      defaultLanguage: 'ru',
-      wordSelector: (word) => (/^[A-Za-z]+$/u.test(word) ? 'EN-us' : 'ru'),
+  it('keeps data immutable and replaces locale rules independently', () => {
+    const english = createBundledRules()[0];
+    if (english === undefined) throw new Error('Missing bundled English rules');
+    const replacement = new TypographistRules({
+      standard: { ...english.compile(false), patterns: [], exceptions: [] },
     });
+    const instance = new Typographist();
+    instance.addRules(replacement);
 
-    expect(service.hyphenate('асбест table')).toBe('ас\u00ADбест ta\u00ADble');
-    expect(russian.hyphenate('table', { language: 'en-us' })).toBe('ta\u00ADble');
-    expect(() => english.hyphenate('', { language: 'en-GB' })).toThrow(RangeError);
-  });
-
-  it('keeps bundled data immutable and allows replacing it with a custom plugin', () => {
-    expect(Object.isFrozen(ru)).toBe(true);
-    expect(Object.isFrozen(ru.patterns)).toBe(true);
-    expect(Object.isFrozen(ru.exceptions?.[0]?.positions)).toBe(true);
-
-    const replacement = prepareKnuthLiang([{ ...enUS, patterns: [], exceptions: [] }]);
-    const service = createHyphenator({ algorithm: replacement, defaultLanguage: 'en-US' });
-
-    expect(service.hyphenate('table')).toBe('table');
-    expect(english.hyphenate('table-table')).toBe('ta\u00ADble-ta\u00ADble');
-    expect(english.hyphenate(english.hyphenate('table-table'))).toBe('ta\u00ADble-ta\u00ADble');
+    expect(Object.isFrozen(enPatterns)).toBe(true);
+    expect(Object.isFrozen(enExceptions[0]?.positions)).toBe(true);
+    expect(instance.format('table')).toBe('table');
+    expect(instance.format('асбест', 'ru')).toBe('ас\u00adбест');
+    expect(typographist.format('table-table')).toBe('ta\u00adble-ta\u00adble');
+    expect(typographist.format(typographist.format('table-table'))).toBe('ta\u00adble-ta\u00adble');
   });
 });

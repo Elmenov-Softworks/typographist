@@ -1,80 +1,36 @@
+import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
 import { prepareExceptionTable } from '@/languages/exceptions/exception-table.util.js';
-import { languageKey } from '@/languages/language-identifier.util.js';
-import type { PreparedLanguageProfile } from '@/languages/prepared-language-profile.types.js';
-import type { PreparedAlgorithm } from '@/algorithms/prepared-algorithm.types.js';
-import type { KnuthLiangPlugin } from '@/algorithms/knuth-liang/knuth-liang-plugin.types.js';
+import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
+import type { CompiledRules } from '@/rules/compiled-rules.types.js';
 import { preparePatternMatcher } from '@/algorithms/knuth-liang/pattern-matcher.util.js';
 
-const validatePluginObject = (plugin: unknown) => {
-  if (typeof plugin !== 'object' || plugin === null) {
-    throw new TypeError('Knuth–Liang plugin must be an object');
-  }
-};
-
-/**
- * Compiles supplied language patterns and exceptions into a frozen algorithm and language profiles.
- * Language identifiers are matched case-insensitively without region fallback. Duplicate registrations,
- * invalid plugin data, patterns, or exceptions are rejected during preparation.
- * Pattern breaks are mapped to original UTF-16 offsets, skipping boundaries inside normalized expansions.
- * Exception lookup and minimum-length filtering are left to the hyphenation service.
- */
-export const prepareKnuthLiang = (plugins: readonly KnuthLiangPlugin[]) => {
-  if (!Array.isArray(plugins)) {
-    throw new TypeError('Knuth–Liang plugins must be an array');
+/** Validates plugin data and prepares an independent matcher for one registered locale. */
+export const prepareKnuthLiang = (rules: CompiledRules) => {
+  if (typeof rules.alphabet !== 'string' || rules.alphabet.length === 0) {
+    throw new TypeError('Rules require a nonempty alphabet');
   }
 
-  const matchers = new Map<string, ReturnType<typeof preparePatternMatcher>>();
-  const languages: PreparedLanguageProfile[] = [];
-  const input: readonly KnuthLiangPlugin[] = plugins;
-
-  for (const plugin of input) {
-    validatePluginObject(plugin);
-    const key = languageKey(plugin.id);
-
-    if (matchers.has(key)) {
-      throw new RangeError(`Duplicate language registration: ${plugin.id}`);
-    }
-
-    if (typeof plugin.normalize !== 'function') {
-      throw new TypeError(`Language ${plugin.id} requires a normalizer`);
-    }
-
-    for (const value of [plugin.leftMin, plugin.rightMin]) {
-      if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 1) {
-        throw new RangeError(`Language ${plugin.id} requires positive safe integer minima`);
-      }
-    }
-
-    const exceptions = prepareExceptionTable(
-      plugin.exceptions === undefined ? [] : plugin.exceptions,
-      plugin.normalize,
-    );
-    const matcher = preparePatternMatcher(plugin.patterns);
-    matchers.set(key, matcher);
-    languages.push(
-      Object.freeze({
-        id: plugin.id,
-        normalize: plugin.normalize,
-        leftMin: plugin.leftMin,
-        rightMin: plugin.rightMin,
-        exceptionBreaks: exceptions.lookup,
-      }),
-    );
+  if (/[\p{Cs}]/u.test(rules.alphabet)) {
+    throw new TypeError('Rules alphabet must contain Unicode scalar values');
   }
 
-  const wordBreaks: PreparedAlgorithm['wordBreaks'] = (_word, language, analysis) => {
-    const matcher = matchers.get(languageKey(language));
-
-    if (matcher === undefined) {
-      throw new RangeError(`Unregistered language: ${language}`);
+  for (const value of [rules.leftMin, rules.rightMin]) {
+    if (!Number.isSafeInteger(value) || value < 1) {
+      throw new RangeError(`Locale ${rules.locale} requires positive safe integer minima`);
     }
+  }
 
+  const { leftMin, rightMin, exceptions: entries = [] } = rules;
+  const normalize = createAlphabetNormalizer(rules.alphabet);
+  const exceptions = prepareExceptionTable(entries, normalize);
+  const matcher = preparePatternMatcher(rules.patterns);
+  const wordBreaks = (analysis: WordAnalysis) => {
     const positions: number[] = [];
 
     for (const boundary of matcher.match(analysis.symbols)) {
       const offset = analysis.boundaries[boundary];
 
-      if (offset !== null && offset !== undefined) {
+      if (offset != null) {
         positions.push(offset);
       }
     }
@@ -82,7 +38,5 @@ export const prepareKnuthLiang = (plugins: readonly KnuthLiangPlugin[]) => {
     return positions;
   };
 
-  const algorithm: PreparedAlgorithm = Object.freeze({ languages: Object.freeze(languages), wordBreaks });
-
-  return algorithm;
+  return Object.freeze({ normalize, leftMin, rightMin, exceptionBreaks: exceptions.lookup, wordBreaks });
 };

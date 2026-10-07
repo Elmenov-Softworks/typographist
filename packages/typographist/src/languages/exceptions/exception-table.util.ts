@@ -1,7 +1,6 @@
 import type { HyphenationException } from '@/languages/exceptions/hyphenation-exception.types.js';
 import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
 import type { WordNormalizer } from '@/languages/analysis/word-normalizer.types.js';
-import { validateWordAnalysis } from '@/languages/analysis/validate-word-analysis.util.js';
 
 /** Stores normalized symbol boundaries, so equivalent spellings never reuse original UTF-16 offsets. */
 export const prepareExceptionTable = (entries: readonly HyphenationException[], normalize: WordNormalizer) => {
@@ -24,13 +23,13 @@ export const prepareExceptionTable = (entries: readonly HyphenationException[], 
       throw new TypeError('Language exception must contain a word and positions array');
     }
 
-    const validated = validateWordAnalysis(entry.word, normalize(entry.word));
+    const normalized = normalize(entry.word);
 
-    if (validated === null) {
+    if (normalized === null) {
       throw new TypeError('Language exception word is unsupported');
     }
 
-    const { analysis, graphemes } = validated;
+    const { analysis, graphemes } = normalized;
     const graphemeSet = new Set(graphemes);
     const mapped = new Map<number, number>();
 
@@ -92,7 +91,7 @@ export const prepareExceptionTable = (entries: readonly HyphenationException[], 
     for (const position of positions) {
       const offset = analysis.boundaries[position];
 
-      if (offset !== null && offset !== undefined) {
+      if (offset != null) {
         offsets.push(offset);
       }
     }

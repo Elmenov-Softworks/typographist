@@ -23,9 +23,9 @@ Default exclusions cover numeric tokens, underscore and camel-case identifiers, 
 
 ## Data and runtime prerequisites
 
-Both tables pin tex-hyphen commit `5684c0f51c0b81133db2efbe60a408b4155a3ff5`. [Provenance](../../../packages/typographist/pattern-data/provenance.json) retains URLs, byte lengths, and SHA-256 hashes. Russian has 7,021 patterns and 184 exceptions (25 no-break); American English has 4,938 patterns and 14 exceptions (4 no-break). Default minima are 2/2 and 2/3 respectively.
+Both tables pin tex-hyphen commit `5684c0f51c0b81133db2efbe60a408b4155a3ff5`. [Provenance](../../../packages/typographist/locale-rules/provenance.json) retains URLs, byte lengths, and SHA-256 hashes. Russian has 7,021 patterns and 184 exceptions (25 no-break); American English has 4,938 patterns and 14 exceptions (4 no-break). Default minima are 2/2 and 2/3 respectively.
 
-The unchanged TeX inputs, provenance, and notices ship alongside emitted tables. Russian data uses LPPL 1.2 or later; American English uses its retained redistribution permission. The library MIT license does not replace these terms. `node tools/pattern-data/convert-patterns.ts` verifies the pinned bytes and reproduces both datasets locally without downloads.
+The unchanged TeX inputs, provenance, and notices ship alongside emitted tables. Russian data uses LPPL 1.2 or later; American English uses its retained redistribution permission. The library MIT license does not replace these terms. `node tools/rules-transformer/regenerate-bundled.ts` verifies the pinned bytes and reproduces both datasets locally without downloads.
 
 The runtime requires standard Unicode normalization, property escapes, and `Intl.Segmenter` grapheme support. Public declarations compile with ES2023 libraries and no Node or DOM ambient types. The runtime imports neither Node facilities nor framework/DOM code. Compatible Unicode/ICU behavior and deterministic callbacks are prerequisites for repeatable cross-environment output. Browser and framework integration remain deferred.
 
@@ -105,7 +105,7 @@ Fresh worker verification against the reorganized package:
 - `npm run test --workspace=@elmenov-softworks/typographist`: 192 tests pass across 12 files.
 - Built ESM import in Node without a `document` global: Russian and English source-exception fixtures pass (`асбест`, `table`, `TABLE`, and `present`).
 - `node_modules/.bin/tsc -p /tmp/typographist-server-tsconfig.json`: a strict NodeNext consumer against emitted declarations passes with `lib: ["ES2023"]` and `types: []`, without DOM or Node ambient types. Its input is `/tmp/typographist-server-consumer.mts`.
-- `node tools/pattern-data/convert-patterns.ts`: verifies both pinned checksums and regenerates 7,021/4,938 patterns and 184/14 exceptions. `git diff --exit-code -- packages/typographist/src/languages/bundled` confirms identical generated sources.
+- `node tools/rules-transformer/regenerate-bundled.ts`: verifies both pinned checksums and regenerates 7,021/4,938 patterns and 184/14 exceptions. `git diff --exit-code -- packages/typographist/src/languages/bundled` confirms identical generated sources.
 - `npm pack --dry-run --json --workspace=@elmenov-softworks/typographist --cache=/tmp/typographist-pack-cache`: passes; 130 files, 128,284 compressed bytes from the fresh build. Inventory assertions confirm public ESM/declarations, both emitted tables, both unchanged TeX sources, provenance, data README notices, and the package MIT license. The retained source files contain Russian LPPL and English copyright/redistribution notices.
 - The full emitted-JavaScript benchmark passes output validation for every workload; the retained reorganization JSON contains all seven samples.
 

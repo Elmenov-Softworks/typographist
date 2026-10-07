@@ -10,7 +10,7 @@ const analyze = (word: string) => {
     throw new Error('Unsupported test word');
   }
 
-  return analysis;
+  return analysis.analysis;
 };
 
 describe('prepared language exceptions', () => {

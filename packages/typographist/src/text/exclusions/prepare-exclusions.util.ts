@@ -1,8 +1,6 @@
-const readToggle = (name: string, value: unknown) => {
-  if (value === undefined) {
-    return true;
-  }
+import type { ExclusionOptions } from '@/text/exclusions/exclusion-options.types.js';
 
+const readToggle = (name: string, value: unknown = true) => {
   if (typeof value !== 'boolean') {
     throw new TypeError(`Exclusion option ${name} must be a boolean`);
   }
@@ -10,16 +8,18 @@ const readToggle = (name: string, value: unknown) => {
   return value;
 };
 
-export const prepareExclusions = (options: unknown = {}) => {
-  if (typeof options !== 'object' || options === null || Array.isArray(options)) {
+export const prepareExclusions = (options: ExclusionOptions = {}) => {
+  const input: unknown = options;
+
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
     throw new TypeError('Exclusions must be an options object');
   }
 
-  const addresses = readToggle('addresses', 'addresses' in options ? options.addresses : undefined);
-  const numbers = readToggle('numbers', 'numbers' in options ? options.numbers : undefined);
-  const underscores = readToggle('underscores', 'underscores' in options ? options.underscores : undefined);
-  const camelCase = readToggle('camelCase', 'camelCase' in options ? options.camelCase : undefined);
-  const custom = 'custom' in options ? options.custom : undefined;
+  const addresses = readToggle('addresses', options.addresses);
+  const numbers = readToggle('numbers', options.numbers);
+  const underscores = readToggle('underscores', options.underscores);
+  const camelCase = readToggle('camelCase', options.camelCase);
+  const custom = options.custom;
 
   if (custom !== undefined && typeof custom !== 'function') {
     throw new TypeError('Exclusion option custom must be a synchronous predicate');
@@ -42,7 +42,7 @@ export const prepareExclusions = (options: unknown = {}) => {
       return false;
     }
 
-    const result: unknown = Reflect.apply(custom, null, [word]);
+    const result: unknown = custom(word);
 
     if (typeof result !== 'boolean') {
       throw new TypeError('Custom exclusion must return a synchronous boolean');

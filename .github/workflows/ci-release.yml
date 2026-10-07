@@ -46,7 +46,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx vitest run --config tools/release/vitest.config.ts
-      - run: npx nx run-many -t test --projects typographist,typographist-vue,typographist-react,typographist-solid
+      - run: npx nx run-many -t test --projects typographist,typographist-vue,typographist-react,typographist-solid,rules-transformer
 
   typecheck:
     name: typecheck

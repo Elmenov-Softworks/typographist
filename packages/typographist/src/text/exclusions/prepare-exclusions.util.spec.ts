@@ -11,11 +11,14 @@ describe('prepared exclusions', () => {
     { addresses: 1 },
     { custom: true },
   ])('rejects malformed options %j', (options) => {
-    expect(() => prepareExclusions(options)).toThrow(TypeError);
+    expect(() => {
+      Reflect.apply(prepareExclusions, null, [options]);
+    }).toThrow(TypeError);
   });
 
   it.each([() => Promise.resolve(false), () => null, () => 1])('rejects non-boolean custom results', (custom) => {
-    const options = { custom };
+    const options = { custom: () => false };
+    Reflect.set(options, 'custom', custom);
 
     expect(() => {
       prepareExclusions(options).preserves('word');

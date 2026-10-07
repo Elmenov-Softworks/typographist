@@ -1,8 +1,14 @@
-import { getGraphemeBoundaries } from '@/languages/analysis/grapheme-boundaries.util.js';
+import { graphemeSegmenter } from '@/languages/analysis/grapheme-segmenter.constants.js';
 import { insertWordBreaks } from '@/text/word-breaks/insert-word-breaks.util.js';
 
 const insert = (word: string, positions: unknown, leftMin = 1, rightMin = 1) =>
-  insertWordBreaks(word, positions, getGraphemeBoundaries(word), leftMin, rightMin);
+  insertWordBreaks(
+    word,
+    positions,
+    [0, ...Array.from(graphemeSegmenter.segment(word), ({ index, segment }) => index + segment.length)],
+    leftMin,
+    rightMin,
+  );
 
 describe('insertWordBreaks', () => {
   it('inserts multiple opportunities without changing original characters', () => {

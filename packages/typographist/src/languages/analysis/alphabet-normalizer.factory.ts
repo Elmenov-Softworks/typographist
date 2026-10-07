@@ -7,6 +7,7 @@ export const createAlphabetNormalizer = (alphabet: string) => {
   return (word: string) => {
     const symbols: string[] = [];
     const boundaries: (number | null)[] = [0];
+    const graphemes = [0];
 
     for (const { index, segment } of graphemeSegmenter.segment(word)) {
       const normalized = Array.from(segment.normalize('NFC').toLowerCase());
@@ -19,8 +20,10 @@ export const createAlphabetNormalizer = (alphabet: string) => {
         symbols.push(symbol);
         boundaries.push(position === normalized.length - 1 ? index + segment.length : null);
       }
+
+      graphemes.push(index + segment.length);
     }
 
-    return { symbols, boundaries };
+    return { analysis: { symbols, boundaries }, graphemes };
   };
 };

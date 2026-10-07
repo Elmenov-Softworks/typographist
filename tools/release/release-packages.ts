@@ -36,6 +36,7 @@ export const buildPackages = (version: string) => {
 
     if (
       project !== 'typographist' &&
+      project !== 'rules-transformer' &&
       (!('dependencies' in manifest) ||
         typeof manifest.dependencies !== 'object' ||
         manifest.dependencies === null ||
