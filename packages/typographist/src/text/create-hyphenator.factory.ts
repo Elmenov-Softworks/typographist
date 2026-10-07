@@ -112,8 +112,16 @@ export const createHyphenator = (options: HyphenationOptions) => {
       if (graphemes.length - 1 < policy.minWordLength) {
         continue;
       }
-      const positions =
-        policy.exceptionBreaks(analysis) ?? profile.exceptionBreaks(analysis) ?? wordBreaks(word, profile.id, analysis);
+      let positions: readonly number[] | null = policy.exceptionBreaks(analysis);
+      if (positions === null) {
+        positions = profile.exceptionBreaks(analysis);
+        if (positions !== null && !Array.isArray(positions)) {
+          throw new TypeError(`Language ${profile.id} exception breaks must be a synchronous array or null`);
+        }
+      }
+      if (positions === null) {
+        positions = wordBreaks(word, profile.id, analysis);
+      }
       const replacement = insertWordBreaks(word, positions, graphemes, policy.leftMin, policy.rightMin);
       if (replacement !== word) {
         parts.push(text.slice(copied, start), replacement);

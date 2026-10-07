@@ -116,6 +116,26 @@ it('validates third-party results and propagates callback errors', () => {
   expect(() => service.hyphenate('abcd')).toThrow(failure);
 });
 
+it.each([vi.fn(), () => false, () => ({}), () => Promise.resolve([])])(
+  'rejects malformed plugin exception results without invoking the algorithm',
+  (exceptionBreaks) => {
+    const prepared = prepare().languages[0];
+    if (prepared === undefined) {
+      throw new Error('Missing test profile');
+    }
+    const profile = { ...prepared };
+    Reflect.set(profile, 'exceptionBreaks', exceptionBreaks);
+    const wordBreaks = vi.fn(() => [2]);
+    const service = createHyphenator({
+      algorithm: { languages: [profile], wordBreaks },
+      defaultLanguage: 'test',
+    });
+
+    expect(() => service.hyphenate('abcd')).toThrow(TypeError);
+    expect(wordBreaks).not.toHaveBeenCalled();
+  },
+);
+
 it('snapshots caller configuration and isolates service instances', () => {
   const algorithm = { languages: [...prepare().languages], wordBreaks: () => [2] };
   const policy = { leftMin: 1, exceptions: [{ word: 'abcd', positions: [1] }] };
