@@ -9,18 +9,77 @@
 <div class="tsd-page-title">
 <h1>Typographist</h1></div>
 <div class="tsd-panel tsd-typography"><h1 id="typographist" class="tsd-anchor-link">Typographist<a href="#typographist" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
-<p>Typography libraries for JavaScript and components for Vue, React, and Solid.</p>
-<p>The Nx workspace contains four ESM packages under <code>packages/</code>. Their public entry points are currently empty.</p>
+<p>Typography libraries for JavaScript and components for Vue, React, and Solid.
+The core package inserts soft hyphens without changing original characters.
+The framework packages are currently placeholders.</p>
+<pre><code class="ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">Typographist</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@elmenov-softworks/typographist&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">typographist</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;en&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">excludedWords:</span><span class="hl-1"> [</span><span class="hl-3">&#39;Typographist&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  </span><span class="hl-2">useFast:</span><span class="hl-1"> </span><span class="hl-4">false</span><span class="hl-1">,</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-2">typographist</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;table&#39;</span><span class="hl-1">); </span><span class="hl-7">// &#39;ta\u00adble&#39;</span><br/><span class="hl-2">typographist</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;асбест&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;ru&#39;</span><span class="hl-1">); </span><span class="hl-7">// &#39;ас\u00adбест&#39;</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Configuration defaults to <code>locale: 'en'</code>, English and Russian rules, no excluded
+words, and <code>useFast: false</code>. Both values of <code>useFast</code> currently select
+Knuth–Liang; the flag reserves selection of a future fast algorithm. <code>Locale</code>
+contains only the bundled locales, <code>'en' | 'ru'</code>. The bundled <code>en</code> rules use US English
+patterns. Selecting a locale does not automatically detect languages within
+text. Unsupported words remain unchanged.</p>
+<p>Only <code>Typographist</code> and <code>TypographistRules</code> are runtime exports. Configuration,
+locale, and declarative plugin output types are also available. Internal
+algorithms, matchers, normalization and prepared services are not public APIs.</p>
+<p>An instance has three public methods:</p>
+<ul>
+<li><code>format(text, locale?)</code> selects the call's locale or the configured default.</li>
+<li><code>addRules(rules)</code> compiles and adds or replaces the plugin's locale atomically.</li>
+<li><code>removeRules(locale)</code> removes the locale and returns whether it was registered.</li>
+</ul>
+<p>Unknown locales throw. The default locale must be registered at construction;
+removing it makes formatting without an override fail until rules are added
+again. Duplicate locales in the constructor are rejected. Configuration arrays
+and rule data are snapshotted during preparation. Excluded words use exact,
+case-sensitive matches. Existing soft hyphens, identifiers, addresses and
+unsupported complete words retain the existing preservation behavior.</p>
+<p>Custom plugins extend <code>TypographistRules</code> and implement its single <code>compile</code>
+operation. The plugin owns storage and can select different rule data based on
+<code>useFast</code>. No runtime algorithm or normalization internals are needed:</p>
+<pre><code class="ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">TypographistRules</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@elmenov-softworks/typographist&#39;</span><span class="hl-1">;</span><br/><span class="hl-0">import</span><span class="hl-1"> </span><span class="hl-0">type</span><span class="hl-1"> { </span><span class="hl-2">CompiledRules</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@elmenov-softworks/typographist&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-8">GermanRules</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-8">TypographistRules</span><span class="hl-1">&lt;</span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">&gt; {</span><br/><span class="hl-1">  </span><span class="hl-4">override</span><span class="hl-1"> </span><span class="hl-6">compile</span><span class="hl-1">(</span><span class="hl-2">_useFast</span><span class="hl-1">: </span><span class="hl-8">boolean</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">rules</span><span class="hl-1">: </span><span class="hl-8">CompiledRules</span><span class="hl-1">&lt;</span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">&gt; = {</span><br/><span class="hl-1">      </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">alphabet:</span><span class="hl-1"> </span><span class="hl-3">&#39;abcdefghijklmnopqrstuvwxyzäöüß&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">leftMin:</span><span class="hl-1"> </span><span class="hl-9">2</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">rightMin:</span><span class="hl-1"> </span><span class="hl-9">2</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">patterns:</span><span class="hl-1"> [</span><span class="hl-3">&#39;a1b&#39;</span><span class="hl-1">], </span><span class="hl-7">// Replace with complete language data.</span><br/><span class="hl-1">    };</span><br/><br/><span class="hl-1">    </span><span class="hl-0">return</span><span class="hl-1"> </span><span class="hl-2">rules</span><span class="hl-1">;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">custom</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">&lt;</span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">&gt;();</span><br/><span class="hl-2">custom</span><span class="hl-1">.</span><span class="hl-6">addRules</span><span class="hl-1">(</span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">GermanRules</span><span class="hl-1">());</span><br/><span class="hl-2">custom</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;abcd&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">);</span><br/><span class="hl-2">custom</span><span class="hl-1">.</span><span class="hl-6">removeRules</span><span class="hl-1">(</span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">);</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Default instances accept only <code>en</code> and <code>ru</code> in configuration, formatting and
+removal. Custom locales are inferred from typed rules supplied to the
+constructor, for example <code>new Typographist({ locale: 'de', rules: [new GermanRules()] })</code>.
+For dynamic registration, declare additional locale strings on the instance
+as shown above. A union such as <code>new Typographist&lt;'de' | 'zu'&gt;()</code> permits both
+additional locales alongside <code>en</code> and <code>ru</code>; their rules still need registration.
+Unregistered locales still throw at runtime. The library does
+not promise language coverage for externally supplied rules.</p>
+<p>Supplying <code>rules</code> in the constructor replaces the bundled list. <code>compile</code> runs
+once per registration and receives the configured <code>useFast</code> value. The base
+class also accepts <code>{ standard, fast? }</code> rule sets in its constructor; when
+<code>fast</code> is omitted it reuses <code>standard</code>. Subclasses can inherit this compiler
+or override it with a normal method or function property. <code>compile</code> returns
+locale, alphabet, break minima, patterns and optional explicit exceptions.
+Patterns must match the alphabet's NFC lowercase form. Exception positions are
+increasing interior UTF-16 offsets at grapheme boundaries; an empty positions
+array prevents hyphenation. Minima count original graphemes.</p>
+<p>The public class coordinates a locale registry and a selected algorithm
+strategy. Stateful registration stays in the registry; word analysis, pattern
+matching, exception resolution, scanning and reconstruction use separate
+functions. The formatting path has no unbounded word cache or shared scratch
+buffers.</p>
+<p><a href="media/README.md">Rules transformer</a> converts TeX tables to
+TypeScript and is installed independently as the <code>transform-rules</code> CLI.
+<a href="media/README-1.md">Benchmarks</a> produce JSON and a standalone HTML report
+for both algorithm modes, optionally comparing a previous emitted implementation.</p>
 <p>Use the Node.js version in <code>.nvmrc</code>, then run <code>npm ci</code>.</p>
 <ul>
 <li><code>npm run build</code> builds all packages and declaration files.</li>
 <li><code>npm run typecheck</code> checks source and tool configurations.</li>
 <li><code>npm run lint</code> and <code>npm run format:check</code> check code and formatting.</li>
-<li><code>npm test</code> runs the Vitest projects, including release automation tests. Library test targets need real tests before CI can pass.</li>
+<li><code>npm test</code> runs the Vitest projects, including release automation tests.</li>
 <li><code>npm run docs</code> generates TypeDoc after <code>npm run build</code>.</li>
 </ul>
-<p>Releases and documentation publication run in GitHub Actions after updates to <code>master</code>. All four packages share one version, with patch releases by default.</p>
-<p>For a minor or major release, add <code>.release/request.json</code> with <code>{&quot;type&quot;:&quot;minor&quot;}</code> or <code>{&quot;type&quot;:&quot;major&quot;}</code> and format it with <code>npm run format</code>. The release Action consumes the request once.</p>
+<p>Releases and documentation publication run in GitHub Actions after updates to
+<code>master</code>. All five packages share one version, with patch releases by default.
+For a minor or major release, add <code>.release/request.json</code> with <code>{&quot;type&quot;:&quot;minor&quot;}</code>
+or <code>{&quot;type&quot;:&quot;major&quot;}</code>. The release Action consumes the request once.</p>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
