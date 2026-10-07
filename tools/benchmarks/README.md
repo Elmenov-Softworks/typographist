@@ -15,10 +15,9 @@ network access. JSON records environment, Git HEAD, dirty working tree status,
 actual algorithm, requested mode, input hashes, output lengths and all samples.
 A dirty run records HEAD plus working tree changes, not a clean commit benchmark.
 
-Both `useFast: false` and `useFast: true` are measured separately. Both currently
-execute Knuth–Liang. Do not interpret their timing differences as evidence of a
-second algorithm. Future modes can use the existing implementation adapter
-without changing workload generation, measurements or report rendering.
+Both modes process the same workloads: `useFast: false` runs Knuth–Liang and
+`useFast: true` runs Khristov. Fast output is heuristic and may differ from
+standard output. The report identifies the actual algorithm for each adapter.
 
 To compare the previous API implementation, preserve its complete built `dist`
 directory before rebuilding this branch, then pass its entry point:
@@ -34,9 +33,10 @@ The legacy module must export `createHyphenator`, `prepareKnuthLiang`, `enUS` an
 `ru`. `--legacy-commit` is optional provenance for the preserved build; the
 harness cannot establish that build's source provenance itself. No checkout or
 build is performed by the harness. Legacy and current adapters process identical
-workloads in the same run, with exact output equality checked before timing.
+workloads in the same run. Exact legacy output equality is checked before timing
+only for Knuth–Liang adapters; Khristov checks its own expected-output fixtures.
 The report compares matching names, locales and input hashes. Relative speed is
-legacy median divided by current median; values above one mean lower latency in
+current standard median divided by selected median; values above one mean lower latency in
 that measurement. Import and adapter-loading time is excluded.
 
 Instance preparation measures compilation of both bundled locales and creation
@@ -50,7 +50,9 @@ lengths are consumed during timing; exact output assertions occur afterward.
 Before timing, the harness checks representative source exceptions, preservation
 after removing soft hyphens, idempotence and insertion boundaries against
 `Intl.Segmenter`. These checks complement the correctness suite; they do not
-establish perfect linguistic coverage.
+establish perfect linguistic coverage. Khristov also checks the approved English
+and Russian examples, uppercase and decomposed spelling, and protected tokens.
+Mode-specific output differences do not fail legacy comparison.
 
 Workloads include short English, Russian and English paragraphs, repeated words,
 2,000 deterministic pseudorandom ASCII words, and 1K/4K/16K scaling cases. Mixed
@@ -64,3 +66,12 @@ and runtime noise can affect results; one run is not a universal speed claim.
 Historical measurements remain in `specs/feature/base-knuth–liang/` and describe
 the earlier API and harness. Their preparation and mixed-language workloads
 must not be treated as directly equivalent to the new ones.
+
+Khristov preparation retains alphabet/classification lookups and snapshotted
+exceptions, proportional to supplied language data. Standard preparation also
+retains its pattern trie. These are instance costs, separate from temporary
+formatting memory: normalization, grapheme boundaries, classes, barrier marks,
+candidates and reconstructed output scale with the processed word/input and
+inserted output. There is no persistent word cache. The harness measures elapsed
+time, not heap allocation; these memory costs describe the implementation, not
+measured byte counts. Historical reports are preserved with their original labels.

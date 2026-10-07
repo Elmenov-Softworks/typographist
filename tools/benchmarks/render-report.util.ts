@@ -22,7 +22,7 @@ const comparison = (result: ProcessingResult, baseline: ImplementationResult | u
 };
 
 export const renderReport = (report: BenchmarkReport) => {
-  const baseline = report.implementations.find(({ id }) => id === 'legacy');
+  const baseline = report.implementations.find(({ id }) => id === 'current-standard');
   const preparation = report.implementations
     .map(
       (implementation) => `<tr>
@@ -70,13 +70,14 @@ export const renderReport = (report: BenchmarkReport) => {
 ${escapeHtml(report.cpu ?? 'Unknown CPU')} · ${escapeHtml(report.os)}</p>
 <p>Implementation: <code>${escapeHtml(report.implementationCommit)}</code>${report.workingTreeDirty ? ' + working tree changes' : ''}<br>
 Legacy: <code>${escapeHtml(report.legacyModule ?? 'not measured')}</code> · commit ${escapeHtml(report.legacyCommit ?? 'not specified')}</p>
-<p>Both requested modes currently run Knuth–Liang. Each measurement uses ${String(report.warmupIterations)} warm-ups and ${String(report.sampleCount)} samples.
-Outputs are checked for preservation, idempotence, grapheme boundaries and, when supplied, equality with the legacy implementation.</p>
+<p>Standard mode runs Knuth–Liang; fast mode runs Khristov. Each measurement uses ${String(report.warmupIterations)} warm-ups and ${String(report.sampleCount)} samples.
+Outputs are checked for preservation, idempotence and grapheme boundaries. Fast mode also checks its own expected-output fixtures.
+When supplied, legacy output equality is checked only for Knuth–Liang implementations.</p>
 <h2>Instance preparation</h2>
 <p>Includes compilation of both locales and creation of ready-to-use formatters. Module loading is excluded.</p>
 <div class="scroll"><table><thead><tr><th>Implementation</th><th>Actual algorithm</th><th>Median, ms</th><th>Min / max, ms</th></tr></thead><tbody>${preparation}</tbody></table></div>
 <h2>Formatting</h2>
-<p>Lower latency is better. Relative speed = legacy median / selected median; above 1 means faster on this run. Timing variation is visible in all retained samples.</p>
+<p>Lower latency is better. Relative speed = current standard median / selected median; above 1 means faster on this run. Algorithms can produce different breaks. Timing variation is visible in all retained samples.</p>
 <div class="filters"><label>Workload <input id="search" type="search" placeholder="Filter workloads"></label>
 <label>Implementation <select id="implementation"><option value="">All</option>${options}</select></label></div>
 <div class="scroll"><table><thead><tr><th>Workload</th><th>Implementation</th><th>Median, ms</th><th>Min / max, ms</th><th>Million UTF-16/s</th><th>Relative speed</th><th>Samples</th></tr></thead><tbody id="results">${rows}</tbody></table></div>
