@@ -1,7 +1,7 @@
 import type { ITypographistRules } from '@/rules/typographist-rules.interfaces.js';
 import * as api from '@/index.js';
 import { Typographist, TypographistRules } from '@/index.js';
-import type { CompiledRules } from '@/index.js';
+import type { CompiledRules, KhristovRules } from '@/index.js';
 import { locales } from '@/rules/locale.constants.js';
 
 class TestRules extends TypographistRules implements ITypographistRules {
@@ -12,7 +12,19 @@ class TestRules extends TypographistRules implements ITypographistRules {
     this.#rules = { locale, alphabet: 'abcdefghijklmnopqrstuvwxyz', leftMin: 1, rightMin: 1, patterns };
   }
 
-  override compile = vi.fn((_useFast: boolean) => this.#rules);
+  override compile = vi.fn((useFast: boolean) =>
+    useFast
+      ? {
+          locale: this.#rules.locale,
+          alphabet: this.#rules.alphabet,
+          leftMin: 1,
+          rightMin: 1,
+          vowels: 'aeiouy',
+          consonants: 'bcdfghjklmnpqrstvwxz',
+          specialLetters: '',
+        }
+      : this.#rules,
+  );
 }
 
 describe('public package API', () => {
@@ -30,6 +42,15 @@ describe('public package API', () => {
 
   it('infers custom locales from supplied rules and supports declared dynamic locales', () => {
     const rules = new TypographistRules({
+      fast: {
+        locale: 'de',
+        alphabet: 'abcd',
+        leftMin: 1,
+        rightMin: 1,
+        vowels: 'a',
+        consonants: 'bcd',
+        specialLetters: '',
+      },
       standard: { locale: 'de', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
     });
     const configured = new Typographist({ locale: 'de', rules: [rules] });
@@ -46,9 +67,27 @@ describe('public package API', () => {
   it('extends a declared union with both custom locales alongside bundled locales', () => {
     const typographist = new Typographist<'de' | 'zu'>();
     const german = new TypographistRules({
+      fast: {
+        locale: 'de',
+        alphabet: 'abcd',
+        leftMin: 1,
+        rightMin: 1,
+        vowels: 'a',
+        consonants: 'bcd',
+        specialLetters: '',
+      },
       standard: { locale: 'de', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
     });
     const zulu = new TypographistRules({
+      fast: {
+        locale: 'zu',
+        alphabet: 'abcd',
+        leftMin: 1,
+        rightMin: 1,
+        vowels: 'a',
+        consonants: 'bcd',
+        specialLetters: '',
+      },
       standard: { locale: 'zu', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['b1c'] },
     });
     typographist.addRules(german);
@@ -95,8 +134,8 @@ describe('public package API', () => {
     const rules = new TestRules();
     const typographist = new Typographist({ rules: [rules], useFast });
 
-    expect(typographist.format('Abcd!')).toBe('A\u00adbcd!');
-    expect(typographist.format('abcd')).toBe('a\u00adbcd');
+    expect(typographist.format('Abcd!')).toBe(useFast ? 'Abcd!' : 'A\u00adbcd!');
+    expect(typographist.format('abcd')).toBe(useFast ? 'abcd' : 'a\u00adbcd');
     expect(rules.compile).toHaveBeenCalledExactlyOnceWith(useFast);
     expect(() => typographist.format('асбест', 'ru')).toThrow('Unregistered locale');
   });
@@ -143,17 +182,52 @@ describe('public package API', () => {
     expect(typographist.format('abcd')).toBe('a\u00adbcd');
   });
 
-  it('selects mode-specific rule sets and falls back to standard rules', () => {
+  it('selects algorithm-specific custom data without fallback', () => {
     const standard: CompiledRules = { locale: 'en', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] };
-    const fast: CompiledRules = { ...standard, patterns: ['b1c'] };
+    const fast: KhristovRules = {
+      locale: 'en',
+      alphabet: 'abcd',
+      leftMin: 1,
+      rightMin: 1,
+      vowels: 'ac',
+      consonants: 'bd',
+      specialLetters: '',
+    };
     const rules = new TypographistRules({ standard, fast });
 
+    expect(rules.compile(false)).toBe(standard);
+    expect(rules.compile(true)).toBe(fast);
+    expect(new Typographist({ rules: [rules] }).format('baba')).toBe('ba\u00adba');
+    expect(new Typographist({ rules: [rules], useFast: true }).format('baba')).toBe('ba\u00adba');
     expect(new Typographist({ rules: [rules] }).format('abcd')).toBe('a\u00adbcd');
-    expect(new Typographist({ rules: [rules], useFast: true }).format('abcd')).toBe('ab\u00adcd');
-    expect(new Typographist({ rules: [new TypographistRules({ standard })], useFast: true }).format('abcd')).toBe(
-      'a\u00adbcd',
-    );
+    expect(new Typographist({ rules: [rules], useFast: true }).format('abcd')).toBe('abcd');
+    const missing = new TypographistRules({ standard, fast });
+    Reflect.set(missing, 'compile', () => standard);
+    expect(() => new Typographist({ rules: [missing], useFast: true })).toThrow('requires Khristov');
+    const incomplete: unknown = Reflect.construct(TypographistRules, [{ standard }]);
+    if (!(incomplete instanceof TypographistRules)) throw new Error('Missing rules instance');
+    expect(() => new Typographist({ rules: [incomplete], useFast: true })).toThrow('Supply data');
     expect(() => new Typographist({ rules: [new TypographistRules()] })).toThrow('Supply rule sets');
+  });
+
+  it.each([false, true])('retains registration when selected data is incompatible with useFast=%s', (useFast) => {
+    const instance = new Typographist({ useFast });
+    const replacement = new TestRules();
+    Reflect.set(replacement, 'compile', () =>
+      useFast
+        ? { locale: 'en', alphabet: 'ab', leftMin: 1, rightMin: 1, patterns: [] }
+        : { locale: 'en', alphabet: 'ab', leftMin: 1, rightMin: 1, vowels: 'a', consonants: 'b', specialLetters: '' },
+    );
+
+    expect(() => {
+      instance.addRules(replacement);
+    }).toThrow('requires');
+    expect(instance.format('table')).toBe('ta\u00adble');
+  });
+
+  it('uses Khristov for bundled fast processing', () => {
+    expect(new Typographist({ useFast: true }).format('hyphenation')).toBe('hyp\u00adhe\u00adna\u00adtion');
+    expect(new Typographist().format('hyphenation')).toBe('hy\u00adphen\u00adation');
   });
 
   it('rejects duplicate or missing default locales in configuration', () => {
@@ -203,8 +277,8 @@ describe('public package API', () => {
     expect(typographist.format('abcd')).toBe('a\u00adbcd');
   });
 
-  it('preserves addresses, identifiers and Unicode and stays idempotent', () => {
-    const typographist = new Typographist();
+  it.each([false, true])('preserves addresses, identifiers and Unicode with useFast=%s', (useFast) => {
+    const typographist = new Typographist({ useFast });
     const text = 'TABLE userName ISO9001 a@example.com https://example.com/table 😀 table';
     const output = typographist.format(text);
 

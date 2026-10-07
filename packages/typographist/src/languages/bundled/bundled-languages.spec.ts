@@ -1,3 +1,4 @@
+import { englishKhristovRules } from '@/languages/bundled/khristov-data.constants.js';
 import { Typographist, TypographistRules } from '@/index.js';
 import { createBundledRules } from '@/rules/bundled/bundled-rules.js';
 import { patterns as ruPatterns, exceptions as ruExceptions } from '@/languages/bundled/ru-data.constants.js';
@@ -38,6 +39,7 @@ describe('pinned bundled language data', () => {
     const english = createBundledRules()[0];
     if (english === undefined) throw new Error('Missing bundled English rules');
     const replacement = new TypographistRules({
+      fast: englishKhristovRules,
       standard: { ...english.compile(false), patterns: [], exceptions: [] },
     });
     const instance = new Typographist();
