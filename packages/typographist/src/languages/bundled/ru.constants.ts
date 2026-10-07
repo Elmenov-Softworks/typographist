@@ -1,6 +1,6 @@
-import type { KnuthLiangPlugin } from '../../algorithms/knuth-liang/knuth-liang-plugin.types.js';
-import { createAlphabetNormalizer } from '../word-analysis.util.js';
-import { exceptions, patterns } from './ru-data.constants.js';
+import type { KnuthLiangPlugin } from '@/algorithms/knuth-liang/knuth-liang-plugin.types.js';
+import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
+import { exceptions, patterns } from '@/languages/bundled/ru-data.constants.js';
 
 export const ru: KnuthLiangPlugin = Object.freeze({
   id: 'ru',

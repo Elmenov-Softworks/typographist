@@ -1,4 +1,6 @@
-import { createAlphabetNormalizer, getGraphemeBoundaries, validateWordAnalysis } from './word-analysis.util.js';
+import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
+import { getGraphemeBoundaries } from '@/languages/analysis/grapheme-boundaries.util.js';
+import { validateWordAnalysis } from '@/languages/analysis/validate-word-analysis.util.js';
 
 const russian = createAlphabetNormalizer('абвгдеёжзийклмнопрстуфхцчшщъыьэюя');
 

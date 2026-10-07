@@ -1,5 +1,5 @@
-import { getGraphemeBoundaries } from '../languages/word-analysis.util.js';
-import { insertWordBreaks } from './insert-word-breaks.util.js';
+import { getGraphemeBoundaries } from '@/languages/analysis/grapheme-boundaries.util.js';
+import { insertWordBreaks } from '@/text/word-breaks/insert-word-breaks.util.js';
 
 const insert = (word: string, positions: unknown, leftMin = 1, rightMin = 1) =>
   insertWordBreaks(word, positions, getGraphemeBoundaries(word), leftMin, rightMin);

@@ -13,7 +13,7 @@ Before timing, the harness checks source exception examples, preservation after 
 
 Workloads include short English, Russian and English paragraphs, repeated words, and 2,000 deterministic pseudorandom 12-letter ASCII words (seed 42, no word cache). Paragraphs include uppercase words, decomposed ё, unsupported stress marks, emoji, existing soft hyphens, identifiers, email, and a URL. Mixed paragraphs route words explicitly by Cyrillic presence. Increasing workloads target 1K, 4K, and 16K code units and record actual lengths. Adversarial workloads include single long ASCII words, one long combining-mark grapheme, dot-atom email near-matches without a dotted hostname, and scheme near-matches. Hashes identify exact generated inputs.
 
-The initial retained measurement is in `specs/runtime-hyphenation-benchmarks.json`. It measures runtime commit `4def2bdd980eafc3d7dad1f2438065ba1677ee81` on Node 24.19.0. Later runtime changes require rerunning these measurements. The implementation report is a separate delivery step.
+The initial retained measurement is in `specs/feature/base-knuth–liang/runtime-hyphenation-benchmarks.json`. It measures runtime commit `4def2bdd980eafc3d7dad1f2438065ba1677ee81` on Node 24.19.0. Later runtime changes require rerunning these measurements. The implementation report is a separate delivery step.
 
 The selected matcher is the baseline bounded trie with sparse nonzero terminal contributions and maximum merging for duplicate pattern keys. No competing representation was implemented or measured, and these results make no comparative speed claim. It has no cache or shared mutable word buffers. Further representation changes would need a measured benefit and equivalent correctness results.
 
@@ -23,4 +23,4 @@ For fixed bundled tables, L and terminal contributions are fixed and matching is
 
 The initial samples are consistent with linear input scaling over the tested sizes, including long words and combining runs. They are observations on one machine, not a guarantee for all lengths or runtime versions. Preparation and short-string samples show timing variation; retain the full samples rather than selecting the best run.
 
-The correction measurements are retained separately in `specs/runtime-hyphenation-benchmarks-p2.json` and identify runtime commit `4befa80ed77e0a3b088584509fba0add8b321eef`. The implementation report records both runs without changing the original measurement provenance.
+The correction measurements are retained separately in `specs/feature/base-knuth–liang/runtime-hyphenation-benchmarks-p2.json` and identify runtime commit `4befa80ed77e0a3b088584509fba0add8b321eef`. The implementation report records both runs without changing the original measurement provenance.

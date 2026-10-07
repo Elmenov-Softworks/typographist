@@ -7,6 +7,7 @@ type TrieNode = {
 const createNode = () => {
   const children = new Map<string, TrieNode>();
   const contributions: Contribution[] = [];
+
   return { children, contributions };
 };
 
@@ -68,20 +69,24 @@ export const preparePatternMatcher = (patterns: readonly string[]) => {
 
     for (const symbol of symbols) {
       let child = node.children.get(symbol);
+
       if (child === undefined) {
         child = createNode();
         node.children.set(symbol, child);
       }
+
       node = child;
     }
 
     // Duplicate character keys must retain stronger weights, regardless of registration order.
     const combined = new Map(node.contributions.map(({ offset, weight }) => [offset, weight]));
+
     for (const [offset, weight] of weights.entries()) {
       if (weight > (combined.get(offset) ?? 0)) {
         combined.set(offset, weight);
       }
     }
+
     node.contributions = Array.from(combined, ([offset, weight]) => ({ offset, weight }));
   }
 
@@ -95,13 +100,17 @@ export const preparePatternMatcher = (patterns: readonly string[]) => {
 
       for (let index = start; index < end; index += 1) {
         const symbol = anchored[index];
+
         if (symbol === undefined) {
           break;
         }
+
         const child = node.children.get(symbol);
+
         if (child === undefined) {
           break;
         }
+
         node = child;
 
         for (const { offset, weight } of node.contributions) {
@@ -112,11 +121,13 @@ export const preparePatternMatcher = (patterns: readonly string[]) => {
     }
 
     const positions: number[] = [];
+
     for (let boundary = 1; boundary < symbols.length; boundary += 1) {
       if ((weights[boundary + 1] ?? 0) % 2 === 1) {
         positions.push(boundary);
       }
     }
+
     return positions;
   };
 

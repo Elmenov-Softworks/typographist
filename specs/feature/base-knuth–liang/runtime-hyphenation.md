@@ -229,7 +229,7 @@ Follow the root `AGENTS.md`, `.codex/AGENTS.md`, and their routed supporting rul
 
 ## Implementation report
 
-Before handing the implementation over for manual review, commit `specs/runtime-hyphenation-report.md` with the delivered API and behavior, completed checks, remaining limitations, and reproducible Node.js benchmark results. Include:
+Before handing the implementation over for manual review, commit `specs/feature/base-knuth–liang/runtime-hyphenation-report.md` with the delivered API and behavior, completed checks, remaining limitations, and reproducible Node.js benchmark results. Include:
 
 - The measured implementation commit, pattern source revisions, Node.js version, OS/CPU, benchmark command, and dataset sizes/content descriptions.
 - Preparation time separately from processing with a reused prepared service; warm-up, iteration counts, timing units, and a summary of repeated samples rather than one best run.

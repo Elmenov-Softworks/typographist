@@ -1,9 +1,6 @@
-import type { WordNormalizer } from './word-analysis.types.js';
+import type { WordNormalizer } from '@/languages/analysis/word-normalizer.types.js';
 
-export type HyphenationException = {
-  readonly word: string;
-  readonly positions: readonly number[];
-};
+import type { HyphenationException } from '@/languages/exceptions/hyphenation-exception.types.js';
 
 export type LanguageProfile = {
   readonly id: string;

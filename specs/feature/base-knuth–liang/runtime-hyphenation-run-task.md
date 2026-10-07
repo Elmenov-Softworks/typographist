@@ -4,7 +4,7 @@ Use the prompt below in the session that will start the implementation. The owne
 
 ## Prompt
 
-Implement the approved specification at `specs/runtime-hyphenation.md` in `/home/alex/projects/elmenov-softworks/typographist` using the `run-task` orchestrator. Read the full specification, including its report and execution-authorization sections, and the applicable `AGENTS.md` rules before starting.
+Implement the approved specification at `specs/feature/base-knuth–liang/runtime-hyphenation.md` in `/home/alex/projects/elmenov-softworks/typographist` using the `run-task` orchestrator. Read the full specification, including its report and execution-authorization sections, and the applicable `AGENTS.md` rules before starting.
 
 Inspect `/home/alex/projects/ai-rules/scripts/run-task.sh` and its current documented options. Launch its standard `--approve` flow on an existing clean feature branch, with the repository above, the approved specification, and GitHub repository `Elmenov-Softworks/typographist`. The owner permits ordinary base-branch merges into the task branch, pushing the task feature branch, and creating/updating its PR after the configured checks and independent agent review. No manual stop before push is required. Preserve unrelated work; do not discard or stash changes to satisfy preflight. Keep coordinator state and logs locally and report the run directory.
 
@@ -22,6 +22,6 @@ Complete the additional core-package, consumer, package-content, and benchmark v
 
 Use scoped implementation slices and independent review. Fix task-related failures and review findings within the authorized scope, following the runner's documented recovery procedure; do not waive checks or conceal blockers. Preserve the runtime contracts, approved data sources, and package boundaries. Do not implement DOM/framework wrappers or Khristov in this task.
 
-Produce and commit `specs/runtime-hyphenation-report.md` as required by the specification. Include actual reproducible Node.js measurements of preparation and full-service processing, representative and adversarial datasets, scaling, iteration/warm-up details, environment, measured implementation revision, considered optimizations, check outcomes, and limitations. Keep results current with the final runtime code. No benchmark dependency or comparison with other libraries is required.
+Produce and commit `specs/feature/base-knuth–liang/runtime-hyphenation-report.md` as required by the specification. Include actual reproducible Node.js measurements of preparation and full-service processing, representative and adversarial datasets, scaling, iteration/warm-up details, environment, measured implementation revision, considered optimizations, check outcomes, and limitations. Keep results current with the final runtime code. No benchmark dependency or comparison with other libraries is required.
 
 At completion, report the delivered behavior, commit IDs, PR URL and reviewed head, local and GitHub check outcomes, benchmark command, a compact table of measured results, report path, and remaining issues. Leave the PR for manual owner review. Do not merge the PR, push the base branch or tags, release packages, or publish documentation. Report any blocking failure honestly rather than claiming the run completed.

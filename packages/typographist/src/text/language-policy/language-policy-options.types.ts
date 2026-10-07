@@ -1,4 +1,4 @@
-import type { HyphenationException } from '../languages/language-profile.types.js';
+import type { HyphenationException } from '@/languages/exceptions/hyphenation-exception.types.js';
 
 export type LanguagePolicyOptions = {
   readonly leftMin?: number;

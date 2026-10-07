@@ -21,19 +21,23 @@ export const insertWordBreaks = (
     if (typeof position !== 'number') {
       throw new TypeError('Algorithm word breaks must contain numeric offsets');
     }
+
     if (!Number.isSafeInteger(position) || position <= previous || position >= word.length) {
       throw new RangeError('Algorithm word breaks must be increasing unique offsets inside the word');
     }
 
     for (; graphemeIndex < graphemes.length; graphemeIndex += 1) {
       const boundary = graphemes[graphemeIndex];
+
       if (boundary !== undefined && boundary >= position) {
         break;
       }
     }
+
     if (graphemes[graphemeIndex] !== position) {
       throw new RangeError('Algorithm word break must be at an original grapheme boundary');
     }
+
     previous = position;
 
     if (graphemeIndex >= leftMin && length - graphemeIndex >= rightMin) {
@@ -45,6 +49,8 @@ export const insertWordBreaks = (
   if (copied === 0) {
     return word;
   }
+
   parts.push(word.slice(copied));
+
   return parts.join('');
 };

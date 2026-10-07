@@ -1,6 +1,6 @@
-import { prepareKnuthLiang } from '../algorithms/knuth-liang/prepare-knuth-liang.factory.js';
-import { createAlphabetNormalizer } from '../languages/word-analysis.util.js';
-import { prepareLanguagePolicy } from './prepare-language-policy.util.js';
+import { prepareKnuthLiang } from '@/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
+import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
+import { prepareLanguagePolicy } from '@/text/language-policy/prepare-language-policy.util.js';
 
 const engine = prepareKnuthLiang([
   {
@@ -13,6 +13,7 @@ const engine = prepareKnuthLiang([
   },
 ]);
 const profile = engine.languages[0];
+
 if (profile === undefined) throw new Error('Missing test profile');
 
 describe('prepareLanguagePolicy', () => {
@@ -68,6 +69,7 @@ describe('prepareLanguagePolicy', () => {
   it('maps canonical equivalents through the same normalizer', () => {
     const policy = prepareLanguagePolicy(profile, { exceptions: [{ word: 'ёлка', positions: [2] }] });
     const analysis = profile.normalize('е\u0308лка');
+
     if (analysis === null) throw new Error('Unsupported test word');
 
     expect(policy.exceptionBreaks(analysis)).toEqual([3]);

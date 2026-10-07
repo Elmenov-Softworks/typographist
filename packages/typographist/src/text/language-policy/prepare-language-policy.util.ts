@@ -1,16 +1,18 @@
-import { prepareExceptionTable } from '../languages/exception-table.util.js';
-import type { PreparedLanguageProfile } from '../languages/prepared-language-profile.types.js';
-import type { LanguagePolicyOptions } from './language-policy-options.types.js';
+import { prepareExceptionTable } from '@/languages/exceptions/exception-table.util.js';
+import type { PreparedLanguageProfile } from '@/languages/prepared-language-profile.types.js';
+import type { LanguagePolicyOptions } from '@/text/language-policy/language-policy-options.types.js';
 
 const validateLimit = (value: unknown, minimum: number, option: string, language: string) => {
   if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < minimum) {
     throw new RangeError(`${option} for language ${language} must be a safe integer at least ${String(minimum)}`);
   }
+
   return value;
 };
 
 export const prepareLanguagePolicy = (profile: PreparedLanguageProfile, options: LanguagePolicyOptions = {}) => {
   const input: unknown = options;
+
   if (typeof input !== 'object' || input === null || Array.isArray(input)) {
     throw new TypeError(`Language policy for ${profile.id} must be an object`);
   }

@@ -1,10 +1,12 @@
-import { createHyphenator, prepareKnuthLiang } from './index.js';
-import type { KnuthLiangPlugin, PreparedAlgorithm, WordNormalizer } from './index.js';
+import { createHyphenator, prepareKnuthLiang } from '@/index.js';
+import type { KnuthLiangPlugin, PreparedAlgorithm } from '@/index.js';
+import type { WordNormalizer } from '@/languages/analysis/word-normalizer.types.js';
 
 const normalize: WordNormalizer = (word) => {
   if (!/^[a-z]+$/i.test(word)) {
     return null;
   }
+
   return {
     symbols: Array.from(word.toLowerCase()),
     boundaries: Array.from({ length: word.length + 1 }, (_, index) => index),

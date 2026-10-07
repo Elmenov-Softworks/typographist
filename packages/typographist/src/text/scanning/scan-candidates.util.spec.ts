@@ -1,4 +1,4 @@
-import { scanCandidates } from './scan-candidates.util.js';
+import { scanCandidates } from '@/text/scanning/scan-candidates.util.js';
 
 const words = (text: string) => scanCandidates(text).map(({ start, end }) => text.slice(start, end));
 
@@ -39,6 +39,7 @@ describe('scanCandidates', () => {
 
   it('retains variation selectors and supplementary letters with UTF-16 offsets', () => {
     const text = '😀 𐐀a\ufe0f!';
+
     expect(scanCandidates(text)).toEqual([{ start: 3, end: 7 }]);
     expect(words(text)).toEqual(['𐐀a\ufe0f']);
   });
@@ -56,6 +57,7 @@ describe('scanCandidates', () => {
     const marked = `a${'\u0301'.repeat(10000)}b`;
     const embedded = `a${'\u200d'.repeat(10000)}b`;
     const trailing = `c${'\ud800'.repeat(10000)}`;
+
     expect(words(`${marked} ${embedded} ${trailing} d`)).toEqual([marked, embedded, 'c', 'd']);
   });
 });

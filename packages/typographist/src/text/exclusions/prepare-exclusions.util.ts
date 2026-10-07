@@ -2,9 +2,11 @@ const readToggle = (name: string, value: unknown) => {
   if (value === undefined) {
     return true;
   }
+
   if (typeof value !== 'boolean') {
     throw new TypeError(`Exclusion option ${name} must be a boolean`);
   }
+
   return value;
 };
 
@@ -18,6 +20,7 @@ export const prepareExclusions = (options: unknown = {}) => {
   const underscores = readToggle('underscores', 'underscores' in options ? options.underscores : undefined);
   const camelCase = readToggle('camelCase', 'camelCase' in options ? options.camelCase : undefined);
   const custom = 'custom' in options ? options.custom : undefined;
+
   if (custom !== undefined && typeof custom !== 'function') {
     throw new TypeError('Exclusion option custom must be a synchronous predicate');
   }
@@ -26,6 +29,7 @@ export const prepareExclusions = (options: unknown = {}) => {
     if (word.includes('\u00ad') || word.includes('\u2011')) {
       return true;
     }
+
     if (
       (numbers && /\p{N}/u.test(word)) ||
       (underscores && word.includes('_')) ||
@@ -33,14 +37,17 @@ export const prepareExclusions = (options: unknown = {}) => {
     ) {
       return true;
     }
+
     if (custom === undefined) {
       return false;
     }
 
     const result: unknown = Reflect.apply(custom, null, [word]);
+
     if (typeof result !== 'boolean') {
       throw new TypeError('Custom exclusion must return a synchronous boolean');
     }
+
     return result;
   };
 

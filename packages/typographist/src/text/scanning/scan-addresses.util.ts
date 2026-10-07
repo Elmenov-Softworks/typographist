@@ -1,4 +1,4 @@
-import type { CandidateSpan } from './candidate-span.types.js';
+import type { CandidateSpan } from '@/text/scanning/candidate-span.types.js';
 
 const asciiLetter = /[A-Za-z]/;
 const schemeCharacter = /[A-Za-z0-9+.-]/;
@@ -8,9 +8,11 @@ const addressDelimiter = /[\s"'<>]/u;
 
 const urlEnd = (text: string, start: number) => {
   let end = start;
+
   while (end < text.length && !addressDelimiter.test(text.charAt(end))) {
     end += 1;
   }
+
   return end;
 };
 
@@ -21,22 +23,28 @@ const hostnameEnd = (text: string, start: number) => {
 
   while (offset < text.length) {
     const character = text.charAt(offset);
+
     if (hostnameCharacter.test(character)) {
       if (offset === labelStart && character === '-') {
         return null;
       }
+
       offset += 1;
       continue;
     }
+
     if (character !== '.') {
       break;
     }
+
     if (offset === labelStart || text.charAt(offset - 1) === '-') {
       return null;
     }
+
     if (!hostnameCharacter.test(text.charAt(offset + 1))) {
       break;
     }
+
     dots += 1;
     offset += 1;
     labelStart = offset;
@@ -45,6 +53,7 @@ const hostnameEnd = (text: string, start: number) => {
   if (dots === 0 || offset === labelStart || text.charAt(offset - 1) === '-') {
     return null;
   }
+
   return offset;
 };
 
@@ -74,6 +83,7 @@ export const scanAddresses = (text: string) => {
 
     if (character === '@' && localStart !== null && !invalidLocalDots && text.charAt(offset - 1) !== '.') {
       const end = hostnameEnd(text, offset + 1);
+
       if (end !== null) {
         spans.push({ start: localStart, end });
         offset = end;

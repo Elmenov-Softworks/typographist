@@ -1,4 +1,4 @@
-import { createHyphenator, enUS, prepareKnuthLiang, ru } from '../../index.js';
+import { createHyphenator, enUS, prepareKnuthLiang, ru } from '@/index.js';
 
 const algorithm = prepareKnuthLiang([ru, enUS]);
 const russian = createHyphenator({ algorithm, defaultLanguage: 'ru' });
@@ -59,6 +59,7 @@ describe('pinned bundled language data', () => {
     expect(Object.isFrozen(ru)).toBe(true);
     expect(Object.isFrozen(ru.patterns)).toBe(true);
     expect(Object.isFrozen(ru.exceptions?.[0]?.positions)).toBe(true);
+
     const replacement = prepareKnuthLiang([{ ...enUS, patterns: [], exceptions: [] }]);
     const service = createHyphenator({ algorithm: replacement, defaultLanguage: 'en-US' });
 

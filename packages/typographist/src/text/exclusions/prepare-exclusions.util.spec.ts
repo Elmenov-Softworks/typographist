@@ -1,4 +1,4 @@
-import { prepareExclusions } from './prepare-exclusions.util.js';
+import { prepareExclusions } from '@/text/exclusions/prepare-exclusions.util.js';
 
 describe('prepared exclusions', () => {
   it.each([
@@ -16,6 +16,7 @@ describe('prepared exclusions', () => {
 
   it.each([() => Promise.resolve(false), () => null, () => 1])('rejects non-boolean custom results', (custom) => {
     const options = { custom };
+
     expect(() => {
       prepareExclusions(options).preserves('word');
     }).toThrow(TypeError);
@@ -36,6 +37,7 @@ describe('prepared exclusions', () => {
     const policy = prepareExclusions({ addresses: false, numbers: false, underscores: false, camelCase: false });
 
     expect(policy.addresses).toBe(false);
+
     for (const word of ['v2', 'user_name', 'userName']) {
       expect(policy.preserves(word)).toBe(false);
     }

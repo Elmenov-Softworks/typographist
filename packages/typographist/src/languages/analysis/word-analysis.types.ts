@@ -3,5 +3,3 @@ export type WordAnalysis = {
   readonly symbols: readonly string[];
   readonly boundaries: readonly (number | null)[];
 };
-
-export type WordNormalizer = (word: string) => WordAnalysis | null;

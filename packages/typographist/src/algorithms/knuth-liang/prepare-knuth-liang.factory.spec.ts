@@ -1,6 +1,6 @@
-import { createAlphabetNormalizer } from '../../languages/word-analysis.util.js';
-import type { KnuthLiangPlugin } from './knuth-liang-plugin.types.js';
-import { prepareKnuthLiang } from './prepare-knuth-liang.factory.js';
+import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
+import type { KnuthLiangPlugin } from '@/algorithms/knuth-liang/knuth-liang-plugin.types.js';
+import { prepareKnuthLiang } from '@/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
 
 const normalize = createAlphabetNormalizer('abcdefghijklmnopqrstuvwxyzё');
 const plugin: KnuthLiangPlugin = {
@@ -37,6 +37,7 @@ describe('prepareKnuthLiang', () => {
     const mutable = { ...plugin, patterns, exceptions };
     const engine = prepareKnuthLiang([mutable]);
     const profile = engine.languages[0];
+
     if (profile === undefined) throw new Error('Missing prepared profile');
 
     patterns[0] = 'a2b';

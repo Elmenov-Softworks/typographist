@@ -1,4 +1,4 @@
-import { scanAddresses } from './scan-addresses.util.js';
+import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
 
 const addresses = (text: string) => scanAddresses(text).map(({ start, end }) => text.slice(start, end));
 
@@ -35,6 +35,7 @@ describe('scanAddresses', () => {
 
   it('returns ordered original UTF-16 spans without interpreting markup', () => {
     const text = '😀 <a@host.com> https://host/😀';
+
     expect(scanAddresses(text)).toEqual([
       { start: 4, end: 14 },
       { start: 16, end: text.length },
@@ -51,6 +52,7 @@ describe('scanAddresses', () => {
     const local = 'a.'.repeat(10000);
     const host = 'a'.repeat(10000);
     const text = `${local} ${host}@${host} ${host}:/word a@host.com`;
+
     expect(addresses(text)).toEqual(['a@host.com']);
   });
 

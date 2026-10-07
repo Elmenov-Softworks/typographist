@@ -1,13 +1,15 @@
-import { prepareExceptionTable } from './exception-table.util.js';
-import { createAlphabetNormalizer } from './word-analysis.util.js';
+import { prepareExceptionTable } from '@/languages/exceptions/exception-table.util.js';
+import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
 
 const normalize = createAlphabetNormalizer('abcdefghijklmnopqrstuvwxyzёлка');
 
 const analyze = (word: string) => {
   const analysis = normalize(word);
+
   if (analysis === null) {
     throw new Error('Unsupported test word');
   }
+
   return analysis;
 };
 
