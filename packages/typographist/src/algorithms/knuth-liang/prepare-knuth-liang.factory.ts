@@ -11,6 +11,13 @@ const validatePluginObject = (plugin: unknown) => {
   }
 };
 
+/**
+ * Compiles supplied language patterns and exceptions into a frozen algorithm and language profiles.
+ * Language identifiers are matched case-insensitively without region fallback. Duplicate registrations,
+ * invalid plugin data, patterns, or exceptions are rejected during preparation.
+ * Pattern breaks are mapped to original UTF-16 offsets, skipping boundaries inside normalized expansions.
+ * Exception lookup and minimum-length filtering are left to the hyphenation service.
+ */
 export const prepareKnuthLiang = (plugins: readonly KnuthLiangPlugin[]) => {
   if (!Array.isArray(plugins)) {
     throw new TypeError('Knuth–Liang plugins must be an array');

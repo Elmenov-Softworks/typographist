@@ -15,6 +15,28 @@ const requireObject = (value: unknown, name: string) => {
   }
 };
 
+/**
+ * Creates a synchronous text hyphenator that inserts soft hyphens while preserving original characters.
+ * Snapshots language profiles, policies, and exclusions and returns a frozen service with a `hyphenate` method.
+ *
+ * Each call can override the default language; `wordSelector` can then select a language for each word
+ * or return `null` to preserve it. Excluded words and words rejected by the normalizer remain unchanged.
+ * User exceptions take precedence over profile exceptions, followed by algorithm breaks. All breaks
+ * must satisfy the configured word-length and grapheme minima.
+ *
+ * Invalid configuration, unregistered languages, and malformed callback results throw errors.
+ * Errors thrown by callbacks propagate to the caller.
+ *
+ * @example
+ * ```ts
+ * import { createHyphenator, enUS, prepareKnuthLiang, ru } from '@elmenov-softworks/typographist';
+ *
+ * const algorithm = prepareKnuthLiang([enUS, ru]);
+ * const service = createHyphenator({ algorithm, defaultLanguage: 'en-US' });
+ * service.hyphenate('Typography');
+ * service.hyphenate('типография', { language: 'ru' });
+ * ```
+ */
 export const createHyphenator = (options: HyphenationOptions) => {
   requireObject(options, 'Hyphenation options');
   const { algorithm, wordSelector } = options;
