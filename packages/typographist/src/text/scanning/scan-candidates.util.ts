@@ -10,7 +10,6 @@ const readSymbol = (text: string, offset: number) => {
   return codePoint === undefined ? '' : String.fromCodePoint(codePoint);
 };
 
-/** Visible hyphens separate components; non-breaking hyphens keep a compound together. */
 export const scanCandidates = (text: string) => {
   const candidates: CandidateSpan[] = [];
   let offset = 0;

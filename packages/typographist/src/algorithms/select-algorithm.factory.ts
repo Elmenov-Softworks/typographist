@@ -5,6 +5,5 @@ export const selectAlgorithm = (useFast: boolean) => {
     throw new TypeError('useFast must be a boolean');
   }
 
-  // Both modes use Knuth–Liang until the fast strategy is implemented.
   return prepareKnuthLiang;
 };

@@ -2,7 +2,6 @@ import type { HyphenationException } from '@/languages/exceptions/hyphenation-ex
 import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
 import type { WordNormalizer } from '@/languages/analysis/word-normalizer.types.js';
 
-/** Stores normalized symbol boundaries, so equivalent spellings never reuse original UTF-16 offsets. */
 export const prepareExceptionTable = (entries: readonly HyphenationException[], normalize: WordNormalizer) => {
   if (!Array.isArray(entries)) {
     throw new TypeError('Language exceptions must be an array');

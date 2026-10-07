@@ -1,4 +1,3 @@
-/** Uses the word's previously computed grapheme boundaries for validation and limits. */
 export const insertWordBreaks = (
   word: string,
   result: unknown,

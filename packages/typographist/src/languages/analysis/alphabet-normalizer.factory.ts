@@ -1,6 +1,5 @@
 import { graphemeSegmenter } from '@/languages/analysis/grapheme-segmenter.constants.js';
 
-/** NFC composition and case expansion retain each original grapheme as a single mapping unit. */
 export const createAlphabetNormalizer = (alphabet: string) => {
   const supported = new Set(alphabet);
 

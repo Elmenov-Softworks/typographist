@@ -53,7 +53,6 @@ const parsePattern = (pattern: unknown) => {
   return { symbols, weights };
 };
 
-/** Compiles once; returned positions are inter-symbol boundaries, before original-offset mapping or text limits. */
 export const preparePatternMatcher = (patterns: readonly string[]) => {
   if (!Array.isArray(patterns)) {
     throw new TypeError('Knuth–Liang patterns must be an array');
@@ -78,7 +77,6 @@ export const preparePatternMatcher = (patterns: readonly string[]) => {
       node = child;
     }
 
-    // Duplicate character keys must retain stronger weights, regardless of registration order.
     const combined = new Map(node.contributions.map(({ offset, weight }) => [offset, weight]));
 
     for (const [offset, weight] of weights.entries()) {

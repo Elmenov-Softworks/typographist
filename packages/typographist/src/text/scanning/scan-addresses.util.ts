@@ -57,7 +57,6 @@ const hostnameEnd = (text: string, start: number) => {
   return offset;
 };
 
-/** Protects scheme:// and www. spans, and ASCII dot-atom email addresses with dotted hostnames. */
 export const scanAddresses = (text: string) => {
   const spans: CandidateSpan[] = [];
   let schemeStart: number | null = null;

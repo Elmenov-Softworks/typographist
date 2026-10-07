@@ -4,7 +4,6 @@ import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
 import type { CompiledRules } from '@/rules/compiled-rules.types.js';
 import { preparePatternMatcher } from '@/algorithms/knuth-liang/pattern-matcher.util.js';
 
-/** Validates plugin data and prepares an independent matcher for one registered locale. */
 export const prepareKnuthLiang = (rules: CompiledRules) => {
   if (typeof rules.alphabet !== 'string' || rules.alphabet.length === 0) {
     throw new TypeError('Rules require a nonempty alphabet');
