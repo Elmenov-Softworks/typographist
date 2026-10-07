@@ -20,6 +20,61 @@ const plugin: KnuthLiangPlugin = {
 };
 
 describe('public package entry point', () => {
+  it('rejects deleted graphemes before exception lookup or algorithm invocation', () => {
+    const liang = prepareKnuthLiang([
+      {
+        ...plugin,
+        patterns: ['a1c'],
+        normalize: () => ({ symbols: ['a', 'c', 'd'], boundaries: [0, 1, 3, 4] }),
+      },
+    ]);
+    const exceptionBreaks = vi.fn(() => null);
+    const wordBreaks = vi.fn(liang.wordBreaks);
+    const algorithm: PreparedAlgorithm = {
+      languages: liang.languages.map((profile) => ({ ...profile, exceptionBreaks })),
+      wordBreaks,
+    };
+    const service = createHyphenator({ algorithm, defaultLanguage: 'custom' });
+
+    expect(() => service.hyphenate('abcd')).toThrow(RangeError);
+    expect(exceptionBreaks).not.toHaveBeenCalled();
+    expect(wordBreaks).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    {
+      word: 'A\u030Abcd',
+      symbols: ['å', 'b', 'c', 'd'],
+      boundaries: [0, 2, 3, 4, 5],
+      pattern: 'å1b',
+      expected: 'A\u030A\u00ADbcd',
+    },
+    {
+      word: 'İbcd',
+      symbols: ['i', '\u0307', 'b', 'c', 'd'],
+      boundaries: [0, null, 1, 2, 3, 4],
+      pattern: 'i1\u03071b',
+      expected: 'İ\u00ADbcd',
+    },
+    {
+      word: 'a\u0301bcd',
+      symbols: ['a', '\u0301', 'b', 'c', 'd'],
+      boundaries: [0, null, 2, 3, 4, 5],
+      pattern: 'a1\u03011b',
+      expected: 'a\u0301\u00ADbcd',
+    },
+  ])(
+    'retains complete graphemes and expansion mappings for $word',
+    ({ word, symbols, boundaries, pattern, expected }) => {
+      const algorithm = prepareKnuthLiang([
+        { ...plugin, normalize: () => ({ symbols, boundaries }), patterns: [pattern] },
+      ]);
+      const service = createHyphenator({ algorithm, defaultLanguage: 'custom' });
+
+      expect(service.hyphenate(word)).toBe(expected);
+    },
+  );
+
   it('prepares a caller-supplied plugin and synchronously processes text', () => {
     const algorithm = prepareKnuthLiang([plugin]);
     const service = createHyphenator({ algorithm, defaultLanguage: 'CUSTOM' });

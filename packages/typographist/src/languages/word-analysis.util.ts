@@ -33,10 +33,17 @@ export const validateWordAnalysis = (word: string, result: unknown) => {
     symbols.push(symbol);
   }
 
+  if (
+    result.boundaries.length !== symbols.length + 1 ||
+    result.boundaries[0] !== 0 ||
+    result.boundaries[result.boundaries.length - 1] !== word.length
+  ) {
+    throw new TypeError('Language analysis must map both endpoints and every inter-symbol boundary');
+  }
+
   const graphemes = getGraphemeBoundaries(word);
-  const originalBoundaries = new Set(graphemes);
   const boundaries: (number | null)[] = [];
-  let previous = -1;
+  let graphemeIndex = 0;
   for (const boundary of result.boundaries) {
     if (boundary === null) {
       boundaries.push(null);
@@ -45,19 +52,15 @@ export const validateWordAnalysis = (word: string, result: unknown) => {
     if (typeof boundary !== 'number') {
       throw new TypeError('Language analysis boundaries must be numbers or null');
     }
-    if (!Number.isSafeInteger(boundary) || boundary <= previous || !originalBoundaries.has(boundary)) {
+    if (!Number.isSafeInteger(boundary) || boundary !== graphemes[graphemeIndex]) {
       throw new RangeError('Language analysis contains an invalid original boundary');
     }
-    previous = boundary;
+    graphemeIndex += 1;
     boundaries.push(boundary);
   }
 
-  if (
-    boundaries.length !== symbols.length + 1 ||
-    boundaries[0] !== 0 ||
-    boundaries[boundaries.length - 1] !== word.length
-  ) {
-    throw new TypeError('Language analysis must map both endpoints and every inter-symbol boundary');
+  if (graphemeIndex !== graphemes.length) {
+    throw new RangeError('Language analysis must retain every original grapheme boundary');
   }
 
   const analysis: WordAnalysis = Object.freeze({
