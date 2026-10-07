@@ -31,8 +31,9 @@ The runtime requires standard Unicode normalization, property escapes, and `Intl
 
 ## Node measurements
 
-The retained [raw measurements](runtime-hyphenation-benchmarks.json) cover runtime implementation commit `4def2bdd980eafc3d7dad1f2438065ba1677ee81`. The subsequent benchmark commit `59c7269` adds only the harness, measurements, and benchmark documentation; this report does not change runtime code.
+The final [raw measurements](runtime-hyphenation-benchmarks-p2.json) cover runtime implementation commit `4befa80ed77e0a3b088584509fba0add8b321eef`, which corrects malformed plugin exception results. Only explicit `null` allows algorithm fallback; undefined, asynchronous, and other non-array results raise `TypeError` before algorithm invocation. User/plugin/algorithm precedence is preserved. Four regressions include a JavaScript-style callback with no return, introduced through `Reflect.set` without type assertions.
 
+The [original measurements](runtime-hyphenation-benchmarks.json) remain unchanged and identify their original runtime commit `4def2bdd980eafc3d7dad1f2438065ba1677ee81`. The final run used the same harness and fixtures. Configured checks ran concurrently on this host, so timing differences cannot be attributed to the small runtime correction alone.
 Environment: Node v24.19.0, ICU 78.3, Linux 6.18.33.2-microsoft-standard-WSL2, 13th Gen Intel Core i5-13420H. Reproduce from the repository root:
 
 ```sh
@@ -40,42 +41,44 @@ npm run build --workspace=@elmenov-softworks/typographist
 node tools/benchmarks/hyphenation.ts "$(git rev-parse HEAD)" > /tmp/hyphenation-benchmarks.json
 ```
 
-The harness benchmarks emitted JavaScript, excluding build and Vitest startup. Preparation has three warm-ups and seven independently timed preparations of both languages. Preparation minimum/median/maximum is 20.64/23.89/36.39 ms. Processing reuses prepared services with three warm-ups per workload and seven samples. Each sample averages `max(1, min(200, floor(20000 / input.length)))` calls. Output lengths are consumed during timing and exact results checked after each sample; preflight also validates preservation, idempotence, known exceptions, and grapheme-safe insertions.
+The harness benchmarks emitted JavaScript, excluding build and Vitest startup. Preparation has three warm-ups and seven independently timed preparations of both languages. Preparation minimum/median/maximum is 19.41/30.40/35.92 ms. Processing reuses prepared services with three warm-ups per workload and seven samples. Each sample averages `max(1, min(200, floor(20000 / input.length)))` calls. Output lengths are consumed during timing and exact results checked after each sample; preflight also validates preservation, idempotence, known exceptions, and grapheme-safe insertions.
 
 The following figures are full-service milliseconds per call, not isolated matcher timings. Throughput uses input UTF-16 code units. All seven samples, iterations, output lengths, and input hashes are retained in the JSON.
 
 | Workload                | Input units | Min ms | Median ms | Max ms | Million units/s |
 | ----------------------- | ----------: | -----: | --------: | -----: | --------------: |
-| short-en                |          19 |  0.026 |     0.050 |  0.085 |           0.381 |
-| paragraph-ru            |          96 |  0.114 |     0.272 |  0.450 |           0.354 |
-| paragraph-en            |         187 |  0.102 |     0.266 |  0.338 |           0.703 |
-| repeated-words          |       28000 | 19.601 |    24.775 | 38.229 |           1.130 |
-| varied-vocabulary       |       25999 | 20.724 |    23.204 | 36.549 |           1.120 |
-| ru-1000                 |        1056 |  0.977 |     1.089 |  1.748 |           0.970 |
-| en-1000                 |        1122 |  0.532 |     0.602 |  1.632 |           1.863 |
-| mixed-1000              |        1132 |  0.752 |     0.929 |  2.038 |           1.219 |
-| long-word-1000          |        1000 |  0.462 |     0.562 |  1.715 |           1.778 |
-| combining-run-1000      |        1002 |  0.143 |     0.179 |  0.251 |           5.592 |
-| email-near-match-1000   |        1008 |  2.136 |     4.519 |  6.032 |           0.223 |
-| scheme-near-match-1000  |        1006 |  0.478 |     0.602 |  3.690 |           1.671 |
-| ru-4000                 |        4032 |  4.825 |     5.561 |  9.485 |           0.725 |
-| en-4000                 |        4114 |  2.536 |     2.732 |  9.702 |           1.506 |
-| mixed-4000              |        4245 |  3.008 |     3.605 |  9.819 |           1.178 |
-| long-word-4000          |        4000 |  1.644 |     1.798 |  4.831 |           2.224 |
-| combining-run-4000      |        4002 |  0.541 |     0.559 |  0.628 |           7.160 |
-| email-near-match-4000   |        4008 |  7.568 |     8.346 | 18.297 |           0.480 |
-| scheme-near-match-4000  |        4006 |  1.524 |     1.627 | 10.530 |           2.462 |
-| ru-16000                |       16032 | 14.897 |    16.464 | 35.216 |           0.974 |
-| en-16000                |       16082 |  7.226 |     7.968 | 23.796 |           2.018 |
-| mixed-16000             |       16131 |  9.740 |    11.172 | 30.691 |           1.444 |
-| long-word-16000         |       16000 |  7.816 |     8.095 | 13.966 |           1.976 |
-| combining-run-16000     |       16002 |  2.143 |     2.251 |  2.478 |           7.109 |
-| email-near-match-16000  |       16008 | 30.041 |    31.938 | 90.942 |           0.501 |
-| scheme-near-match-16000 |       16006 |  6.727 |     8.501 | 40.571 |           1.883 |
+| short-en                |          19 |  0.026 |     0.029 |  0.096 |           0.655 |
+| paragraph-ru            |          96 |  0.104 |     0.164 |  0.309 |           0.586 |
+| paragraph-en            |         187 |  0.115 |     0.203 |  0.369 |           0.920 |
+| repeated-words          |       28000 | 22.282 |    28.435 | 46.011 |           0.985 |
+| varied-vocabulary       |       25999 | 25.298 |    27.435 | 42.770 |           0.948 |
+| ru-1000                 |        1056 |  1.077 |     1.203 |  1.909 |           0.878 |
+| en-1000                 |        1122 |  0.519 |     0.572 |  0.844 |           1.962 |
+| mixed-1000              |        1132 |  0.798 |     0.843 |  2.078 |           1.342 |
+| long-word-1000          |        1000 |  0.500 |     0.642 |  1.315 |           1.557 |
+| combining-run-1000      |        1002 |  0.144 |     0.188 |  0.209 |           5.328 |
+| email-near-match-1000   |        1008 |  2.229 |     4.429 |  6.501 |           0.228 |
+| scheme-near-match-1000  |        1006 |  0.401 |     0.444 |  3.688 |           2.266 |
+| ru-4000                 |        4032 |  3.745 |     4.401 |  6.485 |           0.916 |
+| en-4000                 |        4114 |  1.930 |     2.235 |  6.846 |           1.841 |
+| mixed-4000              |        4245 |  2.675 |     3.105 |  6.809 |           1.367 |
+| long-word-4000          |        4000 |  1.870 |     2.335 |  6.409 |           1.713 |
+| combining-run-4000      |        4002 |  0.552 |     0.643 |  0.717 |           6.226 |
+| email-near-match-4000   |        4008 |  8.205 |     9.513 | 22.461 |           0.421 |
+| scheme-near-match-4000  |        4006 |  1.765 |     2.214 | 10.408 |           1.809 |
+| ru-16000                |       16032 | 14.004 |    19.123 | 38.073 |           0.838 |
+| en-16000                |       16082 |  9.380 |    10.355 | 29.458 |           1.553 |
+| mixed-16000             |       16131 | 13.797 |    16.559 | 47.080 |           0.974 |
+| long-word-16000         |       16000 |  7.656 |     8.426 | 13.831 |           1.899 |
+| combining-run-16000     |       16002 |  2.070 |     2.264 |  2.573 |           7.069 |
+| email-near-match-16000  |       16008 | 34.737 |    52.165 | 92.352 |           0.307 |
+| scheme-near-match-16000 |       16006 |  7.161 |     8.477 | 34.966 |           1.888 |
 
 Paragraphs include uppercase text, decomposed ё, unsupported stress, emoji, manual soft hyphens, identifiers, addresses, and URLs. Mixed text uses explicit Cyrillic-based selector routing. Repeated words contain 28,000 units; varied vocabulary contains 2,000 deterministic pseudorandom 12-letter ASCII words (seed 42), 25,999 units. Varied vocabulary is a matcher workload, not a linguistic corpus. Adversarial inputs include long individual ASCII words, long combining-mark graphemes, dot-atom email near-matches, and scheme near-matches. Construction and exact fixture contents are in [the harness](../tools/benchmarks/hyphenation.ts).
 
-From roughly 4K to 16K units, median times grow by 2.96× for Russian, 2.92× for English, 3.10× for mixed text, 4.50× for long words, 4.03× for combining runs, 3.83× for email near-matches, and 5.22× for scheme near-matches. Samples show substantial scheduling/GC variation. These sizes show no consistent quadratic trend; they do not prove scaling for every length or ICU version. Short workloads are especially noisy. No numerical performance gate or comparative library ranking was used.
+From roughly 4K to 16K units, median time ratios are: ru 4.35×, en 4.63×, mixed 5.33×, long-word 3.61×, combining-run 3.52×, email-near-match 5.48×, scheme-near-match 3.83×. Scheduling/GC variation and concurrent checks limit interpretation. These samples do not establish a consistent quadratic trend or prove scaling at all lengths. No numerical performance gate or comparative library ranking was used.
+
+For context, the previous/final preparation medians are 23.89/30.40 ms. Previous/final 16K medians are English 7.97/10.36 ms, Russian 16.46/19.12 ms, and mixed 11.17/16.56 ms. These are separate host runs, not a controlled performance comparison.
 
 ## Representation and complexity
 
@@ -87,10 +90,10 @@ For fixed bundled tables, L and contribution counts are fixed and M = O(N), yiel
 
 ## Verification and remaining limits
 
-Final worker checks on the unchanged runtime and benchmark implementation:
+Previously completed packaging, consumer, and conversion checks remain recorded below. Refreshed checks for the corrected runtime are identified explicitly:
 
-- `npm run test --workspace=@elmenov-softworks/typographist`: 184 tests pass across 12 files.
-- `npm test`: 199 tests pass across 15 files, including release regressions.
+- `npm run test --workspace=@elmenov-softworks/typographist`: 188 tests passed in the correction slice; the refreshed workspace run also includes these tests.
+- `npm test`: 203 tests pass across 15 files, including release regressions.
 - `npm run lint` and `npm run format:check`: pass; ESLint reports its existing multiple-project advisory.
 - `npm run typecheck`: root TypeScript step passes, but Nx emits sandbox socket errors and returns zero without demonstrated package execution.
 - `npm run build`: Nx likewise emits socket errors and returns zero without demonstrated builds. These Nx invocations are not counted as verified target execution.
@@ -100,7 +103,9 @@ Final worker checks on the unchanged runtime and benchmark implementation:
 - Local conversion verifies pinned hashes and counts; `git diff --exit-code` after regeneration confirms identical tables.
 - `npm pack --dry-run --json --workspace=@elmenov-softworks/typographist --cache=/tmp/typographist-pack-cache`: passes; 106 files, 121,504 compressed bytes. Inventory includes public ESM/declarations, both source files, provenance, and data notices.
 
-Worker evidence logs are `/tmp/typographist-final-{0,1,2,3,4}.log` (lint, formatting, root typecheck, workspace tests, Nx build) and `/tmp/typographist-extra-{0,1,2,3}.log` (direct package builds, direct package typechecks, core tests, pack inventory). The server check inputs are `/tmp/typographist-server-consumer.mts` and `/tmp/typographist-server-tsconfig.json`. These local logs are ephemeral; the coordinator independently verifies before publication.
+Refreshed correction evidence is in `/tmp/typographist-p2-{lint,format,typecheck,test,build,direct-typecheck,direct-build,core-build}.log`. Lint, formatting, all 203 workspace tests, and direct builds/type checks of all four packages passed. Root type checking completed its TypeScript step; both configured Nx commands again reported sandbox socket failures without demonstrated target execution. No sandbox settings were changed. The full benchmark run passed its output validation for every workload; the retained correction JSON contains all seven samples.
+
+Packaging, server-consumer, built-import, and conversion evidence above comes from the previous implementation verification, not a fresh run in this documentation slice. Previous logs are `/tmp/typographist-final-{0,1,2,3,4}.log` and `/tmp/typographist-extra-{0,1,2,3}.log`; server inputs are `/tmp/typographist-server-consumer.mts` and `/tmp/typographist-server-tsconfig.json`. Local logs are ephemeral. Coordinator verification and independent re-review remain required before publication.
 
 The empty wrapper packages remain unchanged; their individual CI test targets may still report no tests. No GitHub CI outcome is claimed here. Publication, independent review, report commit, and waiting for required PR checks belong to the coordinator. Nx target execution remains an environment verification limitation until the coordinator can run it in its permitted environment.
 
