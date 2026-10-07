@@ -34,7 +34,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "pattern-data"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js",
