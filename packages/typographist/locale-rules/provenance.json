@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/hyphenation/tex-hyphen",
+  "revision": "5684c0f51c0b81133db2efbe60a408b4155a3ff5",
+  "files": [
+    {
+      "file": "hyph-ru.tex",
+      "bytes": 68421,
+      "sha256": "ce988fcc66e5e29d7474df5ab5b489d3f52a50ebccf570997f992d84221b922a",
+      "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-ru.tex"
+    },
+    {
+      "file": "hyph-en-us.tex",
+      "bytes": 34128,
+      "sha256": "f4ffcd96c5cbc886bdad23f95dcae8edc3cd3620eae62f7946eceda97c4e68f8",
+      "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-en-us.tex"
+    }
+  ]
+}
