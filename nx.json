@@ -36,7 +36,13 @@
   "release": {
     "groups": {
       "libraries": {
-        "projects": ["typographist", "typographist-vue", "typographist-react", "typographist-solid"],
+        "projects": [
+          "typographist",
+          "typographist-vue",
+          "typographist-react",
+          "typographist-solid",
+          "rules-transformer"
+        ],
         "projectsRelationship": "fixed"
       }
     },
