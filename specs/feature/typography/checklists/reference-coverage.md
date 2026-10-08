@@ -428,3 +428,31 @@ ESLint and formatting passed on Node v24.21.0. No new upstream comparison was
 run; existing isolated fixtures and documented adaptations remain the reference
 evidence. Remaining nonbreaking-spacing audits, CR/LF preparation and browser
 verification remain open. Workspace-wide checks and builds were not rerun.
+
+### Unit, year-range and particle spacing behavior audit
+
+Reviewed TP-R086–TP-R088 against the bundled handlers and isolated fixtures;
+rechecked TP-R078 for their shared pipeline interaction. Year-range fixtures
+preserve supplied range glyphs, abbreviation letters and periods. Metric fixtures
+cover supported Cyrillic and Latin labels, supplied exponent notation, punctuation
+boundaries and non-overlapping traversal. Particle fixtures cover lowercase forms,
+Cyrillic boundaries, punctuation, unsupported separators and existing NBSPs.
+Resolution spacing retains its first-match traversal; a second pass can bind a
+second resolution label, as recorded by its isolated test. All four rules reject
+unknown settings. Only resolution spacing is bundled for English; consumer
+locales receive none of these rules implicitly.
+
+Eight new pipeline scenarios combine these rules with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected outputs apply the hyphenation-only profile to explicitly normalized text.
+They cover the abbreviation rule's interior binding in `г.г.`, repeated formatting
+for a single resolution label, disabled nonbreaking spacing, all-disabled
+formatting, protected literals, URLs and emails. Numeric notation, case, repeated
+words, mixed scripts, combining marks and supplementary Unicode characters remain
+unchanged.
+
+All 214 tests in the five affected test files, package type checking, targeted
+ESLint and formatting passed on Node v24.21.0. No new upstream comparison was
+run; existing isolated fixtures and documented adaptations remain the reference
+evidence. Remaining acceptance audits, CR/LF preparation and browser verification
+remain open. Workspace-wide checks and builds were not rerun.
