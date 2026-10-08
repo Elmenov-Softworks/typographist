@@ -29,6 +29,11 @@ export type ProcessingResult = Timing & {
   readonly inputSha256: string;
   readonly iterations: number;
   readonly millionUtf16PerSecond: number;
+  readonly validation?: {
+    readonly sourcePreserved: boolean;
+    readonly idempotent: boolean;
+    readonly graphemeSafe: boolean | null;
+  };
 };
 
 export type ImplementationResult = {
@@ -38,6 +43,17 @@ export type ImplementationResult = {
   readonly preparation: Timing;
   readonly processing: readonly ProcessingResult[];
   readonly consumedLength: number;
+  readonly version?: string;
+  readonly notes?: string;
+  readonly skippedWorkloads?: readonly { name: string; locale: BenchmarkLocale; reason: string }[];
+};
+
+export type ExternalImplementation = {
+  readonly id: string;
+  readonly version: string;
+  readonly algorithm: string;
+  readonly notes: string;
+  readonly prepare: () => (() => TextFormatter) | Promise<() => TextFormatter>;
 };
 
 export type BenchmarkReport = {
@@ -53,4 +69,14 @@ export type BenchmarkReport = {
   readonly sampleCount: number;
   readonly warmupIterations: number;
   readonly implementations: readonly ImplementationResult[];
+  readonly externalComparison?: {
+    readonly createdAt: string;
+    readonly node: string;
+    readonly icu: string | null;
+    readonly os: string;
+    readonly cpu: string | null;
+    readonly implementationCommit: string;
+    readonly workingTreeDirty: boolean;
+    readonly sourceReportSha256: string;
+  };
 };

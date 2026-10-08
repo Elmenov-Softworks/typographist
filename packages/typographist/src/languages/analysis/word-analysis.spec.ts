@@ -3,6 +3,25 @@ import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normaliz
 const russian = createAlphabetNormalizer('абвгдеёжзийклмнопрстуфхцчшщъыьэюя');
 
 describe('word analysis', () => {
+  it('normalizes simple Latin and Cyrillic letters with exact original offsets', () => {
+    const normalize = createAlphabetNormalizer('abcаё');
+
+    expect(normalize('ABCАЁ')).toEqual({
+      analysis: { symbols: ['a', 'b', 'c', 'а', 'ё'], boundaries: [0, 1, 2, 3, 4, 5] },
+      graphemes: [0, 1, 2, 3, 4, 5],
+    });
+    expect(normalize('ABCD')).toBeNull();
+  });
+
+  it('segments Hangul jamo before normalization instead of treating each letter as a grapheme', () => {
+    const normalize = createAlphabetNormalizer('각');
+
+    expect(normalize('\u1100\u1161\u11a8')).toEqual({
+      analysis: { symbols: ['각'], boundaries: [0, 3] },
+      graphemes: [0, 3],
+    });
+  });
+
   it('normalizes decomposed ё and retains original grapheme boundaries', () => {
     expect(russian('Е\u0308ЛКА')).toEqual({
       analysis: { symbols: ['ё', 'л', 'к', 'а'], boundaries: [0, 2, 3, 4, 5] },

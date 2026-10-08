@@ -3,6 +3,11 @@ import type { TextFormattingContext } from '@/text/text-formatting-context.types
 
 export const formatWord = (word: string, context: TextFormattingContext) => {
   const { algorithm } = context;
+
+  if (word.length < algorithm.leftMin + algorithm.rightMin) {
+    return word;
+  }
+
   const normalized = algorithm.normalize(word);
 
   if (normalized === null) {

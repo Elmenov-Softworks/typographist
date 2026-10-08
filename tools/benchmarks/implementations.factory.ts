@@ -6,7 +6,7 @@ import type { BenchmarkImplementation, TextFormatter } from './benchmark.types.t
 
 export const currentImplementations: readonly BenchmarkImplementation[] = [false, true].map((useFast) => ({
   id: useFast ? 'current-fast' : 'current-standard',
-  algorithm: 'knuth-liang',
+  algorithm: useFast ? 'khristov' : 'knuth-liang',
   useFast,
   create: () => {
     const typographist = new Typographist({ useFast });

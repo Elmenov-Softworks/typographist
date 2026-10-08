@@ -1,9 +1,10 @@
 import type { CompiledRules } from '@/rules/compiled-rules.types.js';
+import type { KhristovRules } from '@/algorithms/khristov/khristov-rules.types.js';
 
 /** Datasets accepted by the default TypographistRules compiler. */
 export type RuleSets<TLocale extends string = string> = {
-  /** Rules used in standard mode and as the fallback when fast rules are absent. */
+  /** Knuth–Liang rules used in standard mode. */
   readonly standard: CompiledRules<TLocale>;
-  /** Rules selected when useFast is true; omission falls back to standard. */
-  readonly fast?: CompiledRules<TLocale>;
+  /** Khristov rules used in fast mode. */
+  readonly fast: KhristovRules<TLocale>;
 };

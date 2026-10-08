@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
+import { verifyFastFixtures } from './verify-fast-fixtures.util.ts';
 
 import type {
   BenchmarkImplementation,
@@ -13,7 +14,7 @@ import type {
 export const sampleCount = 7;
 export const warmupIterations = 3;
 
-const summarize = (samples: readonly number[]) => {
+export const summarize = (samples: readonly number[]) => {
   const sorted = [...samples].sort((left, right) => left - right);
   const minMs = sorted[0];
   const medianMs = sorted[Math.floor(sorted.length / 2)];
@@ -72,11 +73,15 @@ export const measureImplementation = (
   const format = implementation.create();
   assert.equal(format('table TABLE present', 'en'), 'ta\u00adble TA\u00adBLE present');
   assert.equal(format('асбест', 'ru'), 'ас\u00adбест');
+  if (implementation.algorithm === 'khristov') {
+    verifyFastFixtures(format);
+  }
+
   const processing = workloads.map((workload) => {
     const { text, locale, name } = workload;
     const expected = verifyOutput(format, workload);
 
-    if (reference !== null) {
+    if (reference !== null && implementation.algorithm === 'knuth-liang') {
       assert.equal(expected, reference(text, locale), `Output mismatch: ${implementation.id}, ${name}`);
     }
 

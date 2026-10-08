@@ -7,13 +7,9 @@ const hostnameCharacter = /[A-Za-z0-9-]/;
 const addressDelimiter = /[\s"'<>]/u;
 
 const urlEnd = (text: string, start: number) => {
-  let end = start;
+  const delimiter = text.slice(start).search(addressDelimiter);
 
-  while (end < text.length && !addressDelimiter.test(text.charAt(end))) {
-    end += 1;
-  }
-
-  return end;
+  return delimiter === -1 ? text.length : start + delimiter;
 };
 
 const hostnameEnd = (text: string, start: number) => {
@@ -66,8 +62,8 @@ export const scanAddresses = (text: string) => {
 
   while (offset < text.length) {
     const character = text.charAt(offset);
-    const www = text.slice(offset, offset + 4).toLowerCase() === 'www.';
-    const scheme = character === ':' && schemeStart !== null && text.slice(offset + 1, offset + 3) === '//';
+    const www = (character === 'w' || character === 'W') && text.slice(offset, offset + 4).toLowerCase() === 'www.';
+    const scheme = character === ':' && schemeStart !== null && text.startsWith('//', offset + 1);
 
     if (www || scheme) {
       const start = scheme && schemeStart !== null ? schemeStart : offset;
