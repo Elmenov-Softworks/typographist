@@ -26,7 +26,7 @@ Custom locale types can be inferred from configured plugins or declared as a gen
 <ul class="tsd-type-parameter-list">
 <li><span id="tcustomlocale"><span class="tsd-kind-type-parameter">TCustomLocale</span> <span class="tsd-signature-keyword">extends</span> <span class="tsd-signature-type">string</span> = <span class="tsd-signature-type">never</span></span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/35a83cb94674f8029da27d93f9390bef240bfa91/packages/typographist/src/typographist/typographist.ts#L16">typographist/typographist.ts:16</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/9d27565d513bd0ccf968e4057b12504b5dc9aac0/packages/typographist/src/typographist/typographist.ts#L16">typographist/typographist.ts:16</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -64,7 +64,7 @@ Copies excluded words. Invalid configuration, duplicate locales, or a missing de
 <li><span><span class="tsd-kind-parameter">config</span>: <a href="../types/_elmenov-softworks_typographist.TypographistConfig.html" class="tsd-signature-type tsd-kind-type-alias">TypographistConfig</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#tcustomlocale">TCustomLocale</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = {}</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="" class="tsd-signature-type tsd-kind-class">Typographist</a><span class="tsd-signature-symbol">&lt;</span><a class="tsd-signature-type tsd-kind-type-parameter" href="#tcustomlocale">TCustomLocale</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/35a83cb94674f8029da27d93f9390bef240bfa91/packages/typographist/src/typographist/typographist.ts#L24">typographist/typographist.ts:24</a></li></ul></aside></div></li></ul></section></section></details>
+<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/9d27565d513bd0ccf968e4057b12504b5dc9aac0/packages/typographist/src/typographist/typographist.ts#L24">typographist/typographist.ts:24</a></li></ul></aside></div></li></ul></section></section></details>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
@@ -75,7 +75,8 @@ Copies excluded words. Invalid configuration, duplicate locales, or a missing de
 <div class="tsd-signature tsd-anchor-link" id="addrules-1"><span class="tsd-kind-call-signature">addRules</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">rules</span><span class="tsd-signature-symbol">:</span> <a href="_elmenov-softworks_typographist.TypographistRules.html" class="tsd-signature-type tsd-kind-class">TypographistRules</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">void</span><a href="#addrules-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Compiles and registers rules for the plugin's locale, replacing any previous registration.
-Compilation or validation errors propagate and leave the previous rules intact.</p>
+Successful registration clears cached words for all locales in this instance.
+Compilation or validation errors propagate and leave the previous rules and cached words intact.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -83,7 +84,7 @@ Compilation or validation errors propagate and leave the previous rules intact.<
 <li><span><span class="tsd-kind-parameter">rules</span>: <a href="_elmenov-softworks_typographist.TypographistRules.html" class="tsd-signature-type tsd-kind-class">TypographistRules</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/35a83cb94674f8029da27d93f9390bef240bfa91/packages/typographist/src/typographist/typographist.ts#L52">typographist/typographist.ts:52</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/9d27565d513bd0ccf968e4057b12504b5dc9aac0/packages/typographist/src/typographist/typographist.ts#L53">typographist/typographist.ts:53</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="format"><span>format</span><a href="#format" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -92,7 +93,8 @@ Compilation or validation errors propagate and leave the previous rules intact.<
 <div class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Formats text synchronously using the requested locale or the configured default.
 An override affects only this call; selecting an unregistered locale throws even for empty text.
-Preserves excluded words, recognized addresses, identifiers, unsupported words, and existing soft hyphens.</p>
+Preserves excluded words, recognized addresses, identifiers, unsupported words, and existing soft hyphens.
+Reuses cached results for the same locale and exact source word when caching is enabled.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -101,7 +103,7 @@ Preserves excluded words, recognized addresses, identifiers, unsupported words, 
 <li><span><span class="tsd-kind-parameter">locale</span>: <span class="tsd-signature-type">&quot;en&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;ru&quot;</span> <span class="tsd-signature-symbol">|</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="#tcustomlocale">TCustomLocale</a><span class="tsd-signature-symbol"> = ...</span></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/35a83cb94674f8029da27d93f9390bef240bfa91/packages/typographist/src/typographist/typographist.ts#L69">typographist/typographist.ts:69</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/9d27565d513bd0ccf968e4057b12504b5dc9aac0/packages/typographist/src/typographist/typographist.ts#L72">typographist/typographist.ts:72</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="removerules"><span>remove<wbr/>Rules</span><a href="#removerules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -109,6 +111,7 @@ Preserves excluded words, recognized addresses, identifiers, unsupported words, 
 <div class="tsd-signature tsd-anchor-link" id="removerules-1"><span class="tsd-kind-call-signature">removeRules</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">locale</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;en&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;ru&quot;</span> <span class="tsd-signature-symbol">|</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="#tcustomlocale">TCustomLocale</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><a href="#removerules-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes registered rules and reports whether the locale was present.
+Clears cached words for all locales only when rules were removed.
 Removing the default locale makes calls without an override fail until its rules are added again.</p>
 </div>
 <div class="tsd-parameters">
@@ -117,7 +120,7 @@ Removing the default locale makes calls without an override fail until its rules
 <li><span><span class="tsd-kind-parameter">locale</span>: <span class="tsd-signature-type">&quot;en&quot;</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">&quot;ru&quot;</span> <span class="tsd-signature-symbol">|</span> <a class="tsd-signature-type tsd-kind-type-parameter" href="#tcustomlocale">TCustomLocale</a></span></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/35a83cb94674f8029da27d93f9390bef240bfa91/packages/typographist/src/typographist/typographist.ts#L60">typographist/typographist.ts:60</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/Elmenov-Softworks/typographist/blob/9d27565d513bd0ccf968e4057b12504b5dc9aac0/packages/typographist/src/typographist/typographist.ts#L62">typographist/typographist.ts:62</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
