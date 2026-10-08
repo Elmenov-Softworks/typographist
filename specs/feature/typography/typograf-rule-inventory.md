@@ -487,3 +487,9 @@ Fourteen isolated fixtures matched the pinned reference handlers. Typograf’s s
 Letters, case, digits, numeric notation and identifier hyphens remain unchanged. Protected addresses and configured literals bypass the handler. Original segment line context prevents inline protected boundaries from creating dialogue starts. Reference HTML protection markers are omitted because this pipeline protects plain-text segments separately. English and consumer locales receive no implicit rule. Supported outputs are unchanged on a second pass.
 
 `direct-speech.spec.ts` covers isolated reference fixtures, negative contexts, Unicode, content preservation, settings rejection, categories, protected boundaries, spacing interactions and both hyphenation algorithms. Remaining included capabilities require further slices.
+
+### Russian decade-range dashes (TP-R049)
+
+`TP-R049`, `ru/dash/decade`, runs by default in `dashes` at order 310 before direct-speech formatting. It replaces a hyphen, double hyphen, figure dash, en dash or em dash between two two-digit or four-digit decade numbers ending in zero, followed by lowercase `-е` and one ordinary or nonbreaking space before `гг`, `г. г` or a prefix `год`, with an en dash. The range must start the segment or follow whitespace. Digits, suffix letters, case, label punctuation and spacing remain unchanged. This follows the pinned reference's matching boundaries, including its prefix matching for year labels.
+
+The `dash` setting defaults to `–` and accepts `-`, `--`, `‒`, `–`, `—` or `−`; other values and undeclared settings are rejected. Protected URLs, email addresses and configured literals bypass the handler. English and consumer locales receive no implicit rule. `decade-dashes.spec.ts` covers positive and negative boundaries, settings, category selection, content preservation, protection, repeated formatting and both hyphenation algorithms. Remaining specification capabilities require further slices.
