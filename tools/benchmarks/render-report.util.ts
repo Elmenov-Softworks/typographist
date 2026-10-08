@@ -1,4 +1,5 @@
 import type { BenchmarkReport, ImplementationResult, ProcessingResult } from './benchmark.types.ts';
+import { renderCharts } from './render-charts.util.ts';
 
 const escapeHtml = (value: string) =>
   value
@@ -22,6 +23,7 @@ const comparison = (result: ProcessingResult, baseline: ImplementationResult | u
 };
 
 export const renderReport = (report: BenchmarkReport) => {
+  const charts = renderCharts(report);
   const baseline = report.implementations.find(({ id }) => id === 'current-standard');
   const preparation = report.implementations
     .map(
@@ -54,8 +56,19 @@ export const renderReport = (report: BenchmarkReport) => {
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Typographist benchmark results</title>
 <style>
-  :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+  :root { color-scheme: light; font-family: system-ui, sans-serif; color: #19283f; background: #f2f5fa; }
   body { margin: 0 auto; padding: 32px; max-width: 1440px; }
+  section, header { background: white; border: 1px solid #dfe6ef; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+  h1 { font-size: 36px; letter-spacing: -.03em; } h2 { margin-top: 0; }
+  .eyebrow { color: #52677f; text-transform: uppercase; letter-spacing: .12em; font-size: 12px; font-weight: 700; }
+  .legend { display: flex; flex-wrap: wrap; gap: 24px; margin: 20px 0; font-size: 14px; }
+  .legend span { display: flex; align-items: center; gap: 8px; } .legend i { width: 12px; height: 12px; border-radius: 3px; }
+  .chart-scroll { overflow-x: auto; } svg { display: block; width: 100%; min-width: 900px; }
+  .grid { stroke: #e2e8f0; } .axis { fill: #52677f; font-size: 12px; }
+  .workload, .value { fill: #19283f; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .range { stroke: #172c48; stroke-width: 1.4; fill: none; } .reference { stroke: #19283f; stroke-dasharray: 5 5; }
+  nav { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 22px; } a { color: #2563eb; }
+  @media (max-width: 600px) { body { padding: 12px; } section, header { padding: 18px; } h1 { font-size: 28px; } }
   h1 { margin-bottom: 8px; } p { line-height: 1.6; } small { display: block; opacity: .7; margin-top: 4px; }
   table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
   th, td { text-align: left; padding: 12px; border-bottom: 1px solid #8885; }
@@ -65,6 +78,8 @@ export const renderReport = (report: BenchmarkReport) => {
   code { overflow-wrap: anywhere; } summary { cursor: pointer; } [hidden] { display: none; }
 </style></head>
 <body>
+<header id="overview">
+<div class="eyebrow">Same workloads · two algorithms</div>
 <h1>Typographist benchmark results</h1>
 <p>${escapeHtml(report.createdAt)} · ${escapeHtml(report.node)} · ICU ${escapeHtml(report.icu ?? 'unknown')}<br>
 ${escapeHtml(report.cpu ?? 'Unknown CPU')} · ${escapeHtml(report.os)}</p>
@@ -73,15 +88,31 @@ Legacy: <code>${escapeHtml(report.legacyModule ?? 'not measured')}</code> · com
 <p>Standard mode runs Knuth–Liang; fast mode runs Khristov. Each measurement uses ${String(report.warmupIterations)} warm-ups and ${String(report.sampleCount)} samples.
 Outputs are checked for preservation, idempotence and grapheme boundaries. Fast mode also checks its own expected-output fixtures.
 When supplied, legacy output equality is checked only for Knuth–Liang implementations.</p>
+<nav><a href="#speedup">Relative speed</a><a href="#latency-en">English latency</a><a href="#latency-ru">Russian latency</a><a href="#raw-results">All samples</a></nav>
+</header>
+<section id="preparation">
 <h2>Instance preparation</h2>
 <p>Includes compilation of both locales and creation of ready-to-use formatters. Module loading is excluded.</p>
+${charts.preparation}
 <div class="scroll"><table><thead><tr><th>Implementation</th><th>Actual algorithm</th><th>Median, ms</th><th>Min / max, ms</th></tr></thead><tbody>${preparation}</tbody></table></div>
+</section>
+<section id="speedup"><h2>Khristov relative to Knuth–Liang</h2>
+<p>Standard median latency / fast median latency on identical inputs. Above 1× means Khristov was faster; the dashed line marks equal speed. Ratios compare medians, without an uncertainty interval. Different break positions are expected.</p>
+${charts.speedup}</section>
+<section id="latency-en"><h2>English formatting latency</h2>
+<p>Median milliseconds per call; lower is better. Whiskers show the minimum and maximum of the retained samples. All English rows share one linear scale starting at zero.</p>
+${charts.english}</section>
+<section id="latency-ru"><h2>Russian formatting latency</h2>
+<p>Median milliseconds per call; lower is better. Whiskers show the minimum and maximum of the retained samples. All Russian rows share one linear scale starting at zero.</p>
+${charts.russian}</section>
+<section id="raw-results">
 <h2>Formatting</h2>
 <p>Lower latency is better. Relative speed = current standard median / selected median; above 1 means faster on this run. Algorithms can produce different breaks. Timing variation is visible in all retained samples.</p>
 <div class="filters"><label>Workload <input id="search" type="search" placeholder="Filter workloads"></label>
 <label>Implementation <select id="implementation"><option value="">All</option>${options}</select></label></div>
 <div class="scroll"><table><thead><tr><th>Workload</th><th>Implementation</th><th>Median, ms</th><th>Min / max, ms</th><th>Million UTF-16/s</th><th>Relative speed</th><th>Samples</th></tr></thead><tbody id="results">${rows}</tbody></table></div>
 <p>Mixed workloads use an explicitly selected locale per call. Measurements describe this machine and runtime; they are not universal performance guarantees.</p>
+</section>
 <script>
   const search = document.getElementById('search');
   const implementation = document.getElementById('implementation');

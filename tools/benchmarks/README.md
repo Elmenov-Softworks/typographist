@@ -11,7 +11,14 @@ The harness writes `<prefix>.json` and `<prefix>.html`. Without `--output`, the
 prefix is `tools/benchmarks/results/latest`. The standalone HTML page includes
 instance preparation, formatting latency and throughput, every timing sample,
 workload search and implementation filtering. It does not require a server or
-network access. JSON records environment, Git HEAD, dirty working tree status,
+network access. Native SVG charts compare preparation, formatting latency by
+locale, and Khristov speed relative to Knuth–Liang. Latency bars start at zero;
+whiskers show sample minima and maxima, not confidence intervals. Each locale
+has its own shared scale. Relative speed compares workload medians and marks
+equal speed at 1×. Hover over a bar for its values. Charts remain visible without
+JavaScript; the table filters use JavaScript.
+
+JSON records environment, Git HEAD, dirty working tree status,
 actual algorithm, requested mode, input hashes, output lengths and all samples.
 A dirty run records HEAD plus working tree changes, not a clean commit benchmark.
 
