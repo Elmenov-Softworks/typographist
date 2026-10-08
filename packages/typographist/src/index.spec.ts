@@ -103,10 +103,11 @@ describe('public package API', () => {
     expect(typographist.removeRules('de')).toBe(true);
   });
 
-  it('exposes two runtime classes and three Typographist methods', () => {
+  it('exposes two runtime classes and four Typographist methods', () => {
     expect(Object.keys(api).sort()).toEqual(['Typographist', 'TypographistRules']);
     expect(Object.getOwnPropertyNames(Typographist.prototype).sort()).toEqual([
       'addRules',
+      'addTextLocale',
       'constructor',
       'format',
       'removeRules',

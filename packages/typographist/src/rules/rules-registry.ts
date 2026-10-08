@@ -1,4 +1,5 @@
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
+import type { TextLocale } from '@/text/typography/text-locale.types.js';
 import type { TextPipelineOptions, TextRule, TextRuleHandler } from '@/text/typography/text-rule.types.js';
 import { WordCache } from '@/text/word-cache/word-cache.js';
 import { selectAlgorithm } from '@/algorithms/select-algorithm.factory.js';
@@ -68,6 +69,28 @@ export class RulesRegistry {
     }
 
     this.#services.set(key, service);
+    this.#cache.clear();
+  }
+
+  addTextLocale(definition: TextLocale, replace = false) {
+    const key = languageKey(definition.locale);
+
+    if (!Array.isArray(definition.textRules)) {
+      throw new TypeError('Locale textRules must be an array');
+    }
+
+    if (this.#options.categories?.includes('hyphenation')) {
+      throw new TypeError(`Locale ${key} has no hyphenation data`);
+    }
+
+    const localeRules: readonly TextRule[] = definition.textRules;
+    const format = prepareTextPipeline([...this.#textRules, ...localeRules], key, this.#options);
+
+    if (!replace && this.#services.has(key)) {
+      throw new RangeError(`Duplicate locale rules: ${key}`);
+    }
+
+    this.#services.set(key, { hyphenate: format });
     this.#cache.clear();
   }
 

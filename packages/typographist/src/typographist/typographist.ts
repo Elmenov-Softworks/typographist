@@ -3,6 +3,7 @@ import type { Locale } from '@/rules/locale.types.js';
 import { RulesRegistry } from '@/rules/rules-registry.js';
 import type { TypographistRules } from '@/rules/typographist-rules.js';
 import type { TypographistConfig } from '@/typographist/typographist-config.types.js';
+import type { TextLocale } from '@/text/typography/text-locale.types.js';
 
 /**
  * Applies selected symbolic text rules before soft hyphenation using registered locale data.
@@ -42,6 +43,18 @@ export class Typographist<TCustomLocale extends string = never> {
       this.#rules.register(entry);
     }
 
+    const { textLocales = [] } = config;
+
+    if (!Array.isArray(textLocales)) {
+      throw new TypeError('textLocales must be an array');
+    }
+
+    const locales: readonly TextLocale[] = textLocales;
+
+    for (const definition of locales) {
+      this.#rules.addTextLocale(definition);
+    }
+
     this.#rules.require(this.#locale);
   }
 
@@ -52,6 +65,14 @@ export class Typographist<TCustomLocale extends string = never> {
    */
   addRules(rules: TypographistRules) {
     this.#rules.add(rules);
+  }
+
+  /**
+   * Registers or atomically replaces a typography-only locale and clears the shared word cache.
+   * An explicit hyphenation category selection throws because no algorithm data is supplied.
+   */
+  addTextLocale(definition: TextLocale<Locale | TCustomLocale>) {
+    this.#rules.addTextLocale(definition, true);
   }
 
   /**
