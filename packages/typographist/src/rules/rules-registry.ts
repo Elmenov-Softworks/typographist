@@ -1,4 +1,5 @@
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
+import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.factory.js';
 import type { TextLocale } from '@/text/typography/text-locale.types.js';
 import type { TextPipelineOptions, TextRule, TextRuleHandler } from '@/text/typography/text-rule.types.js';
 import { WordCache } from '@/text/word-cache/word-cache.js';
@@ -84,7 +85,11 @@ export class RulesRegistry {
     }
 
     const localeRules: readonly TextRule[] = definition.textRules;
-    const format = prepareTextPipeline([...this.#textRules, ...localeRules], key, this.#options);
+    const format = prepareTextPipeline(
+      [...createBundledPunctuation(key), ...this.#textRules, ...localeRules],
+      key,
+      this.#options,
+    );
 
     if (!replace && this.#services.has(key)) {
       throw new RangeError(`Duplicate locale rules: ${key}`);
@@ -139,7 +144,7 @@ export class RulesRegistry {
     const hyphenationEnabled =
       this.#options.categories === undefined || this.#options.categories.includes('hyphenation');
     const format = prepareTextPipeline(
-      this.#textRules,
+      [...createBundledPunctuation(key), ...this.#textRules],
       key,
       this.#options,
       hyphenationEnabled ? service.hyphenate : (text) => text,

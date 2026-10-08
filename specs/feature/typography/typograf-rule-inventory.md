@@ -146,3 +146,21 @@ All six upstream internal handlers belong to excluded markup-based optical align
 ## Verification obligation
 
 Every included rule needs triggering and non-triggering scenarios, applicable settings, protection checks, and relevant interactions. Adapted rules need explicit tests that preserve all letters, digits, case and abbreviation spelling. Excluded conversions must remain inactive even when all supported categories are enabled.
+
+## Implemented punctuation slice
+
+These rules run in the `punctuation` category by default. They declare no settings; unknown settings are rejected. All other included capabilities remain pending.
+
+| Trace ID | Source ID                                 | Bundled locales | Behavior                                                                                                                          |
+| -------- | ----------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| TP-R053  | `ru/punctuation/hellipQuestion`           | ru              | Remove comma following an ellipsis; normalize question/exclamation plus ellipsis to two trailing dots.                            |
+| TP-R054  | `ru/punctuation/exclamation`              | ru              | Two exclamation marks become one; four become three. Other run lengths remain unchanged.                                          |
+| TP-R057  | `common/punctuation/hellip`               | ru, en          | Three dots become an ellipsis. Four dots become an ellipsis in ru and an ellipsis plus a dot in en. Longer runs remain unchanged. |
+| TP-R058  | `common/punctuation/delDoublePunctuation` | ru, en          | Reduce exactly two commas, colons, dots, semicolons or question marks; preserve dots after question/exclamation marks.            |
+| TP-R060  | `ru/punctuation/exclamationQuestion`      | ru              | An isolated exclamation/question pair becomes question/exclamation.                                                               |
+
+At order 410, Russian ellipsis cleanup and exclamation cleanup precede common ellipsis and duplicate punctuation cleanup. Exclamation/question normalization follows at order 415. Hyphenation runs afterward. Protected addresses and configured literals bypass these rules. Consumer locales receive no implicit bundled typography. The existing `en` identifier uses the reference en-US ellipsis convention; en-GB behaves identically for this slice. No region identifiers or fallback are registered.
+
+Positive and negative fixtures were compared locally with the isolated Typograf 7.8.0 build, enabling only the respective reference rule. No deviations apply to these handlers. Category, settings, protection, composition and algorithm interactions are covered by `bundled-punctuation.factory.spec.ts`.
+
+Reference regex traversal can leave adjacent repeated punctuation for a later pass. For example, Russian `!! !!` becomes `! !!` on the first pass and `! !` on the second. Idempotence is checked for the ordinary combined scenario, not guaranteed for every punctuation sequence or custom handler.
