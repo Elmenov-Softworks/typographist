@@ -69,6 +69,34 @@ const scenarios = [
 describe('bundled spacing reference scenarios', () => {
   it.each(
     (['en', 'ru'] as const).flatMap((locale) =>
+      [false, true].flatMap((useFast) => [0, 64].map((cacheSize) => ({ locale, useFast, cacheSize }))),
+    ),
+  )('combines punctuation spacing for $locale, useFast=$useFast, cacheSize=$cacheSize', (configuration) => {
+    const service = new Typographist({
+      ...configuration,
+      categories: ['spacing', 'hyphenation'],
+      protectedContent: ['Keep ,this(  literal  )'],
+    });
+    const legacy = new Typographist({
+      ...configuration,
+      categories: ['hyphenation'],
+      protectedContent: ['Keep ,this(  literal  )'],
+    });
+    const word = configuration.locale === 'en' ? 'Typography' : 'Типографика';
+    const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
+    const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
+    const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
+    const normalized = `${word} (works) [text] word, next; next! next? next: next word. 25% 2‰ 3‱!! ${unchanged} ${protectedText}`;
+    const expected = legacy.format(normalized);
+
+    expect(service.format(input)).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+    expect(new Typographist({ ...configuration, categories: [] }).format(input)).toBe(input);
+    expect(legacy.format(input).replaceAll('\u00ad', '')).toBe(input);
+  });
+
+  it.each(
+    (['en', 'ru'] as const).flatMap((locale) =>
       [false, true].flatMap((useFast) => [0, 1].map((cacheSize) => ({ locale, useFast, cacheSize }))),
     ),
   )('combines whitespace cleanup for $locale, useFast=$useFast, cacheSize=$cacheSize', (configuration) => {

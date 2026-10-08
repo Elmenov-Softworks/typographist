@@ -136,6 +136,29 @@ reference fixtures and documented boundary deviations remain the evidence for
 reference behavior. Other dash entries and the remaining rule families still
 require their acceptance audits.
 
+### Punctuation spacing behavior audit
+
+Reviewed TP-R019 and TP-R022–TP-R032 against `bundled-spacing.factory.ts`
+and its adjacent tests. Isolated scenarios cover bracket interiors, spacing between
+exclamation/question marks, spaces before punctuation, percent signs and dots,
+and spaces after semicolons, exclamation marks, question marks, commas and colons.
+Each scenario checks positive and unchanged inputs in both locales and rejects
+unknown settings. Opening-parenthesis tests separately cover the locale alphabet,
+punctuation boundaries, combining marks, digits and supplementary characters.
+These rules have no configurable values.
+
+Eight additional service scenarios combine punctuation spacing with hyphenation
+across both locales, both algorithms and cache budgets of zero and 64 MiB.
+Expected results use the hyphenation-only profile on explicitly normalized text
+with the same protected literal. Tests preserve URLs, emails, numeric notation,
+case, repeated words, mixed scripts and combining marks. They check disabled
+categories and a second pass. The interaction intentionally removes the space
+before `!!` after joining `! !`; punctuation cleanup itself is disabled here.
+All 57 spacing tests passed on Node v24.21.0. No new upstream comparison was run;
+this records existing isolated behavior evidence and new pipeline interactions.
+Remaining spacing entries, other families, CR/LF preparation and browser runtime
+verification remain open.
+
 ### Basic whitespace behavior audit
 
 Reviewed TP-R011–TP-R016 in `bundled-spacing.factory.spec.ts` against their
