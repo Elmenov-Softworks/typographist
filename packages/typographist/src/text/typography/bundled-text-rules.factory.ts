@@ -13,17 +13,7 @@ const createLocaleRules = (locale: string) => [
   ...createBundledNonbreakingSpacing(locale),
 ];
 
-export const createBundledTextRules = (locale: string, additionalRules: readonly TextRule[] = []) => {
-  const rules = [...createLocaleRules(locale), ...additionalRules];
-  const ids = new Set(rules.map((rule) => rule.id));
-
-  // Keep other bundled IDs available for settings validation without supplying locale capabilities.
-  for (const rule of [...createLocaleRules('en'), ...createLocaleRules('ru')]) {
-    if (!ids.has(rule.id)) {
-      rules.push({ ...rule, locales: [] });
-      ids.add(rule.id);
-    }
-  }
-
-  return rules;
-};
+export const createBundledTextRules = (locale: string, additionalRules: readonly TextRule[] = []) => [
+  ...createLocaleRules(locale),
+  ...additionalRules,
+];

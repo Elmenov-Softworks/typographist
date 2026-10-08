@@ -11,6 +11,7 @@ import { createHyphenator } from '@/text/create-hyphenator.factory.js';
 export class RulesRegistry {
   #textRules: readonly TextRule[];
   #options: TextPipelineOptions;
+  #declaredIds: ReadonlySet<string>;
   #cache: WordCache;
   #services = new Map<string, { hyphenate: TextRuleHandler }>();
   #prepare: ReturnType<typeof selectAlgorithm>;
@@ -23,9 +24,43 @@ export class RulesRegistry {
     cacheSize: number,
     textRules: readonly TextRule[] = [],
     options: TextPipelineOptions = {},
+    textLocales: readonly TextLocale[] = [],
   ) {
     if (!Array.isArray(textRules)) {
       throw new TypeError('textRules must be an array');
+    }
+
+    if (options.categories !== undefined && !Array.isArray(options.categories)) {
+      throw new TypeError('Invalid formatting categories: expected an array');
+    }
+
+    if (options.protectedContent !== undefined && !Array.isArray(options.protectedContent)) {
+      throw new TypeError('Protected content must be an array');
+    }
+
+    for (const definition of textLocales) {
+      if (!Array.isArray(definition.textRules)) {
+        throw new TypeError('Locale textRules must be an array');
+      }
+    }
+
+    const sharedRules: readonly TextRule[] = textRules;
+    const selectedCategories: TextPipelineOptions['categories'] = options.categories;
+    const protectedContent: TextPipelineOptions['protectedContent'] = options.protectedContent;
+
+    this.#declaredIds = new Set(
+      [
+        ...createBundledTextRules('en'),
+        ...createBundledTextRules('ru'),
+        ...sharedRules,
+        ...textLocales.flatMap((definition) => definition.textRules),
+      ].map((rule) => rule.id),
+    );
+
+    for (const id of Object.keys(options.settings ?? {})) {
+      if (!this.#declaredIds.has(id)) {
+        throw new TypeError(`Unknown text rule: ${id}`);
+      }
     }
 
     this.#textRules = textRules.map((rule: TextRule) => ({
@@ -34,8 +69,8 @@ export class RulesRegistry {
       ...(rule.locales === undefined ? {} : { locales: [...rule.locales] }),
     }));
     this.#options = {
-      ...(options.categories === undefined ? {} : { categories: [...options.categories] }),
-      ...(options.protectedContent === undefined ? {} : { protectedContent: [...options.protectedContent] }),
+      ...(selectedCategories === undefined ? {} : { categories: [...selectedCategories] }),
+      ...(protectedContent === undefined ? {} : { protectedContent: [...protectedContent] }),
       ...(options.settings === undefined
         ? {}
         : {
@@ -89,6 +124,8 @@ export class RulesRegistry {
       createBundledTextRules(key, [...this.#textRules, ...localeRules]),
       key,
       this.#options,
+      (text) => text,
+      new Set([...this.#declaredIds, ...localeRules.map((rule) => rule.id)]),
     );
 
     if (!replace && this.#services.has(key)) {
@@ -148,6 +185,7 @@ export class RulesRegistry {
       key,
       this.#options,
       hyphenationEnabled ? service.hyphenate : (text) => text,
+      this.#declaredIds,
     );
 
     return { key, service: { hyphenate: format } };

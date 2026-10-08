@@ -37,13 +37,17 @@ describe('prepared text pipeline', () => {
   });
 
   it('orders rules by priority and keeps registration order for ties', () => {
-    const rule = (id: string, order: number, from: string, to: string): TextRule => ({
-      id,
-      order,
-      category: 'punctuation',
-      defaults: {},
-      prepare: () => (text) => text.replaceAll(from, to),
-    });
+    const rule = (id: string, order: number, from: string, to: string) => {
+      const definition: TextRule = {
+        id,
+        order,
+        category: 'punctuation',
+        defaults: {},
+        prepare: () => (text) => text.replaceAll(from, to),
+      };
+
+      return definition;
+    };
     const format = prepareTextPipeline(
       [rule('second', 2, '!', '?'), rule('third', 2, '?', '…'), rule('first', 1, '.', '!')],
       'custom',

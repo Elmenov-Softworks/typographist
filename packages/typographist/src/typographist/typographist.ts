@@ -31,7 +31,14 @@ export class Typographist<TCustomLocale extends string = never> {
 
     const { locale = 'en', useFast = false, cacheSize = 64, excludedWords = [], rules = createBundledRules() } = config;
     this.#locale = locale;
-    this.#rules = new RulesRegistry(useFast, excludedWords, cacheSize, config.textRules, config);
+    const { textLocales = [] } = config;
+
+    if (!Array.isArray(textLocales)) {
+      throw new TypeError('textLocales must be an array');
+    }
+
+    const locales: readonly TextLocale[] = textLocales;
+    this.#rules = new RulesRegistry(useFast, excludedWords, cacheSize, config.textRules, config, locales);
 
     if (!Array.isArray(rules)) {
       throw new TypeError('rules must be an array of TypographistRules instances');
@@ -42,14 +49,6 @@ export class Typographist<TCustomLocale extends string = never> {
     for (const entry of entries) {
       this.#rules.register(entry);
     }
-
-    const { textLocales = [] } = config;
-
-    if (!Array.isArray(textLocales)) {
-      throw new TypeError('textLocales must be an array');
-    }
-
-    const locales: readonly TextLocale[] = textLocales;
 
     for (const definition of locales) {
       this.#rules.addTextLocale(definition);

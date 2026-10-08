@@ -10,6 +10,83 @@ const spacing: TextRule = {
 };
 
 describe('service text pipeline', () => {
+  it('applies consumer locale settings alongside bundled algorithm locales', () => {
+    const custom: TextRule = {
+      ...spacing,
+      defaults: { separator: ' ' },
+      prepare:
+        ({ separator }) =>
+        (text) =>
+          text.replaceAll('  ', String(separator)),
+    };
+    const service = new Typographist<'custom'>({
+      categories: ['spacing'],
+      settings: { 'custom/spacing': { separator: '_' } },
+      textLocales: [{ locale: 'custom', textRules: [custom] }],
+    });
+
+    expect(service.format('A  B', 'custom')).toBe('A_B');
+    expect(service.format('A  B', 'en')).toBe('A B');
+    expect(service.format('A  B', 'ru')).toBe('A B');
+    expect(
+      () =>
+        new Typographist<'custom'>({
+          textLocales: [{ locale: 'custom', textRules: [custom] }],
+          settings: { 'custom/missing': {} },
+        }),
+    ).toThrow('Unknown text rule');
+  });
+
+  it('keeps distinct configurable rules owned by multiple typography-only locales', () => {
+    const first: TextRule = {
+      ...spacing,
+      id: 'first/spacing',
+      defaults: { separator: ' ' },
+      prepare:
+        ({ separator }) =>
+        (text) =>
+          text.replaceAll('  ', String(separator)),
+    };
+    const second: TextRule = { ...first, id: 'second/spacing' };
+    const service = new Typographist<'first' | 'second'>({
+      locale: 'first',
+      rules: [],
+      categories: ['spacing'],
+      textLocales: [
+        { locale: 'first', textRules: [first] },
+        { locale: 'second', textRules: [second] },
+      ],
+      settings: {
+        'first/spacing': { separator: '_' },
+        'second/spacing': { separator: '/' },
+      },
+    });
+
+    expect(service.format('A  B')).toBe('A_B');
+    expect(service.format('A  B', 'second')).toBe('A/B');
+    service.addTextLocale({ locale: 'first', textRules: [first] });
+    expect(service.format('A  B')).toBe('A_B');
+    expect(service.format('A  B', 'second')).toBe('A/B');
+  });
+
+  it.each(['', 'spacing', new Set(['spacing']), new Map([['spacing', true]])])(
+    'rejects non-array categories at construction: %s',
+    (categories) => {
+      expect(() => {
+        Reflect.construct(Typographist, [{ categories }]);
+      }).toThrow('Invalid formatting categories');
+    },
+  );
+
+  it.each(['table', new Set(['table']), new Map([['table', true]])])(
+    'rejects non-array protected content at construction: %s',
+    (protectedContent) => {
+      expect(() => {
+        Reflect.construct(Typographist, [{ protectedContent }]);
+      }).toThrow('Protected content must be an array');
+    },
+  );
+
   it('applies Russian range settings with both default bundled locales registered', () => {
     const service = new Typographist({
       categories: ['dashes'],

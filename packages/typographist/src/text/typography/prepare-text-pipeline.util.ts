@@ -21,6 +21,7 @@ export const prepareTextPipeline = (
   locale: string,
   options: TextPipelineOptions = {},
   finish: TextRuleHandler = (text) => text,
+  declaredIds: ReadonlySet<string> = new Set(rules.map((rule) => rule.id)),
 ) => {
   const selected = options.categories ?? categories;
   const protectedContent = [...(options.protectedContent ?? [])];
@@ -75,7 +76,7 @@ export const prepareTextPipeline = (
   }
 
   for (const id of Object.keys(options.settings ?? {})) {
-    if (!ids.has(id)) {
+    if (!declaredIds.has(id)) {
       throw new TypeError(`Unknown text rule: ${id}`);
     }
   }
