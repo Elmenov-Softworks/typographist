@@ -5,7 +5,7 @@ import type { TypographistRules } from '@/rules/typographist-rules.js';
 import type { TypographistConfig } from '@/typographist/typographist-config.types.js';
 
 /**
- * Inserts soft hyphens using registered locale rules while preserving original characters.
+ * Applies selected symbolic text rules before soft hyphenation using registered locale data.
  * Custom locale types can be inferred from configured plugins or declared as a generic union.
  *
  * @example
@@ -30,7 +30,7 @@ export class Typographist<TCustomLocale extends string = never> {
 
     const { locale = 'en', useFast = false, cacheSize = 64, excludedWords = [], rules = createBundledRules() } = config;
     this.#locale = locale;
-    this.#rules = new RulesRegistry(useFast, excludedWords, cacheSize);
+    this.#rules = new RulesRegistry(useFast, excludedWords, cacheSize, config.textRules, config);
 
     if (!Array.isArray(rules)) {
       throw new TypeError('rules must be an array of TypographistRules instances');

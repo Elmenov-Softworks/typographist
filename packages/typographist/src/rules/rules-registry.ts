@@ -1,3 +1,5 @@
+import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
+import type { TextPipelineOptions, TextRule, TextRuleHandler } from '@/text/typography/text-rule.types.js';
 import { WordCache } from '@/text/word-cache/word-cache.js';
 import { selectAlgorithm } from '@/algorithms/select-algorithm.factory.js';
 import { languageKey } from '@/languages/language-identifier.util.js';
@@ -5,13 +7,41 @@ import { TypographistRules } from '@/rules/typographist-rules.js';
 import { createHyphenator } from '@/text/create-hyphenator.factory.js';
 
 export class RulesRegistry {
+  #textRules: readonly TextRule[];
+  #options: TextPipelineOptions;
   #cache: WordCache;
-  #services = new Map<string, ReturnType<typeof createHyphenator>>();
+  #services = new Map<string, { hyphenate: TextRuleHandler }>();
   #prepare: ReturnType<typeof selectAlgorithm>;
   #useFast: boolean;
   #excludedWords: ReadonlySet<string>;
 
-  constructor(useFast: boolean, excludedWords: readonly string[], cacheSize: number) {
+  constructor(
+    useFast: boolean,
+    excludedWords: readonly string[],
+    cacheSize: number,
+    textRules: readonly TextRule[] = [],
+    options: TextPipelineOptions = {},
+  ) {
+    if (!Array.isArray(textRules)) {
+      throw new TypeError('textRules must be an array');
+    }
+
+    this.#textRules = textRules.map((rule: TextRule) => ({
+      ...rule,
+      defaults: { ...rule.defaults },
+      ...(rule.locales === undefined ? {} : { locales: [...rule.locales] }),
+    }));
+    this.#options = {
+      ...(options.categories === undefined ? {} : { categories: [...options.categories] }),
+      ...(options.protectedContent === undefined ? {} : { protectedContent: [...options.protectedContent] }),
+      ...(options.settings === undefined
+        ? {}
+        : {
+            settings: Object.fromEntries(
+              Object.entries(options.settings).map(([id, settings]) => [id, { ...settings }]),
+            ),
+          }),
+    };
     this.#cache = new WordCache(cacheSize);
     this.#prepare = selectAlgorithm(useFast);
     this.#useFast = useFast;
@@ -83,6 +113,15 @@ export class RulesRegistry {
       excludedWords: this.#excludedWords,
     });
 
-    return { key, service };
+    const hyphenationEnabled =
+      this.#options.categories === undefined || this.#options.categories.includes('hyphenation');
+    const format = prepareTextPipeline(
+      this.#textRules,
+      key,
+      this.#options,
+      hyphenationEnabled ? service.hyphenate : (text) => text,
+    );
+
+    return { key, service: { hyphenate: format } };
   }
 }

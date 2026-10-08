@@ -16,7 +16,12 @@ const categories: readonly FormattingCategory[] = [
   'hyphenation',
 ];
 
-export const prepareTextPipeline = (rules: readonly TextRule[], locale: string, options: TextPipelineOptions = {}) => {
+export const prepareTextPipeline = (
+  rules: readonly TextRule[],
+  locale: string,
+  options: TextPipelineOptions = {},
+  finish: TextRuleHandler = (text) => text,
+) => {
   const selected = options.categories ?? categories;
   const protectedContent = [...(options.protectedContent ?? [])];
   const ids = new Set<string>();
@@ -88,7 +93,7 @@ export const prepareTextPipeline = (rules: readonly TextRule[], locale: string, 
       text = result;
     }
 
-    return text;
+    return finish(text);
   };
 
   return (text: string) => {
@@ -96,8 +101,8 @@ export const prepareTextPipeline = (rules: readonly TextRule[], locale: string, 
       throw new TypeError('Text must be a string');
     }
 
-    if (prepared.length === 0) {
-      return text;
+    if (prepared.length === 0 && protectedContent.length === 0) {
+      return finish(text);
     }
 
     const spans: CandidateSpan[] = scanAddresses(text);
