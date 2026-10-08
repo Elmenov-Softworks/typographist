@@ -7,6 +7,25 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
+      id: 'common/nbsp/beforeShortLastWord',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: { lengthLastWord: 3 },
+      prepare: ({ lengthLastWord }) => {
+        if (typeof lengthLastWord !== 'number' || !Number.isSafeInteger(lengthLastWord) || lengthLastWord < 1) {
+          throw new TypeError('lengthLastWord must be a positive safe integer');
+        }
+
+        const letters = locale === 'ru' ? 'а-яё' : 'a-z';
+        const lastWord = new RegExp(
+          `([${letters}\\d]) ([${letters}${letters.toUpperCase()}]{1,${String(lengthLastWord)}}[.!?…])( [${letters.toUpperCase()}]|$)`,
+          'g',
+        );
+
+        return (text) => text.replace(lastWord, '$1\u00a0$2$3');
+      },
+    },
+    {
       id: 'common/nbsp/dpi',
       category: 'nonbreakingSpacing',
       order: 510,
