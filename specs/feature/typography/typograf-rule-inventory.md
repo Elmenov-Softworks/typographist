@@ -149,7 +149,7 @@ Every included rule needs triggering and non-triggering scenarios, applicable se
 
 ## Implemented punctuation slice
 
-These rules run in the `punctuation` category by default. They declare no settings; unknown settings are rejected. All other included capabilities remain pending.
+These rules run in the `punctuation` category by default. They declare no settings; unknown settings are rejected. The implemented spacing rules are listed below; other included capabilities remain pending.
 
 | Trace ID | Source ID                                 | Bundled locales | Behavior                                                                                                                          |
 | -------- | ----------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------- |
@@ -164,3 +164,18 @@ At order 410, Russian ellipsis cleanup and exclamation cleanup precede common el
 Positive and negative fixtures were compared locally with the isolated Typograf 7.8.0 build, enabling only the respective reference rule. No deviations apply to these handlers. Category, settings, protection, composition and algorithm interactions are covered by `bundled-punctuation.factory.spec.ts`.
 
 Reference regex traversal can leave adjacent repeated punctuation for a later pass. For example, Russian `!! !!` becomes `! !!` on the first pass and `! !` on the second. Idempotence is checked for the ordinary combined scenario, not guaranteed for every punctuation sequence or custom handler.
+
+## Implemented spacing slice
+
+These rules run by default in the independently selectable `spacing` category for ru and en. They have no settings; unknown settings are rejected.
+
+| Inventory | Reference ID                     | Order | Behavior                                                                                           |
+| --------- | -------------------------------- | ----- | -------------------------------------------------------------------------------------------------- |
+| TP-R011   | `common/space/replaceTab`        | 205   | Replace each tab with four ordinary spaces.                                                        |
+| TP-R014   | `common/space/delTrailingBlanks` | 207   | Remove ordinary spaces and tabs immediately before LF.                                             |
+| TP-R015   | `common/space/delRepeatSpace`    | 209   | Collapse repeated ordinary spaces and tabs after a non-space character; preserve line indentation. |
+| TP-R019   | `common/space/squareBracket`     | 210   | Remove ordinary spaces immediately inside square brackets.                                         |
+
+Handlers follow the pinned reference. CR and nonbreaking spaces are preserved by the interior cleanup rules; no line-ending normalization is included in this slice. Reference execution also has separate line-ending preparation, which remains pending. Tab expansion runs before trailing and repeated-space cleanup. Punctuation and hyphenation follow. Protected URLs, email addresses and configured literals bypass these handlers. No letters, digits or numeric notation change. Consumer locales receive no implicit rules.
+
+Positive fixtures were compared with an isolated Typograf 7.8.0 installation. Negative cases, settings rejection, category selection, Unicode, content preservation, protection, repeated formatting and both hyphenation algorithms are covered by `bundled-spacing.factory.spec.ts`. Whole-text trimming and the remaining included capabilities are pending.
