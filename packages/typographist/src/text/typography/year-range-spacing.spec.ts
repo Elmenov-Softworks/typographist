@@ -61,7 +61,7 @@ describe('Russian year-range spacing', () => {
   it.each([false, true])('combines spacing and hyphenation with useFast=%s', (useFast) => {
     const service = new Typographist({ locale: 'ru', useFast });
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
-    const expected = legacy.format('2025-2026\u00a0г.\u00a0г. примеры');
+    const expected = legacy.format('2025–2026\u00a0г.\u00a0г. примеры');
 
     expect(service.format('2025-2026  г.г. примеры')).toBe(expected);
     expect(service.format(expected)).toBe(expected);

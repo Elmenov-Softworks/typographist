@@ -17,6 +17,26 @@ export const createBundledDashes = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/dash/years',
+      category: 'dashes',
+      order: 310,
+      defaults: { dash: '–' },
+      prepare: ({ dash }) => {
+        if (typeof dash !== 'string' || !/^(?:--?|‒|–|—|−)$/.test(dash)) {
+          throw new TypeError('dash must be a supported dash or minus glyph');
+        }
+
+        const range =
+          /(?<![\p{L}\p{M}\p{N}_-])(\d{4})[ \u00a0]?(?:--?|‒|–|—)[ \u00a0]?(\d{4})(?=[ \u00a0]?г(?:г?\.?|од(?:а|у|ом|ы|ов|ам|ами|ах)?)(?![\p{L}\p{M}\p{N}_-]))/gu;
+
+        return (text) =>
+          text.replace(range, (match: string, from: string, to: string) =>
+            Number(from) < Number(to) ? `${from}${dash}${to}` : match,
+          );
+      },
+    });
+
+    rules.push({
       id: 'ru/dash/time',
       category: 'dashes',
       order: 310,
