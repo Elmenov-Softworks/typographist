@@ -48,6 +48,16 @@ export const createBundledSpacing = (locale: string) => {
       },
     },
     {
+      id: 'common/space/delLeadingBlanks',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text, context) =>
+        text.replace(/(^|[\r\n\u2028\u2029])[ \t]+/g, (match: string, boundary: string, offset: number) =>
+          offset === 0 && boundary === '' && context?.startsLine === false ? match : boundary,
+        ),
+    },
+    {
       id: 'common/space/squareBracket',
       category: 'spacing',
       order: 210,

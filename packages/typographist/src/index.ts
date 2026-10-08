@@ -10,6 +10,7 @@ export type {
   FormattingCategory,
   TextRule,
   TextRuleHandler,
+  TextRuleContext,
   TextRuleSettings,
   TextPipelineOptions,
 } from '@/text/typography/text-rule.types.js';

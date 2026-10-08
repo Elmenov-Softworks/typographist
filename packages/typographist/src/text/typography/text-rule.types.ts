@@ -4,8 +4,11 @@ export type FormattingCategory = 'quotes' | 'dashes' | 'punctuation' | 'spacing'
 /** Primitive settings declared and validated by each rule during preparation. */
 export type TextRuleSettings = Readonly<Record<string, string | number | boolean>>;
 
-/** Synchronous transformation of an unprotected text segment. */
-export type TextRuleHandler = (text: string) => string;
+/** Original line boundary before an unprotected segment. */
+export type TextRuleContext = { readonly startsLine: boolean };
+
+/** Synchronous transformation of an unprotected segment. Omitted context denotes a complete text. */
+export type TextRuleHandler = (text: string, context?: TextRuleContext) => string;
 
 /** Consumer-supplied symbolic typography. Equal order values retain registration order. */
 export type TextRule = {

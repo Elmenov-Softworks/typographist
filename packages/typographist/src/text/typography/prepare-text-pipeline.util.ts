@@ -82,9 +82,11 @@ export const prepareTextPipeline = (
 
   prepared.sort((left, right) => left.order - right.order);
 
-  const transform = (text: string) => {
+  const transform = (text: string, start: number, original: string) => {
+    const context = { startsLine: start === 0 || /[\r\n\u2028\u2029]/.test(original.charAt(start - 1)) };
+
     for (const rule of prepared) {
-      const result: unknown = rule.handler(text);
+      const result: unknown = rule.handler(text, context);
 
       if (typeof result !== 'string') {
         throw new TypeError(`Text rule ${rule.id} must return a string synchronously`);
@@ -122,7 +124,7 @@ export const prepareTextPipeline = (
 
     for (const span of spans) {
       if (span.start > copied) {
-        parts.push(transform(text.slice(copied, span.start)));
+        parts.push(transform(text.slice(copied, span.start), copied, text));
       }
 
       if (span.end > copied) {
@@ -131,7 +133,7 @@ export const prepareTextPipeline = (
       }
     }
 
-    parts.push(transform(text.slice(copied)));
+    parts.push(transform(text.slice(copied), copied, text));
 
     return parts.join('');
   };

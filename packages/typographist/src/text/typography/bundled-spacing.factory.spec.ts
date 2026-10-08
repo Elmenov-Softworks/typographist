@@ -57,10 +57,60 @@ const scenarios = [
   { id: 'common/space/delTrailingBlanks', input: 'a  \nb\t\n', output: 'a\nb\n', unchanged: 'a  \r\nb  ' },
   { id: 'common/space/delRepeatSpace', input: 'a  b\t\tc', output: 'a b c', unchanged: '  a\n  b\u00a0\u00a0c' },
   { id: 'common/space/squareBracket', input: '[  a  ]', output: '[a]', unchanged: '[\ta\t] ( a )' },
+  {
+    id: 'common/space/delLeadingBlanks',
+    input: '  a\n\tb\r  c\r\n \td\u2028  e\u2029\tf',
+    output: 'a\nb\rc\r\nd\u2028e\u2029f',
+    unchanged: 'a  b\t c\n\u00a0 d\n\u202f e\n\u2009 f',
+  },
   { id: 'common/space/delRepeatN', input: 'a\n\n\n\nb', output: 'a\n\nb', unchanged: 'a\n\nb\r\n\r\n\r\nc' },
 ];
 
 describe('bundled spacing reference scenarios', () => {
+  it.each(['en', 'ru'] as const)('cleans indentation without changing composition for %s', (locale) => {
+    const id = 'common/space/delLeadingBlanks';
+    const rules = createBundledSpacing(locale).filter((rule) => rule.id === id);
+    const format = prepareTextPipeline(rules, locale);
+    const content = '😀 е́ $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс\u00ad';
+
+    expect(format(` \t${content}\n \t`)).toBe(`${content}\n`);
+    expect(format(' \t\r\n \t')).toBe('\r\n');
+    expect(format('')).toBe('');
+    expect(format(format(` \t${content}`))).toBe(content);
+    expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
+      'Invalid setting',
+    );
+
+    for (const categories of [[], ['quotes'], ['hyphenation']] as const) {
+      expect(new Typographist({ locale, categories }).format(' \ta\n b')).toBe(' \ta\n b');
+    }
+
+    const service = new Typographist({
+      locale,
+      categories: ['spacing'],
+      protectedContent: [' \tkept\n  literal'],
+    });
+
+    expect(service.format(' \tkept\n  literal\n  https://example.com\n  user@example.com')).toBe(
+      ' \tkept\n  literal\nhttps://example.com\nuser@example.com',
+    );
+    expect(service.format('https://example.com  next user@example.com  last')).toBe(
+      'https://example.com  next user@example.com  last',
+    );
+  });
+
+  it.each([false, true])('cleans indentation before hyphenation with useFast=%s', (useFast) => {
+    for (const locale of ['ru', 'en'] as const) {
+      const service = new Typographist({ locale, useFast, categories: ['spacing', 'hyphenation'] });
+      const legacy = new Typographist({ locale, useFast, categories: ['hyphenation'] });
+      const content = locale === 'ru' ? 'Типографика\nработает' : 'Typography\nworks';
+      const expected = legacy.format(content);
+
+      expect(service.format(` \t${content.replace('\n', '\n  ')}`)).toBe(expected);
+      expect(service.format(expected)).toBe(expected);
+    }
+  });
+
   it.each(['en', 'ru'] as const)('combines terminal punctuation spacing for %s', (locale) => {
     const service = new Typographist({
       locale,
@@ -136,7 +186,7 @@ describe('bundled spacing reference scenarios', () => {
       `before ${addresses} after Keep\t  this end`,
     );
     expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t ')).toBe(' \r\n     ');
+    expect(service.format(' \r\n\t ')).toBe('\r\n');
     expect(service.format('a\u00adb\u00a0c')).toBe('a\u00adb\u00a0c');
   });
 
