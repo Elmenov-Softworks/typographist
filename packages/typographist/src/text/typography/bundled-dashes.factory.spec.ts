@@ -3,6 +3,62 @@ import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.uti
 import { Typographist } from '@/typographist/typographist.js';
 
 describe('bundled prose dashes', () => {
+  it('matches Russian month reference fixtures with symbolic settings and identifier protection', () => {
+    const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/month');
+    const format = prepareTextPipeline(rules, 'ru');
+    const fixtures = [
+      ['январь-март', 'январь–март'],
+      ['В МАЕ -- Июне', 'В МАЕ–Июне'],
+      ['май ‒июнь', 'май–июнь'],
+      ['июль—август', 'июль–август'],
+      ['января-марта', 'января-марта'],
+      ['январь-феврале', 'январь-феврале'],
+    ] as const;
+
+    for (const [input, output] of fixtures) {
+      expect(format(input)).toBe(output);
+      expect(format(output)).toBe(output);
+    }
+
+    const unchanged =
+      'xмай-июнь май-июньX _май-июнь май-июнь1 май\u0301-июнь май-июнь-июль май−июнь май\t-июнь май  -июнь май\u00a0-июнь';
+
+    expect(format(unchanged)).toBe(unchanged);
+    expect(format('')).toBe('');
+    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
+    expect(createBundledDashes('en').some((rule) => rule.id === 'ru/dash/month')).toBe(false);
+
+    for (const dash of ['-', '--', '‒', '–', '—', '−']) {
+      const configured = prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/month': { dash } } });
+
+      expect(configured('май-июнь')).toBe(`май${dash}июнь`);
+    }
+
+    for (const dash of ['', 'word', '1', '$&', '——']) {
+      expect(() => prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/month': { dash } } })).toThrow(
+        'dash must be',
+      );
+    }
+  });
+
+  it('combines Russian month ranges with protections and both hyphenation algorithms', () => {
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content} май-июнь май - июнь https://example.com/май-июнь user-name@example.com июль-август`;
+    const output = `${content} май–июнь май\u00a0— июнь https://example.com/май-июнь user-name@example.com июль-август`;
+    const service = new Typographist({ locale: 'ru', categories: ['dashes'], protectedContent: ['июль-август'] });
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
+
+    for (const useFast of [false, true]) {
+      const combined = new Typographist({ locale: 'ru', useFast });
+      const hyphenation = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+
+      expect(combined.format('май-июнь')).toBe(hyphenation.format('май–июнь'));
+    }
+  });
+
   it('matches isolated Russian weekday reference fixtures and preserves identifier boundaries', () => {
     const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/weekday');
     const format = prepareTextPipeline(rules, 'ru');

@@ -257,3 +257,11 @@ Thirty glyph/whitespace fixtures per locale were compared locally with isolated 
 Names must be separated from letters, combining marks, digits, underscores and hyphens at the outer boundaries. This deliberately narrows the reference's substring matching to protect identifiers and hyphenated chains. Tabs, nonbreaking spaces, repeated spaces and existing minus glyphs are unchanged by this handler. Prose-dash normalization runs first: `среда - пятница` therefore becomes `среда — пятница`, while `среда-пятница` becomes `среда–пятница`. Both results remain stable on repeated formatting.
 
 Positive and negative isolated fixtures were compared locally with Typograf 7.8.0. Tests cover glyph settings, invalid settings, case preservation, Unicode boundaries, category disabling, protected addresses and literals, numeric and lexical preservation, and interaction with both hyphenation algorithms. This rule is bundled only for `ru`; English and consumer locales receive no implicit weekday rule.
+
+## Implemented Russian month ranges
+
+`TP-R043` (`ru/dash/month`) runs by default in `dashes` at order 310 after weekday ranges. It replaces a hyphen, double hyphen, figure dash, en dash or em dash between two Russian month names in the same case (nominative or prepositional) with an en dash, removing at most one ordinary space on each side. Genitive names and mixed grammatical cases remain unchanged. Letters and case are preserved. The `dash` setting defaults to `–` and accepts `-`, `--`, `‒`, `–`, `—` or `−`; other values are rejected to preserve symbolic-only formatting.
+
+As with weekday ranges, outer Unicode letter, combining-mark, digit, underscore and hyphen boundaries deliberately narrow reference substring matching to protect identifiers and hyphenated chains. Tabs, nonbreaking spaces, repeated spaces and existing minus glyphs remain unchanged. Earlier prose-dash formatting takes precedence for spaced ranges. Protected addresses and configured literals bypass the rule. Only Russian receives this bundled capability.
+
+Isolated fixtures were compared locally with Typograf 7.8.0. Tests cover reference cases, negative cases, settings validation, boundaries, protected content, unchanged lexical and numeric composition, disabled categories, repeated formatting and both hyphenation algorithms.
