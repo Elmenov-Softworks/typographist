@@ -237,3 +237,30 @@ All 24 configurations and 144 workload pairs passed the harness preservation,
 determinism and uncached-equivalence assertions. Inputs are identical to the
 earlier run. This closes the benchmark-refresh gap, not the remaining behavior,
 CR/LF or browser verification gaps.
+
+### Numeric-range dash behavior audit
+
+Reviewed TP-R036, TP-R040, TP-R049 and TP-R051 against the bundled dash
+handlers and their isolated tests. Year ranges cover ascending versus equal or
+reversed values, unchanged leading zeros, identifier boundaries and supplied
+abbreviation punctuation. Time ranges cover minute limits, reference whitespace
+boundaries and identifier suffix protection. Decade ranges cover supported digit
+lengths, terminal zeroes, supplied case and year-label spelling. Day–month ranges
+cover supported month names, reference digit boundaries and unchanged numeric
+notation. All four rules test each accepted separator, invalid and unknown
+settings, Russian-only registration, protected content and disabled categories.
+
+Eight new pipeline scenarios combine these four rules with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected output uses the hyphenation-only profile on explicitly normalized text.
+The fixtures preserve dates, phone digits, currency labels, decimal and fraction
+notation, case, mixed scripts, combining marks, URLs, emails, identifiers and a
+protected range literal. They check repeated formatting, disabling dashes and
+all-disabled formatting. Nonbreaking-spacing normalization is disabled in these
+scenarios; the separately documented day–month second-pass interaction with that
+category remains unchanged.
+
+All 118 tests in the five affected test files passed on Node v24.21.0. No new
+upstream comparison was run; existing isolated fixtures remain the reference
+behavior evidence. This closes the four numeric-range dash behavior audits;
+nonbreaking-spacing audits, CR/LF preparation and browser verification remain open.
