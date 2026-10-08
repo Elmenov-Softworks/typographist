@@ -68,6 +68,31 @@ describe('prepared text pipeline', () => {
     );
   });
 
+  it('supplies complete original token context after earlier handlers change segment length', () => {
+    const before = `${'𐐀'.repeat(2000)}\u00ad+1`;
+    const after = `3/4\u00ad${'é'.repeat(2000)}`;
+    const seen: string[][] = [];
+    const inspect: TextRule = {
+      ...spacing,
+      id: 'custom/context',
+      order: 20,
+      prepare: () => (text, context) => {
+        seen.push([context?.precedingToken ?? '', context?.followingToken ?? '']);
+
+        return text;
+      },
+    };
+    const format = prepareTextPipeline([{ ...spacing, prepare: () => () => '!' }, inspect], 'custom', {
+      protectedContent: [before, after],
+    });
+
+    expect(format(`${before}-2${after}`)).toBe(`${before}!${after}!`);
+    expect(seen).toEqual([
+      [before, after],
+      [`${before}-2${after}`, ''],
+    ]);
+  });
+
   it('copies settings and protected content during preparation', () => {
     const settings = { separator: '\u00a0' };
     const protectedContent = ['A  B'];

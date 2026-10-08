@@ -59,6 +59,29 @@ describe.each(['en', 'ru'] as const)('Unary minus formatting for %s', (locale) =
     expect(service.format(expected)).toBe(expected);
   });
 
+  it.each([
+    ['3', '-3\u00adfoo -3\u00ad -3', '-3\u00adfoo -3\u00ad −3'],
+    ['345', '-345\u00adfoo -345\u00ad -345', '-345\u00adfoo -345\u00ad −345'],
+    ['3', 'id\u00ad3-4 -13\u00adfoo -13', 'id\u00ad3-4 -13\u00adfoo −13'],
+    ['\u00ad', '-3\u00adfoo -345\u00adfoo -4', '-3\u00adfoo -345\u00adfoo −4'],
+    ['3\u00ad', '-3\u00adfoo -3\u00ad -4', '-3\u00adfoo -3\u00ad −4'],
+  ])('preserves existing soft-hyphen boundaries across protected %j', (protectedLiteral, input, expected) => {
+    const service = new Typographist({ locale, categories: ['dashes'], protectedContent: [protectedLiteral] });
+    const unprotected = new Typographist({ locale, categories: ['dashes'] });
+
+    expect(unprotected.format(input)).toBe(expected);
+    expect(service.format(input)).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+
+  it('preserves long identifier context across many protected spans', () => {
+    const service = new Typographist({ locale, categories: ['dashes'], protectedContent: ['3'] });
+    const token = `-3${'a3'.repeat(2000)}\u00adfoo`;
+    const input = `${token} ${'-3suffix '.repeat(2000)}(-3)`;
+
+    expect(service.format(input)).toBe(`${token} ${'-3suffix '.repeat(2000)}(−3)`);
+  });
+
   it('validates settings and keeps consumer locales explicit', () => {
     expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
       'Invalid setting',

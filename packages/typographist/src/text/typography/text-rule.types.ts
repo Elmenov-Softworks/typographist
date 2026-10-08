@@ -10,7 +10,7 @@ export type TextRuleContext = {
   /** Original adjacent characters across protected boundaries; empty at complete-text edges. */
   readonly precedingCharacter?: string;
   readonly followingCharacter?: string;
-  /** Original adjoining lexical/numeric runs, including letters, marks, digits, _, +, -, ., comma and /. */
+  /** Original adjoining lexical/numeric runs, including letters, marks, digits, soft hyphens, _, +, -, ., comma and /. */
   readonly precedingToken?: string;
   readonly followingToken?: string;
   /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */

@@ -83,12 +83,27 @@ export const prepareTextPipeline = (
 
   prepared.sort((left, right) => left.order - right.order);
 
-  const transform = (text: string, start: number, original: string) => {
+  const transform = (
+    text: string,
+    start: number,
+    original: string,
+    tokenAt: (position: number) => CandidateSpan | null,
+  ) => {
+    const segmentEnd = start + text.length;
     const context = {
       precedingCharacter: original.slice(Math.max(0, start - 2), start).match(/.$/su)?.[0] ?? '',
       followingCharacter: original.slice(start + text.length, start + text.length + 2).match(/^./su)?.[0] ?? '',
-      precedingToken: original.slice(0, start).match(/[\p{L}\p{M}\p{N}_+.,/-]+$/u)?.[0] ?? '',
-      followingToken: original.slice(start + text.length).match(/^[\p{L}\p{M}\p{N}_+.,/-]+/u)?.[0] ?? '',
+      get precedingToken() {
+        const token = tokenAt(start - 1);
+
+        return token === null ? '' : original.slice(token.start, start);
+      },
+      get followingToken() {
+        const end = segmentEnd;
+        const token = tokenAt(end);
+
+        return token === null ? '' : original.slice(end, token.end);
+      },
       startsLine: start === 0 || /[\r\n\u2028\u2029]/.test(original.charAt(start - 1)),
       startsText: start === 0,
       endsText: start + text.length === original.length,
@@ -116,6 +131,37 @@ export const prepareTextPipeline = (
       return finish(text);
     }
 
+    let tokens: CandidateSpan[] | null = null;
+    const tokenAt = (position: number) => {
+      if (tokens === null) {
+        tokens = Array.from(text.matchAll(/[\p{L}\p{M}\p{N}_+.,/\u00ad-]+/gu), (match) => ({
+          start: match.index,
+          end: match.index + match[0].length,
+        }));
+      }
+
+      let left = 0;
+      let right = tokens.length;
+
+      while (left < right) {
+        const middle = Math.floor((left + right) / 2);
+        const token = tokens[middle];
+
+        if (token === undefined) {
+          break;
+        }
+
+        if (position < token.start) {
+          right = middle;
+        } else if (position >= token.end) {
+          left = middle + 1;
+        } else {
+          return token;
+        }
+      }
+
+      return null;
+    };
     const spans: CandidateSpan[] = scanAddresses(text);
 
     for (const content of protectedContent) {
@@ -133,7 +179,7 @@ export const prepareTextPipeline = (
 
     for (const span of spans) {
       if (span.start > copied) {
-        parts.push(transform(text.slice(copied, span.start), copied, text));
+        parts.push(transform(text.slice(copied, span.start), copied, text, tokenAt));
       }
 
       if (span.end > copied) {
@@ -142,7 +188,7 @@ export const prepareTextPipeline = (
       }
     }
 
-    parts.push(transform(text.slice(copied), copied, text));
+    parts.push(transform(text.slice(copied), copied, text, tokenAt));
 
     return parts.join('');
   };
