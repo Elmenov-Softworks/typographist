@@ -223,3 +223,9 @@ Positive and negative fixtures were compared locally with isolated Typograf 7.8.
 `TP-R028`, `common/space/afterSemicolon`, runs by default for ru and en in `spacing` at order 210 after spacing before parentheses and before colon spacing. It inserts an ordinary space after a semicolon unless followed by whitespace, `)`, `.`, `…`, `!`, `;`, `?`, a square bracket, or a reference quotation glyph (`«‹»›„“‟”"`). It has no settings; unknown settings are rejected. Only whitespace changes, including between unchanged digits.
 
 Positive and negative fixtures were compared locally with isolated Typograf 7.8.0 for ru and en-US. No handler deviations apply; en-GB shares this behavior. The pipeline protects addresses and configured literals without the upstream private marker. Tests cover numeric and lexical preservation, Unicode, category disabling, settings rejection, interaction with spacing before punctuation and repeated formatting. Consumer locales receive no implicit rules.
+
+## Implemented spacing after commas
+
+`TP-R031`, `common/space/afterComma`, runs by default for ru and en in `spacing` at order 210 after semicolon spacing and before colon spacing. It inserts an ordinary space after a comma with a preceding character, unless followed by whitespace, `)`, `"`, comma, colon, dot, question mark, slash, backslash or a locale closing quotation glyph. Commas between ASCII digits remain unchanged. Russian closing glyphs are `»“‘`; English uses the shared en-US/en-GB `”’` pair. It declares no settings; unknown settings are rejected.
+
+Positive, negative and locale quotation fixtures were compared locally with isolated Typograf 7.8.0. No handler deviations apply. Tests cover unchanged numeric notation and lexical content, Unicode, protected addresses and configured literals, category disabling, punctuation cleanup interactions and repeated formatting. Consumer locales receive no implicit rules.
