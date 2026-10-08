@@ -2,6 +2,95 @@ import { createBundledNonbreakingSpacing } from '@/text/typography/bundled-nonbr
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
 import { Typographist } from '@/typographist/typographist.js';
 
+describe('Russian initials spacing', () => {
+  const id = 'ru/nbsp/initials';
+  const rules = createBundledNonbreakingSpacing('ru').filter((rule) => rule.id === id);
+  const format = prepareTextPipeline(rules, 'ru');
+
+  it.each([
+    ['А.С.Пушкин', 'А.\u00a0С.\u00a0Пушкин'],
+    ['А. С. Пушкин', 'А.\u00a0С.\u00a0Пушкин'],
+    ['Ё.\u202fИ.\u00a0Ёлкин', 'Ё.\u00a0И.\u00a0Ёлкин'],
+    ['(А.С.Пушкин), «М.Ю.Лермонтов»', '(А.\u00a0С.\u00a0Пушкин), «М.\u00a0Ю.\u00a0Лермонтов»'],
+    [
+      '„А.С.Пушкин“ ‚М.Ю.Лермонтов‘ "Л.Н.Толстой"',
+      '„А.\u00a0С.\u00a0Пушкин“ ‚М.\u00a0Ю.\u00a0Лермонтов‘ "Л.\u00a0Н.\u00a0Толстой"',
+    ],
+    [
+      'А.С.Пушкин\r\nМ.Ю.Лермонтов\nЛ.Н.Толстой',
+      'А.\u00a0С.\u00a0Пушкин\r\nМ.\u00a0Ю.\u00a0Лермонтов\nЛ.\u00a0Н.\u00a0Толстой',
+    ],
+    ['😀 А.С.Пу́шкин 12345 1.25 1/2', '😀 А.\u00a0С.\u00a0Пу́шкин 12345 1.25 1/2'],
+  ])('matches isolated reference behavior for %j', (text, expected) => {
+    expect(rules).toHaveLength(1);
+    expect(format(text)).toBe(expected);
+    expect(format(expected)).toBe(expected);
+  });
+
+  it.each([
+    '',
+    ' \r\n\t',
+    'А. Пушкин',
+    'а.С.Пушкин',
+    'А.с.Пушкин',
+    'А.С.пушкин',
+    'A.S.Pushkin',
+    'А.С.ПУШКИН',
+    'А.С.П',
+    'А.  С. Пушкин',
+    'А.\tС.Пушкин',
+    'А.С.\nПушкин',
+    '[А.С.Пушкин]',
+    'xА.С.Пушкин',
+    'А\u00ad.С.Пушкин',
+    'А́.С.Пушкин',
+  ])('preserves unsupported boundaries in %j', (text) => {
+    expect(format(text)).toBe(text);
+  });
+
+  it('rejects settings and supplies initials only for Russian', () => {
+    expect(() => prepareTextPipeline(rules, 'ru', { settings: { [id]: { unknown: true } } })).toThrow(
+      'Invalid setting',
+    );
+    expect(createBundledNonbreakingSpacing('en').some((rule) => rule.id === id)).toBe(false);
+    expect(createBundledNonbreakingSpacing('custom')).toEqual([]);
+  });
+
+  it('preserves lexical and numeric content', () => {
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+
+    expect(format(`${content} А.С.Пушкин`)).toBe(`${content} А.\u00a0С.\u00a0Пушкин`);
+  });
+
+  it('respects categories, protected content and hyphenation exclusions', () => {
+    const text = 'А.С.Пушкин';
+    const service = new Typographist({ locale: 'ru', categories: ['nonbreakingSpacing'], excludedWords: [text] });
+    const protectedService = new Typographist({
+      locale: 'ru',
+      categories: ['nonbreakingSpacing'],
+      protectedContent: [text],
+    });
+    const addresses = 'https://example.com/А.С.Пушкин А.С.Пушкин@example.com';
+
+    expect(service.format(text)).toBe('А.\u00a0С.\u00a0Пушкин');
+    expect(protectedService.format(`${text} ${addresses}`)).toBe(`${text} ${addresses}`);
+    for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
+      expect(new Typographist({ locale: 'ru', categories, excludedWords: ['Пушкин'] }).format('А. С. Пушкин')).toBe(
+        'А. С. Пушкин',
+      );
+    }
+  });
+
+  it.each([false, true])('combines ordinary spacing and hyphenation with useFast=%s', (useFast) => {
+    const service = new Typographist({ locale: 'ru', useFast });
+    const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+    const expected = legacy.format('А.\u00a0С.\u00a0Пушкин');
+
+    expect(service.format('А.  С.  Пушкин')).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+});
+
 describe('bundled nonbreaking mark spacing', () => {
   it.each(['en', 'ru'] as const)('matches isolated section-mark reference behavior for %s', (locale) => {
     const id = 'common/nbsp/afterSectionMark';

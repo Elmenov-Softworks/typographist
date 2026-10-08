@@ -164,6 +164,18 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
     });
 
     rules.push({
+      id: 'ru/nbsp/initials',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(
+          /(^|[(\u00a0\u202f «„‚"])([А-ЯЁ])\.[\u00a0\u202f ]?([А-ЯЁ])\.[\u00a0\u202f ]?([А-ЯЁ][а-яё]+)/gm,
+          '$1$2.\u00a0$3.\u00a0$4',
+        ),
+    });
+
+    rules.push({
       id: 'ru/nbsp/m',
       category: 'nonbreakingSpacing',
       order: 515,
