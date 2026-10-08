@@ -168,7 +168,7 @@
   </head>
   <body>
     <header id="overview">
-      <div class="eyebrow">Same workloads · two algorithms</div>
+      <div class="eyebrow">Same workloads · five implementations</div>
       <h1>Typographist benchmark results</h1>
       <p>
         2026-10-08T04:59:50.821Z · v24.21.0 · ICU 78.3<br />
@@ -179,55 +179,87 @@
         Legacy: <code>not measured</code> · commit not specified
       </p>
       <p>
-        Standard mode runs Knuth–Liang; fast mode runs Khristov. Each measurement uses 3 warm-ups and 7 samples. Outputs
-        are checked for preservation, idempotence and grapheme boundaries. Fast mode also checks its own expected-output
-        fixtures. When supplied, legacy output equality is checked only for Knuth–Liang implementations.
+        Standard mode runs Knuth–Liang; fast mode runs Khristov. Each measurement uses 3 warm-ups and 7 samples.
+        Typographist outputs are checked for preservation, idempotence and grapheme boundaries. Fast mode also checks
+        its own expected-output fixtures. When supplied, legacy output equality is checked only for Knuth–Liang
+        implementations.
       </p>
       <nav>
-        <a href="#speedup">Relative speed</a><a href="#latency-en">English latency</a
-        ><a href="#latency-ru">Russian latency</a><a href="#raw-results">All samples</a>
+        <a href="#speedup">Relative speed</a><a href="#libraries">External libraries</a
+        ><a href="#latency-en">English latency</a><a href="#latency-ru">Russian latency</a
+        ><a href="#raw-results">All samples</a>
       </nav>
     </header>
     <section id="preparation">
       <h2>Instance preparation</h2>
       <p>Includes compilation of both locales and creation of ready-to-use formatters. Module loading is excluded.</p>
       <div class="legend">
-        <span><i style="background: #2563eb"></i>Knuth–Liang (current-standard)</span
-        ><span><i style="background: #dc6828"></i>Khristov (current-fast)</span>
+        <span><i style="background: #2563eb"></i>Knuth–Liang</span
+        ><span><i style="background: #dc6828"></i>Khristov</span
+        ><span><i style="background: #008470"></i>hyphen@1.14.1</span
+        ><span><i style="background: #8755c5"></i>hypher@0.2.5</span
+        ><span><i style="background: #b33f69"></i>hyphenopoly@6.1.0</span>
       </div>
       <div class="chart-scroll">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1050 134"
+          viewBox="0 0 1050 206"
           role="img"
           aria-label="Instance preparation latency"
         >
           <title>Instance preparation latency</title>
-          <line x1="270" x2="270" y1="30" y2="104" class="grid" />
+          <line x1="270" x2="270" y1="30" y2="176" class="grid" />
           <text x="270" y="18" text-anchor="middle" class="axis">0.00 ms</text>
-          <line x1="425" x2="425" y1="30" y2="104" class="grid" />
+          <line x1="425" x2="425" y1="30" y2="176" class="grid" />
           <text x="425" y="18" text-anchor="middle" class="axis">8.32 ms</text>
-          <line x1="580" x2="580" y1="30" y2="104" class="grid" />
+          <line x1="580" x2="580" y1="30" y2="176" class="grid" />
           <text x="580" y="18" text-anchor="middle" class="axis">16.64 ms</text>
-          <line x1="735" x2="735" y1="30" y2="104" class="grid" />
+          <line x1="735" x2="735" y1="30" y2="176" class="grid" />
           <text x="735" y="18" text-anchor="middle" class="axis">24.97 ms</text>
-          <line x1="890" x2="890" y1="30" y2="104" class="grid" />
+          <line x1="890" x2="890" y1="30" y2="176" class="grid" />
           <text x="890" y="18" text-anchor="middle" class="axis">33.29 ms</text>
           <text x="250" y="54" text-anchor="end" class="workload">Both bundled locales</text>
           <g>
-            <title>Both bundled locales · Knuth–Liang (current-standard): 19.9912 ms; min 18.1152, max 33.2899</title>
+            <title>Both bundled locales · Knuth–Liang: 19.9912 ms; min 18.1152, max 33.2899</title>
             <rect x="270" y="42" width="372.32234556044295" height="15" rx="3" fill="#2563eb" />
             <path d="M607.3836537332757,45v9 M607.3836537332757,49.5H890 M890,45v9" class="range" />
             <text x="920" y="54" class="value">19.9912 ms</text>
           </g>
           <g>
-            <title>Both bundled locales · Khristov (current-fast): 0.2613 ms; min 0.2375, max 0.4926</title>
+            <title>Both bundled locales · Khristov: 0.2613 ms; min 0.2375, max 0.4926</title>
             <rect x="270" y="66" width="4.866509469612694" height="15" rx="3" fill="#dc6828" />
             <path
               d="M274.42349338170544,69v9 M274.42349338170544,73.5H279.1746998454662 M279.1746998454662,69v9"
               class="range"
             />
             <text x="920" y="78" class="value">0.2613 ms</text>
+          </g>
+          <g>
+            <title>Both bundled locales · hyphen@1.14.1: 0.1728 ms; min 0.1215, max 0.2206</title>
+            <rect x="270" y="90" width="3.219172016745559" height="15" rx="3" fill="#008470" />
+            <path
+              d="M272.2624978927513,93v9 M272.2624978927513,97.5H274.1092642887088 M274.1092642887088,93v9"
+              class="range"
+            />
+            <text x="920" y="102" class="value">0.1728 ms</text>
+          </g>
+          <g>
+            <title>Both bundled locales · hypher@0.2.5: 14.8983 ms; min 7.4370, max 17.2728</title>
+            <rect x="270" y="114" width="277.47097523894234" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M408.50801980135,117v9 M408.50801980135,121.5H591.6945296122046 M591.6945296122046,117v9"
+              class="range"
+            />
+            <text x="920" y="126" class="value">14.8983 ms</text>
+          </g>
+          <g>
+            <title>Both bundled locales · hyphenopoly@6.1.0: 0.6203 ms; min 0.5501, max 0.7448</title>
+            <rect x="270" y="138" width="11.552929102836886" height="15" rx="3" fill="#b33f69" />
+            <path
+              d="M280.24440481141295,141v9 M280.24440481141295,145.5H283.87189585582774 M283.87189585582774,141v9"
+              class="range"
+            />
+            <text x="920" y="150" class="value">0.6203 ms</text>
           </g>
         </svg>
       </div>
@@ -253,6 +285,24 @@
               <td>khristov</td>
               <td>0.2613</td>
               <td>0.2375 / 0.4926</td>
+            </tr>
+            <tr>
+              <td>hyphen@1.14.1</td>
+              <td>knuth-liang</td>
+              <td>0.1728</td>
+              <td>0.1215 / 0.2206</td>
+            </tr>
+            <tr>
+              <td>hypher@0.2.5</td>
+              <td>knuth-liang</td>
+              <td>14.8983</td>
+              <td>7.4370 / 17.2728</td>
+            </tr>
+            <tr>
+              <td>hyphenopoly@6.1.0</td>
+              <td>knuth-liang-wasm</td>
+              <td>0.6203</td>
+              <td>0.5501 / 0.7448</td>
             </tr>
           </tbody>
         </table>
@@ -577,6 +627,101 @@
         </svg>
       </div>
     </section>
+    <section id="libraries">
+      <h2>External library comparison</h2>
+      <p>
+        Original Typographist measurements are retained unchanged. Libraries were measured separately on
+        2026-10-08T05:18:52.009Z under v24.21.0 on the same CPU, OS and ICU. Cross-run timing variation remains
+        possible. External harness: <code>e938965c15230cb56581f0597028b3ad24fc40ee</code>.
+      </p>
+      <p>
+        Native synchronous whole-text APIs and bundled language patterns are used. Word caches remain enabled where
+        built in; verification and warm-ups populate them. Typographist has no persistent word cache. Different
+        dictionaries, exclusions and output contracts affect timings.
+      </p>
+      <p>
+        Ratios include only workloads that preserve source characters, remain idempotent and insert at original grapheme
+        boundaries. Other raw timings remain in the table, without speed ratios or latency bars. Unsupported workloads
+        are listed separately. Median ratios weight each included workload equally; coverage differs by library.
+      </p>
+      <div class="legend">
+        <span><i style="background: #008470"></i>hyphen@1.14.1 · 29/29 workloads</span
+        ><span><i style="background: #8755c5"></i>hypher@0.2.5 · 16/29 workloads</span
+        ><span><i style="background: #b33f69"></i>hyphenopoly@6.1.0 · 9/29 workloads</span>
+      </div>
+      <div class="chart-scroll">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1050 158"
+          role="img"
+          aria-label="External library speed relative to Knuth–Liang"
+        >
+          <title>External library speed relative to Knuth–Liang</title>
+          <line x1="270" x2="270" y1="30" y2="128" class="grid" />
+          <text x="270" y="18" text-anchor="middle" class="axis">0.00 ×</text>
+          <line x1="425" x2="425" y1="30" y2="128" class="grid" />
+          <text x="425" y="18" text-anchor="middle" class="axis">3.76 ×</text>
+          <line x1="580" x2="580" y1="30" y2="128" class="grid" />
+          <text x="580" y="18" text-anchor="middle" class="axis">7.52 ×</text>
+          <line x1="735" x2="735" y1="30" y2="128" class="grid" />
+          <text x="735" y="18" text-anchor="middle" class="axis">11.27 ×</text>
+          <line x1="890" x2="890" y1="30" y2="128" class="grid" />
+          <text x="890" y="18" text-anchor="middle" class="axis">15.03 ×</text>
+          <line x1="311.2433029313209" x2="311.2433029313209" y1="30" y2="128" class="reference" />
+          <text x="250" y="54" text-anchor="end" class="workload">Median workload ratio</text>
+          <g>
+            <title>Median workload ratio · hyphen@1.14.1 · 29/29 workloads: 1.1595 ×; min 1.1595, max 1.1595</title>
+            <rect x="270" y="42" width="47.82191630846847" height="15" rx="3" fill="#008470" />
+            <path
+              d="M317.8219163084685,45v9 M317.8219163084685,49.5H317.8219163084685 M317.8219163084685,45v9"
+              class="range"
+            />
+            <text x="920" y="54" class="value">1.16 ×</text>
+          </g>
+          <g>
+            <title>Median workload ratio · hypher@0.2.5 · 16/29 workloads: 1.5138 ×; min 1.5138, max 1.5138</title>
+            <rect x="270" y="66" width="62.43569889770418" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M332.4356988977042,69v9 M332.4356988977042,73.5H332.4356988977042 M332.4356988977042,69v9"
+              class="range"
+            />
+            <text x="920" y="78" class="value">1.51 ×</text>
+          </g>
+          <g>
+            <title>
+              Median workload ratio · hyphenopoly@6.1.0 · 9/29 workloads: 15.0327 ×; min 15.0327, max 15.0327
+            </title>
+            <rect x="270" y="90" width="620" height="15" rx="3" fill="#b33f69" />
+            <path d="M890,93v9 M890,97.5H890 M890,93v9" class="range" />
+            <text x="920" y="102" class="value">15.03 ×</text>
+          </g>
+        </svg>
+      </div>
+      <p>
+        <strong>hyphen@1.14.1</strong>: Native synchronous whole-text API; en-us and ru patterns; minWordLength 5/4;
+        built-in word cache retained after warm-up. Pattern loading excluded; preparation creates two new formatters.
+      </p>
+      <p>
+        <strong>hypher@0.2.5</strong>: Native hyphenateText API; hyphenation.en-us and hyphenation.ru datasets; native
+        left/right minima; minLength argument 4/3 (API uses a strict greater-than check). No persistent word cache.
+        Native slash handling may insert zero-width spaces.
+      </p>
+      <p>
+        <strong>hyphenopoly@6.1.0</strong>: Native synchronous WASM whole-text API; en-us and ru; minWordLength 4;
+        native pattern minima; normalize false; built-in word cache retained after warm-up. Words longer than 61
+        characters are unsupported. Preparation uses fresh module state and includes WASM compilation/instantiation;
+        module and pattern-byte loading excluded.
+      </p>
+      <small>Not measured: long-word-1000 — found word longer than 61 characters</small
+      ><small>Not measured: combining-run-1000 — found word longer than 61 characters</small
+      ><small>Not measured: scheme-near-match-1000 — found word longer than 61 characters</small
+      ><small>Not measured: long-word-4000 — found word longer than 61 characters</small
+      ><small>Not measured: combining-run-4000 — found word longer than 61 characters</small
+      ><small>Not measured: scheme-near-match-4000 — found word longer than 61 characters</small
+      ><small>Not measured: long-word-16000 — found word longer than 61 characters</small
+      ><small>Not measured: combining-run-16000 — found word longer than 61 characters</small
+      ><small>Not measured: scheme-near-match-16000 — found word longer than 61 characters</small>
+    </section>
     <section id="latency-en">
       <h2>English formatting latency</h2>
       <p>
@@ -584,25 +729,28 @@
         All English rows share one linear scale starting at zero.
       </p>
       <div class="legend">
-        <span><i style="background: #2563eb"></i>Knuth–Liang (current-standard)</span
-        ><span><i style="background: #dc6828"></i>Khristov (current-fast)</span>
+        <span><i style="background: #2563eb"></i>Knuth–Liang</span
+        ><span><i style="background: #dc6828"></i>Khristov</span
+        ><span><i style="background: #008470"></i>hyphen@1.14.1</span
+        ><span><i style="background: #8755c5"></i>hypher@0.2.5</span
+        ><span><i style="background: #b33f69"></i>hyphenopoly@6.1.0</span>
       </div>
       <div class="chart-scroll">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 1562" role="img" aria-label="EN formatting latency">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 3146" role="img" aria-label="EN formatting latency">
           <title>EN formatting latency</title>
-          <line x1="270" x2="270" y1="30" y2="1532" class="grid" />
+          <line x1="270" x2="270" y1="30" y2="3116" class="grid" />
           <text x="270" y="18" text-anchor="middle" class="axis">0.00 ms</text>
-          <line x1="425" x2="425" y1="30" y2="1532" class="grid" />
+          <line x1="425" x2="425" y1="30" y2="3116" class="grid" />
           <text x="425" y="18" text-anchor="middle" class="axis">1.66 ms</text>
-          <line x1="580" x2="580" y1="30" y2="1532" class="grid" />
+          <line x1="580" x2="580" y1="30" y2="3116" class="grid" />
           <text x="580" y="18" text-anchor="middle" class="axis">3.33 ms</text>
-          <line x1="735" x2="735" y1="30" y2="1532" class="grid" />
+          <line x1="735" x2="735" y1="30" y2="3116" class="grid" />
           <text x="735" y="18" text-anchor="middle" class="axis">4.99 ms</text>
-          <line x1="890" x2="890" y1="30" y2="1532" class="grid" />
+          <line x1="890" x2="890" y1="30" y2="3116" class="grid" />
           <text x="890" y="18" text-anchor="middle" class="axis">6.65 ms</text>
           <text x="250" y="54" text-anchor="end" class="workload">short-en</text>
           <g>
-            <title>short-en · Knuth–Liang (current-standard): 0.0071 ms; min 0.0034, max 0.0095</title>
+            <title>short-en · Knuth–Liang: 0.0071 ms; min 0.0034, max 0.0095</title>
             <rect x="270" y="42" width="0.6610510110701511" height="15" rx="3" fill="#2563eb" />
             <path
               d="M270.32069771879975,45v9 M270.32069771879975,49.5H270.8832309615723 M270.8832309615723,45v9"
@@ -611,7 +759,7 @@
             <text x="920" y="54" class="value">0.0071 ms</text>
           </g>
           <g>
-            <title>short-en · Khristov (current-fast): 0.0038 ms; min 0.0032, max 0.0052</title>
+            <title>short-en · Khristov: 0.0038 ms; min 0.0032, max 0.0052</title>
             <rect x="270" y="66" width="0.3499586465769447" height="15" rx="3" fill="#dc6828" />
             <path
               d="M270.3024438190006,69v9 M270.3024438190006,73.5H270.483176805418 M270.483176805418,69v9"
@@ -619,401 +767,752 @@
             />
             <text x="920" y="78" class="value">0.0038 ms</text>
           </g>
-          <text x="250" y="122" text-anchor="end" class="workload">paragraph-en</text>
           <g>
-            <title>paragraph-en · Knuth–Liang (current-standard): 0.0240 ms; min 0.0202, max 0.0286</title>
-            <rect x="270" y="110" width="2.2387482276669344" height="15" rx="3" fill="#2563eb" />
+            <title>short-en · hyphen@1.14.1: 0.0061 ms; min 0.0028, max 0.0130</title>
+            <rect x="270" y="90" width="0.5701136467798598" height="15" rx="3" fill="#008470" />
             <path
-              d="M271.8810738938684,113v9 M271.8810738938684,117.5H272.6632028279418 M272.6632028279418,113v9"
+              d="M270.2566264652891,93v9 M270.2566264652891,97.5H271.2117657550982 M271.2117657550982,93v9"
               class="range"
             />
-            <text x="920" y="122" class="value">0.0240 ms</text>
+            <text x="920" y="102" class="value">0.0061 ms</text>
           </g>
           <g>
-            <title>paragraph-en · Khristov (current-fast): 0.0214 ms; min 0.0196, max 0.0228</title>
-            <rect x="270" y="134" width="1.9907445291756238" height="15" rx="3" fill="#dc6828" />
+            <title>short-en · hypher@0.2.5: 0.0023 ms; min 0.0019, max 0.0070</title>
+            <rect x="270" y="114" width="0.21472438815117234" height="15" rx="3" fill="#8755c5" />
             <path
-              d="M271.82370597108394,137v9 M271.82370597108394,141.5H272.1220286618892 M272.1220286618892,137v9"
+              d="M270.17474757431813,117v9 M270.17474757431813,121.5H270.6479468295959 M270.6479468295959,117v9"
               class="range"
             />
-            <text x="920" y="146" class="value">0.0214 ms</text>
+            <text x="920" y="126" class="value">0.0023 ms</text>
           </g>
-          <text x="250" y="190" text-anchor="end" class="workload">repeated-words</text>
           <g>
-            <title>repeated-words · Knuth–Liang (current-standard): 3.5820 ms; min 3.4853, max 4.4500</title>
-            <rect x="270" y="178" width="333.715908595715" height="15" rx="3" fill="#2563eb" />
+            <title>short-en · hyphenopoly@6.1.0: 0.0005 ms; min 0.0004, max 0.0013</title>
+            <rect x="270" y="138" width="0.0439740759719713" height="15" rx="3" fill="#b33f69" />
             <path
-              d="M594.7118438788082,181v9 M594.7118438788082,185.5H684.5863771125648 M684.5863771125648,181v9"
+              d="M270.0351107841973,141v9 M270.0351107841973,145.5H270.1219628450314 M270.1219628450314,141v9"
               class="range"
             />
-            <text x="920" y="190" class="value">3.5820 ms</text>
+            <text x="920" y="150" class="value">0.0005 ms</text>
           </g>
+          <text x="250" y="194" text-anchor="end" class="workload">paragraph-en</text>
           <g>
-            <title>repeated-words · Khristov (current-fast): 3.9098 ms; min 3.6864, max 4.3151</title>
-            <rect x="270" y="202" width="364.26158744851074" height="15" rx="3" fill="#dc6828" />
+            <title>paragraph-en · Knuth–Liang: 0.0240 ms; min 0.0202, max 0.0286</title>
+            <rect x="270" y="182" width="2.2387482276669344" height="15" rx="3" fill="#2563eb" />
             <path
-              d="M613.4462908894782,205v9 M613.4462908894782,209.5H672.0190147607111 M672.0190147607111,205v9"
+              d="M271.8810738938684,185v9 M271.8810738938684,189.5H272.6632028279418 M272.6632028279418,185v9"
               class="range"
             />
-            <text x="920" y="214" class="value">3.9098 ms</text>
-          </g>
-          <text x="250" y="258" text-anchor="end" class="workload">varied-vocabulary</text>
-          <g>
-            <title>varied-vocabulary · Knuth–Liang (current-standard): 4.8429 ms; min 4.3144, max 6.6548</title>
-            <rect x="270" y="246" width="451.1864104717954" height="15" rx="3" fill="#2563eb" />
-            <path d="M671.951842496356,249v9 M671.951842496356,253.5H890 M890,249v9" class="range" />
-            <text x="920" y="258" class="value">4.8429 ms</text>
+            <text x="920" y="194" class="value">0.0240 ms</text>
           </g>
           <g>
-            <title>varied-vocabulary · Khristov (current-fast): 3.7965 ms; min 3.6946, max 6.3391</title>
-            <rect x="270" y="270" width="353.70277828284674" height="15" rx="3" fill="#dc6828" />
+            <title>paragraph-en · Khristov: 0.0214 ms; min 0.0196, max 0.0228</title>
+            <rect x="270" y="206" width="1.9907445291756238" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M614.2052163616656,273v9 M614.2052163616656,277.5H860.5833928139418 M860.5833928139418,273v9"
+              d="M271.82370597108394,209v9 M271.82370597108394,213.5H272.1220286618892 M272.1220286618892,209v9"
               class="range"
             />
-            <text x="920" y="282" class="value">3.7965 ms</text>
-          </g>
-          <text x="250" y="326" text-anchor="end" class="workload">en-1000</text>
-          <g>
-            <title>en-1000 · Knuth–Liang (current-standard): 0.1208 ms; min 0.1162, max 0.1448</title>
-            <rect x="270" y="314" width="11.250891192607176" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M280.82293311775067,317v9 M280.82293311775067,321.5H283.486778952501 M283.486778952501,317v9"
-              class="range"
-            />
-            <text x="920" y="326" class="value">0.1208 ms</text>
+            <text x="920" y="218" class="value">0.0214 ms</text>
           </g>
           <g>
-            <title>en-1000 · Khristov (current-fast): 0.1181 ms; min 0.1113, max 0.1409</title>
-            <rect x="270" y="338" width="11.006386780906436" height="15" rx="3" fill="#dc6828" />
+            <title>paragraph-en · hyphen@1.14.1: 0.0175 ms; min 0.0170, max 0.0290</title>
+            <rect x="270" y="230" width="1.6319258428245114" height="15" rx="3" fill="#008470" />
             <path
-              d="M280.3651566297132,341v9 M280.3651566297132,345.5H283.1253629053679 M283.1253629053679,341v9"
+              d="M271.58580984122216,233v9 M271.58580984122216,237.5H272.70592620216064 M272.70592620216064,233v9"
               class="range"
             />
-            <text x="920" y="350" class="value">0.1181 ms</text>
+            <text x="920" y="242" class="value">0.0175 ms</text>
           </g>
-          <text x="250" y="394" text-anchor="end" class="workload">mixed-en-1000</text>
+          <text x="250" y="334" text-anchor="end" class="workload">repeated-words</text>
           <g>
-            <title>mixed-en-1000 · Knuth–Liang (current-standard): 0.1379 ms; min 0.1337, max 0.1615</title>
-            <rect x="270" y="382" width="12.846063951251212" height="15" rx="3" fill="#2563eb" />
+            <title>repeated-words · Knuth–Liang: 3.5820 ms; min 3.4853, max 4.4500</title>
+            <rect x="270" y="322" width="333.715908595715" height="15" rx="3" fill="#2563eb" />
             <path
-              d="M282.4517824338286,385v9 M282.4517824338286,389.5H285.0479627755551 M285.0479627755551,385v9"
+              d="M594.7118438788082,325v9 M594.7118438788082,329.5H684.5863771125648 M684.5863771125648,325v9"
               class="range"
             />
-            <text x="920" y="394" class="value">0.1379 ms</text>
-          </g>
-          <g>
-            <title>mixed-en-1000 · Khristov (current-fast): 0.1265 ms; min 0.1221, max 0.1323</title>
-            <rect x="270" y="406" width="11.783315099488178" height="15" rx="3" fill="#dc6828" />
-            <path
-              d="M281.3792402528341,409v9 M281.3792402528341,413.5H282.32123576586736 M282.32123576586736,409v9"
-              class="range"
-            />
-            <text x="920" y="418" class="value">0.1265 ms</text>
-          </g>
-          <text x="250" y="462" text-anchor="end" class="workload">long-word-1000</text>
-          <g>
-            <title>long-word-1000 · Knuth–Liang (current-standard): 0.0904 ms; min 0.0863, max 0.2396</title>
-            <rect x="270" y="450" width="8.421035548616247" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M278.0426535313445,453v9 M278.0426535313445,457.5H292.3182596700444 M292.3182596700444,453v9"
-              class="range"
-            />
-            <text x="920" y="462" class="value">0.0904 ms</text>
+            <text x="920" y="334" class="value">3.5820 ms</text>
           </g>
           <g>
-            <title>long-word-1000 · Khristov (current-fast): 0.1195 ms; min 0.1172, max 0.1347</title>
-            <rect x="270" y="474" width="11.130337063456174" height="15" rx="3" fill="#dc6828" />
+            <title>repeated-words · Khristov: 3.9098 ms; min 3.6864, max 4.3151</title>
+            <rect x="270" y="346" width="364.26158744851074" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M280.91545569158114,477v9 M280.91545569158114,481.5H282.55108169555086 M282.55108169555086,477v9"
+              d="M613.4462908894782,349v9 M613.4462908894782,353.5H672.0190147607111 M672.0190147607111,349v9"
               class="range"
             />
-            <text x="920" y="486" class="value">0.1195 ms</text>
-          </g>
-          <text x="250" y="530" text-anchor="end" class="workload">combining-run-1000</text>
-          <g>
-            <title>combining-run-1000 · Knuth–Liang (current-standard): 0.0718 ms; min 0.0712, max 0.0758</title>
-            <rect x="270" y="518" width="6.6915127809424595" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M276.6296950762399,521v9 M276.6296950762399,525.5H277.0648952478282 M277.0648952478282,521v9"
-              class="range"
-            />
-            <text x="920" y="530" class="value">0.0718 ms</text>
+            <text x="920" y="358" class="value">3.9098 ms</text>
           </g>
           <g>
-            <title>combining-run-1000 · Khristov (current-fast): 0.0738 ms; min 0.0704, max 0.0942</title>
-            <rect x="270" y="542" width="6.8759312685981815" height="15" rx="3" fill="#dc6828" />
+            <title>repeated-words · hyphen@1.14.1: 3.0176 ms; min 2.7273, max 5.2312</title>
+            <rect x="270" y="370" width="281.13912451558105" height="15" rx="3" fill="#008470" />
             <path
-              d="M276.56135088903,545v9 M276.56135088903,549.5H278.7806785684819 M278.7806785684819,545v9"
+              d="M524.0933908153955,373v9 M524.0933908153955,377.5H757.3684106130489 M757.3684106130489,373v9"
               class="range"
             />
-            <text x="920" y="554" class="value">0.0738 ms</text>
-          </g>
-          <text x="250" y="598" text-anchor="end" class="workload">email-near-match-1000</text>
-          <g>
-            <title>email-near-match-1000 · Knuth–Liang (current-standard): 0.0841 ms; min 0.0807, max 0.0996</title>
-            <rect x="270" y="586" width="7.8343484119210745" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M277.51587960212845,589v9 M277.51587960212845,593.5H279.2793636153624 M279.2793636153624,589v9"
-              class="range"
-            />
-            <text x="920" y="598" class="value">0.0841 ms</text>
+            <text x="920" y="382" class="value">3.0176 ms</text>
           </g>
           <g>
-            <title>email-near-match-1000 · Khristov (current-fast): 0.0877 ms; min 0.0819, max 0.2312</title>
-            <rect x="270" y="610" width="8.172828172209156" height="15" rx="3" fill="#dc6828" />
+            <title>repeated-words · hypher@0.2.5: 2.7631 ms; min 2.5366, max 5.8431</title>
+            <rect x="270" y="394" width="257.4242407394491" height="15" rx="3" fill="#8755c5" />
             <path
-              d="M277.6324148262084,613v9 M277.6324148262084,617.5H291.54366377503294 M291.54366377503294,613v9"
+              d="M506.3243238369846,397v9 M506.3243238369846,401.5H814.3729742157125 M814.3729742157125,397v9"
               class="range"
             />
-            <text x="920" y="622" class="value">0.0877 ms</text>
-          </g>
-          <text x="250" y="666" text-anchor="end" class="workload">scheme-near-match-1000</text>
-          <g>
-            <title>scheme-near-match-1000 · Knuth–Liang (current-standard): 0.0677 ms; min 0.0656, max 0.0738</title>
-            <rect x="270" y="654" width="6.310338743280895" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M276.11389211017894,657v9 M276.11389211017894,661.5H276.8713563563682 M276.8713563563682,657v9"
-              class="range"
-            />
-            <text x="920" y="666" class="value">0.0677 ms</text>
+            <text x="920" y="406" class="value">2.7631 ms</text>
           </g>
           <g>
-            <title>scheme-near-match-1000 · Khristov (current-fast): 0.0817 ms; min 0.0791, max 0.0874</title>
-            <rect x="270" y="678" width="7.613360047078666" height="15" rx="3" fill="#dc6828" />
+            <title>repeated-words · hyphenopoly@6.1.0: 0.2170 ms; min 0.2125, max 0.2435</title>
+            <rect x="270" y="418" width="20.215683946849406" height="15" rx="3" fill="#b33f69" />
             <path
-              d="M277.3660647110522,681v9 M277.3660647110522,685.5H278.1437801764398 M278.1437801764398,681v9"
+              d="M289.8013773454761,421v9 M289.8013773454761,425.5H292.6869897503131 M292.6869897503131,421v9"
               class="range"
             />
-            <text x="920" y="690" class="value">0.0817 ms</text>
+            <text x="920" y="430" class="value">0.2170 ms</text>
           </g>
-          <text x="250" y="734" text-anchor="end" class="workload">en-4000</text>
+          <text x="250" y="474" text-anchor="end" class="workload">varied-vocabulary</text>
           <g>
-            <title>en-4000 · Knuth–Liang (current-standard): 0.4420 ms; min 0.4252, max 0.6552</title>
-            <rect x="270" y="722" width="41.18058087133701" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M309.6169391254169,725v9 M309.6169391254169,729.5H331.04267877616655 M331.04267877616655,725v9"
-              class="range"
-            />
-            <text x="920" y="734" class="value">0.4420 ms</text>
+            <title>varied-vocabulary · Knuth–Liang: 4.8429 ms; min 4.3144, max 6.6548</title>
+            <rect x="270" y="462" width="451.1864104717954" height="15" rx="3" fill="#2563eb" />
+            <path d="M671.951842496356,465v9 M671.951842496356,469.5H890 M890,465v9" class="range" />
+            <text x="920" y="474" class="value">4.8429 ms</text>
           </g>
           <g>
-            <title>en-4000 · Khristov (current-fast): 0.4412 ms; min 0.3957, max 0.8510</title>
-            <rect x="270" y="746" width="41.10262471017638" height="15" rx="3" fill="#dc6828" />
+            <title>varied-vocabulary · Khristov: 3.7965 ms; min 3.6946, max 6.3391</title>
+            <rect x="270" y="486" width="353.70277828284674" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M306.86140893155596,749v9 M306.86140893155596,753.5H349.28742507321675 M349.28742507321675,749v9"
+              d="M614.2052163616656,489v9 M614.2052163616656,493.5H860.5833928139418 M860.5833928139418,489v9"
               class="range"
             />
-            <text x="920" y="758" class="value">0.4412 ms</text>
-          </g>
-          <text x="250" y="802" text-anchor="end" class="workload">mixed-en-4000</text>
-          <g>
-            <title>mixed-en-4000 · Knuth–Liang (current-standard): 0.4830 ms; min 0.4629, max 0.5114</title>
-            <rect x="270" y="790" width="45.002296076684246" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M313.1285066635829,793v9 M313.1285066635829,797.5H317.649381727257 M317.649381727257,793v9"
-              class="range"
-            />
-            <text x="920" y="802" class="value">0.4830 ms</text>
+            <text x="920" y="498" class="value">3.7965 ms</text>
           </g>
           <g>
-            <title>mixed-en-4000 · Khristov (current-fast): 0.4582 ms; min 0.4466, max 0.5060</title>
-            <rect x="270" y="814" width="42.69242264640992" height="15" rx="3" fill="#dc6828" />
+            <title>varied-vocabulary · hyphen@1.14.1: 2.5630 ms; min 2.3506, max 2.7696</title>
+            <rect x="270" y="510" width="238.78538144475777" height="15" rx="3" fill="#008470" />
             <path
-              d="M311.60602073982443,817v9 M311.60602073982443,821.5H317.1407684343553 M317.1407684343553,817v9"
+              d="M488.99807207697495,513v9 M488.99807207697495,517.5H528.0348468706186 M528.0348468706186,513v9"
               class="range"
             />
-            <text x="920" y="826" class="value">0.4582 ms</text>
-          </g>
-          <text x="250" y="870" text-anchor="end" class="workload">long-word-4000</text>
-          <g>
-            <title>long-word-4000 · Knuth–Liang (current-standard): 0.3423 ms; min 0.3369, max 0.3980</title>
-            <rect x="270" y="858" width="31.892161332446122" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M301.39169535510223,861v9 M301.39169535510223,865.5H307.0808228008831 M307.0808228008831,861v9"
-              class="range"
-            />
-            <text x="920" y="870" class="value">0.3423 ms</text>
+            <text x="920" y="522" class="value">2.5630 ms</text>
           </g>
           <g>
-            <title>long-word-4000 · Khristov (current-fast): 0.4753 ms; min 0.4535, max 1.1188</title>
-            <rect x="270" y="882" width="44.27954673523096" height="15" rx="3" fill="#dc6828" />
+            <title>varied-vocabulary · hypher@0.2.5: 2.8603 ms; min 2.8086, max 3.3868</title>
+            <rect x="270" y="534" width="266.48224823172876" height="15" rx="3" fill="#8755c5" />
             <path
-              d="M312.25101888402844,885v9 M312.25101888402844,889.5H374.23329882205866 M374.23329882205866,885v9"
+              d="M531.6669005819749,537v9 M531.6669005819749,541.5H585.5352368129779 M585.5352368129779,537v9"
               class="range"
             />
-            <text x="920" y="894" class="value">0.4753 ms</text>
+            <text x="920" y="546" class="value">2.8603 ms</text>
           </g>
-          <text x="250" y="938" text-anchor="end" class="workload">combining-run-4000</text>
+          <text x="250" y="614" text-anchor="end" class="workload">en-1000</text>
           <g>
-            <title>combining-run-4000 · Knuth–Liang (current-standard): 0.2817 ms; min 0.2766, max 0.9260</title>
-            <rect x="270" y="926" width="26.246281272400715" height="15" rx="3" fill="#2563eb" />
+            <title>en-1000 · Knuth–Liang: 0.1208 ms; min 0.1162, max 0.1448</title>
+            <rect x="270" y="602" width="11.250891192607176" height="15" rx="3" fill="#2563eb" />
             <path
-              d="M295.7682495270336,929v9 M295.7682495270336,933.5H356.2723856206713 M356.2723856206713,929v9"
+              d="M280.82293311775067,605v9 M280.82293311775067,609.5H283.486778952501 M283.486778952501,605v9"
               class="range"
             />
-            <text x="920" y="938" class="value">0.2817 ms</text>
-          </g>
-          <g>
-            <title>combining-run-4000 · Khristov (current-fast): 0.2771 ms; min 0.2702, max 0.2891</title>
-            <rect x="270" y="950" width="25.816579086165657" height="15" rx="3" fill="#dc6828" />
-            <path
-              d="M295.1711756724082,953v9 M295.1711756724082,957.5H296.93868663812174 M296.93868663812174,953v9"
-              class="range"
-            />
-            <text x="920" y="962" class="value">0.2771 ms</text>
-          </g>
-          <text x="250" y="1006" text-anchor="end" class="workload">email-near-match-4000</text>
-          <g>
-            <title>email-near-match-4000 · Knuth–Liang (current-standard): 0.3251 ms; min 0.3232, max 0.3323</title>
-            <rect x="270" y="994" width="30.285956966593734" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M300.113135121407,997v9 M300.113135121407,1001.5H300.9579591063936 M300.9579591063936,997v9"
-              class="range"
-            />
-            <text x="920" y="1006" class="value">0.3251 ms</text>
+            <text x="920" y="614" class="value">0.1208 ms</text>
           </g>
           <g>
-            <title>email-near-match-4000 · Khristov (current-fast): 0.3412 ms; min 0.3249, max 0.4326</title>
-            <rect x="270" y="1018" width="31.78524470196644" height="15" rx="3" fill="#dc6828" />
+            <title>en-1000 · Khristov: 0.1181 ms; min 0.1113, max 0.1409</title>
+            <rect x="270" y="626" width="11.006386780906436" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M300.2695598535185,1021v9 M300.2695598535185,1025.5H310.29886338193114 M310.29886338193114,1021v9"
+              d="M280.3651566297132,629v9 M280.3651566297132,633.5H283.1253629053679 M283.1253629053679,629v9"
               class="range"
             />
-            <text x="920" y="1030" class="value">0.3412 ms</text>
-          </g>
-          <text x="250" y="1074" text-anchor="end" class="workload">scheme-near-match-4000</text>
-          <g>
-            <title>scheme-near-match-4000 · Knuth–Liang (current-standard): 0.3291 ms; min 0.2707, max 1.2151</title>
-            <rect x="270" y="1062" width="30.663929056040157" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M295.2177816713582,1065v9 M295.2177816713582,1069.5H383.2065071534521 M383.2065071534521,1065v9"
-              class="range"
-            />
-            <text x="920" y="1074" class="value">0.3291 ms</text>
+            <text x="920" y="638" class="value">0.1181 ms</text>
           </g>
           <g>
-            <title>scheme-near-match-4000 · Khristov (current-fast): 0.3298 ms; min 0.3188, max 0.4562</title>
-            <rect x="270" y="1086" width="30.729238012093557" height="15" rx="3" fill="#dc6828" />
+            <title>en-1000 · hyphen@1.14.1: 0.1648 ms; min 0.1045, max 0.2478</title>
+            <rect x="270" y="650" width="15.358033718278904" height="15" rx="3" fill="#008470" />
             <path
-              d="M299.70076170239946,1089v9 M299.70076170239946,1093.5H312.5047409174975 M312.5047409174975,1089v9"
+              d="M279.73244289353374,653v9 M279.73244289353374,657.5H293.09034119490946 M293.09034119490946,653v9"
               class="range"
             />
-            <text x="920" y="1098" class="value">0.3298 ms</text>
+            <text x="920" y="662" class="value">0.1648 ms</text>
           </g>
-          <text x="250" y="1142" text-anchor="end" class="workload">en-16000</text>
+          <text x="250" y="754" text-anchor="end" class="workload">mixed-en-1000</text>
           <g>
-            <title>en-16000 · Knuth–Liang (current-standard): 1.9193 ms; min 1.8034, max 2.4797</title>
-            <rect x="270" y="1130" width="178.8166669922479" height="15" rx="3" fill="#2563eb" />
+            <title>mixed-en-1000 · Knuth–Liang: 0.1379 ms; min 0.1337, max 0.1615</title>
+            <rect x="270" y="742" width="12.846063951251212" height="15" rx="3" fill="#2563eb" />
             <path
-              d="M438.0184227095132,1133v9 M438.0184227095132,1137.5H501.0195782612095 M501.0195782612095,1133v9"
+              d="M282.4517824338286,745v9 M282.4517824338286,749.5H285.0479627755551 M285.0479627755551,745v9"
               class="range"
             />
-            <text x="920" y="1142" class="value">1.9193 ms</text>
-          </g>
-          <g>
-            <title>en-16000 · Khristov (current-fast): 1.7060 ms; min 1.5653, max 3.5214</title>
-            <rect x="270" y="1154" width="158.93824184840963" height="15" rx="3" fill="#dc6828" />
-            <path
-              d="M415.82930893801444,1157v9 M415.82930893801444,1161.5H598.075301698169 M598.075301698169,1157v9"
-              class="range"
-            />
-            <text x="920" y="1166" class="value">1.7060 ms</text>
-          </g>
-          <text x="250" y="1210" text-anchor="end" class="workload">mixed-en-16000</text>
-          <g>
-            <title>mixed-en-16000 · Knuth–Liang (current-standard): 2.2393 ms; min 1.8206, max 3.5974</title>
-            <rect x="270" y="1198" width="208.62736388458018" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M439.6197498658824,1201v9 M439.6197498658824,1205.5H605.1533577867522 M605.1533577867522,1201v9"
-              class="range"
-            />
-            <text x="920" y="1210" class="value">2.2393 ms</text>
+            <text x="920" y="754" class="value">0.1379 ms</text>
           </g>
           <g>
-            <title>mixed-en-16000 · Khristov (current-fast): 1.7588 ms; min 1.7367, max 1.9828</title>
-            <rect x="270" y="1222" width="163.86110238730208" height="15" rx="3" fill="#dc6828" />
+            <title>mixed-en-1000 · Khristov: 0.1265 ms; min 0.1221, max 0.1323</title>
+            <rect x="270" y="766" width="11.783315099488178" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M431.79571829784413,1225v9 M431.79571829784413,1229.5H454.72857157883897 M454.72857157883897,1225v9"
+              d="M281.3792402528341,769v9 M281.3792402528341,773.5H282.32123576586736 M282.32123576586736,769v9"
               class="range"
             />
-            <text x="920" y="1234" class="value">1.7588 ms</text>
-          </g>
-          <text x="250" y="1278" text-anchor="end" class="workload">long-word-16000</text>
-          <g>
-            <title>long-word-16000 · Knuth–Liang (current-standard): 1.6918 ms; min 1.6321, max 1.8585</title>
-            <rect x="270" y="1266" width="157.61529295263836" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M422.0581622671026,1269v9 M422.0581622671026,1273.5H443.1455950039307 M443.1455950039307,1269v9"
-              class="range"
-            />
-            <text x="920" y="1278" class="value">1.6918 ms</text>
+            <text x="920" y="778" class="value">0.1265 ms</text>
           </g>
           <g>
-            <title>long-word-16000 · Khristov (current-fast): 4.1567 ms; min 3.2145, max 4.9034</title>
-            <rect x="270" y="1290" width="387.2579795426774" height="15" rx="3" fill="#dc6828" />
+            <title>mixed-en-1000 · hyphen@1.14.1: 0.1503 ms; min 0.1027, max 0.2356</title>
+            <rect x="270" y="790" width="14.00634055176763" height="15" rx="3" fill="#008470" />
             <path
-              d="M569.4800408124695,1293v9 M569.4800408124695,1297.5H726.8242224068767 M726.8242224068767,1293v9"
+              d="M279.5642573978335,793v9 M279.5642573978335,797.5H291.94643430587496 M291.94643430587496,793v9"
               class="range"
             />
-            <text x="920" y="1302" class="value">4.1567 ms</text>
+            <text x="920" y="802" class="value">0.1503 ms</text>
           </g>
-          <text x="250" y="1346" text-anchor="end" class="workload">combining-run-16000</text>
+          <text x="250" y="894" text-anchor="end" class="workload">long-word-1000</text>
           <g>
-            <title>combining-run-16000 · Knuth–Liang (current-standard): 1.1394 ms; min 1.0389, max 1.3070</title>
-            <rect x="270" y="1334" width="106.15658702024758" height="15" rx="3" fill="#2563eb" />
+            <title>long-word-1000 · Knuth–Liang: 0.0904 ms; min 0.0863, max 0.2396</title>
+            <rect x="270" y="882" width="8.421035548616247" height="15" rx="3" fill="#2563eb" />
             <path
-              d="M366.7853574020693,1337v9 M366.7853574020693,1341.5H391.76645233612714 M391.76645233612714,1337v9"
+              d="M278.0426535313445,885v9 M278.0426535313445,889.5H292.3182596700444 M292.3182596700444,885v9"
               class="range"
             />
-            <text x="920" y="1346" class="value">1.1394 ms</text>
-          </g>
-          <g>
-            <title>combining-run-16000 · Khristov (current-fast): 1.3803 ms; min 1.0540, max 2.1119</title>
-            <rect x="270" y="1358" width="128.60069453313648" height="15" rx="3" fill="#dc6828" />
-            <path
-              d="M368.1965339460296,1361v9 M368.1965339460296,1365.5H466.7582763196111 M466.7582763196111,1361v9"
-              class="range"
-            />
-            <text x="920" y="1370" class="value">1.3803 ms</text>
-          </g>
-          <text x="250" y="1414" text-anchor="end" class="workload">email-near-match-16000</text>
-          <g>
-            <title>email-near-match-16000 · Knuth–Liang (current-standard): 1.3983 ms; min 1.2644, max 4.5894</title>
-            <rect x="270" y="1402" width="130.27208208174582" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M387.80254341583793,1405v9 M387.80254341583793,1409.5H697.572704336561 M697.572704336561,1405v9"
-              class="range"
-            />
-            <text x="920" y="1414" class="value">1.3983 ms</text>
+            <text x="920" y="894" class="value">0.0904 ms</text>
           </g>
           <g>
-            <title>email-near-match-16000 · Khristov (current-fast): 1.3364 ms; min 1.2559, max 4.9679</title>
-            <rect x="270" y="1426" width="124.5078446782256" height="15" rx="3" fill="#dc6828" />
+            <title>long-word-1000 · Khristov: 0.1195 ms; min 0.1172, max 0.1347</title>
+            <rect x="270" y="906" width="11.130337063456174" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M387.00411580762295,1429v9 M387.00411580762295,1433.5H732.8400995968274 M732.8400995968274,1429v9"
+              d="M280.91545569158114,909v9 M280.91545569158114,913.5H282.55108169555086 M282.55108169555086,909v9"
               class="range"
             />
-            <text x="920" y="1438" class="value">1.3364 ms</text>
-          </g>
-          <text x="250" y="1482" text-anchor="end" class="workload">scheme-near-match-16000</text>
-          <g>
-            <title>scheme-near-match-16000 · Knuth–Liang (current-standard): 1.5774 ms; min 1.3328, max 2.2460</title>
-            <rect x="270" y="1470" width="146.95698312354347" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M394.1694678902455,1473v9 M394.1694678902455,1477.5H479.25008151974737 M479.25008151974737,1473v9"
-              class="range"
-            />
-            <text x="920" y="1482" class="value">1.5774 ms</text>
+            <text x="920" y="918" class="value">0.1195 ms</text>
           </g>
           <g>
-            <title>scheme-near-match-16000 · Khristov (current-fast): 1.4386 ms; min 1.3982, max 1.4702</title>
-            <rect x="270" y="1494" width="134.0312134194246" height="15" rx="3" fill="#dc6828" />
+            <title>long-word-1000 · hyphen@1.14.1: 0.0787 ms; min 0.0738, max 0.0920</title>
+            <rect x="270" y="930" width="7.32945364494656" height="15" rx="3" fill="#008470" />
             <path
-              d="M400.2598774123332,1497v9 M400.2598774123332,1501.5H406.97104809589507 M406.97104809589507,1497v9"
+              d="M276.878188323368,933v9 M276.878188323368,937.5H278.5675474805519 M278.5675474805519,933v9"
               class="range"
             />
-            <text x="920" y="1506" class="value">1.4386 ms</text>
+            <text x="920" y="942" class="value">0.0787 ms</text>
+          </g>
+          <g>
+            <title>long-word-1000 · hypher@0.2.5: 0.0604 ms; min 0.0568, max 0.0670</title>
+            <rect x="270" y="954" width="5.630689439098666" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M275.29571318876674,957v9 M275.29571318876674,961.5H276.24573956058924 M276.24573956058924,957v9"
+              class="range"
+            />
+            <text x="920" y="966" class="value">0.0604 ms</text>
+          </g>
+          <text x="250" y="1034" text-anchor="end" class="workload">combining-run-1000</text>
+          <g>
+            <title>combining-run-1000 · Knuth–Liang: 0.0718 ms; min 0.0712, max 0.0758</title>
+            <rect x="270" y="1022" width="6.6915127809424595" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M276.6296950762399,1025v9 M276.6296950762399,1029.5H277.0648952478282 M277.0648952478282,1025v9"
+              class="range"
+            />
+            <text x="920" y="1034" class="value">0.0718 ms</text>
+          </g>
+          <g>
+            <title>combining-run-1000 · Khristov: 0.0738 ms; min 0.0704, max 0.0942</title>
+            <rect x="270" y="1046" width="6.8759312685981815" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M276.56135088903,1049v9 M276.56135088903,1053.5H278.7806785684819 M278.7806785684819,1049v9"
+              class="range"
+            />
+            <text x="920" y="1058" class="value">0.0738 ms</text>
+          </g>
+          <g>
+            <title>combining-run-1000 · hyphen@1.14.1: 0.0829 ms; min 0.0734, max 0.0906</title>
+            <rect x="270" y="1070" width="7.7246338769220255" height="15" rx="3" fill="#008470" />
+            <path
+              d="M276.83531114757415,1073v9 M276.83531114757415,1077.5H278.44359628942243 M278.44359628942243,1073v9"
+              class="range"
+            />
+            <text x="920" y="1082" class="value">0.0829 ms</text>
+          </g>
+          <g>
+            <title>combining-run-1000 · hypher@0.2.5: 0.0917 ms; min 0.0800, max 0.1084</title>
+            <rect x="270" y="1094" width="8.5402529559653" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M277.4486435930156,1097v9 M277.4486435930156,1101.5H280.1015140803548 M280.1015140803548,1097v9"
+              class="range"
+            />
+            <text x="920" y="1106" class="value">0.0917 ms</text>
+          </g>
+          <text x="250" y="1174" text-anchor="end" class="workload">email-near-match-1000</text>
+          <g>
+            <title>email-near-match-1000 · Knuth–Liang: 0.0841 ms; min 0.0807, max 0.0996</title>
+            <rect x="270" y="1162" width="7.8343484119210745" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M277.51587960212845,1165v9 M277.51587960212845,1169.5H279.2793636153624 M279.2793636153624,1165v9"
+              class="range"
+            />
+            <text x="920" y="1174" class="value">0.0841 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-1000 · Khristov: 0.0877 ms; min 0.0819, max 0.2312</title>
+            <rect x="270" y="1186" width="8.172828172209156" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M277.6324148262084,1189v9 M277.6324148262084,1193.5H291.54366377503294 M291.54366377503294,1189v9"
+              class="range"
+            />
+            <text x="920" y="1198" class="value">0.0877 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-1000 · hyphen@1.14.1: 0.0847 ms; min 0.0746, max 0.1149</title>
+            <rect x="270" y="1210" width="7.890125074965472" height="15" rx="3" fill="#008470" />
+            <path
+              d="M276.9517090752525,1213v9 M276.9517090752525,1217.5H280.7050641572007 M280.7050641572007,1213v9"
+              class="range"
+            />
+            <text x="920" y="1222" class="value">0.0847 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-1000 · hypher@0.2.5: 0.0345 ms; min 0.0335, max 0.0391</title>
+            <rect x="270" y="1234" width="3.209774111830725" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M273.1255133489513,1237v9 M273.1255133489513,1241.5H273.64371900203514 M273.64371900203514,1237v9"
+              class="range"
+            />
+            <text x="920" y="1246" class="value">0.0345 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-1000 · hyphenopoly@6.1.0: 0.0027 ms; min 0.0026, max 0.0045</title>
+            <rect x="270" y="1258" width="0.2558175197960887" height="15" rx="3" fill="#b33f69" />
+            <path
+              d="M270.2408669223792,1261v9 M270.2408669223792,1265.5H270.4176703632032 M270.4176703632032,1261v9"
+              class="range"
+            />
+            <text x="920" y="1270" class="value">0.0027 ms</text>
+          </g>
+          <text x="250" y="1314" text-anchor="end" class="workload">scheme-near-match-1000</text>
+          <g>
+            <title>scheme-near-match-1000 · Knuth–Liang: 0.0677 ms; min 0.0656, max 0.0738</title>
+            <rect x="270" y="1302" width="6.310338743280895" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M276.11389211017894,1305v9 M276.11389211017894,1309.5H276.8713563563682 M276.8713563563682,1305v9"
+              class="range"
+            />
+            <text x="920" y="1314" class="value">0.0677 ms</text>
+          </g>
+          <g>
+            <title>scheme-near-match-1000 · Khristov: 0.0817 ms; min 0.0791, max 0.0874</title>
+            <rect x="270" y="1326" width="7.613360047078666" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M277.3660647110522,1329v9 M277.3660647110522,1333.5H278.1437801764398 M278.1437801764398,1329v9"
+              class="range"
+            />
+            <text x="920" y="1338" class="value">0.0817 ms</text>
+          </g>
+          <g>
+            <title>scheme-near-match-1000 · hyphen@1.14.1: 0.0845 ms; min 0.0731, max 0.0881</title>
+            <rect x="270" y="1350" width="7.876400338274236" height="15" rx="3" fill="#008470" />
+            <path
+              d="M276.8109802638797,1353v9 M276.8109802638797,1357.5H278.2045240271472 M278.2045240271472,1353v9"
+              class="range"
+            />
+            <text x="920" y="1362" class="value">0.0845 ms</text>
+          </g>
+          <text x="250" y="1454" text-anchor="end" class="workload">en-4000</text>
+          <g>
+            <title>en-4000 · Knuth–Liang: 0.4420 ms; min 0.4252, max 0.6552</title>
+            <rect x="270" y="1442" width="41.18058087133701" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M309.6169391254169,1445v9 M309.6169391254169,1449.5H331.04267877616655 M331.04267877616655,1445v9"
+              class="range"
+            />
+            <text x="920" y="1454" class="value">0.4420 ms</text>
+          </g>
+          <g>
+            <title>en-4000 · Khristov: 0.4412 ms; min 0.3957, max 0.8510</title>
+            <rect x="270" y="1466" width="41.10262471017638" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M306.86140893155596,1469v9 M306.86140893155596,1473.5H349.28742507321675 M349.28742507321675,1469v9"
+              class="range"
+            />
+            <text x="920" y="1478" class="value">0.4412 ms</text>
+          </g>
+          <g>
+            <title>en-4000 · hyphen@1.14.1: 0.4087 ms; min 0.3472, max 0.5448</title>
+            <rect x="270" y="1490" width="38.07665860735874" height="15" rx="3" fill="#008470" />
+            <path
+              d="M302.3481501405748,1493v9 M302.3481501405748,1497.5H320.7569840251367 M320.7569840251367,1493v9"
+              class="range"
+            />
+            <text x="920" y="1502" class="value">0.4087 ms</text>
+          </g>
+          <text x="250" y="1594" text-anchor="end" class="workload">mixed-en-4000</text>
+          <g>
+            <title>mixed-en-4000 · Knuth–Liang: 0.4830 ms; min 0.4629, max 0.5114</title>
+            <rect x="270" y="1582" width="45.002296076684246" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M313.1285066635829,1585v9 M313.1285066635829,1589.5H317.649381727257 M317.649381727257,1585v9"
+              class="range"
+            />
+            <text x="920" y="1594" class="value">0.4830 ms</text>
+          </g>
+          <g>
+            <title>mixed-en-4000 · Khristov: 0.4582 ms; min 0.4466, max 0.5060</title>
+            <rect x="270" y="1606" width="42.69242264640992" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M311.60602073982443,1609v9 M311.60602073982443,1613.5H317.1407684343553 M317.1407684343553,1609v9"
+              class="range"
+            />
+            <text x="920" y="1618" class="value">0.4582 ms</text>
+          </g>
+          <g>
+            <title>mixed-en-4000 · hyphen@1.14.1: 0.3871 ms; min 0.3561, max 0.4292</title>
+            <rect x="270" y="1630" width="36.065659829027695" height="15" rx="3" fill="#008470" />
+            <path
+              d="M303.17713600497717,1633v9 M303.17713600497717,1637.5H309.9896706602573 M309.9896706602573,1633v9"
+              class="range"
+            />
+            <text x="920" y="1642" class="value">0.3871 ms</text>
+          </g>
+          <text x="250" y="1734" text-anchor="end" class="workload">long-word-4000</text>
+          <g>
+            <title>long-word-4000 · Knuth–Liang: 0.3423 ms; min 0.3369, max 0.3980</title>
+            <rect x="270" y="1722" width="31.892161332446122" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M301.39169535510223,1725v9 M301.39169535510223,1729.5H307.0808228008831 M307.0808228008831,1725v9"
+              class="range"
+            />
+            <text x="920" y="1734" class="value">0.3423 ms</text>
+          </g>
+          <g>
+            <title>long-word-4000 · Khristov: 0.4753 ms; min 0.4535, max 1.1188</title>
+            <rect x="270" y="1746" width="44.27954673523096" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M312.25101888402844,1749v9 M312.25101888402844,1753.5H374.23329882205866 M374.23329882205866,1749v9"
+              class="range"
+            />
+            <text x="920" y="1758" class="value">0.4753 ms</text>
+          </g>
+          <g>
+            <title>long-word-4000 · hyphen@1.14.1: 0.3272 ms; min 0.2906, max 0.3595</title>
+            <rect x="270" y="1770" width="30.488326223210027" height="15" rx="3" fill="#008470" />
+            <path
+              d="M297.0715591532769,1773v9 M297.0715591532769,1777.5H303.4959107896074 M303.4959107896074,1773v9"
+              class="range"
+            />
+            <text x="920" y="1782" class="value">0.3272 ms</text>
+          </g>
+          <g>
+            <title>long-word-4000 · hypher@0.2.5: 0.2275 ms; min 0.2243, max 0.2901</title>
+            <rect x="270" y="1794" width="21.19900763806108" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M290.90141866884557,1797v9 M290.90141866884557,1801.5H297.0317588879056 M297.0317588879056,1797v9"
+              class="range"
+            />
+            <text x="920" y="1806" class="value">0.2275 ms</text>
+          </g>
+          <text x="250" y="1874" text-anchor="end" class="workload">combining-run-4000</text>
+          <g>
+            <title>combining-run-4000 · Knuth–Liang: 0.2817 ms; min 0.2766, max 0.9260</title>
+            <rect x="270" y="1862" width="26.246281272400715" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M295.7682495270336,1865v9 M295.7682495270336,1869.5H356.2723856206713 M356.2723856206713,1865v9"
+              class="range"
+            />
+            <text x="920" y="1874" class="value">0.2817 ms</text>
+          </g>
+          <g>
+            <title>combining-run-4000 · Khristov: 0.2771 ms; min 0.2702, max 0.2891</title>
+            <rect x="270" y="1886" width="25.816579086165657" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M295.1711756724082,1889v9 M295.1711756724082,1893.5H296.93868663812174 M296.93868663812174,1889v9"
+              class="range"
+            />
+            <text x="920" y="1898" class="value">0.2771 ms</text>
+          </g>
+          <g>
+            <title>combining-run-4000 · hyphen@1.14.1: 0.3978 ms; min 0.2948, max 0.4962</title>
+            <rect x="270" y="1910" width="37.063251803576684" height="15" rx="3" fill="#008470" />
+            <path
+              d="M297.4698226701508,1913v9 M297.4698226701508,1917.5H316.22721166431023 M316.22721166431023,1913v9"
+              class="range"
+            />
+            <text x="920" y="1922" class="value">0.3978 ms</text>
+          </g>
+          <g>
+            <title>combining-run-4000 · hypher@0.2.5: 0.3190 ms; min 0.3085, max 0.3372</title>
+            <rect x="270" y="1934" width="29.72421609567639" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M298.74174020974294,1937v9 M298.74174020974294,1941.5H301.4141202705381 M301.4141202705381,1937v9"
+              class="range"
+            />
+            <text x="920" y="1946" class="value">0.3190 ms</text>
+          </g>
+          <text x="250" y="2014" text-anchor="end" class="workload">email-near-match-4000</text>
+          <g>
+            <title>email-near-match-4000 · Knuth–Liang: 0.3251 ms; min 0.3232, max 0.3323</title>
+            <rect x="270" y="2002" width="30.285956966593734" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M300.113135121407,2005v9 M300.113135121407,2009.5H300.9579591063936 M300.9579591063936,2005v9"
+              class="range"
+            />
+            <text x="920" y="2014" class="value">0.3251 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-4000 · Khristov: 0.3412 ms; min 0.3249, max 0.4326</title>
+            <rect x="270" y="2026" width="31.78524470196644" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M300.2695598535185,2029v9 M300.2695598535185,2033.5H310.29886338193114 M310.29886338193114,2029v9"
+              class="range"
+            />
+            <text x="920" y="2038" class="value">0.3412 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-4000 · hyphen@1.14.1: 0.3570 ms; min 0.2867, max 0.4579</title>
+            <rect x="270" y="2050" width="33.26117120948246" height="15" rx="3" fill="#008470" />
+            <path
+              d="M296.7142977356292,2053v9 M296.7142977356292,2057.5H312.6586268920473 M312.6586268920473,2053v9"
+              class="range"
+            />
+            <text x="920" y="2062" class="value">0.3570 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-4000 · hypher@0.2.5: 0.1343 ms; min 0.1302, max 0.1836</title>
+            <rect x="270" y="2074" width="12.510671196707843" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M282.1275750094307,2077v9 M282.1275750094307,2081.5H287.10810494032074 M287.10810494032074,2077v9"
+              class="range"
+            />
+            <text x="920" y="2086" class="value">0.1343 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-4000 · hyphenopoly@6.1.0: 0.0097 ms; min 0.0096, max 0.0123</title>
+            <rect x="270" y="2098" width="0.9054979616298755" height="15" rx="3" fill="#b33f69" />
+            <path
+              d="M270.8980913111247,2101v9 M270.8980913111247,2105.5H271.1417421632144 M271.1417421632144,2101v9"
+              class="range"
+            />
+            <text x="920" y="2110" class="value">0.0097 ms</text>
+          </g>
+          <text x="250" y="2154" text-anchor="end" class="workload">scheme-near-match-4000</text>
+          <g>
+            <title>scheme-near-match-4000 · Knuth–Liang: 0.3291 ms; min 0.2707, max 1.2151</title>
+            <rect x="270" y="2142" width="30.663929056040157" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M295.2177816713582,2145v9 M295.2177816713582,2149.5H383.2065071534521 M383.2065071534521,2145v9"
+              class="range"
+            />
+            <text x="920" y="2154" class="value">0.3291 ms</text>
+          </g>
+          <g>
+            <title>scheme-near-match-4000 · Khristov: 0.3298 ms; min 0.3188, max 0.4562</title>
+            <rect x="270" y="2166" width="30.729238012093557" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M299.70076170239946,2169v9 M299.70076170239946,2173.5H312.5047409174975 M312.5047409174975,2169v9"
+              class="range"
+            />
+            <text x="920" y="2178" class="value">0.3298 ms</text>
+          </g>
+          <g>
+            <title>scheme-near-match-4000 · hyphen@1.14.1: 0.3839 ms; min 0.3005, max 0.5297</title>
+            <rect x="270" y="2190" width="35.76620289323827" height="15" rx="3" fill="#008470" />
+            <path
+              d="M298.0005394578072,2193v9 M298.0005394578072,2197.5H319.35062879142043 M319.35062879142043,2193v9"
+              class="range"
+            />
+            <text x="920" y="2202" class="value">0.3839 ms</text>
+          </g>
+          <text x="250" y="2294" text-anchor="end" class="workload">en-16000</text>
+          <g>
+            <title>en-16000 · Knuth–Liang: 1.9193 ms; min 1.8034, max 2.4797</title>
+            <rect x="270" y="2282" width="178.8166669922479" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M438.0184227095132,2285v9 M438.0184227095132,2289.5H501.0195782612095 M501.0195782612095,2285v9"
+              class="range"
+            />
+            <text x="920" y="2294" class="value">1.9193 ms</text>
+          </g>
+          <g>
+            <title>en-16000 · Khristov: 1.7060 ms; min 1.5653, max 3.5214</title>
+            <rect x="270" y="2306" width="158.93824184840963" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M415.82930893801444,2309v9 M415.82930893801444,2313.5H598.075301698169 M598.075301698169,2309v9"
+              class="range"
+            />
+            <text x="920" y="2318" class="value">1.7060 ms</text>
+          </g>
+          <g>
+            <title>en-16000 · hyphen@1.14.1: 1.6495 ms; min 1.2746, max 3.2640</title>
+            <rect x="270" y="2330" width="153.6791473260812" height="15" rx="3" fill="#008470" />
+            <path
+              d="M388.747147560495,2333v9 M388.747147560495,2337.5H574.0897723908781 M574.0897723908781,2333v9"
+              class="range"
+            />
+            <text x="920" y="2342" class="value">1.6495 ms</text>
+          </g>
+          <text x="250" y="2434" text-anchor="end" class="workload">mixed-en-16000</text>
+          <g>
+            <title>mixed-en-16000 · Knuth–Liang: 2.2393 ms; min 1.8206, max 3.5974</title>
+            <rect x="270" y="2422" width="208.62736388458018" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M439.6197498658824,2425v9 M439.6197498658824,2429.5H605.1533577867522 M605.1533577867522,2425v9"
+              class="range"
+            />
+            <text x="920" y="2434" class="value">2.2393 ms</text>
+          </g>
+          <g>
+            <title>mixed-en-16000 · Khristov: 1.7588 ms; min 1.7367, max 1.9828</title>
+            <rect x="270" y="2446" width="163.86110238730208" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M431.79571829784413,2449v9 M431.79571829784413,2453.5H454.72857157883897 M454.72857157883897,2449v9"
+              class="range"
+            />
+            <text x="920" y="2458" class="value">1.7588 ms</text>
+          </g>
+          <g>
+            <title>mixed-en-16000 · hyphen@1.14.1: 1.4592 ms; min 1.3450, max 1.7217</title>
+            <rect x="270" y="2470" width="135.94324723546737" height="15" rx="3" fill="#008470" />
+            <path
+              d="M395.30431581272643,2473v9 M395.30431581272643,2477.5H430.40000721279887 M430.40000721279887,2473v9"
+              class="range"
+            />
+            <text x="920" y="2482" class="value">1.4592 ms</text>
+          </g>
+          <text x="250" y="2574" text-anchor="end" class="workload">long-word-16000</text>
+          <g>
+            <title>long-word-16000 · Knuth–Liang: 1.6918 ms; min 1.6321, max 1.8585</title>
+            <rect x="270" y="2562" width="157.61529295263836" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M422.0581622671026,2565v9 M422.0581622671026,2569.5H443.1455950039307 M443.1455950039307,2565v9"
+              class="range"
+            />
+            <text x="920" y="2574" class="value">1.6918 ms</text>
+          </g>
+          <g>
+            <title>long-word-16000 · Khristov: 4.1567 ms; min 3.2145, max 4.9034</title>
+            <rect x="270" y="2586" width="387.2579795426774" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M569.4800408124695,2589v9 M569.4800408124695,2593.5H726.8242224068767 M726.8242224068767,2589v9"
+              class="range"
+            />
+            <text x="920" y="2598" class="value">4.1567 ms</text>
+          </g>
+          <g>
+            <title>long-word-16000 · hyphen@1.14.1: 1.2346 ms; min 1.1716, max 1.6581</title>
+            <rect x="270" y="2610" width="115.02146260686082" height="15" rx="3" fill="#008470" />
+            <path
+              d="M379.15483641204594,2613v9 M379.15483641204594,2617.5H424.4820468742248 M424.4820468742248,2613v9"
+              class="range"
+            />
+            <text x="920" y="2622" class="value">1.2346 ms</text>
+          </g>
+          <g>
+            <title>long-word-16000 · hypher@0.2.5: 1.1106 ms; min 0.9903, max 1.6408</title>
+            <rect x="270" y="2634" width="103.47239824308254" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M362.2618038327099,2637v9 M362.2618038327099,2641.5H422.86888771014515 M422.86888771014515,2637v9"
+              class="range"
+            />
+            <text x="920" y="2646" class="value">1.1106 ms</text>
+          </g>
+          <text x="250" y="2714" text-anchor="end" class="workload">combining-run-16000</text>
+          <g>
+            <title>combining-run-16000 · Knuth–Liang: 1.1394 ms; min 1.0389, max 1.3070</title>
+            <rect x="270" y="2702" width="106.15658702024758" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M366.7853574020693,2705v9 M366.7853574020693,2709.5H391.76645233612714 M391.76645233612714,2705v9"
+              class="range"
+            />
+            <text x="920" y="2714" class="value">1.1394 ms</text>
+          </g>
+          <g>
+            <title>combining-run-16000 · Khristov: 1.3803 ms; min 1.0540, max 2.1119</title>
+            <rect x="270" y="2726" width="128.60069453313648" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M368.1965339460296,2729v9 M368.1965339460296,2733.5H466.7582763196111 M466.7582763196111,2729v9"
+              class="range"
+            />
+            <text x="920" y="2738" class="value">1.3803 ms</text>
+          </g>
+          <g>
+            <title>combining-run-16000 · hyphen@1.14.1: 3.5188 ms; min 1.5572, max 4.5443</title>
+            <rect x="270" y="2750" width="327.82608421251695" height="15" rx="3" fill="#008470" />
+            <path
+              d="M415.0742964132871,2753v9 M415.0742964132871,2757.5H693.3684286450621 M693.3684286450621,2753v9"
+              class="range"
+            />
+            <text x="920" y="2762" class="value">3.5188 ms</text>
+          </g>
+          <g>
+            <title>combining-run-16000 · hypher@0.2.5: 1.4691 ms; min 1.4558, max 1.5220</title>
+            <rect x="270" y="2774" width="136.87266541746487" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M405.63421755328426,2777v9 M405.63421755328426,2781.5H411.7987867458703 M411.7987867458703,2777v9"
+              class="range"
+            />
+            <text x="920" y="2786" class="value">1.4691 ms</text>
+          </g>
+          <text x="250" y="2854" text-anchor="end" class="workload">email-near-match-16000</text>
+          <g>
+            <title>email-near-match-16000 · Knuth–Liang: 1.3983 ms; min 1.2644, max 4.5894</title>
+            <rect x="270" y="2842" width="130.27208208174582" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M387.80254341583793,2845v9 M387.80254341583793,2849.5H697.572704336561 M697.572704336561,2845v9"
+              class="range"
+            />
+            <text x="920" y="2854" class="value">1.3983 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-16000 · Khristov: 1.3364 ms; min 1.2559, max 4.9679</title>
+            <rect x="270" y="2866" width="124.5078446782256" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M387.00411580762295,2869v9 M387.00411580762295,2873.5H732.8400995968274 M732.8400995968274,2869v9"
+              class="range"
+            />
+            <text x="920" y="2878" class="value">1.3364 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-16000 · hyphen@1.14.1: 1.2441 ms; min 1.1719, max 3.3397</title>
+            <rect x="270" y="2890" width="115.9111923219691" height="15" rx="3" fill="#008470" />
+            <path
+              d="M379.1805500666489,2893v9 M379.1805500666489,2897.5H581.1431396444441 M581.1431396444441,2893v9"
+              class="range"
+            />
+            <text x="920" y="2902" class="value">1.2441 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-16000 · hypher@0.2.5: 0.6606 ms; min 0.6128, max 0.6775</title>
+            <rect x="270" y="2914" width="61.54265097680952" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M327.08710816053997,2917v9 M327.08710816053997,2921.5H333.1192892981615 M333.1192892981615,2917v9"
+              class="range"
+            />
+            <text x="920" y="2926" class="value">0.6606 ms</text>
+          </g>
+          <g>
+            <title>email-near-match-16000 · hyphenopoly@6.1.0: 0.0382 ms; min 0.0378, max 0.0427</title>
+            <rect x="270" y="2938" width="3.5579872062834785" height="15" rx="3" fill="#b33f69" />
+            <path
+              d="M273.52165269436455,2941v9 M273.52165269436455,2945.5H273.97443661221143 M273.97443661221143,2941v9"
+              class="range"
+            />
+            <text x="920" y="2950" class="value">0.0382 ms</text>
+          </g>
+          <text x="250" y="2994" text-anchor="end" class="workload">scheme-near-match-16000</text>
+          <g>
+            <title>scheme-near-match-16000 · Knuth–Liang: 1.5774 ms; min 1.3328, max 2.2460</title>
+            <rect x="270" y="2982" width="146.95698312354347" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M394.1694678902455,2985v9 M394.1694678902455,2989.5H479.25008151974737 M479.25008151974737,2985v9"
+              class="range"
+            />
+            <text x="920" y="2994" class="value">1.5774 ms</text>
+          </g>
+          <g>
+            <title>scheme-near-match-16000 · Khristov: 1.4386 ms; min 1.3982, max 1.4702</title>
+            <rect x="270" y="3006" width="134.0312134194246" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M400.2598774123332,3009v9 M400.2598774123332,3013.5H406.97104809589507 M406.97104809589507,3009v9"
+              class="range"
+            />
+            <text x="920" y="3018" class="value">1.4386 ms</text>
+          </g>
+          <g>
+            <title>scheme-near-match-16000 · hyphen@1.14.1: 1.3355 ms; min 1.2283, max 3.4603</title>
+            <rect x="270" y="3030" width="124.42306415040066" height="15" rx="3" fill="#008470" />
+            <path
+              d="M384.4310733707693,3033v9 M384.4310733707693,3037.5H592.3837333185079 M592.3837333185079,3033v9"
+              class="range"
+            />
+            <text x="920" y="3042" class="value">1.3355 ms</text>
           </g>
         </svg>
       </div>
@@ -1025,25 +1524,28 @@
         All Russian rows share one linear scale starting at zero.
       </p>
       <div class="legend">
-        <span><i style="background: #2563eb"></i>Knuth–Liang (current-standard)</span
-        ><span><i style="background: #dc6828"></i>Khristov (current-fast)</span>
+        <span><i style="background: #2563eb"></i>Knuth–Liang</span
+        ><span><i style="background: #dc6828"></i>Khristov</span
+        ><span><i style="background: #008470"></i>hyphen@1.14.1</span
+        ><span><i style="background: #8755c5"></i>hypher@0.2.5</span
+        ><span><i style="background: #b33f69"></i>hyphenopoly@6.1.0</span>
       </div>
       <div class="chart-scroll">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 542" role="img" aria-label="RU formatting latency">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 1046" role="img" aria-label="RU formatting latency">
           <title>RU formatting latency</title>
-          <line x1="270" x2="270" y1="30" y2="512" class="grid" />
+          <line x1="270" x2="270" y1="30" y2="1016" class="grid" />
           <text x="270" y="18" text-anchor="middle" class="axis">0.00 ms</text>
-          <line x1="425" x2="425" y1="30" y2="512" class="grid" />
+          <line x1="425" x2="425" y1="30" y2="1016" class="grid" />
           <text x="425" y="18" text-anchor="middle" class="axis">1.55 ms</text>
-          <line x1="580" x2="580" y1="30" y2="512" class="grid" />
+          <line x1="580" x2="580" y1="30" y2="1016" class="grid" />
           <text x="580" y="18" text-anchor="middle" class="axis">3.09 ms</text>
-          <line x1="735" x2="735" y1="30" y2="512" class="grid" />
+          <line x1="735" x2="735" y1="30" y2="1016" class="grid" />
           <text x="735" y="18" text-anchor="middle" class="axis">4.64 ms</text>
-          <line x1="890" x2="890" y1="30" y2="512" class="grid" />
+          <line x1="890" x2="890" y1="30" y2="1016" class="grid" />
           <text x="890" y="18" text-anchor="middle" class="axis">6.18 ms</text>
           <text x="250" y="54" text-anchor="end" class="workload">paragraph-ru</text>
           <g>
-            <title>paragraph-ru · Knuth–Liang (current-standard): 0.0306 ms; min 0.0256, max 0.1075</title>
+            <title>paragraph-ru · Knuth–Liang: 0.0306 ms; min 0.0256, max 0.1075</title>
             <rect x="270" y="42" width="3.06717992234265" height="15" rx="3" fill="#2563eb" />
             <path
               d="M272.5665351884808,45v9 M272.5665351884808,49.5H280.77998844847104 M280.77998844847104,45v9"
@@ -1052,7 +1554,7 @@
             <text x="920" y="54" class="value">0.0306 ms</text>
           </g>
           <g>
-            <title>paragraph-ru · Khristov (current-fast): 0.0296 ms; min 0.0230, max 0.0455</title>
+            <title>paragraph-ru · Khristov: 0.0296 ms; min 0.0230, max 0.0455</title>
             <rect x="270" y="66" width="2.972978239767001" height="15" rx="3" fill="#dc6828" />
             <path
               d="M272.30311092056303,69v9 M272.30311092056303,73.5H274.5681286037857 M274.5681286037857,69v9"
@@ -1060,116 +1562,251 @@
             />
             <text x="920" y="78" class="value">0.0296 ms</text>
           </g>
-          <text x="250" y="122" text-anchor="end" class="workload">ru-1000</text>
           <g>
-            <title>ru-1000 · Knuth–Liang (current-standard): 0.2643 ms; min 0.2586, max 0.2895</title>
-            <rect x="270" y="110" width="26.508764313577622" height="15" rx="3" fill="#2563eb" />
+            <title>paragraph-ru · hyphen@1.14.1: 0.0126 ms; min 0.0109, max 0.0179</title>
+            <rect x="270" y="90" width="1.2629648762336145" height="15" rx="3" fill="#008470" />
             <path
-              d="M295.9355855758684,113v9 M295.9355855758684,117.5H299.0376307321716 M299.0376307321716,113v9"
+              d="M271.09440030739364,93v9 M271.09440030739364,97.5H271.79866503801975 M271.79866503801975,93v9"
               class="range"
             />
-            <text x="920" y="122" class="value">0.2643 ms</text>
+            <text x="920" y="102" class="value">0.0126 ms</text>
           </g>
           <g>
-            <title>ru-1000 · Khristov (current-fast): 0.2482 ms; min 0.2353, max 0.3124</title>
-            <rect x="270" y="134" width="24.898986679609276" height="15" rx="3" fill="#dc6828" />
+            <title>paragraph-ru · hypher@0.2.5: 0.0167 ms; min 0.0158, max 0.0214</title>
+            <rect x="270" y="114" width="1.6772449441837658" height="15" rx="3" fill="#8755c5" />
             <path
-              d="M293.60499901130726,137v9 M293.60499901130726,141.5H301.33510471157086 M301.33510471157086,137v9"
+              d="M271.5852745995793,117v9 M271.5852745995793,121.5H272.14910346222297 M272.14910346222297,117v9"
               class="range"
             />
-            <text x="920" y="146" class="value">0.2482 ms</text>
+            <text x="920" y="126" class="value">0.0167 ms</text>
           </g>
-          <text x="250" y="190" text-anchor="end" class="workload">mixed-ru-1000</text>
           <g>
-            <title>mixed-ru-1000 · Knuth–Liang (current-standard): 0.1552 ms; min 0.1380, max 0.2151</title>
-            <rect x="270" y="178" width="15.570020461185312" height="15" rx="3" fill="#2563eb" />
+            <title>paragraph-ru · hyphenopoly@6.1.0: 0.0021 ms; min 0.0020, max 0.0040</title>
+            <rect x="270" y="138" width="0.2088384889177439" height="15" rx="3" fill="#b33f69" />
             <path
-              d="M283.83869124546754,181v9 M283.83869124546754,185.5H291.5774007632491 M291.5774007632491,181v9"
+              d="M270.1978899369033,141v9 M270.1978899369033,145.5H270.3971129590681 M270.3971129590681,141v9"
               class="range"
             />
-            <text x="920" y="190" class="value">0.1552 ms</text>
+            <text x="920" y="150" class="value">0.0021 ms</text>
           </g>
+          <text x="250" y="194" text-anchor="end" class="workload">ru-1000</text>
           <g>
-            <title>mixed-ru-1000 · Khristov (current-fast): 0.1396 ms; min 0.1269, max 0.2840</title>
-            <rect x="270" y="202" width="14.00390342320401" height="15" rx="3" fill="#dc6828" />
+            <title>ru-1000 · Knuth–Liang: 0.2643 ms; min 0.2586, max 0.2895</title>
+            <rect x="270" y="182" width="26.508764313577622" height="15" rx="3" fill="#2563eb" />
             <path
-              d="M282.7293386754471,205v9 M282.7293386754471,209.5H298.4869398631479 M298.4869398631479,205v9"
+              d="M295.9355855758684,185v9 M295.9355855758684,189.5H299.0376307321716 M299.0376307321716,185v9"
               class="range"
             />
-            <text x="920" y="214" class="value">0.1396 ms</text>
+            <text x="920" y="194" class="value">0.2643 ms</text>
           </g>
-          <text x="250" y="258" text-anchor="end" class="workload">ru-4000</text>
           <g>
-            <title>ru-4000 · Knuth–Liang (current-standard): 0.9400 ms; min 0.9123, max 1.5122</title>
-            <rect x="270" y="246" width="94.29090600226493" height="15" rx="3" fill="#2563eb" />
+            <title>ru-1000 · Khristov: 0.2482 ms; min 0.2353, max 0.3124</title>
+            <rect x="270" y="206" width="24.898986679609276" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M361.5124664293791,249v9 M361.5124664293791,253.5H421.6849911017628 M421.6849911017628,249v9"
+              d="M293.60499901130726,209v9 M293.60499901130726,213.5H301.33510471157086 M301.33510471157086,209v9"
               class="range"
             />
-            <text x="920" y="258" class="value">0.9400 ms</text>
+            <text x="920" y="218" class="value">0.2482 ms</text>
           </g>
           <g>
-            <title>ru-4000 · Khristov (current-fast): 0.9307 ms; min 0.8981, max 0.9944</title>
-            <rect x="270" y="270" width="93.35869923960392" height="15" rx="3" fill="#dc6828" />
+            <title>ru-1000 · hyphen@1.14.1: 0.1791 ms; min 0.0980, max 0.2080</title>
+            <rect x="270" y="230" width="17.961844361753418" height="15" rx="3" fill="#008470" />
             <path
-              d="M360.0860702151749,273v9 M360.0860702151749,277.5H369.74481960847754 M369.74481960847754,273v9"
+              d="M279.83426504161497,233v9 M279.83426504161497,237.5H290.8639267288645 M290.8639267288645,233v9"
               class="range"
             />
-            <text x="920" y="282" class="value">0.9307 ms</text>
+            <text x="920" y="242" class="value">0.1791 ms</text>
           </g>
-          <text x="250" y="326" text-anchor="end" class="workload">mixed-ru-4000</text>
           <g>
-            <title>mixed-ru-4000 · Knuth–Liang (current-standard): 0.5395 ms; min 0.4885, max 1.3191</title>
-            <rect x="270" y="314" width="54.11639055169216" height="15" rx="3" fill="#2563eb" />
+            <title>ru-1000 · hypher@0.2.5: 0.1702 ms; min 0.1625, max 0.1877</title>
+            <rect x="270" y="254" width="17.068573585719882" height="15" rx="3" fill="#8755c5" />
             <path
-              d="M318.99574826080027,317v9 M318.99574826080027,321.5H402.3200218411243 M402.3200218411243,317v9"
+              d="M286.3002746768773,257v9 M286.3002746768773,261.5H288.8312141149393 M288.8312141149393,257v9"
               class="range"
             />
-            <text x="920" y="326" class="value">0.5395 ms</text>
+            <text x="920" y="266" class="value">0.1702 ms</text>
           </g>
           <g>
-            <title>mixed-ru-4000 · Khristov (current-fast): 0.5038 ms; min 0.4690, max 0.6479</title>
-            <rect x="270" y="338" width="50.531253842418955" height="15" rx="3" fill="#dc6828" />
+            <title>ru-1000 · hyphenopoly@6.1.0: 0.0199 ms; min 0.0191, max 0.0214</title>
+            <rect x="270" y="278" width="1.9911797803308784" height="15" rx="3" fill="#b33f69" />
             <path
-              d="M317.0422116162417,341v9 M317.0422116162417,345.5H334.98512295745076 M334.98512295745076,341v9"
+              d="M271.91455607686646,281v9 M271.91455607686646,285.5H272.145541713854 M272.145541713854,281v9"
               class="range"
             />
-            <text x="920" y="350" class="value">0.5038 ms</text>
+            <text x="920" y="290" class="value">0.0199 ms</text>
           </g>
-          <text x="250" y="394" text-anchor="end" class="workload">ru-16000</text>
+          <text x="250" y="334" text-anchor="end" class="workload">mixed-ru-1000</text>
           <g>
-            <title>ru-16000 · Knuth–Liang (current-standard): 3.9268 ms; min 3.6778, max 6.1810</title>
-            <rect x="270" y="382" width="393.88496683384415" height="15" rx="3" fill="#2563eb" />
-            <path d="M638.9109335059065,385v9 M638.9109335059065,389.5H890 M890,385v9" class="range" />
-            <text x="920" y="394" class="value">3.9268 ms</text>
-          </g>
-          <g>
-            <title>ru-16000 · Khristov (current-fast): 3.7890 ms; min 3.5855, max 4.0612</title>
-            <rect x="270" y="406" width="380.0638116809449" height="15" rx="3" fill="#dc6828" />
+            <title>mixed-ru-1000 · Knuth–Liang: 0.1552 ms; min 0.1380, max 0.2151</title>
+            <rect x="270" y="322" width="15.570020461185312" height="15" rx="3" fill="#2563eb" />
             <path
-              d="M629.6521598446968,409v9 M629.6521598446968,413.5H677.3675845332336 M677.3675845332336,409v9"
+              d="M283.83869124546754,325v9 M283.83869124546754,329.5H291.5774007632491 M291.5774007632491,325v9"
               class="range"
             />
-            <text x="920" y="418" class="value">3.7890 ms</text>
-          </g>
-          <text x="250" y="462" text-anchor="end" class="workload">mixed-ru-16000</text>
-          <g>
-            <title>mixed-ru-16000 · Knuth–Liang (current-standard): 2.1381 ms; min 1.8431, max 5.7436</title>
-            <rect x="270" y="450" width="214.46703769616565" height="15" rx="3" fill="#2563eb" />
-            <path
-              d="M454.8807701019184,453v9 M454.8807701019184,457.5H846.1260475651154 M846.1260475651154,453v9"
-              class="range"
-            />
-            <text x="920" y="462" class="value">2.1381 ms</text>
+            <text x="920" y="334" class="value">0.1552 ms</text>
           </g>
           <g>
-            <title>mixed-ru-16000 · Khristov (current-fast): 1.8831 ms; min 1.7923, max 5.8569</title>
-            <rect x="270" y="474" width="188.8839378741315" height="15" rx="3" fill="#dc6828" />
+            <title>mixed-ru-1000 · Khristov: 0.1396 ms; min 0.1269, max 0.2840</title>
+            <rect x="270" y="346" width="14.00390342320401" height="15" rx="3" fill="#dc6828" />
             <path
-              d="M449.7773305290326,477v9 M449.7773305290326,481.5H857.494285714283 M857.494285714283,477v9"
+              d="M282.7293386754471,349v9 M282.7293386754471,353.5H298.4869398631479 M298.4869398631479,349v9"
               class="range"
             />
-            <text x="920" y="486" class="value">1.8831 ms</text>
+            <text x="920" y="358" class="value">0.1396 ms</text>
+          </g>
+          <g>
+            <title>mixed-ru-1000 · hyphen@1.14.1: 0.1121 ms; min 0.0988, max 0.1470</title>
+            <rect x="270" y="370" width="11.248931355101345" height="15" rx="3" fill="#008470" />
+            <path
+              d="M279.90763268840954,373v9 M279.90763268840954,377.5H284.7415285933172 M284.7415285933172,373v9"
+              class="range"
+            />
+            <text x="920" y="382" class="value">0.1121 ms</text>
+          </g>
+          <text x="250" y="474" text-anchor="end" class="workload">ru-4000</text>
+          <g>
+            <title>ru-4000 · Knuth–Liang: 0.9400 ms; min 0.9123, max 1.5122</title>
+            <rect x="270" y="462" width="94.29090600226493" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M361.5124664293791,465v9 M361.5124664293791,469.5H421.6849911017628 M421.6849911017628,465v9"
+              class="range"
+            />
+            <text x="920" y="474" class="value">0.9400 ms</text>
+          </g>
+          <g>
+            <title>ru-4000 · Khristov: 0.9307 ms; min 0.8981, max 0.9944</title>
+            <rect x="270" y="486" width="93.35869923960392" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M360.0860702151749,489v9 M360.0860702151749,493.5H369.74481960847754 M369.74481960847754,489v9"
+              class="range"
+            />
+            <text x="920" y="498" class="value">0.9307 ms</text>
+          </g>
+          <g>
+            <title>ru-4000 · hyphen@1.14.1: 0.4093 ms; min 0.3629, max 0.4669</title>
+            <rect x="270" y="510" width="41.054712829639065" height="15" rx="3" fill="#008470" />
+            <path
+              d="M306.4030076039476,513v9 M306.4030076039476,517.5H316.8348010030728 M316.8348010030728,513v9"
+              class="range"
+            />
+            <text x="920" y="522" class="value">0.4093 ms</text>
+          </g>
+          <g>
+            <title>ru-4000 · hypher@0.2.5: 0.6610 ms; min 0.6386, max 0.7891</title>
+            <rect x="270" y="534" width="66.30434072156288" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M334.0596367901628,537v9 M334.0596367901628,541.5H349.1565515288787 M349.1565515288787,537v9"
+              class="range"
+            />
+            <text x="920" y="546" class="value">0.6610 ms</text>
+          </g>
+          <g>
+            <title>ru-4000 · hyphenopoly@6.1.0: 0.0778 ms; min 0.0729, max 0.1734</title>
+            <rect x="270" y="558" width="7.807827212429132" height="15" rx="3" fill="#b33f69" />
+            <path
+              d="M277.3166720595383,561v9 M277.3166720595383,565.5H287.39754004206367 M287.39754004206367,561v9"
+              class="range"
+            />
+            <text x="920" y="570" class="value">0.0778 ms</text>
+          </g>
+          <text x="250" y="614" text-anchor="end" class="workload">mixed-ru-4000</text>
+          <g>
+            <title>mixed-ru-4000 · Knuth–Liang: 0.5395 ms; min 0.4885, max 1.3191</title>
+            <rect x="270" y="602" width="54.11639055169216" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M318.99574826080027,605v9 M318.99574826080027,609.5H402.3200218411243 M402.3200218411243,605v9"
+              class="range"
+            />
+            <text x="920" y="614" class="value">0.5395 ms</text>
+          </g>
+          <g>
+            <title>mixed-ru-4000 · Khristov: 0.5038 ms; min 0.4690, max 0.6479</title>
+            <rect x="270" y="626" width="50.531253842418955" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M317.0422116162417,629v9 M317.0422116162417,633.5H334.98512295745076 M334.98512295745076,629v9"
+              class="range"
+            />
+            <text x="920" y="638" class="value">0.5038 ms</text>
+          </g>
+          <g>
+            <title>mixed-ru-4000 · hyphen@1.14.1: 0.4679 ms; min 0.3588, max 0.5404</title>
+            <rect x="270" y="650" width="46.93598608639376" height="15" rx="3" fill="#008470" />
+            <path
+              d="M305.99036806341996,653v9 M305.99036806341996,657.5H324.20995227309544 M324.20995227309544,653v9"
+              class="range"
+            />
+            <text x="920" y="662" class="value">0.4679 ms</text>
+          </g>
+          <text x="250" y="754" text-anchor="end" class="workload">ru-16000</text>
+          <g>
+            <title>ru-16000 · Knuth–Liang: 3.9268 ms; min 3.6778, max 6.1810</title>
+            <rect x="270" y="742" width="393.88496683384415" height="15" rx="3" fill="#2563eb" />
+            <path d="M638.9109335059065,745v9 M638.9109335059065,749.5H890 M890,745v9" class="range" />
+            <text x="920" y="754" class="value">3.9268 ms</text>
+          </g>
+          <g>
+            <title>ru-16000 · Khristov: 3.7890 ms; min 3.5855, max 4.0612</title>
+            <rect x="270" y="766" width="380.0638116809449" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M629.6521598446968,769v9 M629.6521598446968,773.5H677.3675845332336 M677.3675845332336,769v9"
+              class="range"
+            />
+            <text x="920" y="778" class="value">3.7890 ms</text>
+          </g>
+          <g>
+            <title>ru-16000 · hyphen@1.14.1: 1.9698 ms; min 1.5579, max 4.6029</title>
+            <rect x="270" y="790" width="197.58650703770013" height="15" rx="3" fill="#008470" />
+            <path
+              d="M426.2656786927656,793v9 M426.2656786927656,797.5H731.7018928975804 M731.7018928975804,793v9"
+              class="range"
+            />
+            <text x="920" y="802" class="value">1.9698 ms</text>
+          </g>
+          <g>
+            <title>ru-16000 · hypher@0.2.5: 2.6841 ms; min 2.5551, max 3.1724</title>
+            <rect x="270" y="814" width="269.23477430836914" height="15" rx="3" fill="#8755c5" />
+            <path
+              d="M526.2962239119886,817v9 M526.2962239119886,821.5H588.2152758453341 M588.2152758453341,817v9"
+              class="range"
+            />
+            <text x="920" y="826" class="value">2.6841 ms</text>
+          </g>
+          <g>
+            <title>ru-16000 · hyphenopoly@6.1.0: 0.2851 ms; min 0.2806, max 0.3768</title>
+            <rect x="270" y="838" width="28.598340074413947" height="15" rx="3" fill="#b33f69" />
+            <path
+              d="M298.1418411260245,841v9 M298.1418411260245,845.5H307.79612684030496 M307.79612684030496,841v9"
+              class="range"
+            />
+            <text x="920" y="850" class="value">0.2851 ms</text>
+          </g>
+          <text x="250" y="894" text-anchor="end" class="workload">mixed-ru-16000</text>
+          <g>
+            <title>mixed-ru-16000 · Knuth–Liang: 2.1381 ms; min 1.8431, max 5.7436</title>
+            <rect x="270" y="882" width="214.46703769616565" height="15" rx="3" fill="#2563eb" />
+            <path
+              d="M454.8807701019184,885v9 M454.8807701019184,889.5H846.1260475651154 M846.1260475651154,885v9"
+              class="range"
+            />
+            <text x="920" y="894" class="value">2.1381 ms</text>
+          </g>
+          <g>
+            <title>mixed-ru-16000 · Khristov: 1.8831 ms; min 1.7923, max 5.8569</title>
+            <rect x="270" y="906" width="188.8839378741315" height="15" rx="3" fill="#dc6828" />
+            <path
+              d="M449.7773305290326,909v9 M449.7773305290326,913.5H857.494285714283 M857.494285714283,909v9"
+              class="range"
+            />
+            <text x="920" y="918" class="value">1.8831 ms</text>
+          </g>
+          <g>
+            <title>mixed-ru-16000 · hyphen@1.14.1: 1.6095 ms; min 1.3720, max 2.0799</title>
+            <rect x="270" y="930" width="161.44956479534133" height="15" rx="3" fill="#008470" />
+            <path
+              d="M407.62625788706816,933v9 M407.62625788706816,937.5H478.6328587607147 M478.6328587607147,933v9"
+              class="range"
+            />
+            <text x="920" y="942" class="value">1.6095 ms</text>
           </g>
         </svg>
       </div>
@@ -1188,6 +1825,9 @@
             <option value="">All</option>
             <option value="current-standard">current-standard</option>
             <option value="current-fast">current-fast</option>
+            <option value="hyphen">hyphen</option>
+            <option value="hypher">hypher</option>
+            <option value="hyphenopoly">hyphenopoly</option>
           </select></label
         >
       </div>
@@ -1201,6 +1841,7 @@
               <th>Min / max, ms</th>
               <th>Million UTF-16/s</th>
               <th>Relative speed</th>
+              <th>Validation</th>
               <th>Samples</th>
             </tr>
           </thead>
@@ -1212,6 +1853,7 @@
               <td>0.0034 / 0.0095</td>
               <td>2.68</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1226,6 +1868,7 @@
               <td>0.0256 / 0.1075</td>
               <td>3.14</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1240,6 +1883,7 @@
               <td>0.0202 / 0.0286</td>
               <td>7.78</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1254,6 +1898,7 @@
               <td>3.4853 / 4.4500</td>
               <td>7.82</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1268,6 +1913,7 @@
               <td>4.3144 / 6.6548</td>
               <td>5.37</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1282,6 +1928,7 @@
               <td>0.2586 / 0.2895</td>
               <td>4.00</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1296,6 +1943,7 @@
               <td>0.1162 / 0.1448</td>
               <td>9.29</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1310,6 +1958,7 @@
               <td>0.1337 / 0.1615</td>
               <td>8.21</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1324,6 +1973,7 @@
               <td>0.1380 / 0.2151</td>
               <td>7.29</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1338,6 +1988,7 @@
               <td>0.0863 / 0.2396</td>
               <td>11.06</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1352,6 +2003,7 @@
               <td>0.0712 / 0.0758</td>
               <td>13.95</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1366,6 +2018,7 @@
               <td>0.0807 / 0.0996</td>
               <td>11.99</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1380,6 +2033,7 @@
               <td>0.0656 / 0.0738</td>
               <td>14.85</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1394,6 +2048,7 @@
               <td>0.9123 / 1.5122</td>
               <td>4.29</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1408,6 +2063,7 @@
               <td>0.4252 / 0.6552</td>
               <td>9.31</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1422,6 +2078,7 @@
               <td>0.4629 / 0.5114</td>
               <td>8.79</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1436,6 +2093,7 @@
               <td>0.4885 / 1.3191</td>
               <td>7.87</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1450,6 +2108,7 @@
               <td>0.3369 / 0.3980</td>
               <td>11.69</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1464,6 +2123,7 @@
               <td>0.2766 / 0.9260</td>
               <td>14.21</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1478,6 +2138,7 @@
               <td>0.3232 / 0.3323</td>
               <td>12.33</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1492,6 +2153,7 @@
               <td>0.2707 / 1.2151</td>
               <td>12.17</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1506,6 +2168,7 @@
               <td>3.6778 / 6.1810</td>
               <td>4.08</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1520,6 +2183,7 @@
               <td>1.8034 / 2.4797</td>
               <td>8.38</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1534,6 +2198,7 @@
               <td>1.8206 / 3.5974</td>
               <td>7.20</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1548,6 +2213,7 @@
               <td>1.8431 / 5.7436</td>
               <td>7.54</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1562,6 +2228,7 @@
               <td>1.6321 / 1.8585</td>
               <td>9.46</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1576,6 +2243,7 @@
               <td>1.0389 / 1.3070</td>
               <td>14.04</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1590,6 +2258,7 @@
               <td>1.2644 / 4.5894</td>
               <td>11.45</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1604,6 +2273,7 @@
               <td>1.3328 / 2.2460</td>
               <td>10.15</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1618,6 +2288,7 @@
               <td>0.0032 / 0.0052</td>
               <td>5.06</td>
               <td>1.89×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1632,6 +2303,7 @@
               <td>0.0230 / 0.0455</td>
               <td>3.24</td>
               <td>1.03×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1646,6 +2318,7 @@
               <td>0.0196 / 0.0228</td>
               <td>8.75</td>
               <td>1.12×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1660,6 +2333,7 @@
               <td>3.6864 / 4.3151</td>
               <td>7.16</td>
               <td>0.92×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1674,6 +2348,7 @@
               <td>3.6946 / 6.3391</td>
               <td>6.85</td>
               <td>1.28×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1688,6 +2363,7 @@
               <td>0.2353 / 0.3124</td>
               <td>4.25</td>
               <td>1.06×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1702,6 +2378,7 @@
               <td>0.1113 / 0.1409</td>
               <td>9.50</td>
               <td>1.02×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1716,6 +2393,7 @@
               <td>0.1221 / 0.1323</td>
               <td>8.95</td>
               <td>1.09×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1730,6 +2408,7 @@
               <td>0.1269 / 0.2840</td>
               <td>8.11</td>
               <td>1.11×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1744,6 +2423,7 @@
               <td>0.1172 / 0.1347</td>
               <td>8.37</td>
               <td>0.76×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1758,6 +2438,7 @@
               <td>0.0704 / 0.0942</td>
               <td>13.58</td>
               <td>0.97×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1772,6 +2453,7 @@
               <td>0.0819 / 0.2312</td>
               <td>11.49</td>
               <td>0.96×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1786,6 +2468,7 @@
               <td>0.0791 / 0.0874</td>
               <td>12.31</td>
               <td>0.83×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1800,6 +2483,7 @@
               <td>0.8981 / 0.9944</td>
               <td>4.33</td>
               <td>1.01×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1814,6 +2498,7 @@
               <td>0.3957 / 0.8510</td>
               <td>9.33</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1828,6 +2513,7 @@
               <td>0.4466 / 0.5060</td>
               <td>9.26</td>
               <td>1.05×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1842,6 +2528,7 @@
               <td>0.4690 / 0.6479</td>
               <td>8.43</td>
               <td>1.07×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1856,6 +2543,7 @@
               <td>0.4535 / 1.1188</td>
               <td>8.42</td>
               <td>0.72×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1870,6 +2558,7 @@
               <td>0.2702 / 0.2891</td>
               <td>14.44</td>
               <td>1.02×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1884,6 +2573,7 @@
               <td>0.3249 / 0.4326</td>
               <td>11.75</td>
               <td>0.95×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1898,6 +2588,7 @@
               <td>0.3188 / 0.4562</td>
               <td>12.15</td>
               <td>1.00×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1912,6 +2603,7 @@
               <td>3.5855 / 4.0612</td>
               <td>4.23</td>
               <td>1.04×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1926,6 +2618,7 @@
               <td>1.5653 / 3.5214</td>
               <td>9.43</td>
               <td>1.13×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1940,6 +2633,7 @@
               <td>1.7367 / 1.9828</td>
               <td>9.17</td>
               <td>1.27×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1954,6 +2648,7 @@
               <td>1.7923 / 5.8569</td>
               <td>8.57</td>
               <td>1.14×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1968,6 +2663,7 @@
               <td>3.2145 / 4.9034</td>
               <td>3.85</td>
               <td>0.41×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1982,6 +2678,7 @@
               <td>1.0540 / 2.1119</td>
               <td>11.59</td>
               <td>0.83×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -1996,6 +2693,7 @@
               <td>1.2559 / 4.9679</td>
               <td>11.98</td>
               <td>1.05×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
@@ -2010,10 +2708,1181 @@
               <td>1.3982 / 1.4702</td>
               <td>11.13</td>
               <td>1.10×</td>
+              <td>passed</td>
               <td>
                 <details>
                   <summary>7 samples</summary>
                   1.3982, 1.4404, 1.4386, 1.4702, 1.4454, 1.4069, 1.4187 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="short-en">
+              <td>short-en<small>en · 19 UTF-16 units · 200 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.0061</td>
+              <td>0.0028 / 0.0130</td>
+              <td>3.10</td>
+              <td>1.16×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0130, 0.0061, 0.0077, 0.0072, 0.0028, 0.0037, 0.0037 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="paragraph-ru">
+              <td>paragraph-ru<small>ru · 96 UTF-16 units · 200 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.0126</td>
+              <td>0.0109 / 0.0179</td>
+              <td>7.62</td>
+              <td>2.43×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0179, 0.0141, 0.0126, 0.0121, 0.0113, 0.0109, 0.0140 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="paragraph-en">
+              <td>paragraph-en<small>en · 187 UTF-16 units · 106 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.0175</td>
+              <td>0.0170 / 0.0290</td>
+              <td>10.68</td>
+              <td>1.37×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0219, 0.0290, 0.0195, 0.0175, 0.0173, 0.0174, 0.0170 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="repeated-words">
+              <td>repeated-words<small>en · 28,000 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>3.0176</td>
+              <td>2.7273 / 5.2312</td>
+              <td>9.28</td>
+              <td>1.19×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  3.0176, 2.7718, 2.7273, 2.7384, 4.7448, 5.2312, 4.5165 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="varied-vocabulary">
+              <td>varied-vocabulary<small>en · 25,999 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>2.5630</td>
+              <td>2.3506 / 2.7696</td>
+              <td>10.14</td>
+              <td>1.89×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  2.3506, 2.3940, 2.5010, 2.6046, 2.5630, 2.6485, 2.7696 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="ru-1000">
+              <td>ru-1000<small>ru · 1,056 UTF-16 units · 18 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.1791</td>
+              <td>0.0980 / 0.2080</td>
+              <td>5.90</td>
+              <td>1.48×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1083, 0.0980, 0.1260, 0.2080, 0.1931, 0.1791, 0.1808 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="en-1000">
+              <td>en-1000<small>en · 1,122 UTF-16 units · 17 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.1648</td>
+              <td>0.1045 / 0.2478</td>
+              <td>6.81</td>
+              <td>0.73×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2478, 0.2032, 0.1248, 0.1227, 0.1045, 0.1923, 0.1648 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="mixed-en-1000">
+              <td>mixed-en-1000<small>en · 1,132 UTF-16 units · 17 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.1503</td>
+              <td>0.1027 / 0.2356</td>
+              <td>7.53</td>
+              <td>0.92×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1503, 0.1027, 0.1185, 0.1540, 0.1454, 0.2356, 0.2238 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="mixed-ru-1000">
+              <td>mixed-ru-1000<small>ru · 1,132 UTF-16 units · 17 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.1121</td>
+              <td>0.0988 / 0.1470</td>
+              <td>10.09</td>
+              <td>1.38×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1121, 0.0988, 0.1210, 0.1069, 0.1024, 0.1167, 0.1470 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="long-word-1000">
+              <td>long-word-1000<small>en · 1,000 UTF-16 units · 20 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.0787</td>
+              <td>0.0738 / 0.0920</td>
+              <td>12.71</td>
+              <td>1.15×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0889, 0.0920, 0.0759, 0.0787, 0.0779, 0.0738, 0.0823 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="combining-run-1000">
+              <td>combining-run-1000<small>en · 1,002 UTF-16 units · 19 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.0829</td>
+              <td>0.0734 / 0.0906</td>
+              <td>12.08</td>
+              <td>0.87×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0734, 0.0846, 0.0842, 0.0742, 0.0906, 0.0829, 0.0805 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="email-near-match-1000">
+              <td>email-near-match-1000<small>en · 1,008 UTF-16 units · 19 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.0847</td>
+              <td>0.0746 / 0.1149</td>
+              <td>11.90</td>
+              <td>0.99×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0768, 0.0870, 0.0884, 0.0793, 0.1149, 0.0847, 0.0746 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="scheme-near-match-1000">
+              <td>scheme-near-match-1000<small>en · 1,006 UTF-16 units · 19 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.0845</td>
+              <td>0.0731 / 0.0881</td>
+              <td>11.90</td>
+              <td>0.80×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0878, 0.0768, 0.0845, 0.0731, 0.0881, 0.0811, 0.0869 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="ru-4000">
+              <td>ru-4000<small>ru · 4,032 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.4093</td>
+              <td>0.3629 / 0.4669</td>
+              <td>9.85</td>
+              <td>2.30×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.4669, 0.3734, 0.4075, 0.4193, 0.3629, 0.4093, 0.4130 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="en-4000">
+              <td>en-4000<small>en · 4,114 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.4087</td>
+              <td>0.3472 / 0.5448</td>
+              <td>10.07</td>
+              <td>1.08×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.5448, 0.4279, 0.4244, 0.4087, 0.3694, 0.3776, 0.3472 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="mixed-en-4000">
+              <td>mixed-en-4000<small>en · 4,245 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.3871</td>
+              <td>0.3561 / 0.4292</td>
+              <td>10.97</td>
+              <td>1.25×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.4292, 0.3572, 0.4018, 0.3837, 0.3871, 0.4237, 0.3561 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="mixed-ru-4000">
+              <td>mixed-ru-4000<small>ru · 4,245 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.4679</td>
+              <td>0.3588 / 0.5404</td>
+              <td>9.07</td>
+              <td>1.15×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.4436, 0.5122, 0.4679, 0.5404, 0.5135, 0.4178, 0.3588 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="long-word-4000">
+              <td>long-word-4000<small>en · 4,000 UTF-16 units · 5 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.3272</td>
+              <td>0.2906 / 0.3595</td>
+              <td>12.22</td>
+              <td>1.05×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.3595, 0.3500, 0.3272, 0.3149, 0.2906, 0.3123, 0.3373 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="combining-run-4000">
+              <td>combining-run-4000<small>en · 4,002 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.3978</td>
+              <td>0.2948 / 0.4962</td>
+              <td>10.06</td>
+              <td>0.71×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.3978, 0.3887, 0.2948, 0.4067, 0.4522, 0.3896, 0.4962 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="email-near-match-4000">
+              <td>email-near-match-4000<small>en · 4,008 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.3570</td>
+              <td>0.2867 / 0.4579</td>
+              <td>11.23</td>
+              <td>0.91×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.3941, 0.4579, 0.3304, 0.3570, 0.2954, 0.4157, 0.2867 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="scheme-near-match-4000">
+              <td>scheme-near-match-4000<small>en · 4,006 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>0.3839</td>
+              <td>0.3005 / 0.5297</td>
+              <td>10.44</td>
+              <td>0.86×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.4523, 0.5297, 0.3839, 0.3209, 0.3520, 0.3005, 0.4878 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="ru-16000">
+              <td>ru-16000<small>ru · 16,032 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>1.9698</td>
+              <td>1.5579 / 4.6029</td>
+              <td>8.14</td>
+              <td>1.99×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.9610, 1.9698, 1.7577, 2.8566, 1.5579, 3.7376, 4.6029 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="en-16000">
+              <td>en-16000<small>en · 16,082 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>1.6495</td>
+              <td>1.2746 / 3.2640</td>
+              <td>9.75</td>
+              <td>1.16×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.6495, 1.2746, 1.3207, 2.3601, 3.2640, 1.9872, 1.4057 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="mixed-en-16000">
+              <td>mixed-en-16000<small>en · 16,131 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>1.4592</td>
+              <td>1.3450 / 1.7217</td>
+              <td>11.05</td>
+              <td>1.53×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.4408, 1.3924, 1.7217, 1.3450, 1.5090, 1.4592, 1.6743 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="mixed-ru-16000">
+              <td>mixed-ru-16000<small>ru · 16,131 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>1.6095</td>
+              <td>1.3720 / 2.0799</td>
+              <td>10.02</td>
+              <td>1.33×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  2.0799, 1.7428, 1.5051, 1.4927, 1.6264, 1.3720, 1.6095 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="long-word-16000">
+              <td>long-word-16000<small>en · 16,000 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>1.2346</td>
+              <td>1.1716 / 1.6581</td>
+              <td>12.96</td>
+              <td>1.37×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.6581, 1.3229, 1.2010, 1.2346, 1.6364, 1.1716, 1.2153 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="combining-run-16000">
+              <td>combining-run-16000<small>en · 16,002 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>3.5188</td>
+              <td>1.5572 / 4.5443</td>
+              <td>4.55</td>
+              <td>0.32×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  3.5188, 1.5572, 1.6577, 2.1247, 4.0682, 4.5443, 4.0632 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="email-near-match-16000">
+              <td>email-near-match-16000<small>en · 16,008 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>1.2441</td>
+              <td>1.1719 / 3.3397</td>
+              <td>12.87</td>
+              <td>1.12×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  3.1645, 3.3397, 2.5656, 1.2039, 1.2021, 1.1719, 1.2441 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphen" data-name="scheme-near-match-16000">
+              <td>scheme-near-match-16000<small>en · 16,006 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphen</td>
+              <td>1.3355</td>
+              <td>1.2283 / 3.4603</td>
+              <td>11.98</td>
+              <td>1.18×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.6699, 3.4603, 1.3355, 1.2406, 1.2283, 1.3682, 1.2647 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="short-en">
+              <td>short-en<small>en · 19 UTF-16 units · 200 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.0023</td>
+              <td>0.0019 / 0.0070</td>
+              <td>8.24</td>
+              <td>3.08×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0070, 0.0023, 0.0023, 0.0020, 0.0025, 0.0020, 0.0019 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="paragraph-ru">
+              <td>paragraph-ru<small>ru · 96 UTF-16 units · 200 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.0167</td>
+              <td>0.0158 / 0.0214</td>
+              <td>5.74</td>
+              <td>1.83×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0214, 0.0161, 0.0189, 0.0167, 0.0165, 0.0204, 0.0158 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="paragraph-en">
+              <td>paragraph-en<small>en · 187 UTF-16 units · 106 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.0471</td>
+              <td>0.0228 / 0.1147</td>
+              <td>3.97</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1147, 0.0471, 0.0514, 0.0322, 0.0380, 0.0567, 0.0228 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="repeated-words">
+              <td>repeated-words<small>en · 28,000 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>2.7631</td>
+              <td>2.5366 / 5.8431</td>
+              <td>10.13</td>
+              <td>1.30×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  2.8020, 2.5366, 2.7982, 2.7631, 2.6187, 2.6690, 5.8431 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="varied-vocabulary">
+              <td>varied-vocabulary<small>en · 25,999 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>2.8603</td>
+              <td>2.8086 / 3.3868</td>
+              <td>9.09</td>
+              <td>1.69×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  3.3868, 2.8451, 2.8086, 2.8603, 2.9399, 3.0842, 2.8177 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="ru-1000">
+              <td>ru-1000<small>ru · 1,056 UTF-16 units · 18 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.1702</td>
+              <td>0.1625 / 0.1877</td>
+              <td>6.21</td>
+              <td>1.55×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1625, 0.1702, 0.1669, 0.1877, 0.1685, 0.1812, 0.1724 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="en-1000">
+              <td>en-1000<small>en · 1,122 UTF-16 units · 17 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.1101</td>
+              <td>0.1049 / 0.1511</td>
+              <td>10.19</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1085, 0.1083, 0.1049, 0.1511, 0.1120, 0.1139, 0.1101 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="mixed-en-1000">
+              <td>mixed-en-1000<small>en · 1,132 UTF-16 units · 17 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.1108</td>
+              <td>0.1038 / 0.1339</td>
+              <td>10.22</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1191, 0.1072, 0.1115, 0.1108, 0.1339, 0.1043, 0.1038 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="mixed-ru-1000">
+              <td>mixed-ru-1000<small>ru · 1,132 UTF-16 units · 17 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.1326</td>
+              <td>0.1181 / 0.1486</td>
+              <td>8.54</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1486, 0.1346, 0.1326, 0.1251, 0.1192, 0.1181, 0.1388 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="long-word-1000">
+              <td>long-word-1000<small>en · 1,000 UTF-16 units · 20 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.0604</td>
+              <td>0.0568 / 0.0670</td>
+              <td>16.55</td>
+              <td>1.50×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0574, 0.0670, 0.0572, 0.0568, 0.0631, 0.0617, 0.0604 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="combining-run-1000">
+              <td>combining-run-1000<small>en · 1,002 UTF-16 units · 19 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.0917</td>
+              <td>0.0800 / 0.1084</td>
+              <td>10.93</td>
+              <td>0.78×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0917, 0.1005, 0.0905, 0.1084, 0.0942, 0.0894, 0.0800 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="email-near-match-1000">
+              <td>email-near-match-1000<small>en · 1,008 UTF-16 units · 19 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.0345</td>
+              <td>0.0335 / 0.0391</td>
+              <td>29.26</td>
+              <td>2.44×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0345, 0.0342, 0.0342, 0.0349, 0.0346, 0.0335, 0.0391 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="scheme-near-match-1000">
+              <td>scheme-near-match-1000<small>en · 1,006 UTF-16 units · 19 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.0510</td>
+              <td>0.0496 / 0.0690</td>
+              <td>19.74</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0510, 0.0506, 0.0496, 0.0518, 0.0498, 0.0536, 0.0690 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="ru-4000">
+              <td>ru-4000<small>ru · 4,032 UTF-16 units · 4 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.6610</td>
+              <td>0.6386 / 0.7891</td>
+              <td>6.10</td>
+              <td>1.42×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.6591, 0.7891, 0.6610, 0.6979, 0.6745, 0.6493, 0.6386 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="en-4000">
+              <td>en-4000<small>en · 4,114 UTF-16 units · 4 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.3938</td>
+              <td>0.3744 / 0.5077</td>
+              <td>10.45</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.3832, 0.4112, 0.3938, 0.3744, 0.3922, 0.4290, 0.5077 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="mixed-en-4000">
+              <td>mixed-en-4000<small>en · 4,245 UTF-16 units · 4 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.4013</td>
+              <td>0.3802 / 0.5272</td>
+              <td>10.58</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.3822, 0.5272, 0.3802, 0.3992, 0.4124, 0.4099, 0.4013 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="mixed-ru-4000">
+              <td>mixed-ru-4000<small>ru · 4,245 UTF-16 units · 4 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.4512</td>
+              <td>0.4445 / 0.5012</td>
+              <td>9.41</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.4479, 0.4913, 0.4445, 0.4456, 0.5012, 0.4601, 0.4512 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="long-word-4000">
+              <td>long-word-4000<small>en · 4,000 UTF-16 units · 5 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.2275</td>
+              <td>0.2243 / 0.2901</td>
+              <td>17.58</td>
+              <td>1.50×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2243, 0.2273, 0.2255, 0.2275, 0.2770, 0.2398, 0.2901 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="combining-run-4000">
+              <td>combining-run-4000<small>en · 4,002 UTF-16 units · 4 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.3190</td>
+              <td>0.3085 / 0.3372</td>
+              <td>12.54</td>
+              <td>0.88×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.3344, 0.3372, 0.3085, 0.3190, 0.3169, 0.3102, 0.3320 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="email-near-match-4000">
+              <td>email-near-match-4000<small>en · 4,008 UTF-16 units · 4 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.1343</td>
+              <td>0.1302 / 0.1836</td>
+              <td>29.85</td>
+              <td>2.42×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1836, 0.1311, 0.1335, 0.1346, 0.1302, 0.1818, 0.1343 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="scheme-near-match-4000">
+              <td>scheme-near-match-4000<small>en · 4,006 UTF-16 units · 4 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.2001</td>
+              <td>0.1965 / 0.2411</td>
+              <td>20.02</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.1984, 0.1965, 0.2411, 0.2036, 0.2001, 0.2000, 0.2075 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="ru-16000">
+              <td>ru-16000<small>ru · 16,032 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>2.6841</td>
+              <td>2.5551 / 3.1724</td>
+              <td>5.97</td>
+              <td>1.46×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  3.1376, 3.1724, 2.9886, 2.6841, 2.5916, 2.5551, 2.6569 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="en-16000">
+              <td>en-16000<small>en · 16,082 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>1.7276</td>
+              <td>1.4924 / 2.3010</td>
+              <td>9.31</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.7276, 1.7375, 1.6075, 2.3010, 1.5419, 1.4924, 1.8498 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="mixed-en-16000">
+              <td>mixed-en-16000<small>en · 16,131 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>1.5089</td>
+              <td>1.4425 / 1.8617</td>
+              <td>10.69</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.4425, 1.4649, 1.5089, 1.6321, 1.5519, 1.8617, 1.5026 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="mixed-ru-16000">
+              <td>mixed-ru-16000<small>ru · 16,131 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>1.9194</td>
+              <td>1.7028 / 1.9295</td>
+              <td>8.40</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.9194, 1.9295, 1.8227, 1.9264, 1.7028, 1.7149, 1.9270 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="long-word-16000">
+              <td>long-word-16000<small>en · 16,000 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>1.1106</td>
+              <td>0.9903 / 1.6408</td>
+              <td>14.41</td>
+              <td>1.52×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.1106, 1.6408, 0.9903, 1.0232, 1.1420, 1.0287, 1.3325 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="combining-run-16000">
+              <td>combining-run-16000<small>en · 16,002 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>1.4691</td>
+              <td>1.4558 / 1.5220</td>
+              <td>10.89</td>
+              <td>0.78×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.5214, 1.4974, 1.4691, 1.4579, 1.4657, 1.5220, 1.4558 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="email-near-match-16000">
+              <td>email-near-match-16000<small>en · 16,008 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>0.6606</td>
+              <td>0.6128 / 0.6775</td>
+              <td>24.23</td>
+              <td>2.12×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.6775, 0.6128, 0.6269, 0.6408, 0.6668, 0.6631, 0.6606 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hypher" data-name="scheme-near-match-16000">
+              <td>scheme-near-match-16000<small>en · 16,006 UTF-16 units · 1 calls/sample</small></td>
+              <td>hypher</td>
+              <td>1.0760</td>
+              <td>1.0075 / 1.4824</td>
+              <td>14.87</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  1.0499, 1.4824, 1.1219, 1.0830, 1.0148, 1.0760, 1.0075 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="short-en">
+              <td>short-en<small>en · 19 UTF-16 units · 200 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0005</td>
+              <td>0.0004 / 0.0013</td>
+              <td>40.25</td>
+              <td>15.03×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0011, 0.0013, 0.0007, 0.0005, 0.0004, 0.0004, 0.0004 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="paragraph-ru">
+              <td>paragraph-ru<small>ru · 96 UTF-16 units · 200 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0021</td>
+              <td>0.0020 / 0.0040</td>
+              <td>46.11</td>
+              <td>14.69×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0040, 0.0021, 0.0021, 0.0020, 0.0021, 0.0020, 0.0022 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="paragraph-en">
+              <td>paragraph-en<small>en · 187 UTF-16 units · 106 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0035</td>
+              <td>0.0034 / 0.0046</td>
+              <td>53.69</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0046, 0.0034, 0.0035, 0.0034, 0.0034, 0.0036, 0.0040 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="repeated-words">
+              <td>repeated-words<small>en · 28,000 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.2170</td>
+              <td>0.2125 / 0.2435</td>
+              <td>129.04</td>
+              <td>16.51×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2237, 0.2435, 0.2156, 0.2210, 0.2170, 0.2125, 0.2125 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="varied-vocabulary">
+              <td>varied-vocabulary<small>en · 25,999 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.2199</td>
+              <td>0.2124 / 0.2486</td>
+              <td>118.23</td>
+              <td>—</td>
+              <td>not idempotent</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2234, 0.2172, 0.2199, 0.2124, 0.2293, 0.2185, 0.2486 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="ru-1000">
+              <td>ru-1000<small>ru · 1,056 UTF-16 units · 18 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0199</td>
+              <td>0.0191 / 0.0214</td>
+              <td>53.20</td>
+              <td>13.31×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0199, 0.0191, 0.0210, 0.0199, 0.0214, 0.0195, 0.0192 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="en-1000">
+              <td>en-1000<small>en · 1,122 UTF-16 units · 17 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0182</td>
+              <td>0.0178 / 0.0411</td>
+              <td>61.62</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0184, 0.0181, 0.0192, 0.0182, 0.0182, 0.0178, 0.0411 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="mixed-en-1000">
+              <td>mixed-en-1000<small>en · 1,132 UTF-16 units · 17 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0225</td>
+              <td>0.0204 / 0.0271</td>
+              <td>50.23</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0204, 0.0225, 0.0252, 0.0228, 0.0214, 0.0221, 0.0271 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="mixed-ru-1000">
+              <td>mixed-ru-1000<small>ru · 1,132 UTF-16 units · 17 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0209</td>
+              <td>0.0195 / 0.0231</td>
+              <td>54.11</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0221, 0.0213, 0.0209, 0.0200, 0.0204, 0.0231, 0.0195 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="email-near-match-1000">
+              <td>email-near-match-1000<small>en · 1,008 UTF-16 units · 19 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0027</td>
+              <td>0.0026 / 0.0045</td>
+              <td>367.10</td>
+              <td>30.62×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0045, 0.0026, 0.0040, 0.0029, 0.0026, 0.0027, 0.0026 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="ru-4000">
+              <td>ru-4000<small>ru · 4,032 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0778</td>
+              <td>0.0729 / 0.1734</td>
+              <td>51.80</td>
+              <td>12.08×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0732, 0.0771, 0.0778, 0.0729, 0.0838, 0.0948, 0.1734 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="en-4000">
+              <td>en-4000<small>en · 4,114 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0682</td>
+              <td>0.0651 / 0.0807</td>
+              <td>60.36</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0807, 0.0669, 0.0656, 0.0651, 0.0706, 0.0684, 0.0682 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="mixed-en-4000">
+              <td>mixed-en-4000<small>en · 4,245 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0715</td>
+              <td>0.0699 / 0.0779</td>
+              <td>59.37</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0715, 0.0714, 0.0765, 0.0699, 0.0704, 0.0763, 0.0779 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="mixed-ru-4000">
+              <td>mixed-ru-4000<small>ru · 4,245 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0697</td>
+              <td>0.0688 / 0.0751</td>
+              <td>60.88</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0744, 0.0694, 0.0697, 0.0751, 0.0705, 0.0688, 0.0691 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="email-near-match-4000">
+              <td>email-near-match-4000<small>en · 4,008 UTF-16 units · 4 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0097</td>
+              <td>0.0096 / 0.0123</td>
+              <td>412.38</td>
+              <td>33.45×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0102, 0.0097, 0.0123, 0.0098, 0.0096, 0.0097, 0.0097 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="ru-16000">
+              <td>ru-16000<small>ru · 16,032 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.2851</td>
+              <td>0.2806 / 0.3768</td>
+              <td>56.23</td>
+              <td>13.77×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2820, 0.2806, 0.3237, 0.3768, 0.3020, 0.2827, 0.2851 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="en-16000">
+              <td>en-16000<small>en · 16,082 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.2587</td>
+              <td>0.2563 / 0.2930</td>
+              <td>62.16</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2774, 0.2590, 0.2563, 0.2930, 0.2587, 0.2579, 0.2575 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="mixed-en-16000">
+              <td>mixed-en-16000<small>en · 16,131 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.2703</td>
+              <td>0.2660 / 0.3865</td>
+              <td>59.68</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2696, 0.2660, 0.3865, 0.2843, 0.2693, 0.3332, 0.2703 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="mixed-ru-16000">
+              <td>mixed-ru-16000<small>ru · 16,131 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.2711</td>
+              <td>0.2680 / 0.3797</td>
+              <td>59.49</td>
+              <td>—</td>
+              <td>source changed; not idempotent; graphemes not checked</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.2687, 0.2711, 0.2874, 0.2803, 0.2692, 0.2680, 0.3797 ms
+                </details>
+              </td>
+            </tr>
+            <tr data-implementation="hyphenopoly" data-name="email-near-match-16000">
+              <td>email-near-match-16000<small>en · 16,008 UTF-16 units · 1 calls/sample</small></td>
+              <td>hyphenopoly</td>
+              <td>0.0382</td>
+              <td>0.0378 / 0.0427</td>
+              <td>419.17</td>
+              <td>36.61×</td>
+              <td>passed</td>
+              <td>
+                <details>
+                  <summary>7 samples</summary>
+                  0.0427, 0.0382, 0.0381, 0.0380, 0.0382, 0.0378, 0.0383 ms
                 </details>
               </td>
             </tr>
