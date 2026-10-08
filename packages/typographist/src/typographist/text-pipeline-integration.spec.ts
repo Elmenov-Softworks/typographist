@@ -10,6 +10,38 @@ const spacing: TextRule = {
 };
 
 describe('service text pipeline', () => {
+  it('applies Russian range settings with both default bundled locales registered', () => {
+    const service = new Typographist({
+      categories: ['dashes'],
+      settings: { 'ru/dash/years': { dash: '—' } },
+    });
+
+    expect(service.format('2020-2025 гг.', 'ru')).toBe('2020—2025 гг.');
+    expect(service.format('2020-2025 гг.', 'en')).toBe('2020-2025 гг.');
+    expect(service.format('word - word', 'en')).toBe('word\u00a0— word');
+  });
+
+  it('keeps bundled settings from supplying capabilities to consumer typography-only locales', () => {
+    const service = new Typographist<'custom'>({
+      categories: ['dashes', 'spacing'],
+      settings: { 'ru/dash/years': { dash: '—' }, 'common/space/afterComma': {} },
+      textLocales: [{ locale: 'custom', textRules: [spacing] }],
+    });
+
+    expect(service.format('2020-2025 гг.  word,word', 'custom')).toBe('2020-2025 гг. word,word');
+    expect(service.format('2020-2025 гг.', 'ru')).toBe('2020—2025 гг.');
+    service.addTextLocale({ locale: 'custom', textRules: [spacing] });
+    expect(service.format('word  word', 'custom')).toBe('word word');
+  });
+
+  it('rejects genuinely unknown bundled IDs and invalid locale setting names', () => {
+    expect(() => new Typographist({ settings: { 'ru/dash/unknown': { dash: '—' } } })).toThrow('Unknown text rule');
+    expect(() => new Typographist({ settings: { 'ru/dash/years': { unknown: '—' } } })).toThrow('Invalid setting');
+    expect(() => new Typographist({ settings: { 'ru/dash/years': { dash: 'invalid' } } })).toThrow(
+      'dash must be a supported',
+    );
+  });
+
   it('runs selected text rules without hyphenation', () => {
     const service = new Typographist({ textRules: [spacing], categories: ['spacing'] });
 

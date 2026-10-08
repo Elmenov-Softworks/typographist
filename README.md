@@ -25,14 +25,14 @@ hyphens are inserted. To retain the previous behavior, use
 `categories: ['hyphenation']` as above. `useFast` changes only the hyphenation
 algorithm, independently of selected text categories.
 
-| Category             | Behavior                                                                 |
-| -------------------- | ------------------------------------------------------------------------ |
-| `quotes`             | Consumer quotation rules; bundled quotation formatting is still pending. |
-| `dashes`             | Supported prose and range separators, and clear unary minus signs.       |
-| `punctuation`        | Apostrophes, ellipses and supported punctuation cleanup.                 |
-| `spacing`            | Ordinary whitespace cleanup and punctuation spacing.                     |
-| `nonbreakingSpacing` | Supported word, abbreviation, number-label and unit bindings.            |
-| `hyphenation`        | Soft hyphens from the selected existing algorithm.                       |
+| Category             | Behavior                                                           |
+| -------------------- | ------------------------------------------------------------------ |
+| `quotes`             | Bundled Russian and English quotation pairs, nesting and cleanup.  |
+| `dashes`             | Supported prose and range separators, and clear unary minus signs. |
+| `punctuation`        | Apostrophes, ellipses and supported punctuation cleanup.           |
+| `spacing`            | Ordinary whitespace cleanup and punctuation spacing.               |
+| `nonbreakingSpacing` | Supported word, abbreviation, number-label and unit bindings.      |
+| `hyphenation`        | Soft hyphens from the selected existing algorithm.                 |
 
 ```ts
 const punctuation = new Typographist({ categories: ['punctuation'] });
@@ -55,6 +55,9 @@ Explicit category lists replace the default selection; an empty list disables
 formatting but still validates text and requires a registered locale. Settings
 override the selected rule's defaults; they do not select categories. Unknown
 rule IDs, undeclared setting names and mismatched primitive types are rejected.
+Bundled rule settings apply only where that rule supports the registered locale;
+Russian settings can coexist with English and consumer typography-only locales.
+They do not add bundled capabilities to consumer locales.
 Enabled rules also validate setting ranges during preparation. Final-newline
 insertion is off unless its `enabled` setting is true. See the
 [rule catalogue](specs/feature/typography/typograf-rule-inventory.md) for individual
@@ -172,8 +175,9 @@ Built-in repeated-formatting scenarios are tested, with a documented exception:
 Russian day–month range formatting can change on its second default pass because
 later nonbreaking spacing affects the earlier range rule's next input. See the
 [catalogue's repeated-formatting notes](specs/feature/typography/typograf-rule-inventory.md#repeated-formatting-regressions).
-The feature remains under implementation: bundled quotation handling, final
-reference coverage and completed-feature benchmarks are still open. See the
+Bundled quotation handling, reference coverage and completed-feature benchmarks
+are implemented and recorded. Complete independent review and final owner acceptance
+remain open; no publication is authorized. See the
 [verification record](specs/feature/typography/checklists/requirements.md).
 
 Custom plugins extend `TypographistRules`. Its constructor requires both

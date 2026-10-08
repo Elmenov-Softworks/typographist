@@ -1,9 +1,5 @@
-import { createBundledDashes } from '@/text/typography/bundled-dashes.factory.js';
-import { createBundledNonbreakingSpacing } from '@/text/typography/bundled-nonbreaking-spacing.factory.js';
+import { createBundledTextRules } from '@/text/typography/bundled-text-rules.factory.js';
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
-import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.js';
-import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.factory.js';
-import { createBundledQuotes } from '@/text/typography/bundled-quotes.factory.js';
 import type { TextLocale } from '@/text/typography/text-locale.types.js';
 import type { TextPipelineOptions, TextRule, TextRuleHandler } from '@/text/typography/text-rule.types.js';
 import { WordCache } from '@/text/word-cache/word-cache.js';
@@ -90,15 +86,7 @@ export class RulesRegistry {
 
     const localeRules: readonly TextRule[] = definition.textRules;
     const format = prepareTextPipeline(
-      [
-        ...createBundledSpacing(key),
-        ...createBundledDashes(key),
-        ...createBundledPunctuation(key),
-        ...createBundledQuotes(key),
-        ...createBundledNonbreakingSpacing(key),
-        ...this.#textRules,
-        ...localeRules,
-      ],
+      createBundledTextRules(key, [...this.#textRules, ...localeRules]),
       key,
       this.#options,
     );
@@ -156,14 +144,7 @@ export class RulesRegistry {
     const hyphenationEnabled =
       this.#options.categories === undefined || this.#options.categories.includes('hyphenation');
     const format = prepareTextPipeline(
-      [
-        ...createBundledSpacing(key),
-        ...createBundledDashes(key),
-        ...createBundledPunctuation(key),
-        ...createBundledQuotes(key),
-        ...createBundledNonbreakingSpacing(key),
-        ...this.#textRules,
-      ],
+      createBundledTextRules(key, this.#textRules),
       key,
       this.#options,
       hyphenationEnabled ? service.hyphenate : (text) => text,
