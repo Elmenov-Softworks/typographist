@@ -112,6 +112,29 @@ punctuation interactions. Isolated Typograf 7.8.0 comparison confirms that
 Russian TP-R053 removes the remaining comma on the second pass; English retains
 it. The tests preserve this reference traversal rather than forcing idempotence.
 
+### Basic whitespace behavior audit
+
+Reviewed TP-R011–TP-R016 in `bundled-spacing.factory.spec.ts` against their
+bundled handlers. This audit covers rule behavior without upstream's separate
+CR/LF preparation step.
+
+| Trace ID | Positive and negative behavior                                                                        | Settings and interactions                                                                                              |
+| -------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| TP-R011  | Tabs become four spaces; ordinary and nonbreaking spaces remain unchanged in isolation.               | Unknown settings rejected; tab expansion precedes repeated-space cleanup and hyphenation.                              |
+| TP-R012  | Leading Unicode whitespace is trimmed; interior whitespace and zero-width spaces remain.              | Unknown settings rejected; protected text boundaries, empty input and category disabling tested.                       |
+| TP-R013  | Trailing Unicode whitespace is trimmed; interior whitespace and zero-width spaces remain.             | Unknown settings rejected; protected text boundaries and repeated formatting tested.                                   |
+| TP-R014  | Spaces and tabs before LF are removed; blanks before CRLF and at isolated text end remain.            | Unknown settings rejected; combined tab expansion, trimming and line cleanup tested.                                   |
+| TP-R015  | Repeated spaces and tabs between content collapse; indentation and repeated NBSP remain in isolation. | Unknown settings rejected; protected literals and tab expansion interactions tested.                                   |
+| TP-R016  | LF runs reduce to two by default; shorter runs and interior CRLF remain.                              | Positive safe-integer limits accepted; invalid limits and unknown settings rejected; protected newline runs preserved. |
+
+Eight additional service scenarios combine these rules with indentation cleanup,
+both locales, both hyphenation algorithms and enabled/disabled caching. Expected
+hyphenation comes from the hyphenation-only profile on explicitly cleaned text.
+The scenarios check a second pass, disabled categories and protected tabs/newlines.
+All 49 spacing tests passed on Node 24.21.0. This closes the behavior audit for
+these six entries; remaining spacing entries, other rule families, CR/LF preparation
+and browser runtime verification remain open.
+
 - TP-R056 protected-boundary, apostrophe, spacing and direct-speech interactions
   now have 32 additional service scenarios across both algorithms and cache modes.
   Isolated straight quotes around protected content remain unchanged because

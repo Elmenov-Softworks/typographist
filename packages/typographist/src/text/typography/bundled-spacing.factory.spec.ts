@@ -67,6 +67,27 @@ const scenarios = [
 ];
 
 describe('bundled spacing reference scenarios', () => {
+  it.each(
+    (['en', 'ru'] as const).flatMap((locale) =>
+      [false, true].flatMap((useFast) => [0, 1].map((cacheSize) => ({ locale, useFast, cacheSize }))),
+    ),
+  )('combines whitespace cleanup for $locale, useFast=$useFast, cacheSize=$cacheSize', (configuration) => {
+    const service = new Typographist({
+      ...configuration,
+      categories: ['spacing', 'hyphenation'],
+      protectedContent: ['Keep\t  this\n\n\n'],
+    });
+    const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
+    const input = '\tTypography\tworks  \n\n\n  Типографика\tработает\nKeep\t  this\n\n\nend\t ';
+    const cleaned = 'Typography works\n\nТипографика работает\nKeep\t  this\n\n\nend';
+    const expected = legacy.format(cleaned);
+
+    expect(service.format(input)).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+    expect(new Typographist({ ...configuration, categories: [] }).format(input)).toBe(input);
+    expect(legacy.format(input).replaceAll('\u00ad', '')).toBe(input);
+  });
+
   describe('whole-text trimming', () => {
     it.each(['en', 'ru'] as const)('trims only outer whitespace for %s', (locale) => {
       const ids = ['common/space/trimLeft', 'common/space/trimRight'];
