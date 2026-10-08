@@ -179,3 +179,17 @@ These rules run by default in the independently selectable `spacing` category fo
 Handlers follow the pinned reference. CR and nonbreaking spaces are preserved by the interior cleanup rules; no line-ending normalization is included in this slice. Reference execution also has separate line-ending preparation, which remains pending. Tab expansion runs before trailing and repeated-space cleanup. Punctuation and hyphenation follow. Protected URLs, email addresses and configured literals bypass these handlers. No letters, digits or numeric notation change. Consumer locales receive no implicit rules.
 
 Positive fixtures were compared with an isolated Typograf 7.8.0 installation. Negative cases, settings rejection, category selection, Unicode, content preservation, protection, repeated formatting and both hyphenation algorithms are covered by `bundled-spacing.factory.spec.ts`. Whole-text trimming and the remaining included capabilities are pending.
+
+## Implemented punctuation spacing cleanup
+
+The following ru/en rules run by default in `spacing`, at order 210 after square-bracket cleanup, in the listed order. They have no settings; unknown settings are rejected.
+
+| Inventory | Reference ID                        | Behavior                                                                                                                 |
+| --------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| TP-R023   | `common/space/delBeforePunctuation` | Remove one ordinary space before `!`, `?`, `:`, `;`, or `,`, except after punctuation or before a closing round bracket. |
+| TP-R024   | `common/space/delBeforePercent`     | Remove one ordinary or nonbreaking space between a digit and `%`, `‰`, or `‱`.                                           |
+| TP-R026   | `common/space/bracket`              | Remove ordinary spaces immediately inside round brackets.                                                                |
+
+Handlers preserve reference behavior without deviations. Percent cleanup changes whitespace only; digits and numeric notation remain unchanged. Bracket cleanup preserves tabs and nonbreaking spaces. Protected addresses and configured literals bypass all three handlers. No rules are implicitly supplied to consumer locales. The existing `en` identifier uses the shared en-US/en-GB behavior for these rules.
+
+Positive fixtures were compared locally with the isolated Typograf 7.8.0 build for ru and en-US. Isolated negative cases, unknown settings, category disabling, protected content, combined formatting, repeated formatting, and lexical and numeric preservation are covered by `bundled-spacing.factory.spec.ts`. Whole-text trimming and the remaining included capabilities are still pending.

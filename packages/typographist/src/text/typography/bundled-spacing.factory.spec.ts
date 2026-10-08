@@ -3,6 +3,14 @@ import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.uti
 import { Typographist } from '@/typographist/typographist.js';
 
 const scenarios = [
+  { id: 'common/space/bracket', input: '(  a  )', output: '(a)', unchanged: '(\ta\t) [ a ]' },
+  { id: 'common/space/delBeforePercent', input: '1 % 2\u00a0‰ 3 ‱', output: '1% 2‰ 3‱', unchanged: '1  % a % 2\t%' },
+  {
+    id: 'common/space/delBeforePunctuation',
+    input: 'a ! b ? c : d ; e ,',
+    output: 'a! b? c: d; e,',
+    unchanged: 'a . ! ! :) a\t,',
+  },
   { id: 'common/space/replaceTab', input: '\ta\tb', output: '    a    b', unchanged: 'a  b\u00a0c' },
   { id: 'common/space/delTrailingBlanks', input: 'a  \nb\t\n', output: 'a\nb\n', unchanged: 'a  \r\nb  ' },
   { id: 'common/space/delRepeatSpace', input: 'a  b\t\tc', output: 'a b c', unchanged: '  a\n  b\u00a0\u00a0c' },
@@ -47,6 +55,20 @@ describe('bundled spacing reference scenarios', () => {
     expect(service.format(output)).toBe(output);
     expect(legacy.format('a\tb')).toBe('a\tb');
     expect(new Typographist({ categories: [] }).format('a\tb')).toBe('a\tb');
+  });
+
+  it.each(['en', 'ru'] as const)('combines punctuation spacing without rewriting content for %s', (locale) => {
+    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep ( this ) 1 %'] });
+    const input = '( $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс ) ; 10 %';
+    const output = '($100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс); 10%';
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(service.format('https://example.com/(a) user@example.com Keep ( this ) 1 %')).toBe(
+      'https://example.com/(a) user@example.com Keep ( this ) 1 %',
+    );
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('1 % ( a ) ;')).toBe('1 % ( a ) ;');
   });
 
   it('does not bundle spacing for consumer locales', () => {
