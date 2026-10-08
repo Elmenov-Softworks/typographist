@@ -6,12 +6,15 @@ export type TextRuleSettings = Readonly<Record<string, string | number | boolean
 
 /** Original boundaries of an unprotected segment. */
 export type TextRuleContext = {
+  /** Whether the segment originally began at a line boundary. */
   readonly startsLine: boolean;
   /** Original adjacent characters across protected boundaries; empty at complete-text edges. */
   readonly precedingCharacter?: string;
+  /** Original character after the segment across a protected boundary; empty at the text end. */
   readonly followingCharacter?: string;
   /** Original adjoining lexical/numeric runs, including letters, marks, digits, soft hyphens, _, +, -, ., comma and /. */
   readonly precedingToken?: string;
+  /** Original lexical/numeric continuation after the segment across a protected boundary. */
   readonly followingToken?: string;
   /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */
   readonly startsText?: boolean;

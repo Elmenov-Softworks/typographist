@@ -1,6 +1,5 @@
 import type { Workload } from '../benchmark.types.ts';
 
-/** Deterministic text inputs with punctuation, protected addresses and unchanged numeric notation. */
 export const createTypographyWorkloads = () => {
   const paragraphs = {
     en: '"Typography"  improves reading... Next - sentence (-1.25). $100 12345 1/2 2026-10-08 word word MiXeD https://example.com/a-b user-name@example.com 😀 e\u0301. ',

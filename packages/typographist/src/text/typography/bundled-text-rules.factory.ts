@@ -5,7 +5,6 @@ import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.
 import { createBundledQuotes } from '@/text/typography/bundled-quotes.factory.js';
 import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.js';
 
-// Typograf 7.8.0 inventory order resolves equal priorities across the complete bundle.
 const referenceOrder = [
   'common/space/normalizeLineEndings',
   'common/dash/minus',

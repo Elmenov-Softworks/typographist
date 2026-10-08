@@ -177,7 +177,6 @@ export const createBundledDashes = (locale: string) => {
     });
   }
 
-  // Typograf 7.8.0 registration order resolves interactions between equal-priority bundled rules.
   const referenceOrder = [
     'ru/dash/years',
     'ru/dash/weekday',
@@ -206,7 +205,6 @@ export const createBundledDashes = (locale: string) => {
       return (text, context) => {
         const before = context?.precedingCharacter ?? '';
         const after = context?.followingCharacter ?? '';
-        // A protected continuation blocks a complete endpoint; it must never supply endpoint characters.
         const prefix = /[\p{L}\p{M}\p{N}_-]/u.test(before) ? '_' : isRange ? before : '';
         const suffix = /[\p{L}\p{M}\p{N}_-]/u.test(after) ? '_' : isRange ? after : '';
         const result = handler(prefix + text + suffix, context);

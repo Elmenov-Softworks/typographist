@@ -309,7 +309,6 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
     });
   }
 
-  // Typograf 7.8.0 registration order resolves interactions between equal-priority bundled rules.
   const referenceOrder = [
     'ru/nbsp/year',
     'ru/nbsp/see',
