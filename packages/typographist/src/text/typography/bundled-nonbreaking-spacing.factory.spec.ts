@@ -307,3 +307,84 @@ describe('nonbreaking spacing before short terminal numbers', () => {
     expect(service.format(expected)).toBe(expected);
   });
 });
+
+describe('Russian day–month spacing', () => {
+  const id = 'ru/nbsp/dayMonth';
+  const rules = createBundledNonbreakingSpacing('ru').filter((rule) => rule.id === id);
+  const format = prepareTextPipeline(rules, 'ru');
+
+  it.each([
+    'января',
+    'февраля',
+    'марта',
+    'апреля',
+    'мая',
+    'май',
+    'мае',
+    'июня',
+    'июля',
+    'августа',
+    'сентября',
+    'октября',
+    'ноября',
+    'декабря',
+    'ЯНВ.',
+    'МаЯ',
+  ])('binds a number to the month prefix in %j', (month) => {
+    const text = `1 ${month}, 31 ${month}`;
+    const expected = `1\u00a0${month}, 31\u00a0${month}`;
+
+    expect(format(text)).toBe(expected);
+    expect(format(expected)).toBe(expected);
+  });
+
+  it.each([
+    '',
+    ' \r\n\t',
+    '1января',
+    '1  января',
+    '1\tянваря',
+    '1\nянваря',
+    '1\rянваря',
+    '1\u00a0января',
+    '1\u202fянваря',
+    '1 January',
+  ])('preserves unsupported input %j', (text) => {
+    expect(format(text)).toBe(text);
+  });
+
+  it('preserves reference substring boundaries and composition', () => {
+    expect(format('1 мая́к')).toBe('1\u00a0мая́к');
+    expect(format('😀 12345 мартовский 1.25 мая 1/2 июня 2026-10-08 $100 100 руб. MiXeD мiкс слово слово')).toBe(
+      '😀 12345\u00a0мартовский 1.25\u00a0мая 1/2\u00a0июня 2026-10-08 $100 100 руб. MiXeD мiкс слово слово',
+    );
+    expect(rules).toHaveLength(1);
+    expect(() => prepareTextPipeline(rules, 'ru', { settings: { [id]: { unknown: true } } })).toThrow(
+      'Invalid setting',
+    );
+    expect(createBundledNonbreakingSpacing('en').some((rule) => rule.id === id)).toBe(false);
+    expect(createBundledNonbreakingSpacing('custom')).toEqual([]);
+  });
+
+  it('respects categories and protected content', () => {
+    const text = '12 января';
+    const service = new Typographist({ locale: 'ru', categories: ['nonbreakingSpacing'], protectedContent: [text] });
+
+    expect(service.format(`${text} https://example.com/12января user12января@example.com`)).toBe(
+      `${text} https://example.com/12января user12января@example.com`,
+    );
+    for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
+      expect(new Typographist({ locale: 'ru', categories }).format('12 мая')).toBe('12 мая');
+    }
+    expect(new Typographist({ locale: 'ru', categories: ['nonbreakingSpacing'] }).format(text)).toBe('12\u00a0января');
+  });
+
+  it.each([false, true])('combines ordinary spacing and hyphenation with useFast=%s', (useFast) => {
+    const service = new Typographist({ locale: 'ru', useFast });
+    const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+    const expected = legacy.format('12\u00a0января');
+
+    expect(service.format('12  января')).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+});

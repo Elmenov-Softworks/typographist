@@ -117,6 +117,15 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/dayMonth',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(/(\d{1,2}) (янв|фев|мар|апр|ма[ейя]|июн|июл|авг|сен|окт|ноя|дек)/gi, '$1\u00a0$2'),
+    });
+
+    rules.push({
       id: 'ru/nbsp/abbr',
       category: 'nonbreakingSpacing',
       order: 510,
