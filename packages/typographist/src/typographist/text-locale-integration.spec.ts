@@ -10,6 +10,50 @@ const spacing: TextRule = {
 };
 
 describe('typography-only locales', () => {
+  it.each([
+    ['«', '»'],
+    ['「', '」'],
+  ])('uses consumer quotation data %s %s after shared spacing at equal priority', (opening, closing) => {
+    const quotes: TextRule = {
+      id: 'custom/quotes',
+      category: 'quotes',
+      order: spacing.order,
+      defaults: { opening, closing },
+      prepare: (settings) => {
+        const { opening, closing } = settings;
+
+        if (typeof opening !== 'string' || typeof closing !== 'string') {
+          throw new TypeError('Quotation pairs must be strings');
+        }
+
+        return (text) => text.replace(/"([^" ]+ [^" ]+)"/g, `${opening}$1${closing}`);
+      },
+    };
+    const service = new Typographist({
+      locale: 'custom',
+      rules: [],
+      textRules: [spacing],
+      textLocales: [{ locale: 'custom', textRules: [quotes] }],
+      protectedContent: ['"Keep  Case"'],
+    });
+
+    expect(service.format('"猫  犬" "Keep  Case" https://example.com a@b.com')).toBe(
+      `${opening}猫 犬${closing} "Keep  Case" https://example.com a@b.com`,
+    );
+  });
+
+  it.each([null, 42, false, {}, Promise.resolve('text')])('rejects invalid custom handler result %s', (result) => {
+    const handler = vi.fn().mockReturnValueOnce(result).mockReturnValue('valid');
+    const service = new Typographist({
+      locale: 'custom',
+      rules: [],
+      textLocales: [{ locale: 'custom', textRules: [{ ...spacing, prepare: () => handler }] }],
+    });
+
+    expect(() => service.format('text')).toThrow('must return a string synchronously');
+    expect(service.format('text')).toBe('valid');
+  });
+
   it.each([false, true])('applies available capabilities without algorithm data (useFast=%s)', (useFast) => {
     const service = new Typographist({
       locale: 'custom',

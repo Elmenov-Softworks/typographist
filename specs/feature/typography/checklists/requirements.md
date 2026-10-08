@@ -172,3 +172,28 @@ Browser runtime verification is complete on the reported Chromium version.
 Final acceptance review and independent reviews remain open; this browser check
 does not establish reference parity for every rule or coverage of other browsers.
 No publication is authorized.
+
+## Consumer rule contract review — 2026-10-08
+
+Reviewed the public text rule and locale types, service registration, pipeline
+preparation and their existing tests against US2 and FR-006, FR-008, FR-011,
+FR-013 and FR-014. Shared rules precede locale rules at equal priority;
+preparation copies configuration and freezes settings; recognized addresses and
+literal protected spans are excluded before handlers run. Registration prepares
+the replacement before mutating service state. Formatting performs no network,
+filesystem or DOM operations. Consumer handlers remain responsible for their
+own symbolic-only behavior and private state.
+
+Seven added service assertions cover consumer quotation pairs with a non-bundled
+alphabet, shared/locale ordering at equal priority, protected content, and null,
+numeric, boolean, object and Promise handler results. Invalid results throw;
+a later valid call remains usable. The quotation fixture accepts text normalized
+by the shared spacing rule, so its output also verifies ordering through the
+public service API without requiring hyphenation data.
+
+All 26 tests in the three contract/pipeline test files, package type checking,
+targeted ESLint, formatting and diff checks passed on Node v24.21.0. ESLint emitted
+the existing multiple-project resolver warning. No production source changed;
+workspace-wide checks and builds were not rerun. The owner-reported browser
+verification remains complete. Final acceptance and independent reviews remain
+open; this focused review does not replace them.
