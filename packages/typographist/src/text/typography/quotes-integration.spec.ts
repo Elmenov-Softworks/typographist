@@ -75,8 +75,32 @@ describe('quotation pair settings', () => {
   });
 
   it.each([
+    ['"hello"', '”hello”'],
+    ['"one "two" three"', '”one ’two’ three”'],
+    ['"one "two "three" two" one"', '”one ’two ’three’ two” one”'],
+    ['"open', '”open'],
+    ['close"', 'close”'],
+    ['"😀 é "inner" text"', '”😀 é ’inner’ text”'],
+  ])('supports identical outer glyphs for %j', (input, expected) => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '”’', right: '”’' } },
+    });
+
+    expect(instance.format(input)).toBe(expected);
+  });
+
+  it('supports one identical pair and preserves literal private-use characters', () => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '”', right: '”' } },
+    });
+
+    expect(instance.format('"one "two" three" \uf005\uf008')).toBe('”one ”two” three” \uf005\uf008');
+  });
+
+  it.each([
     { left: '', right: '' },
-    { left: '”', right: '”' },
     { left: '«', right: '»”' },
     { left: '««««', right: '»»»»' },
     { left: 'a', right: 'b' },
