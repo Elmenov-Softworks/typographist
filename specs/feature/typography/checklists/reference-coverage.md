@@ -86,6 +86,32 @@ typography-only English and Russian locales.
 
 ## Remaining acceptance work
 
+### Punctuation behavior audit
+
+Reviewed `bundled-punctuation.factory.spec.ts` against the six bundled punctuation
+handlers. TP-R056 belongs to the separately tested quotation factory.
+
+| Trace ID | Positive and negative behavior                                                                                        | Settings and interactions                                                                         |
+| -------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| TP-R053  | Question/exclamation ellipses and comma removal; longer dot runs unchanged.                                           | Unknown settings rejected; Russian punctuation ordering tested.                                   |
+| TP-R054  | Two and four exclamation marks; one, three and five unchanged.                                                        | Unknown settings rejected; combined punctuation and repeated-pass traversal tested.               |
+| TP-R057  | Three/four dots in both locales; two/five unchanged.                                                                  | Unknown settings rejected; duplicate punctuation, protection and hyphenation interactions tested. |
+| TP-R058  | Duplicate comma, colon, dot, semicolon and question mark in both locales; triples and punctuation ellipses unchanged. | Unknown settings rejected; ellipsis ordering, category disabling and repeated passes tested.      |
+| TP-R059  | Locale alphabet apostrophes; quotes, digits, mixed alphabets and combining marks unchanged.                           | Unknown settings rejected; protection, categories and successive apostrophe traversal tested.     |
+| TP-R060  | Exclamation followed by question mark; longer runs and existing question/exclamation order unchanged.                 | Unknown settings rejected; Russian punctuation ordering tested.                                   |
+
+These rules declare no configurable values. Settings coverage therefore checks
+rejection of unknown keys. Shared service scenarios cover protected addresses,
+configured literals, unchanged lexical/numeric content and empty input; the
+hyphenation interaction runs with both algorithms. This audit does not close
+the behavior audit for the other inventory entries.
+
+Added an isolated Russian TP-R058 scenario and both-locale ellipsis/duplicate
+punctuation interactions. Isolated Typograf 7.8.0 comparison confirms that
+`word...,,` becomes `word…,` on the first punctuation-only pass in both locales.
+Russian TP-R053 removes the remaining comma on the second pass; English retains
+it. The tests preserve this reference traversal rather than forcing idempotence.
+
 - TP-R056 protected-boundary, apostrophe, spacing and direct-speech interactions
   now have 32 additional service scenarios across both algorithms and cache modes.
   Isolated straight quotes around protected content remain unchanged because

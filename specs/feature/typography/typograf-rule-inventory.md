@@ -520,6 +520,12 @@ The `dash` setting defaults to `–` and accepts `-`, `--`, `‒`, `–`, `—` 
 
 Dates, numeric ranges, hyphenated phone numbers, identifier suffixes, scientific notation, malformed numeric tokens and spaced signs are left unchanged. This deliberately limits normalization to clear unary contexts; it does not infer subtraction or rewrite numeric representations. Protected addresses and configured literals bypass the handler. Consumer locales receive no implicit rule. This capability has no standalone Typograf reference ID and does not enable excluded number-conversion rules. Isolated formatting is idempotent. `minus.spec.ts` covers glyph selection, boundaries, Unicode, content preservation, settings rejection, categories, protection and interaction with prose dashes and both hyphenation algorithms. Further specification capabilities remain pending.
 
+Punctuation-only repeated formatting also retains the reference interaction for
+`word...,,`: the first pass produces `word…,` in both locales. In Russian a
+second pass removes the remaining comma through TP-R053; English retains it.
+The isolated comparison and behavior audit are recorded in
+[reference coverage](checklists/reference-coverage.md).
+
 ## Implemented final-newline insertion (TP-R020)
 
 `common/space/insertFinalNewline` is bundled for `ru` and `en` in the `spacing` category at order 1300, after trimming and other text rules, before hyphenation. Its boolean `enabled` setting defaults to `false`, preserving the reference's disabled individual default even when the spacing category is selected. Set `settings: { 'common/space/insertFinalNewline': { enabled: true } }` to append LF unless the text already ends with LF. Unknown settings and nonboolean values are rejected.
