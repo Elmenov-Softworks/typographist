@@ -1,3 +1,4 @@
+import type { HyphenationBoundary } from '@/text/hyphenation-boundary.types.js';
 import { formatWord } from '@/text/word-breaks/format-word.util.js';
 import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
 import { scanCandidates } from '@/text/scanning/scan-candidates.util.js';
@@ -7,6 +8,7 @@ export const formatText = (
   text: string,
   context: TextFormattingContext,
   format = (word: string) => formatWord(word, context),
+  boundary?: HyphenationBoundary,
 ) => {
   const { exclusions } = context;
 
@@ -38,7 +40,11 @@ export const formatText = (
 
     const word = text.slice(start, end);
 
-    if (exclusions.preserves(word)) {
+    if (
+      exclusions.preserves(word) ||
+      (start === 0 && boundary?.preserveStart === true) ||
+      (end === text.length && boundary?.preserveEnd === true)
+    ) {
       continue;
     }
 

@@ -1,3 +1,5 @@
+import { scanCandidates } from '@/text/scanning/scan-candidates.util.js';
+import type { HyphenationBoundary } from '@/text/hyphenation-boundary.types.js';
 import { segmentBoundary } from '@/text/typography/segment-boundary.types.js';
 import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
 import type { CandidateSpan } from '@/text/scanning/candidate-span.types.js';
@@ -7,6 +9,30 @@ import type {
   TextRule,
   TextRuleHandler,
 } from '@/text/typography/text-rule.types.js';
+
+const spanAt = <TSpan extends CandidateSpan>(spans: readonly TSpan[], position: number) => {
+  let left = 0;
+  let right = spans.length;
+
+  while (left < right) {
+    const middle = Math.floor((left + right) / 2);
+    const token = spans[middle];
+
+    if (token === undefined) {
+      break;
+    }
+
+    if (position < token.start) {
+      right = middle;
+    } else if (position >= token.end) {
+      left = middle + 1;
+    } else {
+      return token;
+    }
+  }
+
+  return null;
+};
 
 const categories: readonly FormattingCategory[] = [
   'quotes',
@@ -21,8 +47,9 @@ export const prepareTextPipeline = (
   rules: readonly TextRule[],
   locale: string,
   options: TextPipelineOptions = {},
-  finish: TextRuleHandler = (text) => text,
+  finish: (text: string, boundary?: HyphenationBoundary) => string = (text) => text,
   declaredIds: ReadonlySet<string> = new Set(rules.map((rule) => rule.id)),
+  preservesCandidate = (_word: string) => false,
 ) => {
   const selected = options.categories ?? categories;
   const protectedContent = [...(options.protectedContent ?? [])];
@@ -89,6 +116,7 @@ export const prepareTextPipeline = (
     start: number,
     original: string,
     tokenAt: (position: number) => CandidateSpan | null,
+    candidateAt: (position: number) => (CandidateSpan & { preserved: boolean }) | null,
   ) => {
     const segmentEnd = start + text.length;
     const context = {
@@ -121,7 +149,13 @@ export const prepareTextPipeline = (
       text = result;
     }
 
-    return finish(text);
+    const preceding = start === 0 ? null : candidateAt(start);
+    const following = segmentEnd === original.length ? null : candidateAt(segmentEnd - 1);
+
+    return finish(text, {
+      preserveStart: preceding !== null && preceding.start < start && preceding.preserved,
+      preserveEnd: following !== null && following.end > segmentEnd && following.preserved,
+    });
   };
 
   return (text: string) => {
@@ -133,6 +167,15 @@ export const prepareTextPipeline = (
       return finish(text);
     }
 
+    let candidates: (CandidateSpan & { preserved: boolean })[] | null = null;
+    const candidateAt = (position: number) => {
+      candidates ??= scanCandidates(text).map((span) => ({
+        ...span,
+        preserved: preservesCandidate(text.slice(span.start, span.end)),
+      }));
+
+      return spanAt(candidates, position);
+    };
     let tokens: CandidateSpan[] | null = null;
     const tokenAt = (position: number) => {
       if (tokens === null) {
@@ -142,27 +185,7 @@ export const prepareTextPipeline = (
         }));
       }
 
-      let left = 0;
-      let right = tokens.length;
-
-      while (left < right) {
-        const middle = Math.floor((left + right) / 2);
-        const token = tokens[middle];
-
-        if (token === undefined) {
-          break;
-        }
-
-        if (position < token.start) {
-          right = middle;
-        } else if (position >= token.end) {
-          left = middle + 1;
-        } else {
-          return token;
-        }
-      }
-
-      return null;
+      return spanAt(tokens, position);
     };
     const spans: CandidateSpan[] = scanAddresses(text);
 
@@ -181,7 +204,7 @@ export const prepareTextPipeline = (
 
     for (const span of spans) {
       if (span.start > copied) {
-        parts.push(transform(text.slice(copied, span.start), copied, text, tokenAt));
+        parts.push(transform(text.slice(copied, span.start), copied, text, tokenAt, candidateAt));
       }
 
       if (span.end > copied) {
@@ -190,7 +213,7 @@ export const prepareTextPipeline = (
       }
     }
 
-    parts.push(transform(text.slice(copied), copied, text, tokenAt));
+    parts.push(transform(text.slice(copied), copied, text, tokenAt, candidateAt));
 
     return parts.join('');
   };

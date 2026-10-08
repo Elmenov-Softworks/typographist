@@ -214,6 +214,7 @@ export class RulesRegistry {
       this.#options,
       hyphenationEnabled ? service.hyphenate : (text) => text,
       new Set(this.#declaredSettings.keys()),
+      service.preservesCandidate,
     );
 
     return { key, service: { hyphenate: format } };

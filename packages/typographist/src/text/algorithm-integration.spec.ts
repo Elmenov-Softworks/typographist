@@ -14,6 +14,44 @@ describe.each([
         expect(instance.format(text)).toBe(text);
       });
 
+      it.each([
+        { text: 'banana123', protectedContent: ['123'] },
+        { text: '123banana', protectedContent: ['123'] },
+        { text: 'banana_name', protectedContent: ['_'] },
+        { text: 'bananaName', protectedContent: ['N'] },
+        { text: 'banana\u00adbanana', protectedContent: ['\u00ad'] },
+        { text: 'bananabanana', protectedContent: ['na'] },
+        { text: 'banana\u2011banana', protectedContent: ['\u2011'] },
+      ])('preserves complete excluded candidates around $protectedContent', ({ text, protectedContent }) => {
+        const instance = new Typographist({
+          useFast,
+          cacheSize,
+          ...config,
+          protectedContent,
+          excludedWords: ['bananabanana'],
+        });
+
+        expect(instance.format(text)).toBe(text);
+        const ordinary = new Typographist({ useFast, cacheSize, ...config }).format('computer');
+
+        expect(ordinary).toContain('\u00ad');
+        expect(instance.format('computer')).toBe(ordinary);
+        expect(instance.format(text)).toBe(text);
+      });
+
+      it('keeps exact exclusions case-sensitive across protected fragments', () => {
+        const instance = new Typographist({
+          useFast,
+          cacheSize,
+          ...config,
+          protectedContent: ['X'],
+          excludedWords: ['bananaXbanana'],
+        });
+
+        expect(instance.format('bananaXbanana')).toBe('bananaXbanana');
+        expect(instance.format('BANANAXBANANA')).toBe('BA\u00adNANAXBA\u00adNANA');
+      });
+
       it('snapshots exclusions and processes visible-hyphen components', () => {
         const excludedWords = ['banana'];
         const instance = new Typographist({ useFast, cacheSize, ...config, excludedWords });
