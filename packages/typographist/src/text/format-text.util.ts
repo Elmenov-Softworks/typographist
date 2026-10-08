@@ -3,7 +3,11 @@ import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
 import { scanCandidates } from '@/text/scanning/scan-candidates.util.js';
 import type { TextFormattingContext } from '@/text/text-formatting-context.types.js';
 
-export const formatText = (text: string, context: TextFormattingContext) => {
+export const formatText = (
+  text: string,
+  context: TextFormattingContext,
+  format = (word: string) => formatWord(word, context),
+) => {
   const { exclusions } = context;
 
   if (typeof text !== 'string') {
@@ -38,7 +42,7 @@ export const formatText = (text: string, context: TextFormattingContext) => {
       continue;
     }
 
-    const replacement = formatWord(word, context);
+    const replacement = format(word);
 
     if (replacement !== word) {
       parts.push(text.slice(copied, start), replacement);

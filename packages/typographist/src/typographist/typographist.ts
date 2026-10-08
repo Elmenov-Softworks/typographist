@@ -28,9 +28,9 @@ export class Typographist<TCustomLocale extends string = never> {
       throw new TypeError('Typographist config must be an object');
     }
 
-    const { locale = 'en', useFast = false, excludedWords = [], rules = createBundledRules() } = config;
+    const { locale = 'en', useFast = false, cacheSize = 64, excludedWords = [], rules = createBundledRules() } = config;
     this.#locale = locale;
-    this.#rules = new RulesRegistry(useFast, excludedWords);
+    this.#rules = new RulesRegistry(useFast, excludedWords, cacheSize);
 
     if (!Array.isArray(rules)) {
       throw new TypeError('rules must be an array of TypographistRules instances');
@@ -47,7 +47,8 @@ export class Typographist<TCustomLocale extends string = never> {
 
   /**
    * Compiles and registers rules for the plugin's locale, replacing any previous registration.
-   * Compilation or validation errors propagate and leave the previous rules intact.
+   * Successful registration clears cached words for all locales in this instance.
+   * Compilation or validation errors propagate and leave the previous rules and cached words intact.
    */
   addRules(rules: TypographistRules) {
     this.#rules.add(rules);
@@ -55,6 +56,7 @@ export class Typographist<TCustomLocale extends string = never> {
 
   /**
    * Removes registered rules and reports whether the locale was present.
+   * Clears cached words for all locales only when rules were removed.
    * Removing the default locale makes calls without an override fail until its rules are added again.
    */
   removeRules(locale: Locale | TCustomLocale) {
@@ -65,6 +67,7 @@ export class Typographist<TCustomLocale extends string = never> {
    * Formats text synchronously using the requested locale or the configured default.
    * An override affects only this call; selecting an unregistered locale throws even for empty text.
    * Preserves excluded words, recognized addresses, identifiers, unsupported words, and existing soft hyphens.
+   * Reuses cached results for the same locale and exact source word when caching is enabled.
    */
   format(text: string, locale: Locale | TCustomLocale = this.#locale) {
     return this.#rules.require(locale).hyphenate(text);

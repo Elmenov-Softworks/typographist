@@ -1,5 +1,47 @@
 # Hyphenation benchmarks
 
+For cache profiles and the same three external libraries, build the core and run:
+
+```sh
+npm run build --workspace=@elmenov-softworks/typographist
+node tools/benchmarks/cache-comparison.ts \
+  --modules /tmp/typographist-competitors/node_modules \
+  --output specs/feature/create-cache/benchmarks/cache-comparison
+```
+
+Install the pinned external packages as described below. This harness records
+all 29 existing workloads for both Typographist algorithms with disabled, empty,
+and warmed caches, plus empty and warmed native external instances. Hypher has no
+persistent cache; its warmed profile measures a repeated call. Every sample uses
+a new instance and times one call. Imports are excluded; preparation and warm-up
+are recorded separately. Seven samples follow three discarded preliminary samples.
+All current outputs must equal the corresponding uncached algorithm. External
+source, idempotence, and grapheme failures remain in the table but are excluded
+from charts and ratios; unsupported calls are listed separately.
+
+The standalone HTML contains cache gains, comparisons against each external
+library, English and Russian latency charts, and filters for workload, profile,
+cache state, and locale. JSON retains every sample, input hash, package version,
+environment, and source revision. Median speed ratios give each shared passing
+workload equal weight. Different coverage and dictionaries prevent a universal
+ranking. Browser screenshots measure report rendering, not browser hyphenation.
+
+For the bounded word cache comparison, build the core package and run:
+
+```sh
+node tools/benchmarks/word-cache.ts --output /tmp/typographist-benchmarks/word-cache.json
+```
+
+This separate harness compares disabled (0 MiB), initially empty (64 MiB), and
+warmed (64 MiB) caches for both algorithms on the repeated-word and diverse-word
+workloads. Each sample uses a fresh instance. Rule preparation and one untimed
+cache-populating call for warmed cases are recorded separately from formatting.
+Three runtime warm-up samples are discarded, then seven single-call samples are
+retained. Equality with uncached output is checked outside timing. Optional
+`--commit <sha>` records caller-supplied source provenance; it does not verify the
+built output. Results and procedure for the cache feature are retained separately
+in `specs/feature/create-cache/benchmarks/`.
+
 Run from the repository root after building the core package:
 
 ```sh
@@ -67,7 +109,9 @@ paragraphs use one explicitly selected locale per call, measured under both
 locales. Unicode, existing soft hyphens, identifiers, email, URLs, very long
 words, combining runs and near-matching addresses remain represented.
 
-The harness has no added dependencies, acceptance thresholds or word cache.
+The harness adds no dependencies, acceptance thresholds, or separate cache.
+Current adapters use Typographist's default 64 MiB cache. Use `cache-comparison.ts`
+for explicit disabled, empty, and warmed profiles.
 
 ## External libraries
 
@@ -99,8 +143,9 @@ and pattern-byte loading. Hyphenopoly receives fresh module state for each
 preparation sample and includes WASM compilation and instantiation.
 
 Built-in word caches in hyphen and Hyphenopoly remain enabled and are populated
-by verification and warm-ups. Hypher and Typographist have no persistent word
-cache. This comparison describes warmed native APIs, not uncached engines.
+by verification and warm-ups. Hypher has no persistent word cache. Current
+Typographist adapters use the default cache; historical pre-cache reports retain
+their original measurements and labels. This comparison describes warmed native APIs.
 Different word protection, Unicode handling and dictionaries affect results.
 
 External outputs are checked for source preservation after removing soft hyphens,
@@ -126,6 +171,7 @@ exceptions, proportional to supplied language data. Standard preparation also
 retains its pattern trie. These are instance costs, separate from temporary
 formatting memory: normalization, grapheme boundaries, classes, barrier marks,
 candidates and reconstructed output scale with the processed word/input and
-inserted output. There is no persistent word cache. The harness measures elapsed
-time, not heap allocation; these memory costs describe the implementation, not
+inserted output. The current instance also retains its bounded word cache unless
+disabled. The harness measures elapsed time, not heap allocation; these memory
+costs describe the implementation, not
 measured byte counts. Historical reports are preserved with their original labels.

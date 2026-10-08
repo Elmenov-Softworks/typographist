@@ -29,6 +29,20 @@ Only `Typographist` and `TypographistRules` are runtime exports. Configuration,
 locale, and declarative plugin output types are also available. Internal
 algorithms, matchers, normalization and prepared services are not public APIs.
 
+`cacheSize` defaults to 64 MiB. Positive finite numbers, including fractions,
+set the estimated word-cache budget; zero disables caching. Negative,
+non-finite and non-number values throw during initialization. Each instance
+starts with an empty in-memory LRU cache shared across its locales. Successful
+rule additions, replacements and removals clear it. Failed changes and absent
+locale removals preserve it.
+
+The estimate is 96 bytes per entry plus two bytes per UTF-16 code unit in its
+JSON-encoded `[locale, originalWord]` key and formatted result. This accounts
+for identity, strings and entry overhead, but is not an exact JavaScript heap
+limit: physical memory varies by runtime. Prepared rules and temporary
+formatting allocations are outside the budget. The budget allocates nothing
+up front; entries larger than it are formatted without retention.
+
 An instance has three public methods:
 
 - `format(text, locale?)` selects the call's locale or the configured default.
