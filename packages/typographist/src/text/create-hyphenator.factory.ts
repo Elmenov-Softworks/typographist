@@ -21,5 +21,7 @@ export const createHyphenator = (
   };
   const hyphenate = (text: string, boundary?: HyphenationBoundary) => formatText(text, context, format, boundary);
 
-  return { hyphenate, preservesCandidate: exclusions.preserves };
+  const preservesCandidate = (word: string) => exclusions.preserves(word) || algorithm.normalize(word) === null;
+
+  return { hyphenate, preservesCandidate };
 };

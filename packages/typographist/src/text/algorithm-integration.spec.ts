@@ -39,6 +39,31 @@ describe.each([
         expect(instance.format(text)).toBe(text);
       });
 
+      it.each([
+        { text: 'bananaж', protectedContent: ['ж'] },
+        { text: 'жbanana', protectedContent: ['ж'] },
+        { text: 'banana\u0301', protectedContent: ['\u0301'] },
+        { text: 'banana\u0301banana', protectedContent: ['\u0301'] },
+        { text: 'banana\u200dbanana', protectedContent: ['\u200d'] },
+        { text: 'banana\u200cbanana', protectedContent: ['\u200c'] },
+        { text: 'banana\ud800banana', protectedContent: ['\ud800'] },
+        { text: 'banana\udc00banana', protectedContent: ['\udc00'] },
+        { text: 'banana𐐀banana', protectedContent: ['𐐀'] },
+      ])('preserves unsupported complete candidates around $protectedContent', ({ text, protectedContent }) => {
+        const configuration = { useFast, cacheSize, ...config };
+        const unprotected = new Typographist(configuration);
+        const instance = new Typographist({ ...configuration, protectedContent });
+
+        expect(unprotected.format(text)).toBe(text);
+        expect(instance.format(text)).toBe(text);
+        expect(instance.format(text)).toBe(text);
+
+        const ordinary = unprotected.format('computer');
+
+        expect(ordinary).toContain('\u00ad');
+        expect(instance.format('computer')).toBe(ordinary);
+      });
+
       it('keeps exact exclusions case-sensitive across protected fragments', () => {
         const instance = new Typographist({
           useFast,
