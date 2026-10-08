@@ -221,4 +221,37 @@ describe('bundled prose dashes', () => {
   it('does not bundle dashes for consumer locales', () => {
     expect(createBundledDashes('custom')).toEqual([]);
   });
+
+  describe.each(['en', 'ru'] as const)('spacing and dash interactions for %s', (locale) => {
+    describe.each([false, true])('useFast=%s', (useFast) => {
+      it.each([0, 64])('preserves protected content and hyphenation with cache=%s MiB', (cacheSize) => {
+        const protectedText = 'Keep\t -  this';
+        const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+        const addresses = 'https://example.com/a-b user-name@example.com';
+        const inputRanges = locale === 'ru' ? 'среда-пятница\tмай-июнь  X-XI' : 'monday-friday\tMay-June  X-XI';
+        const outputRanges = locale === 'ru' ? 'среда–пятница май–июнь X–XI' : 'monday-friday May-June X-XI';
+        const input = `  ${inputRanges}\t table  -  table ${content} ${addresses} ${protectedText}  `;
+        const cleaned = `${outputRanges} table\u00a0— table ${content} ${addresses} ${protectedText}`;
+        const service = new Typographist({
+          locale,
+          useFast,
+          cacheSize,
+          categories: ['spacing', 'dashes', 'hyphenation'],
+          protectedContent: [protectedText],
+        });
+        const hyphenation = new Typographist({
+          locale,
+          useFast,
+          cacheSize,
+          categories: ['hyphenation'],
+          protectedContent: [protectedText],
+        });
+        const expected = hyphenation.format(cleaned);
+
+        expect(service.format(input)).toBe(expected);
+        expect(service.format(expected)).toBe(expected);
+        expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+      });
+    });
+  });
 });

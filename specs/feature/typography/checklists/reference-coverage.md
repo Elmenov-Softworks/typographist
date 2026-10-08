@@ -112,6 +112,30 @@ punctuation interactions. Isolated Typograf 7.8.0 comparison confirms that
 Russian TP-R053 removes the remaining comma on the second pass; English retains
 it. The tests preserve this reference traversal rather than forcing idempotence.
 
+### Prose and named-range dash behavior audit
+
+Reviewed TP-R033–TP-R035, TP-R037, TP-R043 and TP-R052 against
+`bundled-dashes.factory.ts` and `bundled-dashes.factory.spec.ts`.
+
+| Trace ID        | Positive and negative behavior                                                                                                                                        | Settings and interactions                                                                                           |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| TP-R033–TP-R035 | Supported prose dash glyphs acquire a preceding NBSP; lexical hyphens, dates, phone numbers, unsupported whitespace and longer dash runs remain unchanged.            | No configurable values; unknown keys rejected. English regional entries share the documented `en` behavior.         |
+| TP-R037         | Russian weekday ranges preserve case and normalize separators; identifiers, combining-mark boundaries, multi-part ranges and unsupported separators remain unchanged. | Supported symbolic `dash` settings accepted; invalid settings rejected. Spaced prose dashes run first.              |
+| TP-R043         | Russian nominative and prepositional month ranges preserve case; mixed grammatical forms, identifiers and unsupported separators remain unchanged.                    | Supported symbolic `dash` settings accepted; invalid settings rejected. Spaced prose dashes run first.              |
+| TP-R052         | Uppercase Roman century ranges normalize separators; lowercase forms, word fragments, identifiers and unsupported whitespace remain unchanged.                        | Supported symbolic `dash` settings accepted; invalid settings rejected. Century normalization follows prose dashes. |
+
+Existing isolated fixtures check repeated formatting, empty and whitespace-only
+input, protections and category selection. Eight added service scenarios combine
+spacing, dashes and hyphenation across both locales, algorithms and cache budgets
+of zero and 64 MiB. Expected hyphenation is obtained from the hyphenation-only
+profile on explicitly normalized text. They preserve URLs, emails, protected tabs
+and spaces, numeric notation, lexical content and English named ranges, and check
+a second pass and all-disabled formatting. The targeted file passed all 21 tests
+on Node v24.21.0. No new upstream comparison was run in this slice; existing
+reference fixtures and documented boundary deviations remain the evidence for
+reference behavior. Other dash entries and the remaining rule families still
+require their acceptance audits.
+
 ### Basic whitespace behavior audit
 
 Reviewed TP-R011–TP-R016 in `bundled-spacing.factory.spec.ts` against their
