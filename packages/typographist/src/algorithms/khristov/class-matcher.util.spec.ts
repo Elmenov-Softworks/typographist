@@ -39,6 +39,8 @@ describe('Khristov class matching', () => {
 
   it('keeps symbol indexes independent of UTF-16 lengths and unknown symbols', () => {
     expect(matchKhristovClasses(['C', 'V', '𐐨', 'C', 'V'])).toEqual([]);
+    expect(matchKhristovClasses(['𐐨', 'C', 'V', 'C', 'V'])).toEqual([3]);
+    expect(matchKhristovClasses(['CV', 'C', 'V'])).toEqual([]);
   });
 
   it('does not mutate input or retain marks between calls', () => {

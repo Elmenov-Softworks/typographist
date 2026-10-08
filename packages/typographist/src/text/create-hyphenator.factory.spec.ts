@@ -63,6 +63,19 @@ it('honors break and no-break exceptions before the strategy and filters minima'
   expect(wordBreaks).not.toHaveBeenCalled();
 });
 
+it('preserves words too short for minima while retaining exactly long enough words', () => {
+  const algorithm = prepareKnuthLiang({
+    locale: 'en',
+    alphabet: 'abcde',
+    leftMin: 2,
+    rightMin: 3,
+    patterns: ['b1c'],
+  });
+  const service = create(algorithm);
+
+  expect(service.hyphenate('a ab abc abcd abcde')).toBe('a ab abc abcd ab\u00adcde');
+});
+
 it('rejects non-string text at the formatting boundary', () => {
   const service = create();
 

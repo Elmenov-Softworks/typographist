@@ -12,14 +12,17 @@ const rules = [
 ];
 
 export const matchKhristovClasses = (classes: readonly string[]) => {
+  const text = classes
+    .map((category) => (category === 'V' || category === 'C' || category === 'X' ? category : '_'))
+    .join('');
   const marked = new Uint8Array(classes.length + 1);
 
   for (const { pattern, offset } of rules) {
-    for (let start = 0; start <= classes.length - pattern.length; start += 1) {
+    for (let start = text.indexOf(pattern); start !== -1; start = text.indexOf(pattern, start + 1)) {
       let matches = true;
 
-      for (let index = 0; index < pattern.length; index += 1) {
-        if (classes[start + index] !== pattern[index] || (index > 0 && marked[start + index] === 1)) {
+      for (let index = 1; index < pattern.length; index += 1) {
+        if (marked[start + index] === 1) {
           matches = false;
           break;
         }

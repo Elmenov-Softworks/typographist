@@ -90,7 +90,7 @@ export const preparePatternMatcher = (patterns: readonly string[]) => {
 
   const match = (symbols: readonly string[]) => {
     const anchored = ['.', ...symbols, '.'];
-    const weights: number[] = Array.from({ length: anchored.length + 1 }, () => 0);
+    const weights = new Uint8Array(anchored.length + 1);
 
     for (let start = 0; start < anchored.length; start += 1) {
       let node = root;
