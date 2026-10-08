@@ -135,6 +135,37 @@ describe('bundled spacing reference scenarios', () => {
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('1 % ( a ) ;')).toBe('1 % ( a ) ;');
   });
 
+  it.each(['en', 'ru'] as const)('spaces opening parentheses using the %s alphabet', (locale) => {
+    const id = 'common/space/beforeBracket';
+    const rules = createBundledSpacing(locale).filter((rule) => rule.id === id);
+    const format = prepareTextPipeline(rules, locale);
+    const input = 'word(a) СЛОВО(б) ё(в) a.(b) !(c) ?(d) ,(e) ;(f) …(g) )(h)';
+    const output =
+      locale === 'ru'
+        ? 'word(a) СЛОВО (б) ё (в) a. (b) ! (c) ? (d) , (e) ; (f) … (g) ) (h)'
+        : 'word (a) СЛОВО(б) ё(в) a. (b) ! (c) ? (d) , (e) ; (f) … (g) ) (h)';
+
+    expect(rules).toHaveLength(1);
+    expect(format(input)).toBe(output);
+    expect(format(output)).toBe(output);
+    expect(format('1(2) [(a) :(b) -(c) e\u0301(d) 😀(e)')).toBe('1(2) [(a) :(b) -(c) e\u0301(d) 😀(e)');
+    expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
+      'Invalid setting',
+    );
+
+    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep(a) слово(б)'] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
+    const addresses = 'https://example.com/a(b) user@example.com';
+    const lexicalInput = locale === 'ru' ? 'слово(  тест  )' : 'word(  test  )';
+    const lexicalOutput = locale === 'ru' ? 'слово (тест)' : 'word (test)';
+
+    expect(service.format(`${content} ${addresses} Keep(a) слово(б) ${lexicalInput}`)).toBe(
+      `${content} ${addresses} Keep(a) слово(б) ${lexicalOutput}`,
+    );
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a(b) я(б)')).toBe('a(b) я(б)');
+  });
+
   it('does not bundle spacing for consumer locales', () => {
     expect(createBundledSpacing('custom')).toEqual([]);
     const service = new Typographist({

@@ -89,6 +89,17 @@ export const createBundledSpacing = (locale: string) => {
       defaults: {},
       prepare: () => (text) => text.replace(/(\() +/g, '(').replace(/ +\)/g, ')'),
     },
+    {
+      id: 'common/space/beforeBracket',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => {
+        const beforeBracket = locale === 'ru' ? /([а-яё.!?,;…)])\(/gi : /([a-z.!?,;…)])\(/gi;
+
+        return (text) => text.replace(beforeBracket, '$1 (');
+      },
+    },
   ];
 
   return rules;
