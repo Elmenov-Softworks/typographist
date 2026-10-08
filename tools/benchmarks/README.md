@@ -1,5 +1,21 @@
 # Hyphenation benchmarks
 
+For the bounded word cache comparison, build the core package and run:
+
+```sh
+node tools/benchmarks/word-cache.ts --output /tmp/typographist-benchmarks/word-cache.json
+```
+
+This separate harness compares disabled (0 MiB), initially empty (64 MiB), and
+warmed (64 MiB) caches for both algorithms on the repeated-word and diverse-word
+workloads. Each sample uses a fresh instance. Rule preparation and one untimed
+cache-populating call for warmed cases are recorded separately from formatting.
+Three runtime warm-up samples are discarded, then seven single-call samples are
+retained. Equality with uncached output is checked outside timing. Optional
+`--commit <sha>` records caller-supplied source provenance; it does not verify the
+built output. Results and procedure for the cache feature are retained separately
+in `specs/feature/create-cache/benchmarks/`.
+
 Run from the repository root after building the core package:
 
 ```sh
