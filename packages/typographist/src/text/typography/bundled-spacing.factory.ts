@@ -28,6 +28,26 @@ export const createBundledSpacing = (locale: string) => {
       prepare: () => (text) => text.replace(/([^\n \t])[ \t]{2,}(?![\n \t])/g, '$1 '),
     },
     {
+      id: 'common/space/delRepeatN',
+      category: 'spacing',
+      order: 209,
+      defaults: { maxConsecutiveLineBreaks: 2 },
+      prepare: ({ maxConsecutiveLineBreaks }) => {
+        if (
+          typeof maxConsecutiveLineBreaks !== 'number' ||
+          !Number.isSafeInteger(maxConsecutiveLineBreaks) ||
+          maxConsecutiveLineBreaks < 1
+        ) {
+          throw new TypeError('maxConsecutiveLineBreaks must be a positive safe integer');
+        }
+
+        const repeatedLineBreaks = /\n+/g;
+
+        return (text) =>
+          text.replace(repeatedLineBreaks, (lineBreaks) => lineBreaks.slice(0, maxConsecutiveLineBreaks));
+      },
+    },
+    {
       id: 'common/space/squareBracket',
       category: 'spacing',
       order: 210,

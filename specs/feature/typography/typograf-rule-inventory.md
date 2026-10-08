@@ -193,3 +193,9 @@ The following ru/en rules run by default in `spacing`, at order 210 after square
 Handlers preserve reference behavior without deviations. Percent cleanup changes whitespace only; digits and numeric notation remain unchanged. Bracket cleanup preserves tabs and nonbreaking spaces. Protected addresses and configured literals bypass all three handlers. No rules are implicitly supplied to consumer locales. The existing `en` identifier uses the shared en-US/en-GB behavior for these rules.
 
 Positive fixtures were compared locally with the isolated Typograf 7.8.0 build for ru and en-US. Isolated negative cases, unknown settings, category disabling, protected content, combined formatting, repeated formatting, and lexical and numeric preservation are covered by `bundled-spacing.factory.spec.ts`. Whole-text trimming and the remaining included capabilities are still pending.
+
+## Implemented consecutive line-break cleanup
+
+`TP-R016`, `common/space/delRepeatN`, runs for ru and en in `spacing` at order 209, after repeated-space cleanup and before bracket cleanup. It limits each run of LF characters to `maxConsecutiveLineBreaks`, which defaults to 2. Preparation accepts positive safe integers and rejects zero, negative, fractional, nonfinite and incorrectly typed settings. This boundary validation is stricter than the reference's unchecked setting. No other whitespace, letters, digits or numeric notation changes.
+
+Positive fixtures with limits 1, 2 and 3 were compared locally with isolated Typograf 7.8.0 for ru and en-US. Both reference English variants share this rule. CR characters remain untouched by this handler; reference-wide line-ending preparation remains pending. Protected addresses and configured literals bypass the handler. Tests cover invalid settings, category disabling, protected line breaks, composition preservation and repeated formatting. No implicit rules are supplied to consumer locales.

@@ -15,9 +15,45 @@ const scenarios = [
   { id: 'common/space/delTrailingBlanks', input: 'a  \nb\t\n', output: 'a\nb\n', unchanged: 'a  \r\nb  ' },
   { id: 'common/space/delRepeatSpace', input: 'a  b\t\tc', output: 'a b c', unchanged: '  a\n  b\u00a0\u00a0c' },
   { id: 'common/space/squareBracket', input: '[  a  ]', output: '[a]', unchanged: '[\ta\t] ( a )' },
+  { id: 'common/space/delRepeatN', input: 'a\n\n\n\nb', output: 'a\n\nb', unchanged: 'a\n\nb\r\n\r\n\r\nc' },
 ];
 
 describe('bundled spacing reference scenarios', () => {
+  it.each(['en', 'ru'] as const)('configures consecutive line breaks for %s', (locale) => {
+    const id = 'common/space/delRepeatN';
+    const rules = createBundledSpacing(locale).filter((rule) => rule.id === id);
+
+    for (const maximum of [1, 2, 3, Number.MAX_SAFE_INTEGER]) {
+      const format = prepareTextPipeline(rules, locale, {
+        settings: { [id]: { maxConsecutiveLineBreaks: maximum } },
+      });
+      const expected = `a${'\n'.repeat(Math.min(4, maximum))}b`;
+
+      expect(format('a\n\n\n\nb')).toBe(expected);
+      expect(format(expected)).toBe(expected);
+    }
+
+    for (const maximum of [0, -1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1, '2', true]) {
+      expect(() =>
+        prepareTextPipeline(rules, locale, { settings: { [id]: { maxConsecutiveLineBreaks: maximum } } }),
+      ).toThrow();
+    }
+  });
+
+  it.each(['en', 'ru'] as const)('preserves protected line breaks and content for %s', (locale) => {
+    const protectedContent = 'Keep\n\n\nthis';
+    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: [protectedContent] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content}\n\n\nhttps://example.com/a\n\n\nuser@example.com\n\n\n${protectedContent}`;
+    const output = `${content}\n\nhttps://example.com/a\n\nuser@example.com\n\n${protectedContent}`;
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(service.format('\n\n\n')).toBe('\n\n');
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('\n\n\n')).toBe('\n\n\n');
+  });
+
   it.each(['en', 'ru'] as const)('matches isolated rule behavior for %s', (locale) => {
     for (const { id, input, output, unchanged } of scenarios) {
       const rules = createBundledSpacing(locale).filter((rule) => rule.id === id);
