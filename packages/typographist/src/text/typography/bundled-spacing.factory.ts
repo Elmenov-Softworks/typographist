@@ -108,6 +108,20 @@ export const createBundledSpacing = (locale: string) => {
       prepare: () => (text) => text.replace(/;([^).…!;?\s[\]«‹»›„“‟”"])/g, '; $1'),
     },
     {
+      id: 'common/space/afterExclamationMark',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) => text.replace(/!([^).…!;?\s[\]«‹»›„“‟”"])/g, '! $1'),
+    },
+    {
+      id: 'common/space/afterQuestionMark',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) => text.replace(/\?([^).…!;?\s[\]«‹»›„“‟”"])/g, '? $1'),
+    },
+    {
       id: 'common/space/afterComma',
       category: 'spacing',
       order: 210,
