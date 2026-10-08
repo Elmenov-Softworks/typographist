@@ -10,6 +10,40 @@ regional locale. TP-R056 supplies configurable quotation pairs, duplicate remova
 and quotation spacing. The 42 excluded entries
 remain excluded; default-profile exclusion tests are recorded in the inventory.
 
+### Supplemental hyphenation, minus and registration audit
+
+Reviewed the supplemental `common/dash/minus` handler, algorithm selection,
+hyphenation preparation, word formatting, exclusions, shared word cache and
+locale registry. Unary-minus normalization changes a standalone hyphen before
+an unchanged digit expression to U+2212. Fixtures distinguish it from prose
+dashes and ranges and preserve dates, phone sequences, identifier suffixes,
+decimal/fraction notation, URLs, emails and configured literals. Both bundled
+locales test category disabling, repeated formatting and algorithm integration.
+This supplemental handler is outside the pinned 107-rule inventory.
+
+The hyphenation regressions exercise default and hyphenation-only profiles with
+both algorithms and zero/64 MiB caches. They cover case-sensitive exclusions,
+existing soft hyphens, unsupported words, grapheme boundaries, exceptions and
+visible-hyphen components. Selected algorithm data is required without fallback.
+Cache tests exercise exact-source and locale separation, shared LRU eviction,
+zero-size disabling, successful mutation invalidation and failed-registration
+rollback. The registry prepares replacement services before changing its map or
+clearing the cache; no whole-text or persistent cache was introduced.
+
+Typography-only locale and pipeline fixtures additionally cover missing locales,
+explicit unavailable hyphenation, stable ordering for equal priorities,
+preparation once per registration, disabled-rule preparation avoidance,
+overlapping protected literals, copied settings and invalid synchronous results.
+The built-in text pipeline finishes symbolic rules before word hyphenation.
+Consumer handler closures remain consumer-owned; these tests do not promise
+isolation from arbitrary mutable state captured by a supplied handler.
+
+The seven focused suites passed 107 tests on Node v24.21.0. The public-entry
+suite was checked separately for missing and incompatible selected algorithm
+data and failed-replacement behavior. No new browser run or upstream comparison
+was performed, and no production source changed. This closes this supplemental
+evidence review; final acceptance and independent reviews remain open.
+
 ## Included and adapted entries
 
 | Trace ID | Reference ID                              | Bundled source                                        |
