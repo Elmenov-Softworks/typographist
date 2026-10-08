@@ -101,6 +101,13 @@ export const createBundledSpacing = (locale: string) => {
       },
     },
     {
+      id: 'common/space/afterSemicolon',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) => text.replace(/;([^).…!;?\s[\]«‹»›„“‟”"])/g, '; $1'),
+    },
+    {
       id: 'common/space/afterColon',
       category: 'spacing',
       order: 210,

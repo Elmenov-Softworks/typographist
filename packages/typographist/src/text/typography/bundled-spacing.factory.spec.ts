@@ -4,6 +4,12 @@ import { Typographist } from '@/typographist/typographist.js';
 
 const scenarios = [
   {
+    id: 'common/space/afterSemicolon',
+    input: ';start word;next слово;далее 1;2 ;, ;: ;/ ;\\ ;( ;😀',
+    output: '; start word; next слово; далее 1; 2 ; , ; : ; / ; \\ ; ( ; 😀',
+    unchanged: ';. ;… ;! ;; ;? ;[ ;] ;) ;« ;‹ ;» ;› ;„ ;“ ;‟ ;” ;" ; next ;\t ;\n ;\u00a0',
+  },
+  {
     id: 'common/space/afterColon',
     input: 'word:next слово:далее a:1',
     output: 'word: next слово: далее a: 1',
@@ -182,6 +188,19 @@ describe('bundled spacing reference scenarios', () => {
     expect(service.format(output)).toBe(output);
     expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a:b')).toBe('a:b');
+  });
+
+  it.each(['en', 'ru'] as const)('spaces semicolons with protected content for %s', (locale) => {
+    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep;this'] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content};next https://example.com/a;b user@example.com Keep;this`;
+    const output = `${content}; next https://example.com/a;b user@example.com Keep;this`;
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(service.format('word ;next')).toBe('word; next');
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a;b')).toBe('a;b');
   });
 
   it('does not bundle spacing for consumer locales', () => {
