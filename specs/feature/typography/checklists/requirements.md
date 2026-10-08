@@ -41,7 +41,8 @@ nonbreaking-spacing rules, but has no bundled quotation handler. TP-R056
 does not establish quotation acceptance under US1 or FR-003.
 
 Feature acceptance remains open. Implement and verify bundled quotation
-behavior, then finish the reference-rule coverage audit and public migration
-documentation. The README still describes the core as a hyphenation service.
+behavior, then finish the reference-rule coverage audit. The README now documents
+the category default change, hyphenation-only migration, settings, protection and
+consumer text locales, and explicitly identifies the missing bundled quote handler.
 The existing benchmark report explicitly measures an earlier implementation;
 it does not establish performance of the completed feature.

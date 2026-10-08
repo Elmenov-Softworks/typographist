@@ -1,7 +1,8 @@
 # Typographist
 
 Typography libraries for JavaScript and components for Vue, React, and Solid.
-The core package inserts soft hyphens without changing original characters.
+The core package applies symbolic typography and inserts soft hyphens.
+Letters, case, word order and numeric notation are preserved by bundled rules.
 The framework packages are currently placeholders.
 
 ```ts
@@ -9,6 +10,7 @@ import { Typographist } from '@elmenov-softworks/typographist';
 
 const typographist = new Typographist({
   locale: 'en',
+  categories: ['hyphenation'],
   excludedWords: ['Typographist'],
   useFast: false,
 });
@@ -16,6 +18,54 @@ const typographist = new Typographist({
 typographist.format('table'); // 'ta\u00adble'
 typographist.format('асбест', 'ru'); // 'ас\u00adбест'
 ```
+
+Omitting `categories` selects all available categories. This changes the previous
+hyphenation-only default: punctuation and whitespace can now change before soft
+hyphens are inserted. To retain the previous behavior, use
+`categories: ['hyphenation']` as above. `useFast` changes only the hyphenation
+algorithm, independently of selected text categories.
+
+| Category             | Behavior                                                                 |
+| -------------------- | ------------------------------------------------------------------------ |
+| `quotes`             | Consumer quotation rules; bundled quotation formatting is still pending. |
+| `dashes`             | Supported prose and range separators, and clear unary minus signs.       |
+| `punctuation`        | Apostrophes, ellipses and supported punctuation cleanup.                 |
+| `spacing`            | Ordinary whitespace cleanup and punctuation spacing.                     |
+| `nonbreakingSpacing` | Supported word, abbreviation, number-label and unit bindings.            |
+| `hyphenation`        | Soft hyphens from the selected existing algorithm.                       |
+
+```ts
+const punctuation = new Typographist({ categories: ['punctuation'] });
+punctuation.format('Wait...'); // 'Wait…', without soft hyphens
+
+const unchanged = new Typographist({ categories: [] });
+unchanged.format('  Wait...  '); // '  Wait...  '
+
+const spaced = new Typographist({
+  categories: ['spacing'],
+  settings: {
+    'common/space/delRepeatN': { maxConsecutiveLineBreaks: 1 },
+    'common/space/insertFinalNewline': { enabled: true },
+  },
+});
+spaced.format('a\n\n\nb'); // 'a\nb\n'
+```
+
+Explicit category lists replace the default selection; an empty list disables
+formatting but still validates text and requires a registered locale. Settings
+override the selected rule's defaults; they do not select categories. Unknown
+rule IDs, undeclared setting names and mismatched primitive types are rejected.
+Enabled rules also validate setting ranges during preparation. Final-newline
+insertion is off unless its `enabled` setting is true. See the
+[rule catalogue](specs/feature/typography/typograf-rule-inventory.md) for individual
+defaults, settings, ordering, reference IDs and deviations.
+
+`rules` continues to supply hyphenation datasets; it does not select formatting
+categories. `textRules` supplies shared symbolic rules and `textLocales` registers
+locales with symbolic rules but no hyphenation data. No Typograf runtime dependency
+is required. Bundled typography covers `en` and `ru` only. The `en` typography
+currently shares the implemented behavior of reference `en-US` and `en-GB`; neither
+regional identifier is registered automatically. There is no region fallback.
 
 Configuration defaults to `locale: 'en'`, English and Russian rules, no excluded
 words, and `useFast: false`. Standard mode uses Knuth–Liang patterns. Set
@@ -43,10 +93,11 @@ limit: physical memory varies by runtime. Prepared rules and temporary
 formatting allocations are outside the budget. The budget allocates nothing
 up front; entries larger than it are formatted without retention.
 
-An instance has three public methods:
+An instance has four public methods:
 
 - `format(text, locale?)` selects the call's locale or the configured default.
 - `addRules(rules)` compiles and adds or replaces the plugin's locale atomically.
+- `addTextLocale(definition)` adds or atomically replaces a typography-only locale.
 - `removeRules(locale)` removes the locale and returns whether it was registered.
 
 Unknown locales throw. The default locale must be registered at construction;
@@ -54,7 +105,70 @@ removing it makes formatting without an override fail until rules are added
 again. Duplicate locales in the constructor are rejected. Configuration arrays
 and rule data are snapshotted during preparation. Excluded words use exact,
 case-sensitive matches. Existing soft hyphens, identifiers, addresses and
-unsupported complete words retain the existing preservation behavior.
+unsupported complete words retain the existing hyphenation preservation behavior.
+`excludedWords` excludes only hyphenation; surrounding typography still runs.
+Recognized URLs, emails and nonempty `protectedContent` literals bypass both text
+rules and hyphenation. Identifier filters belong to hyphenation and do not disable
+surrounding whitespace or punctuation rules. Plain-text formatting does not sanitize
+HTML or generate markup.
+
+Text handlers run on unprotected segments in ascending `order`, followed by
+hyphenation. Equal priorities preserve registration order: bundled rules, shared
+`textRules`, then locale-owned rules. Protection can split a sentence or quotation
+across segments; custom handlers must not assume they receive the entire input.
+Their optional context identifies original line and complete-text boundaries.
+Preparation runs once per locale registration. Handlers must synchronously return
+a string; promises and other result types throw. Custom handlers own their
+content-preservation and repeated-formatting behavior.
+
+A typography-only locale needs no fabricated patterns or letter classifications:
+
+```ts
+import type { TextLocale } from '@elmenov-softworks/typographist';
+
+const exampleLocale: TextLocale<'example'> = {
+  locale: 'example',
+  textRules: [
+    {
+      id: 'example/quotes',
+      category: 'quotes',
+      order: 410,
+      defaults: {},
+      prepare: () => (text) => text.replace(/"([^"\n]+)"/g, '‹$1›'),
+    },
+    {
+      id: 'example/spacing',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) => text.replace(/ {2,}/g, ' '),
+    },
+  ],
+};
+
+const customText = new Typographist<'example'>({
+  locale: 'example',
+  rules: [],
+  textLocales: [exampleLocale],
+  categories: ['quotes', 'spacing'],
+});
+customText.format('"hello"  world'); // '‹hello› world'
+```
+
+This small consumer rule handles paired straight quotes only; it does not provide
+nested or unmatched quotation handling. Consumer locales receive no implicit
+bundled rules. Omitting categories uses their available text capabilities;
+explicitly selecting `hyphenation` for a typography-only locale throws. Successful
+replacement clears the shared word cache; failed registration preserves prior
+state. Supply algorithm data through `TypographistRules` when hyphenation is needed.
+
+Built-in repeated-formatting scenarios are tested, with a documented exception:
+Russian day–month range formatting can change on its second default pass because
+later nonbreaking spacing affects the earlier range rule's next input. See the
+[catalogue's repeated-formatting notes](specs/feature/typography/typograf-rule-inventory.md#repeated-formatting-regressions).
+The feature remains under implementation: bundled quotation handling, final
+reference coverage and completed-feature benchmarks are still open. See the
+[verification record](specs/feature/typography/checklists/requirements.md).
 
 Custom plugins extend `TypographistRules`. Its constructor requires both
 algorithm datasets; subclasses can instead override the synchronous `compile`
