@@ -351,3 +351,30 @@ All 139 tests in the six affected test files passed on Node v24.21.0. No new
 upstream comparison was run; existing isolated comparisons and documented
 adaptations remain the reference evidence. Remaining nonbreaking-spacing audits,
 CR/LF preparation and browser verification remain open.
+
+### Russian name and date nonbreaking spacing behavior audit
+
+Reviewed TP-R070–TP-R072 against the bundled handlers and their isolated tests.
+Initials fixtures cover Cyrillic case, surname boundaries, nested punctuation,
+existing nonbreaking spaces, combining marks and unsupported Latin initials.
+Day–month fixtures cover all supported month prefixes, supplied case and the
+reference's substring matching within decimal, fraction and longer-number forms.
+Century fixtures cover Roman numeral boundaries and preserve supplied abbreviation
+periods and interior spaces instead of applying the excluded reference conversions.
+All three rules reject unknown settings and supply no implicit English or consumer
+locale behavior. Existing fixtures cover disabled categories and protected content.
+
+Eight new pipeline scenarios combine these rules with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected outputs apply the hyphenation-only profile to explicitly normalized text.
+The Russian abbreviation rule also binds the interior space in `в. в.`; English's
+common sentence-final short-word rule binds `XV в.` despite lacking the Russian
+century handler. The tests cover these interactions, repeated formatting, disabled
+nonbreaking spacing, all-disabled formatting, protected literals, URLs and emails.
+They preserve digit notation, letter case, repeated words, mixed scripts, combining
+marks and supplementary Unicode characters.
+
+All 146 tests in the three affected test files passed on Node v24.21.0. No new
+upstream comparison was run; existing isolated comparisons and the documented
+century adaptation remain the reference evidence. Other nonbreaking-spacing
+audits, CR/LF preparation and browser verification remain open.
