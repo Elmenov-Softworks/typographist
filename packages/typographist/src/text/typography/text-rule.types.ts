@@ -4,8 +4,14 @@ export type FormattingCategory = 'quotes' | 'dashes' | 'punctuation' | 'spacing'
 /** Primitive settings declared and validated by each rule during preparation. */
 export type TextRuleSettings = Readonly<Record<string, string | number | boolean>>;
 
-/** Original line boundary before an unprotected segment. */
-export type TextRuleContext = { readonly startsLine: boolean };
+/** Original boundaries of an unprotected segment. */
+export type TextRuleContext = {
+  readonly startsLine: boolean;
+  /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */
+  readonly startsText?: boolean;
+  /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */
+  readonly endsText?: boolean;
+};
 
 /** Synchronous transformation of an unprotected segment. Omitted context denotes a complete text. */
 export type TextRuleHandler = (text: string, context?: TextRuleContext) => string;

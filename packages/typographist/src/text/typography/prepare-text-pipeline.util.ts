@@ -83,7 +83,11 @@ export const prepareTextPipeline = (
   prepared.sort((left, right) => left.order - right.order);
 
   const transform = (text: string, start: number, original: string) => {
-    const context = { startsLine: start === 0 || /[\r\n\u2028\u2029]/.test(original.charAt(start - 1)) };
+    const context = {
+      startsLine: start === 0 || /[\r\n\u2028\u2029]/.test(original.charAt(start - 1)),
+      startsText: start === 0,
+      endsText: start + text.length === original.length,
+    };
 
     for (const rule of prepared) {
       const result: unknown = rule.handler(text, context);

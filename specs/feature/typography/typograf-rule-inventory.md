@@ -468,4 +468,14 @@ The handler matches Typograf 7.8.0. Unlike its disabled reference default, it is
 
 The handler follows Typograf 7.8.0 line boundaries. Unlike its disabled reference default, the approved all-categories default enables it. Protected addresses and configured literals remain unchanged. The optional public handler context supplies `startsLine` from the original segment boundary, preventing spaces after protected inline content from being mistaken for indentation. Existing one-argument consumer handlers remain compatible; omitted context denotes complete text. Built-in outputs are unchanged on a second pass.
 
-`bundled-spacing.factory.spec.ts` covers reference boundaries, Unicode, whitespace-only input, composition preservation, settings rejection, category selection, protected boundaries, tab cleanup and both hyphenation algorithms. Whole-text trimming and other remaining capabilities require further slices.
+`bundled-spacing.factory.spec.ts` covers reference boundaries, Unicode, whitespace-only input, composition preservation, settings rejection, category selection, protected boundaries, tab cleanup and both hyphenation algorithms. Other remaining capabilities require further slices.
+
+### Whole-text trimming (TP-R012, TP-R013)
+
+`common/space/trimLeft` and `common/space/trimRight` run by default for `ru` and `en` in `spacing` at orders 206 and 207. They use native `trimStart` and `trimEnd`, matching Typograf 7.8.0's whitespace semantics, including CR/LF, Unicode spaces and boundary U+FEFF. Interior whitespace and non-whitespace characters remain unchanged. Both rules have no settings; unknown settings are rejected. Consumer locales receive no implicit rule. Both reference English variants share this behavior through `en`.
+
+The rules run after NBSP normalization and after tab expansion and before trailing-blank and repeated-space cleanup. Protected addresses and configured literals bypass trimming. Segment context supplies original `startsText` and `endsText` boundaries so inline spaces around protected content are preserved. These optional fields extend the existing handler context; omitted fields retain complete-text behavior for direct or legacy handler callers. One-argument consumer handlers remain compatible. Built-in trimming is idempotent and never changes digits, letters, case, numeric notation or interior soft hyphens.
+
+Fourteen isolated fixtures matched the pinned reference handlers. Typograf’s separate whole-pipeline CR/LF normalization is not part of these handlers; existing interior line endings remain unchanged here.
+
+`bundled-spacing.factory.spec.ts` covers isolated reference behavior, left/right selection, Unicode whitespace, empty input, composition preservation, settings rejection, category selection, protected boundaries, spacing interactions and both hyphenation algorithms. Whitespace-only text now becomes empty when ordinary spacing is enabled. Remaining included capabilities require further slices.

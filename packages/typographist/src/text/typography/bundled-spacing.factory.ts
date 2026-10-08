@@ -14,6 +14,20 @@ export const createBundledSpacing = (locale: string) => {
       prepare: () => (text) => text.replace(/\t/g, '    '),
     },
     {
+      id: 'common/space/trimLeft',
+      category: 'spacing',
+      order: 206,
+      defaults: {},
+      prepare: () => (text, context) => (context?.startsText === false ? text : text.trimStart()),
+    },
+    {
+      id: 'common/space/trimRight',
+      category: 'spacing',
+      order: 207,
+      defaults: {},
+      prepare: () => (text, context) => (context?.endsText === false ? text : text.trimEnd()),
+    },
+    {
       id: 'common/space/delTrailingBlanks',
       category: 'spacing',
       order: 207,
