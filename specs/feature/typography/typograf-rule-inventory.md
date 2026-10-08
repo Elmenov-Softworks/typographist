@@ -561,8 +561,14 @@ The registry now installs this factory for both algorithm-backed and typography-
 English and Russian locales. Service tests cover independent category selection,
 nesting, repeated formatting, literal protection, unchanged addresses, locale
 replacement and default-profile ellipsis/hyphenation interactions with both algorithms.
-Configurable pairs, spacing and duplicate-quote settings, and broader protected-boundary
-interactions remain incomplete. Consumer locales receive no implicit quotation data.
+The `left` and `right` settings now override quotation pairs. Each string contains
+one to three BMP punctuation or symbol characters, with matching lengths and distinct
+outer glyphs. Empty pairs, whitespace, letters, digits, surrogate code units and
+mismatched depths are rejected during preparation. A single pair or repeated opening
+glyph disables inner-pair substitution, matching the reference. English callers can
+select en-GB pairs with `left: '‘“'` and `right: '’”'` while retaining locale `en`.
+Identical outer glyphs, quotation spacing, duplicate removal and broader
+protected-boundary interactions remain incomplete. Consumer locales receive no implicit quotation data.
 The isolated handler preserves CR/LF; Typograf's global preparation removes CR
 before its quotation handler, independently of enabled rules.
 

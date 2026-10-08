@@ -52,3 +52,40 @@ describe('bundled quotation service integration', () => {
     expect(instance.format('"hello"')).toBe('"hello"');
   });
 });
+
+describe('quotation pair settings', () => {
+  it('selects British English pairs through the existing English locale', () => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '‘“', right: '’”' } },
+    });
+
+    expect(instance.format('"hello "world" hello"')).toBe('‘hello “world” hello’');
+  });
+
+  it('supports one pair and repeated pairs without nesting substitution', () => {
+    for (const left of ['«', '««']) {
+      const instance = new Typographist({
+        categories: ['quotes'],
+        settings: { 'common/punctuation/quote': { left, right: '»'.repeat(left.length) } },
+      });
+
+      expect(instance.format('"hello "world" hello"')).toBe('«hello «world» hello»');
+    }
+  });
+
+  it.each([
+    { left: '', right: '' },
+    { left: '”', right: '”' },
+    { left: '«', right: '»”' },
+    { left: '««««', right: '»»»»' },
+    { left: 'a', right: 'b' },
+    { left: '1', right: '2' },
+    { left: ' ', right: ' ' },
+    { left: '\ud800', right: '»' },
+  ])('rejects invalid quotation pairs %j', (settings) => {
+    expect(
+      () => new Typographist({ categories: ['quotes'], settings: { 'common/punctuation/quote': settings } }),
+    ).toThrow(TypeError);
+  });
+});
