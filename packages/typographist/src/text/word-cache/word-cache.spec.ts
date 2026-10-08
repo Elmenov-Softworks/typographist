@@ -46,3 +46,29 @@ it('keeps exact source keys and locale identities distinct and clears retained r
   cache.format('en', 'abcd', compute);
   expect(compute).toHaveBeenCalledTimes(6);
 });
+
+it.each([
+  { bytes: 129, computations: 2 },
+  { bytes: 130, computations: 1 },
+])('retains an entry only when its full estimate fits $bytes bytes', ({ bytes, computations }) => {
+  const cache = new WordCache(bytes / 1_048_576);
+  const compute = vi.fn(() => 'abcd');
+
+  cache.format('en', 'abcd', compute);
+  cache.format('en', 'abcd', compute);
+
+  expect(compute).toHaveBeenCalledTimes(computations);
+});
+
+it('does not collide when locale and word contain composite-key separators', () => {
+  const cache = new WordCache(1);
+  const first = vi.fn(() => 'first');
+  const second = vi.fn(() => 'second');
+
+  expect(cache.format('en', 'a:b', first)).toBe('first');
+  expect(cache.format('en:a', 'b', second)).toBe('second');
+  expect(cache.format('en', 'a:b', first)).toBe('first');
+  expect(cache.format('en:a', 'b', second)).toBe('second');
+  expect(first).toHaveBeenCalledTimes(1);
+  expect(second).toHaveBeenCalledTimes(1);
+});
