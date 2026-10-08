@@ -3,6 +3,18 @@ import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.uti
 import { Typographist } from '@/typographist/typographist.js';
 
 const scenarios = [
+  {
+    id: 'common/space/delBetweenExclamationMarks',
+    input: 'a! ! ? ? b',
+    output: 'a!!?? b',
+    unchanged: 'a!  ! b?\t? c!\u00a0!',
+  },
+  {
+    id: 'common/space/delBeforeDot',
+    input: 'a . b ... c .\n',
+    output: 'a. b... c.\n',
+    unchanged: '1 .25 a .b a .. ! . a\t. a\u00a0.',
+  },
   { id: 'common/space/bracket', input: '(  a  )', output: '(a)', unchanged: '(\ta\t) [ a ]' },
   { id: 'common/space/delBeforePercent', input: '1 % 2\u00a0‰ 3 ‱', output: '1% 2‰ 3‱', unchanged: '1  % a % 2\t%' },
   {
@@ -19,6 +31,22 @@ const scenarios = [
 ];
 
 describe('bundled spacing reference scenarios', () => {
+  it.each(['en', 'ru'] as const)('combines terminal punctuation spacing for %s', (locale) => {
+    const service = new Typographist({
+      locale,
+      categories: ['spacing', 'punctuation'],
+      protectedContent: ['Keep . ! !'],
+    });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
+    const input = `${content} . Wait ... Really! ! https://example.com/a user@example.com Keep . ! !`;
+    const output = `${content}. Wait… Really${locale === 'ru' ? '!' : '!!'} https://example.com/a user@example.com Keep . ! !`;
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a . ! !')).toBe('a . ! !');
+  });
+
   it.each(['en', 'ru'] as const)('configures consecutive line breaks for %s', (locale) => {
     const id = 'common/space/delRepeatN';
     const rules = createBundledSpacing(locale).filter((rule) => rule.id === id);
