@@ -27,6 +27,22 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       },
     },
     {
+      id: 'common/nbsp/afterShortWord',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: { lengthShortWord: 2 },
+      prepare: ({ lengthShortWord }) => {
+        if (typeof lengthShortWord !== 'number' || !Number.isSafeInteger(lengthShortWord) || lengthShortWord < 1) {
+          throw new TypeError('lengthShortWord must be a positive safe integer');
+        }
+
+        const letters = locale === 'ru' ? 'а-яё' : 'a-z';
+        const shortWord = new RegExp(`(^|[ \\u00a0(«‹»›„“‟”"])([${letters}]{1,${String(lengthShortWord)}}) `, 'gim');
+
+        return (text) => text.replace(shortWord, '$1$2\u00a0').replace(shortWord, '$1$2\u00a0');
+      },
+    },
+    {
       id: 'common/nbsp/afterSectionMark',
       category: 'nonbreakingSpacing',
       order: 510,
