@@ -91,6 +91,19 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/m',
+      category: 'nonbreakingSpacing',
+      order: 515,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(
+          /(^|[\s,.(])(\d+)[ \u00a0]?(мм?|см|км|дм|гм|mm?|km|cm|dm)([23²³])?([\s).!?,;]|$)/gm,
+          (_match, boundary: string, number: string, unit: string, exponent: string | undefined, suffix: string) =>
+            `${boundary}${number}\u00a0${unit}${exponent ?? ''}${suffix === '\u00a0' ? ' ' : suffix}`,
+        ),
+    });
+
+    rules.push({
       id: 'ru/nbsp/years',
       category: 'nonbreakingSpacing',
       order: 515,
