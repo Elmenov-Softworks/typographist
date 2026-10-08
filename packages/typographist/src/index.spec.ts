@@ -288,3 +288,15 @@ describe('public package API', () => {
     expect(typographist.format('')).toBe('');
   });
 });
+
+it.each([-1, NaN, Infinity, -Infinity, '64', null])('rejects invalid public cacheSize %j', (cacheSize) => {
+  expect(() => {
+    Reflect.construct(Typographist, [{ cacheSize }]);
+  }).toThrow('cacheSize');
+});
+
+it.each([undefined, 64, 0.5, 0])('accepts cacheSize %s without changing output', (cacheSize) => {
+  const instance = new Typographist(cacheSize === undefined ? {} : { cacheSize });
+
+  expect(instance.format('table table')).toBe('ta\u00adble ta\u00adble');
+});

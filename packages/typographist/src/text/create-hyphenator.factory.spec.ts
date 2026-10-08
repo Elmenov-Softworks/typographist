@@ -1,3 +1,4 @@
+import { WordCache } from '@/text/word-cache/word-cache.js';
 import { prepareKnuthLiang } from '@/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
 import { createHyphenator } from '@/text/create-hyphenator.factory.js';
 
@@ -82,4 +83,25 @@ it('rejects non-string text at the formatting boundary', () => {
   expect(() => {
     Reflect.apply(service.hyphenate, service, [null]);
   }).toThrow(TypeError);
+});
+
+it('reuses computed breaks and no-break results across calls after protection checks', () => {
+  const prepared = prepare();
+  const normalize = vi.fn(prepared.normalize);
+  const wordBreaks = vi.fn(prepared.wordBreaks);
+  const service = createHyphenator({
+    algorithm: { ...prepared, normalize, wordBreaks },
+    excludedWords: new Set(['excluded']),
+    cache: new WordCache(64),
+    locale: 'en',
+  });
+
+  expect(service.hyphenate('abcd abcd efgh efgh')).toBe('ab\u00adcd ab\u00adcd efgh efgh');
+  expect(service.hyphenate('abcd efgh')).toBe('ab\u00adcd efgh');
+  expect(normalize).toHaveBeenCalledTimes(2);
+  expect(wordBreaks).toHaveBeenCalledTimes(2);
+
+  const protectedText = 'https://abcd.com abcd@example.com excluded abcd123 abcd\u2011abcd ab\u00adcd';
+  expect(service.hyphenate(protectedText)).toBe(protectedText);
+  expect(normalize).toHaveBeenCalledTimes(2);
 });

@@ -11,4 +11,6 @@ export type TypographistConfig<TCustomLocale extends string = never> = {
   readonly excludedWords?: readonly string[];
   /** Selects heuristic Khristov hyphenation when true; false or omitted selects Knuth–Liang. */
   readonly useFast?: boolean;
+  /** Estimated word-cache budget in MiB; defaults to 64. Finite positive fractions are valid; zero disables caching. */
+  readonly cacheSize?: number;
 };

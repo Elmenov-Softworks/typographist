@@ -28,9 +28,9 @@ export class Typographist<TCustomLocale extends string = never> {
       throw new TypeError('Typographist config must be an object');
     }
 
-    const { locale = 'en', useFast = false, excludedWords = [], rules = createBundledRules() } = config;
+    const { locale = 'en', useFast = false, cacheSize = 64, excludedWords = [], rules = createBundledRules() } = config;
     this.#locale = locale;
-    this.#rules = new RulesRegistry(useFast, excludedWords);
+    this.#rules = new RulesRegistry(useFast, excludedWords, cacheSize);
 
     if (!Array.isArray(rules)) {
       throw new TypeError('rules must be an array of TypographistRules instances');
