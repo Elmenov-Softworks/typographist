@@ -145,3 +145,74 @@ describe('Russian nonbreaking particle spacing', () => {
     expect(service.format(expected)).toBe(expected);
   });
 });
+
+describe('nonbreaking spacing before short terminal numbers', () => {
+  const id = 'common/nbsp/beforeShortLastNumber';
+
+  it.each(['en', 'ru'] as const)('matches isolated reference boundaries for %s', (locale) => {
+    const rules = createBundledNonbreakingSpacing(locale).filter((rule) => rule.id === id);
+    const format = prepareTextPipeline(rules, locale);
+    const word = locale === 'ru' ? 'Слово' : 'Word';
+    const next = locale === 'ru' ? 'Далее' : 'Next';
+    const quote = locale === 'ru' ? '»' : '”';
+
+    expect(rules).toHaveLength(1);
+
+    for (const suffix of ['', '.', '!', '?', '…', '%', '+', '-', '−', ')', "'", '"', quote]) {
+      const expected = `${word}\u00a012${suffix}`;
+
+      expect(format(`${word} 12${suffix}`)).toBe(expected);
+      expect(format(expected)).toBe(expected);
+    }
+
+    expect(format(`${word} 1. ${next} 2!`)).toBe(`${word}\u00a01. ${next}\u00a02!`);
+    expect(format(`${word} 1\r\n${word} 2\n`)).toBe(`${word}\u00a01\r\n${word}\u00a02\n`);
+
+    for (const suffix of ['123', '1.25', '1/2', '2026-10-08', '12,', '12. next', '12. дальше', '12 words']) {
+      expect(format(`${word} ${suffix}`)).toBe(`${word} ${suffix}`);
+    }
+
+    const unchanged = `123 12 😀 12 e\u0301 12 ${word}\t12 ${word}  12 ${word}\u00a012`;
+
+    expect(format(unchanged)).toBe(unchanged);
+    expect(format(locale === 'ru' ? 'Word 12' : 'Слово 12')).toBe(locale === 'ru' ? 'Word 12' : 'Слово 12');
+    expect(prepareTextPipeline(rules, locale, { settings: { [id]: { lengthLastNumber: 3 } } })(`${word} 123`)).toBe(
+      `${word}\u00a0123`,
+    );
+    expect(prepareTextPipeline(rules, locale, { settings: { [id]: { lengthLastNumber: 1 } } })(`${word} 12`)).toBe(
+      `${word} 12`,
+    );
+
+    for (const value of [0, -1, 1.5, Infinity, NaN, Number.MAX_SAFE_INTEGER + 1, '2', true]) {
+      expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { lengthLastNumber: value } } })).toThrow();
+    }
+
+    expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
+      'Invalid setting',
+    );
+  });
+
+  it.each(['en', 'ru'] as const)('preserves protected content and selects the category for %s', (locale) => {
+    const word = locale === 'ru' ? 'Слово' : 'Word';
+    const service = new Typographist({ locale, categories: ['nonbreakingSpacing'], protectedContent: [`${word} 12`] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const protectedText = `https://example.com/12 user@example.com ${word} 12`;
+
+    expect(service.format(`${content} ${protectedText} ${word} 2`)).toBe(`${content} ${protectedText} ${word}\u00a02`);
+    expect(service.format('')).toBe('');
+    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
+
+    for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
+      expect(new Typographist({ locale, categories, excludedWords: [word] }).format(`${word} 12`)).toBe(`${word} 12`);
+    }
+  });
+
+  it.each([false, true])('combines ordinary spacing and hyphenation with useFast=%s', (useFast) => {
+    const service = new Typographist({ useFast });
+    const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
+    const expected = legacy.format('example\u00a012.');
+
+    expect(service.format('example  12.')).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+});
