@@ -545,3 +545,25 @@ Combined fixtures cover the owner's acceptance inputs. HTML exclusion scenarios 
 ### Hyphenation profile regression matrix
 
 `packages/typographist/src/text/algorithm-integration.spec.ts` runs the existing protected-token, exclusion snapshot, visible-hyphen, exception and Unicode-grapheme regression cases under both the default and explicit hyphenation-only profiles. Each profile uses both algorithms with zero and 64 MiB cache budgets. Expected strings remain identical across these configurations. The separate locale replacement and instance-isolation regression remains covered.
+
+## Quotation handler preparation slice
+
+TP-R056 (`common/punctuation/quote`) now has an isolated prepared handler in
+`bundled-quotes.factory.ts`, with order 410 and category `quotes`. Russian uses
+`«„‚` / `»“‘`; English uses the reference en-US pairs `“‘` / `”’`. Recognition,
+opening and closing context, depth capping, unmatched-quote handling and straight
+quote depth resets follow the pinned plain-text handler. Balanced Russian text
+supports three levels; unbalanced text caps at two. English caps at two even for
+balanced text. Single straight apostrophes remain the separate punctuation rule.
+Letters, case and numeric notation remain unchanged.
+
+This is preparation work, not service acceptance: the registry does not yet
+install this factory. Configurable pairs, spacing and duplicate-quote settings,
+protected-boundary interactions and combined default-profile verification remain
+for the integration slice. Consumer locales receive no implicit quotation data.
+The isolated handler preserves CR/LF; Typograf's global preparation removes CR
+before its quotation handler, independently of enabled rules.
+
+The colocated tests cover 28 locale/input combinations and one category/protection
+scenario. Of those combinations, 26 match isolated Typograf 7.8.0 executions; the
+two whitespace-only CR/LF combinations test local preservation instead.
