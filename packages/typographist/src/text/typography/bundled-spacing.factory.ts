@@ -7,6 +7,13 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
+      id: 'common/space/normalizeLineEndings',
+      category: 'spacing',
+      order: 0,
+      defaults: {},
+      prepare: () => (text) => text.replace(/\r\n?/g, '\n'),
+    },
+    {
       id: 'common/space/insertFinalNewline',
       category: 'spacing',
       order: 1300,

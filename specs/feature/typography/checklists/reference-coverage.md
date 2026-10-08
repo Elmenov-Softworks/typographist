@@ -218,9 +218,8 @@ other families, CR/LF preparation and browser runtime verification remain open.
   quotes, category selection and hyphenation integration are also tested.
 - Audit behavior scenarios for each implemented entry. A declaration alone does
   not establish positive, negative, settings and interaction coverage.
-- Resolve the documented reference-wide CR/LF preparation gap. Upstream normalizes
-  CR/LF before rules run; current handlers preserve interior CR. This preparation
-  is separate from the 107 public reference rules.
+- CR/LF preparation is now implemented through bundled spacing; see the completed
+  line-ending preparation record below. It is separate from the 107 public rules.
 - Verify the completed feature in a browser runtime. Node smoke checks do not
   establish browser runtime behavior. The benchmark matrix has been refreshed
   after quotation completion; see the benchmark acceptance record below.
@@ -456,3 +455,28 @@ ESLint and formatting passed on Node v24.21.0. No new upstream comparison was
 run; existing isolated fixtures and documented adaptations remain the reference
 evidence. Remaining acceptance audits, CR/LF preparation and browser verification
 remain open. Workspace-wide checks and builds were not rerun.
+
+### Completed reference line-ending preparation
+
+Reviewed Typograf 7.8.0's `removeCR` call before public-rule execution and its LF
+output default. Bundled English and Russian now prepare CRLF and lone CR as LF
+through `common/space/normalizeLineEndings`, a spacing rule at order 0 with no
+settings. This closes the previously recorded CR/LF preparation gap for enabled
+bundled spacing. Isolated public-rule handlers still retain their documented
+behavior when called without preparation.
+
+Twenty-nine tests cover empty input, mixed CR/LF, repeated line breaks, Unicode
+line separators, supplementary characters, combining marks, invalid settings,
+disabled spacing and custom-locale absence. Eight pipeline configurations combine
+preparation, trimming, indentation removal, trailing-blank cleanup and repeated
+newline cleanup with both hyphenation algorithms and zero/64 MiB caches. They
+check repeated formatting, protected literals with original CR/LF, numeric
+notation, URLs and emails, and equivalent default-profile formatting after
+normalization. The hyphenation-only profile preserves the original input except
+for soft hyphens.
+
+Ten isolated comparisons with Typograf 7.8.0 passed. The full suite passed 1,768
+tests; after the final default-profile assertions, all 29 affected tests, package
+type checking, targeted ESLint and formatting passed on Node v24.21.0. Browser
+verification and final acceptance review remain open. Workspace-wide type
+checking, lint and builds were not rerun for this slice.

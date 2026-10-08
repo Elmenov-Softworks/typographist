@@ -121,6 +121,12 @@ Preparation runs once per locale registration. Handlers must synchronously retur
 a string; promises and other result types throw. Custom handlers own their
 content-preservation and repeated-formatting behavior.
 
+Bundled English and Russian spacing starts with CRLF and lone CR normalization
+to LF (`common/space/normalizeLineEndings`, order 0, no settings), before whitespace
+cleanup. Protected literals retain their original line endings. Disabling
+`spacing`, including the hyphenation-only profile, preserves line endings. Consumer
+locales receive this preparation only if they supply it themselves.
+
 A typography-only locale needs no fabricated patterns or letter classifications:
 
 ```ts

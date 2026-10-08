@@ -631,3 +631,15 @@ existing spaces, Unicode, protected content, duplicate-removal ordering, disable
 categories, repeated formatting and invalid types. An isolated Typograf 7.8.0
 comparison matched 120 fixtures across English and Russian, distinct and identical
 pairs, and duplicate-removal settings. Final feature acceptance remains separate.
+
+### Reference line-ending preparation (outside the 107-rule inventory)
+
+Typograf 7.8.0 calls `removeCR` before running its public rules and emits LF by
+default. Bundled Russian and English implement this whitespace preparation as
+`common/space/normalizeLineEndings` in `spacing`, at order 0 with no settings.
+CRLF and lone CR become LF; existing LF and Unicode line separators remain
+unchanged. This lets trailing-blank and repeated-newline rules operate consistently.
+The handler runs on unprotected segments; protected content retains its original
+bytes. It is inactive when spacing is disabled, preserving the hyphenation-only
+and all-disabled contracts. Custom locales receive no implicit preparation.
+Upstream's optional CR/CRLF output mode is outside this API's scope.
