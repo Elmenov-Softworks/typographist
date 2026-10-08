@@ -82,6 +82,16 @@ describe.each(['en', 'ru'] as const)('Unary minus formatting for %s', (locale) =
     expect(service.format(input)).toBe(`${token} ${'-3suffix '.repeat(2000)}(−3)`);
   });
 
+  it.each([
+    ['-3' + 'a3-3'.repeat(2000) + '\u00adfoo', null],
+    ['-1' + '3'.repeat(4000) + '.25', '−1' + '3'.repeat(4000) + '.25'],
+    ['(-13/34), -13.3e-4 -13\u00adfoo -13.', '(−13/34), -13.3e-4 -13\u00adfoo −13.'],
+  ])('handles fragmented numeric candidates in %j', (input, expected) => {
+    const service = new Typographist({ locale, categories: ['dashes'], protectedContent: ['3'] });
+
+    expect(service.format(input)).toBe(expected ?? input);
+  });
+
   it('validates settings and keeps consumer locales explicit', () => {
     expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
       'Invalid setting',

@@ -1,3 +1,4 @@
+import { prepareMinus } from '@/text/typography/prepare-minus.util.js';
 import type { TextRule } from '@/text/typography/text-rule.types.js';
 
 export const createBundledDashes = (locale: string) => {
@@ -11,8 +12,7 @@ export const createBundledDashes = (locale: string) => {
       category: 'dashes',
       order: 300,
       defaults: {},
-      prepare: () => (text) =>
-        text.replace(/(^|[\s([{])-(\d+(?:[.,/]\d+)*)(?![.,/]\d)(?=$|[\s)\]},;!?]|\.(?=\s|$))/g, '$1−$2'),
+      prepare: prepareMinus,
     },
     {
       id: locale === 'ru' ? 'ru/dash/main' : 'en-US/dash/main',
@@ -181,13 +181,15 @@ export const createBundledDashes = (locale: string) => {
     ...rule,
     prepare: (settings) => {
       const handler = rule.prepare(settings);
-      const usesTokenContext = rule.id === 'common/dash/minus';
+      if (rule.id === 'common/dash/minus') {
+        return handler;
+      }
 
       return (text, context) => {
-        const before = (usesTokenContext ? context?.precedingToken : null) ?? context?.precedingCharacter ?? '';
-        const after = (usesTokenContext ? context?.followingToken : null) ?? context?.followingCharacter ?? '';
-        const prefix = usesTokenContext || /[\p{L}\p{M}\p{N}_-]/u.test(before) ? before : '';
-        const suffix = usesTokenContext || /[\p{L}\p{M}\p{N}_-]/u.test(after) ? after : '';
+        const before = context?.precedingCharacter ?? '';
+        const after = context?.followingCharacter ?? '';
+        const prefix = /[\p{L}\p{M}\p{N}_-]/u.test(before) ? before : '';
+        const suffix = /[\p{L}\p{M}\p{N}_-]/u.test(after) ? after : '';
         const result = handler(prefix + text + suffix, context);
 
         return result.slice(prefix.length, result.length - suffix.length);

@@ -36,3 +36,21 @@ All times below are medians in milliseconds. Setup constructs a new service with
 The complete run covers 24 configurations and 144 configuration/workload pairs. Every pair passed deterministic-output and uncached-equivalence checks, and preserved its original letters, combining marks and digits. Disabled categories returned the exact input. These checks supplement the reference and content-preservation test suite; they do not prove numeric punctuation preservation or linguistic correctness.
 
 Cache settings are approximate configured budgets, not measured heap limits. Heap snapshots cover the whole process without forced GC and include temporary allocations. First calls can reuse words from earlier workloads. Fixed profile order, JIT, GC and system noise prevent general speed claims from one run. No numerical performance target is asserted.
+
+## Protected-fragment minus correction
+
+On 2026-10-08, a bounded experiment ran against the corrected emitted Node build under Node v24.21.0. One English service used `categories: ['dashes']` and `protectedContent: ['3']`. Each input was `'-3' + 'a3'.repeat(n) + '\u00adfoo'`: one identifier token with many protected fragments. Every measured call asserted exact preservation of the input. Setup and imports were excluded. Each size received 20 warm-up calls, then seven batches of 30 calls measured with `performance.now()`; the table reports the median batch time divided by 30.
+
+| n      | UTF-16 units | Median ms/call |
+| ------ | ------------ | -------------- |
+| 2,000  | 4,006        | 2.914          |
+| 4,000  | 8,006        | 5.076          |
+| 8,000  | 16,006       | 10.347         |
+| 16,000 | 32,006       | 21.356         |
+| 32,000 | 64,006       | 42.727         |
+
+The last three doublings took approximately twice as long. This is evidence for the bounded workload, not an asymptotic proof or a timing requirement. JIT, GC and system load affect these measurements; memory was not measured. The run was separate from the earlier matrix and does not replace its results.
+
+The minus handler now scans only hyphen candidates in each unprotected segment. Internal boundary metadata references the original text and segment end, so a candidate can inspect a numeric continuation across protection without copying an adjoining token. Numeric scans stop at the first nonnumeric continuation; separate hyphen candidates have disjoint numeric runs. Segments without hyphens perform no numeric classification. Public adjoining-token getters remain complete and lazy for consumer handlers, and protected bytes remain unchanged. Behavior regressions cover many protected fragments, repeated hyphen candidates, long protected numeric runs, scientific notation and existing soft hyphens. Unit tests contain no timing assertions.
+
+Correction validation passed: 1,857 tests, workspace type checking, lint, formatting and builds. The coordinator still owns the commit and complete independent re-review.

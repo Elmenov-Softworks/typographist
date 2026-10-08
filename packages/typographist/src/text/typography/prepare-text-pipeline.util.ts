@@ -1,3 +1,4 @@
+import { segmentBoundary } from '@/text/typography/segment-boundary.types.js';
 import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
 import type { CandidateSpan } from '@/text/scanning/candidate-span.types.js';
 import type {
@@ -91,6 +92,7 @@ export const prepareTextPipeline = (
   ) => {
     const segmentEnd = start + text.length;
     const context = {
+      [segmentBoundary]: { original, end: segmentEnd },
       precedingCharacter: original.slice(Math.max(0, start - 2), start).match(/.$/su)?.[0] ?? '',
       followingCharacter: original.slice(start + text.length, start + text.length + 2).match(/^./su)?.[0] ?? '',
       get precedingToken() {
