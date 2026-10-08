@@ -182,6 +182,34 @@ All 49 spacing tests passed on Node 24.21.0. This closes the behavior audit for
 these six entries; remaining spacing entries, other rule families, CR/LF preparation
 and browser runtime verification remain open.
 
+### Locale spacing and final newline behavior audit
+
+Reviewed TP-R017, TP-R018, TP-R020 and TP-R021 against the bundled spacing
+handlers and their adjacent isolated tests. Year-label fixtures cover three- and
+four-digit years, all supported suffixes, unchanged case and numeric notation,
+Unicode boundaries and the reference's non-overlapping traversal. Ellipsis fixtures
+cover Russian letter boundaries, question/exclamation ellipses, unchanged lowercase
+continuations and supplementary characters. Both rules reject unknown settings
+and are absent from the English bundle. Their documented repeated-pass behavior
+remains unchanged.
+
+Final-newline fixtures cover the disabled default, explicit enabling, invalid
+settings, empty input, existing LF/CRLF endings, protected terminal content and
+category selection. Leading-indentation fixtures cover CR/LF and Unicode line
+boundaries, unchanged interior whitespace, protected segment context and unknown
+settings. This audit does not establish upstream's separate CR/LF preparation.
+
+Eight new pipeline scenarios combine all four entries with ellipsis normalization
+and hyphenation across both locales, algorithms and zero/64 MiB cache budgets.
+Expected results come from the hyphenation-only profile on explicitly normalized
+text. They preserve numeric notation, case, mixed scripts, combining marks, URLs,
+emails and a multiline protected literal. They check a second pass, all-disabled
+formatting and the final-newline default separately from its enabled setting.
+All 89 tests in the three affected files passed on Node v24.21.0. No new upstream
+comparison was run; existing isolated reference fixtures remain the evidence for
+reference behavior. This closes the remaining spacing-family behavior audit;
+other families, CR/LF preparation and browser runtime verification remain open.
+
 - TP-R056 protected-boundary, apostrophe, spacing and direct-speech interactions
   now have 32 additional service scenarios across both algorithms and cache modes.
   Isolated straight quotes around protected content remain unchanged because
