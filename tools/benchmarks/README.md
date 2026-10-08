@@ -68,6 +68,53 @@ locales. Unicode, existing soft hyphens, identifiers, email, URLs, very long
 words, combining runs and near-matching addresses remain represented.
 
 The harness has no added dependencies, acceptance thresholds or word cache.
+
+## External libraries
+
+To append `hyphen`, `hypher` and `hyphenopoly` measurements to an existing report,
+install their pinned versions in a separate directory. This does not change the
+workspace dependencies:
+
+```sh
+npm install --prefix /tmp/typographist-competitors --ignore-scripts \
+  hyphen@1.14.1 hypher@0.2.5 hyphenopoly@6.1.0 \
+  hyphenation.en-us@0.2.1 hyphenation.ru@0.2.1
+node tools/benchmarks/compare-libraries.ts \
+  --modules /tmp/typographist-competitors/node_modules \
+  --input /path/to/original-report.json \
+  --output /tmp/typographist-benchmarks/with-libraries
+```
+
+The input must be an original report before external measurements were appended.
+Node, ICU, OS, CPU, sample counts and workload hashes must match. Saved timings
+remain unchanged. Extension metadata records its own time, source commit, dirty
+state and the original report hash. Comparing measurements from separate runs
+remains subject to runtime variation.
+
+Adapters call native synchronous whole-text APIs with English-US and Russian
+patterns. Minimum word lengths are aligned with the bundled minima where the
+APIs permit; native dictionaries and output rules remain in use. Their return
+values are checked synchronously by the adapters. Preparation excludes module
+and pattern-byte loading. Hyphenopoly receives fresh module state for each
+preparation sample and includes WASM compilation and instantiation.
+
+Built-in word caches in hyphen and Hyphenopoly remain enabled and are populated
+by verification and warm-ups. Hypher and Typographist have no persistent word
+cache. This comparison describes warmed native APIs, not uncached engines.
+Different word protection, Unicode handling and dictionaries affect results.
+
+External outputs are checked for source preservation after removing soft hyphens,
+idempotence and original grapheme boundaries. Failed checks do not stop the run:
+their raw timings and validation status are retained, but their speed ratios and
+latency bars are excluded. Exceptions mark workloads as unsupported, without a
+timing. In particular, Hyphenopoly 6.1.0 reports words longer than 61 characters.
+The external summary chart uses the median of per-workload standard/library
+ratios among passing workloads and labels each library's included count.
+
+Package documentation: [hyphen](https://github.com/ytiurin/hyphen),
+[Hypher](https://github.com/bramstein/hypher),
+[Hyphenopoly](https://mnater.github.io/Hyphenopoly/Module.html).
+
 Retain all samples and compare on the same machine/runtime. Fixed-order timing
 and runtime noise can affect results; one run is not a universal speed claim.
 Historical measurements remain in `specs/feature/base-knuth–liang/` and describe

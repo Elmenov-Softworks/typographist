@@ -1,4 +1,5 @@
 import type { BenchmarkReport, ProcessingResult } from './benchmark.types.ts';
+import { isComparable, relativeSpeed } from './comparison.util.ts';
 
 type ChartSeries = { label: string; color: string };
 type ChartValue = { median: number; min: number; max: number };
@@ -67,9 +68,24 @@ const matched = (results: readonly ProcessingResult[], result: ProcessingResult)
   ) ?? null;
 
 export const renderCharts = (report: BenchmarkReport) => {
-  const series = report.implementations.map(({ algorithm, id }) => ({
-    label: `${algorithm === 'khristov' ? 'Khristov' : 'Knuth–Liang'} (${id})`,
-    color: algorithm === 'khristov' ? '#dc6828' : id === 'legacy' ? '#8755c5' : '#2563eb',
+  const colors = new Map([
+    ['current-standard', '#2563eb'],
+    ['current-fast', '#dc6828'],
+    ['hyphen', '#008470'],
+    ['hypher', '#8755c5'],
+    ['hyphenopoly', '#b33f69'],
+    ['legacy', '#52677f'],
+  ]);
+  const series = report.implementations.map(({ id, version }) => ({
+    label:
+      version === undefined
+        ? id === 'current-fast'
+          ? 'Khristov'
+          : id === 'current-standard'
+            ? 'Knuth–Liang'
+            : id
+        : `${id}@${version}`,
+    color: colors.get(id) ?? '#52677f',
   }));
   const preparation = renderBars(
     'Instance preparation latency',
@@ -100,7 +116,9 @@ export const renderCharts = (report: BenchmarkReport) => {
           values: report.implementations.map(({ processing }) => {
             const entry = matched(processing, result);
 
-            return entry === null ? null : { median: entry.medianMs, min: entry.minMs, max: entry.maxMs };
+            return entry === null || !isComparable(entry)
+              ? null
+              : { median: entry.medianMs, min: entry.minMs, max: entry.maxMs };
           }),
         })),
       series,
@@ -124,10 +142,37 @@ export const renderCharts = (report: BenchmarkReport) => {
     }
   }
 
+  const librarySeries: ChartSeries[] = [];
+  const libraryValues: (ChartValue | null)[] = [];
+
+  for (const implementation of report.implementations.filter(({ version }) => version !== undefined)) {
+    const ratios = implementation.processing
+      .map((result) => relativeSpeed(result, standard))
+      .filter((ratio) => ratio !== null)
+      .sort((left, right) => left - right);
+    const middle = Math.floor(ratios.length / 2);
+    const upper = ratios[middle];
+    const lower = ratios[middle - 1];
+    const median =
+      upper === undefined ? null : ratios.length % 2 === 0 && lower !== undefined ? (lower + upper) / 2 : upper;
+    librarySeries.push({
+      label: `${implementation.id}@${implementation.version ?? ''} · ${String(ratios.length)}/${String(workloads.length)} workloads`,
+      color: colors.get(implementation.id) ?? '#52677f',
+    });
+    libraryValues.push(median === null ? null : { median, min: median, max: median });
+  }
+
   return {
     preparation,
     english: latency('en'),
     russian: latency('ru'),
+    libraries: renderBars(
+      'External library speed relative to Knuth–Liang',
+      [{ label: 'Median workload ratio', values: libraryValues }],
+      librarySeries,
+      '×',
+      1,
+    ),
     speedup: renderBars(
       'Khristov speed relative to Knuth–Liang',
       ratios,

@@ -14,7 +14,7 @@ import type {
 export const sampleCount = 7;
 export const warmupIterations = 3;
 
-const summarize = (samples: readonly number[]) => {
+export const summarize = (samples: readonly number[]) => {
   const sorted = [...samples].sort((left, right) => left - right);
   const minMs = sorted[0];
   const medianMs = sorted[Math.floor(sorted.length / 2)];
