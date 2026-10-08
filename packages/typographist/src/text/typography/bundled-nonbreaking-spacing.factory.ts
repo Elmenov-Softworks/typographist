@@ -117,6 +117,14 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/mln',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) => text.replace(/(\d) ?(тыс|млн|млрд|трлн)(\.|\s|$)/gi, '$1\u00a0$2$3'),
+    });
+
+    rules.push({
       id: 'ru/nbsp/centuries',
       category: 'nonbreakingSpacing',
       order: 510,
