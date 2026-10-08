@@ -91,6 +91,14 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/afterNumberSign',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) => text.replace(/№[ \u00a0\u2009]?(\d|п\/п)/g, '№\u202f$1'),
+    });
+
+    rules.push({
       id: 'ru/nbsp/m',
       category: 'nonbreakingSpacing',
       order: 515,
