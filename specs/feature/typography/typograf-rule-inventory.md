@@ -650,3 +650,24 @@ The handler runs on unprotected segments; protected content retains its original
 bytes. It is inactive when spacing is disabled, preserving the hyphenation-only
 and all-disabled contracts. Custom locales receive no implicit preparation.
 Upstream's optional CR/CRLF output mode is outside this API's scope.
+
+### Protected range endpoint audit
+
+All seven bundled range handlers (years, weekdays, time, months, decades,
+days with months, and centuries) require their matched endpoints and labels
+inside one unprotected segment. Original adjacent identifier characters block
+segment-edge matches using `_`, which none of these handlers can consume as an
+endpoint. Protected characters cannot complete a Roman numeral, month or weekday
+name, year label, or time. Ranges with protected endpoint letters or digits
+remain unchanged; complete unprotected ranges still format beside protected
+delimiters. Original adjoining punctuation also prevents false text-edge matches
+for time, decade, and day–month ranges.
+
+This fixes false century matches in `X-VIDEO` with protected `IDEO` and `MIX-V`
+with protected `MI`, and analogous truncated month, weekday, year-label and time
+matches. The boundary check uses only adjacent code points and constant-size
+markers, without copying or rescanning adjoining tokens. Public-service cases
+in `protected-range-dashes.spec.ts` cover every range handler, identifier
+preservation, partial endpoints, valid ranges, and many protected fragments
+inside one long identifier. Unary minus retains its separate numeric eligibility
+logic and existing regression coverage.

@@ -201,11 +201,14 @@ export const createBundledDashes = (locale: string) => {
         return handler;
       }
 
+      const isRange = referenceOrder.includes(rule.id) && rule.id !== 'ru/dash/directSpeech';
+
       return (text, context) => {
         const before = context?.precedingCharacter ?? '';
         const after = context?.followingCharacter ?? '';
-        const prefix = /[\p{L}\p{M}\p{N}_-]/u.test(before) ? before : '';
-        const suffix = /[\p{L}\p{M}\p{N}_-]/u.test(after) ? after : '';
+        // A protected continuation blocks a complete endpoint; it must never supply endpoint characters.
+        const prefix = /[\p{L}\p{M}\p{N}_-]/u.test(before) ? '_' : isRange ? before : '';
+        const suffix = /[\p{L}\p{M}\p{N}_-]/u.test(after) ? '_' : isRange ? after : '';
         const result = handler(prefix + text + suffix, context);
 
         return result.slice(prefix.length, result.length - suffix.length);
