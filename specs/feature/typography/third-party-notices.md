@@ -1,6 +1,6 @@
 # Third-party notices
 
-The specification template adapts GitHub Spec Kit. Reference descriptions and metadata come from Typograf 7.8.0. Bundled punctuation handlers adapt Typograf rule behavior. The package LICENSE includes attribution.
+The specification template adapts GitHub Spec Kit. Reference descriptions and metadata come from Typograf 7.8.0. Bundled punctuation, spacing and dash handlers adapt Typograf rule behavior. The package LICENSE includes attribution.
 
 GitHub Spec Kit: Copyright (c) GitHub, Inc.
 

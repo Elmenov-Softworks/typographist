@@ -1,3 +1,4 @@
+import { createBundledDashes } from '@/text/typography/bundled-dashes.factory.js';
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
 import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.js';
 import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.factory.js';
@@ -87,7 +88,13 @@ export class RulesRegistry {
 
     const localeRules: readonly TextRule[] = definition.textRules;
     const format = prepareTextPipeline(
-      [...createBundledSpacing(key), ...createBundledPunctuation(key), ...this.#textRules, ...localeRules],
+      [
+        ...createBundledSpacing(key),
+        ...createBundledDashes(key),
+        ...createBundledPunctuation(key),
+        ...this.#textRules,
+        ...localeRules,
+      ],
       key,
       this.#options,
     );
@@ -145,7 +152,7 @@ export class RulesRegistry {
     const hyphenationEnabled =
       this.#options.categories === undefined || this.#options.categories.includes('hyphenation');
     const format = prepareTextPipeline(
-      [...createBundledSpacing(key), ...createBundledPunctuation(key), ...this.#textRules],
+      [...createBundledSpacing(key), ...createBundledDashes(key), ...createBundledPunctuation(key), ...this.#textRules],
       key,
       this.#options,
       hyphenationEnabled ? service.hyphenate : (text) => text,
