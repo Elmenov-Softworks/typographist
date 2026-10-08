@@ -541,3 +541,7 @@ Combined fixtures cover the owner's acceptance inputs. HTML exclusion scenarios 
 ## Typography locale cache regressions
 
 `packages/typographist/src/typographist/word-cache-integration.spec.ts` checks FR-012 and FR-013 for both hyphenation algorithms. Adding, replacing or removing a typography-only locale invalidates cached words across the registered hyphenation locales. Failed preparation and duplicate rule IDs preserve the previous typography handler and warm word entries. The custom locale formats text without hyphenation data, and removal restores the missing-locale error even for empty input.
+
+### Hyphenation profile regression matrix
+
+`packages/typographist/src/text/algorithm-integration.spec.ts` runs the existing protected-token, exclusion snapshot, visible-hyphen, exception and Unicode-grapheme regression cases under both the default and explicit hyphenation-only profiles. Each profile uses both algorithms with zero and 64 MiB cache budgets. Expected strings remain identical across these configurations. The separate locale replacement and instance-isolation regression remains covered.
