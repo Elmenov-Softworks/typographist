@@ -91,6 +91,18 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/years',
+      category: 'nonbreakingSpacing',
+      order: 515,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(
+          /(^|\D)(\d{4})(--?|‒|–|—)(\d{4})[ \u00a0]?(?=г\.?([ \u00a0]?г\.)?(?:[,;:?!"‘“»\s]|$))/gm,
+          '$1$2$3$4\u00a0',
+        ),
+    });
+
+    rules.push({
       id: 'ru/nbsp/beforeParticle',
       category: 'nonbreakingSpacing',
       order: 515,
