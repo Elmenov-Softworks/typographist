@@ -21,7 +21,12 @@ export const createBundledSpacing = (locale: string) => {
       prepare:
         ({ enabled }) =>
         (text, context) =>
-          enabled && context?.endsText !== false && !text.endsWith('\n') ? `${text}\n` : text,
+          enabled &&
+          context?.endsText !== false &&
+          !text.endsWith('\n') &&
+          !(text.length === 0 && context?.precedingCharacter === '\n')
+            ? `${text}\n`
+            : text,
     },
     {
       id: 'common/space/replaceTab',
@@ -203,5 +208,34 @@ export const createBundledSpacing = (locale: string) => {
     });
   }
 
-  return rules;
+  // Typograf 7.8.0 registration order resolves interactions between equal-priority bundled rules.
+  const referenceOrder = [
+    'common/space/replaceTab',
+    'common/space/trimLeft',
+    'common/space/trimRight',
+    'common/space/delTrailingBlanks',
+    'common/space/delRepeatSpace',
+    'common/space/delRepeatN',
+    'ru/space/year',
+    'ru/space/afterHellip',
+    'common/space/squareBracket',
+    'common/space/insertFinalNewline',
+    'common/space/delLeadingBlanks',
+    'common/space/delBetweenExclamationMarks',
+    'common/space/delBeforePunctuation',
+    'common/space/delBeforePercent',
+    'common/space/delBeforeDot',
+    'common/space/bracket',
+    'common/space/beforeBracket',
+    'common/space/afterSemicolon',
+    'common/space/afterExclamationMark',
+    'common/space/afterQuestionMark',
+    'common/space/afterComma',
+    'common/space/afterColon',
+    'common/space/normalizeLineEndings',
+  ];
+
+  return rules.sort(
+    (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),
+  );
 };

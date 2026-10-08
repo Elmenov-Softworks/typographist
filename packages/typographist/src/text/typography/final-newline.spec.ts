@@ -48,6 +48,16 @@ describe.each(['ru', 'en'] as const)('Final newline for %s', (locale) => {
     expect(service.format('https://example.com/path next')).toBe('https://example.com/path next\n');
   });
 
+  it.each(['keep\n', 'keep\r\n', 'keep', 'keep\r'])('respects protected terminal content %j', (protectedText) => {
+    const service = new Typographist({ locale, categories: ['spacing'], settings, protectedContent: [protectedText] });
+    const expected = protectedText.endsWith('\n') ? protectedText : `${protectedText}\n`;
+
+    expect(service.format(protectedText)).toBe(expected);
+    expect(service.format(`first ${protectedText}`)).toBe(`first ${expected}`);
+    expect(service.format(expected)).toBe(expected);
+    expect(service.format(`${protectedText}next`)).toBe(`${protectedText}next\n`);
+  });
+
   it.each([false, true])('runs after trimming and before hyphenation with useFast=%s', (useFast) => {
     const service = new Typographist({ locale, useFast, settings });
     const legacy = new Typographist({ locale, useFast, categories: ['hyphenation'] });

@@ -177,6 +177,22 @@ export const createBundledDashes = (locale: string) => {
     });
   }
 
+  // Typograf 7.8.0 registration order resolves interactions between equal-priority bundled rules.
+  const referenceOrder = [
+    'ru/dash/years',
+    'ru/dash/weekday',
+    'ru/dash/time',
+    'ru/dash/month',
+    'ru/dash/directSpeech',
+    'ru/dash/decade',
+    'ru/dash/daysMonth',
+    'ru/dash/centuries',
+  ];
+
+  rules.sort(
+    (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),
+  );
+
   return rules.map<TextRule>((rule) => ({
     ...rule,
     prepare: (settings) => {

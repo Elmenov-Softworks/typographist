@@ -465,3 +465,17 @@ describe('Russian single-year label spacing', () => {
     expect(service.format(expected)).toBe(expected);
   });
 });
+
+describe('equal-priority bundled nonbreaking interactions', () => {
+  it.each([
+    ['и см. текст', 'и\u00a0см.\u00a0текст'],
+    ['и им. автора', 'и\u00a0им.\u00a0автора'],
+    ['и 10 см дальше', 'и\u00a010\u00a0см дальше'],
+    ['и 10 dpi дальше', 'и\u00a010\u00a0dpi дальше'],
+  ])('retains reference bindings for %j', (input, expected) => {
+    const service = new Typographist({ locale: 'ru', categories: ['nonbreakingSpacing'] });
+
+    expect(service.format(input)).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+});

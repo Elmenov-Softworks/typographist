@@ -75,5 +75,17 @@ export const createBundledPunctuation = (locale: string) => {
     });
   }
 
-  return rules;
+  // Typograf 7.8.0 registration order resolves interactions between equal-priority bundled rules.
+  const referenceOrder = [
+    'ru/punctuation/hellipQuestion',
+    'ru/punctuation/exclamation',
+    'common/punctuation/hellip',
+    'common/punctuation/delDoublePunctuation',
+    'common/punctuation/apostrophe',
+    'ru/punctuation/exclamationQuestion',
+  ];
+
+  return rules.sort(
+    (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),
+  );
 };
