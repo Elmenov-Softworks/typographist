@@ -97,10 +97,19 @@ typography-only English and Russian locales.
 - Resolve the documented reference-wide CR/LF preparation gap. Upstream normalizes
   CR/LF before rules run; current handlers preserve interior CR. This preparation
   is separate from the 107 public reference rules.
-- Verify the completed feature in a browser runtime and refresh benchmarks after
-  the remaining handlers are implemented. Existing Node smoke checks and benchmark
-  results cover the earlier implementation.
+- Verify the completed feature in a browser runtime. Node smoke checks do not
+  establish browser runtime behavior. The benchmark matrix has been refreshed
+  after quotation completion; see the benchmark acceptance record below.
 
 Supplemental unary-minus normalization and algorithmic soft hyphenation are outside
 the 107-entry inventory and remain part of final acceptance. No numeric, lexical
 or HTML conversion is authorized by these gaps.
+
+## Completed quotation benchmark verification — 2026-10-08
+
+The [refreshed benchmark report](../benchmarks/README.md) measures all bundled
+handlers, including TP-R056, at `72bd385fdf343503ad968014eaa04c734dfa05d8`.
+All 24 configurations and 144 workload pairs passed the harness preservation,
+determinism and uncached-equivalence assertions. Inputs are identical to the
+earlier run. This closes the benchmark-refresh gap, not the remaining behavior,
+CR/LF or browser verification gaps.

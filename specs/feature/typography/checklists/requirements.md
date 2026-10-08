@@ -84,3 +84,18 @@ recorded in [the coverage audit](reference-coverage.md). Feature acceptance
 remains open for the per-rule behavior audit, the documented CR/LF preparation
 gap, browser runtime verification, and benchmarks of the completed feature.
 No runtime implementation was changed in this verification slice.
+
+## Completed quotation benchmarks — 2026-10-08
+
+Freshly built the core with Node v24.21.0 at
+`72bd385fdf343503ad968014eaa04c734dfa05d8`; the working tree was clean during
+build and measurement. The existing benchmark harness completed all 24
+configurations and 144 workload pairs with its assertions passing. The
+[report](../benchmarks/README.md) and raw results now include bundled quotation
+formatting. Workloads are unchanged from the earlier run. Setup and repeated
+formatting remain separate, with both algorithms, both cache settings and both
+locales. Heap observations retain the documented measurement limitations.
+
+No runtime code changed. The per-rule behavior audit, CR/LF preparation and
+browser runtime verification remain open. The full test suite and workspace
+checks were not rerun for this benchmark-data slice; the core build passed.
