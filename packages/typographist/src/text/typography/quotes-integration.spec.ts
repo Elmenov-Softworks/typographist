@@ -175,3 +175,100 @@ describe('duplicate quotation removal', () => {
     ).toThrow(TypeError);
   });
 });
+
+describe('quotation spacing', () => {
+  it.each([
+    ['"hello"', '«\u202fhello\u202f»'],
+    ['« word »', '«\u202fword\u202f»'],
+    ['«\u00a0word\u00a0»', '«\u202fword\u202f»'],
+    ['«\u202fword\u202f»', '«\u202fword\u202f»'],
+    ['«  word  »', '«\u202f word \u202f»'],
+    ['"one "two" three"', '«\u202fone ‹\u202ftwo\u202f› three\u202f»'],
+    ['""word""', '«\u202f‹\u202fword\u202f›\u202f»'],
+    ['"open', '«\u202fopen'],
+    ['close"', 'close\u202f»'],
+    ['"😀 é"', '«\u202f😀 é\u202f»'],
+    ['"$100 1.25 1/2 2026-10-08 MiXeD"', '«\u202f$100 1.25 1/2 2026-10-08 MiXeD\u202f»'],
+    ['«\tword\t»', '«\u202f\tword\t\u202f»'],
+    ['«\nword\n»', '«\u202f\nword\n\u202f»'],
+    ['', ''],
+    ['word', 'word'],
+  ])('matches reference spacing for %j', (input, expected) => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '«‹', right: '»›', spacing: true } },
+    });
+
+    expect(instance.format(input)).toBe(expected);
+  });
+
+  it.each([
+    ['"hello"', '”\u202fhello\u202f”'],
+    ['"one "two" three"', '”\u202fone ’\u202ftwo\u202f’ three\u202f”'],
+    ['""word""', '”\u202f’\u202fword\u202f’\u202f”'],
+    ['"😀 é"', '”\u202f😀 é\u202f”'],
+    ['« word »', '« word »'],
+  ])('uses quote direction with identical glyphs for %j', (input, expected) => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '”’', right: '”’', spacing: true } },
+    });
+
+    expect(instance.format(input)).toBe(expected);
+  });
+
+  it('applies spacing before duplicate removal', () => {
+    for (const [left, right] of [
+      ['«', '»'],
+      ['”', '”'],
+    ] as const) {
+      const instance = new Typographist({
+        categories: ['quotes'],
+        settings: { 'common/punctuation/quote': { left, right, spacing: true, removeDuplicateQuotes: true } },
+      });
+
+      expect(instance.format('""word""')).toBe(`${left}\u202f${left}word\u202f${right}`);
+    }
+  });
+
+  it.each(['en', 'ru'] as const)('defaults to no spacing for %s and honors category selection', (locale) => {
+    const defaults = new Typographist({ locale, categories: ['quotes'] });
+    const disabled = new Typographist({
+      locale,
+      categories: [],
+      settings: { 'common/punctuation/quote': { spacing: true } },
+    });
+    const glyphs = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
+
+    expect(defaults.format('"word"')).toBe(`${glyphs[0]}word${glyphs[1]}`);
+    expect(disabled.format('"word"')).toBe('"word"');
+  });
+
+  it('preserves protected quotes, addresses and private-use characters', () => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      protectedContent: ['« Keep »'],
+      settings: { 'common/punctuation/quote': { left: '«‹', right: '»›', spacing: true } },
+    });
+
+    expect(instance.format('« Keep » "change" https://example.com/a user@example.com \uf005')).toBe(
+      '« Keep » «\u202fchange\u202f» https://example.com/a user@example.com \uf005',
+    );
+  });
+
+  it('keeps ordinary spaced pairs stable on a second pass', () => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '«‹', right: '»›', spacing: true } },
+    });
+    const formatted = instance.format('"one "two" three"');
+
+    expect(instance.format(formatted)).toBe(formatted);
+  });
+
+  it('rejects a nonboolean spacing setting', () => {
+    expect(() => new Typographist({ settings: { 'common/punctuation/quote': { spacing: 'true' } } })).toThrow(
+      TypeError,
+    );
+  });
+});

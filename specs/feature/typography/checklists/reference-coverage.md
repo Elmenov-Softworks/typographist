@@ -6,8 +6,8 @@ passes. The inventory remains the source for defaults, settings and deviations.
 
 All 65 included or adapted reference entries have bundled handler declarations.
 TP-R034 maps to the existing English prose-dash handler rather than a separate
-regional locale. TP-R056 is registered with fixed locale pairs; its configurable
-settings remain incomplete. The 42 excluded entries
+regional locale. TP-R056 supplies configurable quotation pairs, duplicate removal
+and quotation spacing. The 42 excluded entries
 remain excluded; default-profile exclusion tests are recorded in the inventory.
 
 ## Included and adapted entries
@@ -86,8 +86,9 @@ typography-only English and Russian locales.
 
 ## Remaining acceptance work
 
-- Complete TP-R056 configurable settings and broader protected-boundary and
-  apostrophe, spacing and direct-speech interaction coverage. Fixed locale pairs,
+- Complete broader TP-R056 protected-boundary and apostrophe, spacing and
+  direct-speech interaction coverage. Configurable pairs, duplicate removal and
+  quotation spacing are implemented. Fixed locale pairs,
   nesting, unmatched quotes, category selection and hyphenation integration are tested.
 - Audit behavior scenarios for each implemented entry. A declaration alone does
   not establish positive, negative, settings and interaction coverage.

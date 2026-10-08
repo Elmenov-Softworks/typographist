@@ -567,7 +567,8 @@ Identical opening and closing outer glyphs are supported, including nested pairs
 mismatched depths are rejected during preparation. A single pair or repeated opening
 glyph disables inner-pair substitution, matching the reference. English callers can
 select en-GB pairs with `left: '‘“'` and `right: '’”'` while retaining locale `en`.
-Quotation spacing and broader protected-boundary interactions remain incomplete. Consumer locales receive no implicit quotation data.
+Quotation settings are implemented. Broader protected-boundary interactions remain
+part of final acceptance verification. Consumer locales receive no implicit quotation data.
 The isolated handler preserves CR/LF; Typograf's global preparation removes CR
 before its quotation handler, independently of enabled rules.
 
@@ -593,3 +594,24 @@ nonoverlapping runs, identical glyph directions, Unicode, content preservation,
 protection and invalid setting types. Eight isolated Typograf 7.8.0 fixtures match.
 Runs of three or more duplicate glyphs can shrink again on a second formatting
 pass, matching the reference; this setting does not guarantee idempotence.
+
+The boolean `spacing` setting defaults to `false` for both bundled locales. When
+enabled, it removes one ordinary space, NBSP or narrow NBSP immediately inside each
+configured pair before quotation placement, then inserts narrow NBSP (U+202F)
+after opening and before closing glyphs. Tabs, line breaks and extra spaces are
+preserved. Spacing runs before duplicate removal and belongs to `quotes`, so it
+does not require the `spacing` or `nonbreakingSpacing` category. Prepared regular
+expressions are omitted when the setting is disabled.
+
+Identical outer glyphs retain opening/closing direction through spacing without
+reserving temporary characters. As in the reference's internal buffer handling,
+preexisting spaces around identical configured glyphs are not stripped before
+placement. Protected literals and addresses bypass the handler. Spacing does not
+change letters or numeric notation and does not act on segments containing no
+recognized quotation glyphs.
+
+Twenty-seven service scenarios cover spacing settings, nesting, unmatched pairs,
+existing spaces, Unicode, protected content, duplicate-removal ordering, disabled
+categories, repeated formatting and invalid types. An isolated Typograf 7.8.0
+comparison matched 120 fixtures across English and Russian, distinct and identical
+pairs, and duplicate-removal settings. Final feature acceptance remains separate.
