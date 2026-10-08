@@ -423,3 +423,11 @@ The handler preserves the reference boundary `(^|[^a-яёA-ЯЁ])` exactly. Its 
 Letters, abbreviation punctuation and digit sequences remain unchanged. Tabs, line breaks and existing nonbreaking spaces between the abbreviation and number do not match in isolation. Protected addresses and configured literals bypass the handler. English and consumer locales receive no implicit rule. Reference HTML protection markers are omitted because plain-text protection is handled by the pipeline. Like the reference, consumed boundaries can leave adjacent references for a second pass: `стр. 1 стр. 2 стр. 3` becomes `стр. 1 стр. 2 стр. 3`, then `стр. 1 стр. 2 стр. 3`.
 
 `page-spacing.spec.ts` covers positive and negative boundaries, case, Unicode, numeric preservation, category selection, settings rejection, protected content, both algorithms and repeated formatting. Remaining included capabilities are pending.
+
+### Russian see/name abbreviation nonbreaking spacing (TP-R064)
+
+`ru/nbsp/see` runs for `ru` in `nonbreakingSpacing`, enabled by default at order 510. It has no settings. After the start of text, whitespace or `(`, case-insensitive `см.` and `им.` bind to a following Russian/Latin alphabetic or digit token with U+00A0. Zero or one ordinary or nonbreaking space is accepted. The token must end at whitespace, `.`, `,`, `?`, `!` or end of text. A preceding U+00A0 becomes an ordinary space, as in the reference.
+
+Letters, case, abbreviation punctuation, digits and numeric notation remain unchanged. Protected addresses and configured literals bypass the rule. English and consumer locales receive no implicit rule. Reference HTML protection markers are omitted because the plain-text pipeline handles protection separately. Consumed boundaries leave alternating adjacent matches unchanged on subsequent passes: `см. a см. b см. c` becomes `см. a см. b см. c` and remains so.
+
+Isolated fixtures were compared with Typograf 7.8.0. `see-spacing.spec.ts` covers reference boundaries, Unicode, content preservation, settings rejection, category selection, protected content, ordinary-spacing interaction, both hyphenation algorithms and repeated formatting. Remaining included capabilities are pending.
