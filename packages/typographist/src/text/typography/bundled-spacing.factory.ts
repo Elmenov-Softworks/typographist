@@ -100,6 +100,13 @@ export const createBundledSpacing = (locale: string) => {
         return (text) => text.replace(beforeBracket, '$1 (');
       },
     },
+    {
+      id: 'common/space/afterColon',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) => text.replace(/(\D):([^)",:.?\s/\\])/g, '$1: $2'),
+    },
   ];
 
   return rules;

@@ -4,6 +4,12 @@ import { Typographist } from '@/typographist/typographist.js';
 
 const scenarios = [
   {
+    id: 'common/space/afterColon',
+    input: 'word:next слово:далее a:1',
+    output: 'word: next слово: далее a: 1',
+    unchanged: ':start 12:30 1:2 a:) a:" a:, a:. a:? a:/ a:\\ a: next a:\u00a0next',
+  },
+  {
     id: 'common/space/delBetweenExclamationMarks',
     input: 'a! ! ? ? b',
     output: 'a!!?? b',
@@ -164,6 +170,18 @@ describe('bundled spacing reference scenarios', () => {
     );
     expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a(b) я(б)')).toBe('a(b) я(б)');
+  });
+
+  it.each(['en', 'ru'] as const)('spaces colons while preserving notation and protection for %s', (locale) => {
+    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep:this'] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
+    const input = `${content} 12:30 https://example.com:8080/a user@example.com Keep:this word:next`;
+    const output = `${content} 12:30 https://example.com:8080/a user@example.com Keep:this word: next`;
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a:b')).toBe('a:b');
   });
 
   it('does not bundle spacing for consumer locales', () => {
