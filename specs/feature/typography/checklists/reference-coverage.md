@@ -264,3 +264,35 @@ All 118 tests in the five affected test files passed on Node v24.21.0. No new
 upstream comparison was run; existing isolated fixtures remain the reference
 behavior evidence. This closes the four numeric-range dash behavior audits;
 nonbreaking-spacing audits, CR/LF preparation and browser verification remain open.
+
+### Common nonbreaking spacing behavior audit
+
+Reviewed TP-R076, TP-R078 and TP-R083–TP-R085 against
+`bundled-nonbreaking-spacing.factory.ts` and their isolated tests. NBSP
+normalization changes only U+00A0 and precedes ordinary whitespace cleanup and
+rebinding. Resolution-unit fixtures cover lowercase `dpi`/`lpi`, unchanged case,
+digit notation and unsupported boundaries. Its isolated first-match traversal is
+tested separately from the combined pipeline; normalization can remove an earlier
+NBSP before that match is chosen again on a later call.
+
+Section-mark fixtures cover digit and uppercase Roman-letter boundaries, optional
+ordinary/NBSP/thin spacing and Russian narrow-NBSP versus English NBSP output.
+Paragraph-mark fixtures cover digit boundaries and preserve unsupported separators.
+Number-to-word fixtures cover one to five digits, locale alphabets and unchanged
+signed, decimal, fraction, date and identifier boundaries. These five rules have
+no configurable values; each rejects unknown settings. Tests also cover category
+selection, protected content and consumer locales without implicit bundled rules.
+
+Eight new service scenarios combine these capabilities with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected output uses the hyphenation-only profile on explicitly normalized text.
+The fixtures preserve numeric notation, case, repeated words, mixed scripts,
+combining marks, URLs, emails and a protected literal containing NBSP, marks,
+resolution units and numbers. They check repeated formatting, disabling
+nonbreaking spacing and all-disabled formatting.
+
+All 191 tests in the five affected test files, package type checking, targeted
+ESLint and formatting passed on Node v24.21.0. No new upstream comparison was
+run; existing isolated fixtures and documented default deviations remain the
+reference evidence. Other nonbreaking-spacing audits, CR/LF preparation and
+browser verification remain open.
