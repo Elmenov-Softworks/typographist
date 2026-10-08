@@ -402,3 +402,29 @@ All 149 tests in the three affected test files passed on Node v24.21.0. No new
 upstream comparison was run; existing isolated fixtures remain the reference
 evidence. Other nonbreaking-spacing audits, CR/LF preparation and browser
 verification remain open.
+
+### Russian number-sign, address and abbreviation behavior audit
+
+Reviewed TP-R073–TP-R075 against the bundled handlers and isolated fixtures.
+Number-sign spacing covers digits, `п/п`, accepted separators and narrow NBSP
+output without rewriting notation. Address fixtures cover supplied case, numeric
+notation, supported abbreviations and alphabet boundaries. Abbreviation fixtures
+cover lowercase Cyrillic groups, domain-suffix exceptions, date placeholders and
+the reference's two-pass traversal. The address adaptation preserves supplied
+letters and case; abbreviation formatting changes whitespace only. All three
+rules reject unknown settings and are absent from English bundled rules.
+Existing fixtures cover disabled categories and protected content.
+
+Eight new pipeline scenarios combine these rules with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected outputs apply the hyphenation-only profile to explicitly normalized text.
+They check repeated formatting, disabled nonbreaking spacing, all-disabled
+formatting, protected literals, URLs and valid email addresses. Numeric notation,
+case, repeated words, mixed scripts, combining marks and supplementary Unicode
+characters remain unchanged.
+
+All 77 tests in the four affected test files, package type checking, targeted
+ESLint and formatting passed on Node v24.21.0. No new upstream comparison was
+run; existing isolated fixtures and documented adaptations remain the reference
+evidence. Remaining nonbreaking-spacing audits, CR/LF preparation and browser
+verification remain open. Workspace-wide checks and builds were not rerun.
