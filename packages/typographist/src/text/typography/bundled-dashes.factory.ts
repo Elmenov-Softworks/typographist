@@ -17,6 +17,20 @@ export const createBundledDashes = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/dash/directSpeech',
+      category: 'dashes',
+      order: 310,
+      defaults: {},
+      prepare: () => (text, context) =>
+        text
+          .replace(/(["»‘“,])[ |\u00a0]?(--?|‒|–|—)[ |\u00a0]/g, '$1\u00a0— ')
+          .replace(/^(--?|‒|–|—)[ \u00a0]/gm, (match: string, _dash: string, offset: number) =>
+            offset === 0 && context?.startsLine === false ? match : '—\u00a0',
+          )
+          .replace(/([.…?!])[ \u00a0](--?|‒|–|—)[ \u00a0]/g, '$1 —\u00a0'),
+    });
+
+    rules.push({
       id: 'ru/dash/centuries',
       category: 'dashes',
       order: 310,

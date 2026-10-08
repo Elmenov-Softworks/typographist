@@ -479,3 +479,11 @@ The rules run after NBSP normalization and after tab expansion and before traili
 Fourteen isolated fixtures matched the pinned reference handlers. Typograf’s separate whole-pipeline CR/LF normalization is not part of these handlers; existing interior line endings remain unchanged here.
 
 `bundled-spacing.factory.spec.ts` covers isolated reference behavior, left/right selection, Unicode whitespace, empty input, composition preservation, settings rejection, category selection, protected boundaries, spacing interactions and both hyphenation algorithms. Whitespace-only text now becomes empty when ordinary spacing is enabled. Remaining included capabilities require further slices.
+
+### Russian direct-speech dashes (TP-R048)
+
+`ru/dash/directSpeech` runs by default for `ru` in `dashes` at order 310, after prose-dash normalization and before range handlers. It has no settings; unknown settings are rejected. Hyphens, double hyphens, figure dashes, en dashes and em dashes become em dashes in three contexts: after `"`, `»`, `‘`, `“` or a comma, at line start, and after `.`, `…`, `?` or `!`. The first context accepts an optional ordinary space, U+00A0 or literal pipe before the dash and requires one of those characters after it; output binds the dash to the preceding punctuation with U+00A0 and leaves an ordinary space afterward. Line-start dashes require an ordinary or nonbreaking following space and bind to following text with U+00A0. Sentence-punctuation dashes require one ordinary or nonbreaking space on each side and emit an ordinary space before and U+00A0 after.
+
+Letters, case, digits, numeric notation and identifier hyphens remain unchanged. Protected addresses and configured literals bypass the handler. Original segment line context prevents inline protected boundaries from creating dialogue starts. Reference HTML protection markers are omitted because this pipeline protects plain-text segments separately. English and consumer locales receive no implicit rule. Supported outputs are unchanged on a second pass.
+
+`direct-speech.spec.ts` covers isolated reference fixtures, negative contexts, Unicode, content preservation, settings rejection, categories, protected boundaries, spacing interactions and both hyphenation algorithms. Remaining included capabilities require further slices.
