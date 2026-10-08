@@ -15,5 +15,27 @@ export const createBundledDashes = (locale: string) => {
     },
   ];
 
+  if (locale === 'ru') {
+    rules.push({
+      id: 'ru/dash/weekday',
+      category: 'dashes',
+      order: 310,
+      defaults: { dash: '–' },
+      prepare: ({ dash }) => {
+        if (typeof dash !== 'string' || !/^(?:--?|‒|–|—|−)$/.test(dash)) {
+          throw new TypeError('dash must be a supported dash or minus glyph');
+        }
+
+        const weekday = '(понедельник|вторник|среда|четверг|пятница|суббота|воскресенье)';
+        const range = new RegExp(
+          `(?<![\\p{L}\\p{M}\\p{N}_-])${weekday} ?(?:--?|‒|–|—) ?${weekday}(?![\\p{L}\\p{M}\\p{N}_-])`,
+          'giu',
+        );
+
+        return (text) => text.replace(range, `$1${dash}$2`);
+      },
+    });
+  }
+
   return rules;
 };

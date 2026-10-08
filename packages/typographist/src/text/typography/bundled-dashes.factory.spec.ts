@@ -3,6 +3,62 @@ import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.uti
 import { Typographist } from '@/typographist/typographist.js';
 
 describe('bundled prose dashes', () => {
+  it('matches isolated Russian weekday reference fixtures and preserves identifier boundaries', () => {
+    const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/weekday');
+    const format = prepareTextPipeline(rules, 'ru');
+    const fixtures = [
+      ['понедельник-пятница', 'понедельник–пятница'],
+      ['ВТОРНИК -- Суббота', 'ВТОРНИК–Суббота'],
+      ['среда ‒четверг', 'среда–четверг'],
+      ['пятница–воскресенье', 'пятница–воскресенье'],
+      ['суббота — понедельник', 'суббота–понедельник'],
+    ] as const;
+
+    for (const [input, output] of fixtures) {
+      expect(format(input)).toBe(output);
+      expect(format(output)).toBe(output);
+    }
+
+    const unchanged =
+      'среда−четверг среда\t-четверг среда  -четверг среда\u00a0-четверг среда-пятница-воскресенье ' +
+      'xсреда-пятница среда-пятницаX _среда-пятница среда-пятница1 среда\u0301-пятница monday-friday';
+
+    expect(format(unchanged)).toBe(unchanged);
+    expect(format('')).toBe('');
+    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
+    expect(createBundledDashes('en').some((rule) => rule.id === 'ru/dash/weekday')).toBe(false);
+
+    for (const dash of ['-', '--', '‒', '–', '—', '−']) {
+      const configured = prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/weekday': { dash } } });
+
+      expect(configured('среда-пятница')).toBe(`среда${dash}пятница`);
+    }
+
+    for (const dash of ['', 'word', '1', '$&', '——']) {
+      expect(() => prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/weekday': { dash } } })).toThrow(
+        'dash must be',
+      );
+    }
+  });
+
+  it('combines Russian weekday ranges with protections, prose dashes and hyphenation', () => {
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content} среда-пятница среда - пятница https://example.com/среда-пятница user-name@example.com вторник-суббота`;
+    const output = `${content} среда–пятница среда\u00a0— пятница https://example.com/среда-пятница user-name@example.com вторник-суббота`;
+    const service = new Typographist({ locale: 'ru', categories: ['dashes'], protectedContent: ['вторник-суббота'] });
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
+
+    for (const useFast of [false, true]) {
+      const combined = new Typographist({ locale: 'ru', useFast });
+      const hyphenation = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+
+      expect(combined.format('среда-пятница')).toBe(hyphenation.format('среда–пятница'));
+    }
+  });
+
   it.each(['en', 'ru'] as const)('matches reference glyph and whitespace cases for %s', (locale) => {
     const rules = createBundledDashes(locale);
     const format = prepareTextPipeline(rules, locale);
