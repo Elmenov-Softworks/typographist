@@ -144,5 +144,16 @@ export const createBundledSpacing = (locale: string) => {
     },
   ];
 
+  if (locale === 'ru') {
+    rules.unshift({
+      id: 'ru/space/afterHellip',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(/([а-яё])(\.\.\.|…)([А-ЯЁ])/g, '$1$2 $3').replace(/([?!]\.\.)([а-яёa-z])/gi, '$1 $2'),
+    });
+  }
+
   return rules;
 };
