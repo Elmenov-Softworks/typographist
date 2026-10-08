@@ -388,3 +388,80 @@ describe('Russian day–month spacing', () => {
     expect(service.format(expected)).toBe(expected);
   });
 });
+
+describe('Russian single-year label spacing', () => {
+  const id = 'ru/nbsp/year';
+  const rules = createBundledNonbreakingSpacing('ru').filter((rule) => rule.id === id);
+  const format = prepareTextPipeline(rules, 'ru');
+
+  it.each([
+    ['2026 г.', '2026\u00a0г.'],
+    ['2026г', '2026\u00a0г'],
+    ['(0001 г), 1999 г; 2000 г,', '(0001 г), 1999\u00a0г; 2000\u00a0г,'],
+    ['😀2026 г\nе́2027 г ', '😀2026\u00a0г\nе́2027\u00a0г '],
+    ['1.2026 г. 1/2027 г.', '1.2026\u00a0г. 1/2027\u00a0г.'],
+    ['2026-2027 г.', '2026-2027\u00a0г.'],
+  ])('matches reference boundaries and preserves composition in %j', (text, expected) => {
+    expect(rules).toHaveLength(1);
+    expect(format(text)).toBe(expected);
+    expect(format(expected)).toBe(expected);
+    expect(expected.replace(/\s/g, '')).toBe(text.replace(/\s/g, ''));
+  });
+
+  it.each([
+    '',
+    ' \r\n\t',
+    '123 г.',
+    '12345 г.',
+    '2026 Г.',
+    '2026 год',
+    '2026 г!',
+    '2026 г?',
+    '2026 г:',
+    '2026 г)',
+    '2026 г\r\n',
+    '2026 г\t',
+    '2026  г.',
+    '2026\tг.',
+    '2026\nг.',
+    '2026\u00a0г.',
+    '2026\u202fг.',
+    '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 слово слово MiXeD мiкс',
+  ])('preserves unsupported input %j', (text) => {
+    expect(format(text)).toBe(text);
+  });
+
+  it('rejects settings and supplies no implicit rule to other locales', () => {
+    expect(() => prepareTextPipeline(rules, 'ru', { settings: { [id]: { unknown: true } } })).toThrow(
+      'Invalid setting',
+    );
+    for (const locale of ['en', 'custom']) {
+      expect(createBundledNonbreakingSpacing(locale).some((rule) => rule.id === id)).toBe(false);
+    }
+  });
+
+  it('respects categories, exclusions and protected content', () => {
+    for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
+      expect(new Typographist({ locale: 'ru', categories }).format('2026 г.')).toBe('2026 г.');
+    }
+    const service = new Typographist({
+      locale: 'ru',
+      categories: ['nonbreakingSpacing'],
+      protectedContent: ['2026 г.'],
+      excludedWords: ['2027'],
+    });
+
+    expect(service.format('2026 г. 2027 г. https://example.com/2028г. user2029г@example.com')).toBe(
+      '2026 г. 2027\u00a0г. https://example.com/2028г. user2029г@example.com',
+    );
+  });
+
+  it.each([false, true])('combines spacing and hyphenation with useFast=%s', (useFast) => {
+    const service = new Typographist({ locale: 'ru', useFast });
+    const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+    const expected = legacy.format('Типографика 2026\u00a0г.');
+
+    expect(service.format('Типографика 2026  г.')).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+});
