@@ -153,6 +153,13 @@ export const createBundledSpacing = (locale: string) => {
       prepare: () => (text) =>
         text.replace(/([а-яё])(\.\.\.|…)([А-ЯЁ])/g, '$1$2 $3').replace(/([?!]\.\.)([а-яёa-z])/gi, '$1 $2'),
     });
+    rules.unshift({
+      id: 'ru/space/year',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) => text.replace(/(^| |\u00a0)(\d{3,4})(год([ауе]|ом)?)([^а-яё]|$)/g, '$1$2 $3$5'),
+    });
   }
 
   return rules;
