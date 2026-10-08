@@ -4,9 +4,10 @@ This audit checks the saved 107-rule inventory against bundled handler declarati
 It is a source coverage check, not proof that every reference fixture or interaction
 passes. The inventory remains the source for defaults, settings and deviations.
 
-Of 65 included or adapted reference entries, 64 have bundled implementations.
+All 65 included or adapted reference entries have bundled handler declarations.
 TP-R034 maps to the existing English prose-dash handler rather than a separate
-regional locale. TP-R056 has no bundled implementation. The 42 excluded entries
+regional locale. TP-R056 is registered with fixed locale pairs; its configurable
+settings remain incomplete. The 42 excluded entries
 remain excluded; default-profile exclusion tests are recorded in the inventory.
 
 ## Included and adapted entries
@@ -48,7 +49,7 @@ remain excluded; default-profile exclusion tests are recorded in the inventory.
 | TP-R052  | `ru/dash/centuries`                       | `bundled-dashes.factory.ts`                           |
 | TP-R053  | `ru/punctuation/hellipQuestion`           | `bundled-punctuation.factory.ts`                      |
 | TP-R054  | `ru/punctuation/exclamation`              | `bundled-punctuation.factory.ts`                      |
-| TP-R056  | `common/punctuation/quote`                | Missing                                               |
+| TP-R056  | `common/punctuation/quote`                | `bundled-quotes.factory.ts`                           |
 | TP-R057  | `common/punctuation/hellip`               | `bundled-punctuation.factory.ts`                      |
 | TP-R058  | `common/punctuation/delDoublePunctuation` | `bundled-punctuation.factory.ts`                      |
 | TP-R059  | `common/punctuation/apostrophe`           | `bundled-punctuation.factory.ts`                      |
@@ -80,13 +81,14 @@ remain excluded; default-profile exclusion tests are recorded in the inventory.
 | TP-R088  | `ru/nbsp/beforeParticle`                  | `bundled-nonbreaking-spacing.factory.ts`              |
 
 Sources are relative to `packages/typographist/src/text/typography/`.
-The registry prepares the four bundled factories. Its path has no quotation handler.
+The registry prepares all five bundled factories for algorithm-backed and
+typography-only English and Russian locales.
 
 ## Remaining acceptance work
 
-- Implement TP-R056 in the independently selected `quotes` category, covering
-  locale pairs, nesting, unmatched quotes, settings, protection and interactions
-  with apostrophes, spacing, direct speech and hyphenation.
+- Complete TP-R056 configurable settings and broader protected-boundary and
+  apostrophe, spacing and direct-speech interaction coverage. Fixed locale pairs,
+  nesting, unmatched quotes, category selection and hyphenation integration are tested.
 - Audit behavior scenarios for each implemented entry. A declaration alone does
   not establish positive, negative, settings and interaction coverage.
 - Resolve the documented reference-wide CR/LF preparation gap. Upstream normalizes

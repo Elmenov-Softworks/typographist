@@ -557,10 +557,12 @@ supports three levels; unbalanced text caps at two. English caps at two even for
 balanced text. Single straight apostrophes remain the separate punctuation rule.
 Letters, case and numeric notation remain unchanged.
 
-This is preparation work, not service acceptance: the registry does not yet
-install this factory. Configurable pairs, spacing and duplicate-quote settings,
-protected-boundary interactions and combined default-profile verification remain
-for the integration slice. Consumer locales receive no implicit quotation data.
+The registry now installs this factory for both algorithm-backed and typography-only
+English and Russian locales. Service tests cover independent category selection,
+nesting, repeated formatting, literal protection, unchanged addresses, locale
+replacement and default-profile ellipsis/hyphenation interactions with both algorithms.
+Configurable pairs, spacing and duplicate-quote settings, and broader protected-boundary
+interactions remain incomplete. Consumer locales receive no implicit quotation data.
 The isolated handler preserves CR/LF; Typograf's global preparation removes CR
 before its quotation handler, independently of enabled rules.
 

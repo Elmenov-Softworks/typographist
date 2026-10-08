@@ -3,6 +3,7 @@ import { createBundledNonbreakingSpacing } from '@/text/typography/bundled-nonbr
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
 import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.js';
 import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.factory.js';
+import { createBundledQuotes } from '@/text/typography/bundled-quotes.factory.js';
 import type { TextLocale } from '@/text/typography/text-locale.types.js';
 import type { TextPipelineOptions, TextRule, TextRuleHandler } from '@/text/typography/text-rule.types.js';
 import { WordCache } from '@/text/word-cache/word-cache.js';
@@ -93,6 +94,7 @@ export class RulesRegistry {
         ...createBundledSpacing(key),
         ...createBundledDashes(key),
         ...createBundledPunctuation(key),
+        ...createBundledQuotes(key),
         ...createBundledNonbreakingSpacing(key),
         ...this.#textRules,
         ...localeRules,
@@ -158,6 +160,7 @@ export class RulesRegistry {
         ...createBundledSpacing(key),
         ...createBundledDashes(key),
         ...createBundledPunctuation(key),
+        ...createBundledQuotes(key),
         ...createBundledNonbreakingSpacing(key),
         ...this.#textRules,
       ],
