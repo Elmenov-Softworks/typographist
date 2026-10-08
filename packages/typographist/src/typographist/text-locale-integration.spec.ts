@@ -1,5 +1,5 @@
 import { Typographist } from '@/typographist/typographist.js';
-import type { TextRule } from '@/text/typography/text-rule.types.js';
+import type { TextRule, TextRuleSettings } from '@/text/typography/text-rule.types.js';
 
 const spacing: TextRule = {
   id: 'custom/spacing',
@@ -65,6 +65,33 @@ describe('typography-only locales', () => {
     expect(service.format('Abc  Abc')).toBe('Abc Abc');
     expect(service.format('')).toBe('');
     expect(() => service.format('', 'en')).toThrow('Unregistered locale');
+  });
+
+  it.each<{ settings: TextRuleSettings; name: string }>([
+    { settings: { unknown: '—' }, name: 'unknown' },
+    { settings: { dash: 42 }, name: 'dash' },
+    { settings: { dash: false }, name: 'dash' },
+  ])('rejects invalid bundled settings with only consumer locales: $settings', ({ settings, name }) => {
+    expect(
+      () =>
+        new Typographist({
+          locale: 'custom',
+          rules: [],
+          textLocales: [{ locale: 'custom', textRules: [] }],
+          settings: { 'ru/dash/years': settings },
+        }),
+    ).toThrow(`Invalid setting ${name} for text rule ru/dash/years`);
+  });
+
+  it('accepts valid bundled settings without applying bundled rules to consumer locales', () => {
+    const service = new Typographist({
+      locale: 'custom',
+      rules: [],
+      textLocales: [{ locale: 'custom', textRules: [spacing] }],
+      settings: { 'ru/dash/years': { dash: '—' } },
+    });
+
+    expect(service.format('1941-1945  годы')).toBe('1941-1945 годы');
   });
 
   it('rejects explicit hyphenation requests without fabricating data', () => {

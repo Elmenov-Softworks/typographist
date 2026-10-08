@@ -1,7 +1,12 @@
 import { createBundledTextRules } from '@/text/typography/bundled-text-rules.factory.js';
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
 import type { TextLocale } from '@/text/typography/text-locale.types.js';
-import type { TextPipelineOptions, TextRule, TextRuleHandler } from '@/text/typography/text-rule.types.js';
+import type {
+  TextPipelineOptions,
+  TextRule,
+  TextRuleHandler,
+  TextRuleSettings,
+} from '@/text/typography/text-rule.types.js';
 import { WordCache } from '@/text/word-cache/word-cache.js';
 import { selectAlgorithm } from '@/algorithms/select-algorithm.factory.js';
 import { languageKey } from '@/languages/language-identifier.util.js';
@@ -11,7 +16,7 @@ import { createHyphenator } from '@/text/create-hyphenator.factory.js';
 export class RulesRegistry {
   #textRules: readonly TextRule[];
   #options: TextPipelineOptions;
-  #declaredIds: ReadonlySet<string>;
+  #declaredSettings: ReadonlyMap<string, TextRuleSettings>;
   #cache: WordCache;
   #services = new Map<string, { hyphenate: TextRuleHandler }>();
   #prepare: ReturnType<typeof selectAlgorithm>;
@@ -48,18 +53,26 @@ export class RulesRegistry {
     const selectedCategories: TextPipelineOptions['categories'] = options.categories;
     const protectedContent: TextPipelineOptions['protectedContent'] = options.protectedContent;
 
-    this.#declaredIds = new Set(
+    this.#declaredSettings = new Map(
       [
         ...createBundledTextRules('en'),
         ...createBundledTextRules('ru'),
         ...sharedRules,
         ...textLocales.flatMap((definition) => definition.textRules),
-      ].map((rule) => rule.id),
+      ].map((rule) => [rule.id, { ...rule.defaults }]),
     );
 
-    for (const id of Object.keys(options.settings ?? {})) {
-      if (!this.#declaredIds.has(id)) {
+    for (const [id, overrides] of Object.entries(options.settings ?? {})) {
+      const defaults = this.#declaredSettings.get(id);
+
+      if (defaults === undefined) {
         throw new TypeError(`Unknown text rule: ${id}`);
+      }
+
+      for (const [name, value] of Object.entries(overrides)) {
+        if (!Object.hasOwn(defaults, name) || typeof defaults[name] !== typeof value) {
+          throw new TypeError(`Invalid setting ${name} for text rule ${id}`);
+        }
       }
     }
 
@@ -125,7 +138,7 @@ export class RulesRegistry {
       key,
       this.#options,
       (text) => text,
-      new Set([...this.#declaredIds, ...localeRules.map((rule) => rule.id)]),
+      new Set([...this.#declaredSettings.keys(), ...localeRules.map((rule) => rule.id)]),
     );
 
     if (!replace && this.#services.has(key)) {
@@ -185,7 +198,7 @@ export class RulesRegistry {
       key,
       this.#options,
       hyphenationEnabled ? service.hyphenate : (text) => text,
-      this.#declaredIds,
+      new Set(this.#declaredSettings.keys()),
     );
 
     return { key, service: { hyphenate: format } };
