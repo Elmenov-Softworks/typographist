@@ -447,3 +447,11 @@ The handler follows Typograf 7.8.0 without deviations. Digits, numeric notation,
 The handler follows Typograf 7.8.0 without deviations. Amounts, numeric notation, label letters, case and abbreviation punctuation remain unchanged. Repeated spaces, tabs, line breaks and existing nonbreaking spaces remain unchanged in isolation; earlier ordinary-spacing cleanup can collapse repeated spaces. Protected addresses and configured literals bypass the handler. Hyphenation exclusions do not disable it. English and consumer locales receive no implicit rule. Supported outputs remain unchanged on a second pass.
 
 `ruble-kopek-spacing.spec.ts` covers reference boundaries, Unicode, composition preservation, settings rejection, category selection, protection, ordinary-spacing interaction and both hyphenation algorithms. Remaining included capabilities are pending.
+
+### Russian postscript nonbreaking spacing (TP-R066)
+
+`ru/nbsp/ps` runs for `ru` in `nonbreakingSpacing`, enabled by default at order 510. It has no settings; unknown settings are rejected. At the start of a line or after whitespace, two or three dotted parts matching Latin `p`/`s` or Cyrillic `з`/`ы` bind with U+00A0. Matching is global and case-insensitive. Each interior gap accepts zero or one ordinary or nonbreaking space. The final period, optional colon and following ordinary space are required.
+
+The approved spacing-only adaptation preserves supplied letters, case and the optional colon; Typograf 7.8.0 instead emits uppercase Latin parts and removes the colon. No abbreviation punctuation, lexical content or numeric notation is rewritten. Reference HTML protection markers are omitted because the plain-text pipeline protects addresses and configured literals separately. English and consumer locales receive no implicit rule. Earlier ordinary-spacing cleanup can collapse repeated interior spaces. Supported outputs remain unchanged on a second pass.
+
+`postscript-spacing.spec.ts` covers boundaries, case, mixed abbreviation forms, Unicode, composition preservation, settings rejection, category selection, protected content, ordinary-spacing interaction and both hyphenation algorithms. Remaining included capabilities are pending.

@@ -117,6 +117,19 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/ps',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(
+          /(^|\s)([pз]\.)[ \u00a0]?(?:([pз]\.)[ \u00a0]?)?([sы]\.)(:?) /gim,
+          (_match, boundary: string, first: string, second: string | undefined, last: string, colon: string) =>
+            `${boundary}${first}\u00a0${second === undefined ? '' : `${second}\u00a0`}${last}${colon} `,
+        ),
+    });
+
+    rules.push({
       id: 'ru/nbsp/rubleKopek',
       category: 'nonbreakingSpacing',
       order: 510,
