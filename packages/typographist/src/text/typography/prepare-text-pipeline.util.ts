@@ -193,7 +193,18 @@ export const prepareTextPipeline = (
       let start = text.indexOf(content);
 
       while (start !== -1) {
-        spans.push({ start, end: start + content.length });
+        let protectedStart = start;
+        let protectedEnd = start + content.length;
+
+        if (/[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(text.slice(start - 1, start + 1))) {
+          protectedStart -= 1;
+        }
+
+        if (/[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(text.slice(protectedEnd - 1, protectedEnd + 1))) {
+          protectedEnd += 1;
+        }
+
+        spans.push({ start: protectedStart, end: protectedEnd });
         start = text.indexOf(content, start + 1);
       }
     }

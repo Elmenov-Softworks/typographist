@@ -49,6 +49,10 @@ describe.each([
         { text: 'banana\ud800banana', protectedContent: ['\ud800'] },
         { text: 'banana\udc00banana', protectedContent: ['\udc00'] },
         { text: 'banana𐐀banana', protectedContent: ['𐐀'] },
+        { text: 'banana𐐀banana', protectedContent: ['\ud801'] },
+        { text: 'banana𐐀banana', protectedContent: ['\udc00'] },
+        { text: '𐐀banana', protectedContent: ['\ud801'] },
+        { text: 'banana𐐀', protectedContent: ['\udc00'] },
       ])('preserves unsupported complete candidates around $protectedContent', ({ text, protectedContent }) => {
         const configuration = { useFast, cacheSize, ...config };
         const unprotected = new Typographist(configuration);
