@@ -27,6 +27,21 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       },
     },
     {
+      id: 'common/nbsp/afterShortWordByList',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => {
+        const words =
+          locale === 'ru'
+            ? 'а|без|в|во|если|да|до|для|за|и|или|из|к|ко|как|ли|на|но|не|ни|о|об|обо|от|по|про|при|под|с|со|то|у'
+            : 'a|an|and|as|at|bar|but|by|for|if|in|nor|not|of|off|on|or|out|per|pro|so|the|to|up|via|yet';
+        const listedWord = new RegExp(`(^|[ \\u00a0(«‹»›„“‟”"])(${words}) `, 'gim');
+
+        return (text) => text.replace(listedWord, '$1$2\u00a0').replace(listedWord, '$1$2\u00a0');
+      },
+    },
+    {
       id: 'common/nbsp/afterShortWord',
       category: 'nonbreakingSpacing',
       order: 510,
