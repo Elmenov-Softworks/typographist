@@ -11,7 +11,7 @@ import type {
 } from './benchmark.types.ts';
 import { sampleCount, summarize, warmupIterations } from './measurement.util.ts';
 
-const validation = (format: TextFormatter, expected: string, { text, locale }: Workload) => {
+export const validateExternalOutput = (format: TextFormatter, expected: string, { text, locale }: Workload) => {
   const sourcePreserved = expected.replaceAll('\u00ad', '') === text.replaceAll('\u00ad', '');
   const idempotent = format(expected, locale) === expected;
   let graphemeSafe: boolean | null = null;
@@ -59,11 +59,11 @@ export const measureExternal = async (implementation: ExternalImplementation, wo
   for (const workload of workloads) {
     const { text, locale, name } = workload;
     let expected: string;
-    let checked: ReturnType<typeof validation>;
+    let checked: ReturnType<typeof validateExternalOutput>;
 
     try {
       expected = format(text, locale);
-      checked = validation(format, expected, workload);
+      checked = validateExternalOutput(format, expected, workload);
     } catch (error) {
       skippedWorkloads.push({ name, locale, reason: error instanceof Error ? error.message : String(error) });
       continue;
