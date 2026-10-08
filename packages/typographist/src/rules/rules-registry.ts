@@ -1,15 +1,18 @@
+import { WordCache } from '@/text/word-cache/word-cache.js';
 import { selectAlgorithm } from '@/algorithms/select-algorithm.factory.js';
 import { languageKey } from '@/languages/language-identifier.util.js';
 import { TypographistRules } from '@/rules/typographist-rules.js';
 import { createHyphenator } from '@/text/create-hyphenator.factory.js';
 
 export class RulesRegistry {
+  #cache: WordCache;
   #services = new Map<string, ReturnType<typeof createHyphenator>>();
   #prepare: ReturnType<typeof selectAlgorithm>;
   #useFast: boolean;
   #excludedWords: ReadonlySet<string>;
 
-  constructor(useFast: boolean, excludedWords: readonly string[]) {
+  constructor(useFast: boolean, excludedWords: readonly string[], cacheSize: number) {
+    this.#cache = new WordCache(cacheSize);
     this.#prepare = selectAlgorithm(useFast);
     this.#useFast = useFast;
 
@@ -24,6 +27,7 @@ export class RulesRegistry {
     const { key, service } = this.#compile(rules);
 
     this.#services.set(key, service);
+    this.#cache.clear();
   }
 
   register(rules: TypographistRules) {
@@ -34,10 +38,17 @@ export class RulesRegistry {
     }
 
     this.#services.set(key, service);
+    this.#cache.clear();
   }
 
   remove(locale: string) {
-    return this.#services.delete(languageKey(locale));
+    const removed = this.#services.delete(languageKey(locale));
+
+    if (removed) {
+      this.#cache.clear();
+    }
+
+    return removed;
   }
 
   require(locale: string) {
@@ -67,6 +78,8 @@ export class RulesRegistry {
     const algorithm = this.#prepare(compiled);
     const service = createHyphenator({
       algorithm,
+      cache: this.#cache,
+      locale: key,
       excludedWords: this.#excludedWords,
     });
 
