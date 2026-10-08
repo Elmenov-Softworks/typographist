@@ -78,3 +78,70 @@ describe('bundled nonbreaking mark spacing', () => {
     expect(service.format('§1 ¶2', 'custom')).toBe('§1 ¶2');
   });
 });
+
+describe('Russian nonbreaking particle spacing', () => {
+  const id = 'ru/nbsp/beforeParticle';
+  const rules = createBundledNonbreakingSpacing('ru').filter((rule) => rule.id === id);
+
+  it.each([
+    ['Он ли, она же! ты бы? я б: ёж ль» Я ж;', 'Он\u00a0ли, она\u00a0же! ты\u00a0бы? я\u00a0б: ёж\u00a0ль» Я\u00a0ж;'],
+    [
+      'Он ли тут она же там ты бы смог я б ушёл ёж ль спит Я ж тут',
+      'Он\u00a0ли тут она\u00a0же там ты\u00a0бы смог я\u00a0б ушёл ёж\u00a0ль спит Я\u00a0ж тут',
+    ],
+    ['Он\u00a0ли\u00a0тут', 'Он\u00a0ли тут'],
+    ['я бы он ли тут', 'я\u00a0бы он\u00a0ли тут'],
+    ['Он ли. Он ли\nОн ли', 'Он ли. Он ли\nОн ли'],
+    [
+      'Он ЛИ тут a ли тут я  бы тут я\tбы тут я бы😀 e\u0301 бы тут',
+      'Он ЛИ тут a ли тут я  бы тут я\tбы тут я бы😀 e\u0301 бы тут',
+    ],
+  ])('matches the isolated reference for %j', (input, expected) => {
+    const format = prepareTextPipeline(rules, 'ru');
+
+    expect(rules).toHaveLength(1);
+    expect(format(input)).toBe(expected);
+    expect(format(expected)).toBe(expected);
+  });
+
+  it('rejects settings and limits the rule to Russian', () => {
+    expect(() => prepareTextPipeline(rules, 'ru', { settings: { [id]: { unknown: true } } })).toThrow(
+      'Invalid setting',
+    );
+    expect(createBundledNonbreakingSpacing('en').some((rule) => rule.id === id)).toBe(false);
+    expect(createBundledNonbreakingSpacing('custom')).toEqual([]);
+    expect(new Typographist({ locale: 'en', categories: ['nonbreakingSpacing'] }).format('Он ли тут')).toBe(
+      'Он ли тут',
+    );
+  });
+
+  it('selects the category independently and preserves protected and lexical content', () => {
+    const service = new Typographist({
+      locale: 'ru',
+      categories: ['nonbreakingSpacing'],
+      protectedContent: ['Он ли тут'],
+    });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const protectedText = 'https://example.com/он user@example.com Он ли тут';
+
+    expect(service.format(`${content} ${protectedText} она же там`)).toBe(
+      `${content} ${protectedText} она\u00a0же там`,
+    );
+    expect(service.format('')).toBe('');
+    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
+    expect(service.format('а\u00adб бы тут')).toBe('а\u00adб\u00a0бы тут');
+
+    for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
+      expect(new Typographist({ locale: 'ru', categories }).format('он ли тут')).toBe('он ли тут');
+    }
+  });
+
+  it.each([false, true])('combines spacing and hyphenation with useFast=%s', (useFast) => {
+    const service = new Typographist({ locale: 'ru', useFast });
+    const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+    const expected = legacy.format('проверка\u00a0бы работала');
+
+    expect(service.format('проверка  бы работала')).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+});
