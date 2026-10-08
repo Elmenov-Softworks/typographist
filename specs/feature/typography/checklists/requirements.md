@@ -143,3 +143,32 @@ No runtime or harness code changed. Core build, report integrity checks, targete
 formatting and diff checks passed. Workspace tests, lint and type checks were
 not rerun for this data/documentation slice. Browser runtime verification and
 final acceptance review remain open.
+
+## Completed browser verification — 2026-10-08
+
+The owner reported a successful host run of
+`/tmp/typographist-browser-acceptance.mjs` against the current built core package:
+Chromium 156.0.8078.4, Node v24.21.0, 181 assertions passed, and
+`pageErrors: []`. The host served the emitted ESM files on `127.0.0.1` and ran
+Chromium with its sandbox enabled. Its environment set
+`PLAYWRIGHT_BROWSERS_PATH=/tmp/typographist-browser-cache` and
+`LD_LIBRARY_PATH=/tmp/typographist-browser-libs/usr/lib/x86_64-linux-gnu`.
+
+The worker inspected the corrected temporary harness but did not rerun it.
+The earlier worker attempt was blocked by `listen EPERM`; the successful host
+run supplies browser runtime evidence without changing repository source or
+bypassing worker restrictions. The host corrected the harness to use actual
+Unicode and CR/LF escapes and to expect the existing `Invalid text rule` error.
+The temporary harness is not a committed repository artifact.
+
+The assertions cover English and Russian, both algorithms, zero/64 MiB cache
+budgets, quotation-only and default formatting, repeated formatting, disabled
+categories, CR/LF preparation, protected literals, URLs and emails, and the
+specified lexical and numeric preservation examples. They also cover missing
+locales, input validation, a custom typography-only locale, locale replacement,
+failed-registration rollback and invalid synchronous handler results.
+
+Browser runtime verification is complete on the reported Chromium version.
+Final acceptance review and independent reviews remain open; this browser check
+does not establish reference parity for every rule or coverage of other browsers.
+No publication is authorized.
