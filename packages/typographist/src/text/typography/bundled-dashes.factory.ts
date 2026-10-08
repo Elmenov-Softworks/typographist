@@ -17,6 +17,22 @@ export const createBundledDashes = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/dash/time',
+      category: 'dashes',
+      order: 310,
+      defaults: { dash: '–' },
+      prepare: ({ dash }) => {
+        if (typeof dash !== 'string' || !/^(?:--?|‒|–|—|−)$/.test(dash)) {
+          throw new TypeError('dash must be a supported dash or minus glyph');
+        }
+
+        const range = /(^| |\n)(\d?\d:[0-5]\d)(?:--?|‒|–|—)(\d?\d:[0-5]\d)(?=[\u00a0 ,.?:!]|$)/g;
+
+        return (text) => text.replace(range, `$1$2${dash}$3`);
+      },
+    });
+
+    rules.push({
       id: 'ru/dash/decade',
       category: 'dashes',
       order: 310,
