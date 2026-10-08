@@ -1,7 +1,6 @@
 import type { Locale } from '@/rules/locale.types.js';
 import type { ITypographistRules } from '@/rules/typographist-rules.interfaces.js';
 import { TypographistRules } from '@/rules/typographist-rules.js';
-import { englishKhristovRules, russianKhristovRules } from '@/languages/bundled/khristov-data.constants.js';
 import {
   patterns as englishPatterns,
   exceptions as englishExceptions,
@@ -12,7 +11,16 @@ class BundledRules extends TypographistRules<Locale> implements ITypographistRul
 
 export const createBundledRules = () => [
   new BundledRules({
-    fast: englishKhristovRules,
+    fast: {
+      locale: 'en',
+      alphabet: 'abcdefghijklmnopqrstuvwxyz',
+      vowels: 'aeiouy',
+      consonants: 'bcdfghjklmnpqrstvwxz',
+      specialLetters: '',
+      leftMin: 2,
+      rightMin: 3,
+      exceptions: englishExceptions,
+    },
     standard: {
       locale: 'en',
       alphabet: 'abcdefghijklmnopqrstuvwxyz',
@@ -23,7 +31,16 @@ export const createBundledRules = () => [
     },
   }),
   new BundledRules({
-    fast: russianKhristovRules,
+    fast: {
+      locale: 'ru',
+      alphabet: 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',
+      vowels: 'аеёиоуыэюя',
+      consonants: 'бвгджзклмнпрстфхцчшщ',
+      specialLetters: 'йьъ',
+      leftMin: 2,
+      rightMin: 2,
+      exceptions: russianExceptions,
+    },
     standard: {
       locale: 'ru',
       alphabet: 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя',

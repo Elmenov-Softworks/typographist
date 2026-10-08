@@ -1,15 +1,7 @@
-import { prepareKhristov } from '@/algorithms/khristov/prepare-khristov.factory.js';
-import { englishKhristovRules, russianKhristovRules } from '@/languages/bundled/khristov-data.constants.js';
-import { createHyphenator } from '@/text/create-hyphenator.factory.js';
+import { Typographist } from '@/index.js';
 
-const english = createHyphenator({
-  algorithm: prepareKhristov(englishKhristovRules),
-  excludedWords: new Set<string>(),
-});
-const russian = createHyphenator({
-  algorithm: prepareKhristov(russianKhristovRules),
-  excludedWords: new Set<string>(),
-});
+const english = new Typographist({ useFast: true });
+const russian = new Typographist({ useFast: true, locale: 'ru' });
 
 describe('bundled Khristov data', () => {
   it.each([
@@ -32,8 +24,8 @@ describe('bundled Khristov data', () => {
     ['вьюга', 'вь|юга'],
     ['е\u0308лочка', 'е\u0308лоч|ка'],
   ])('formats Russian %s with the selected special-letter classification', (word, expected) => {
-    expect(russian.hyphenate(word)).toBe(expected.replaceAll('|', '\u00ad'));
-    expect(russian.hyphenate(word.toUpperCase())).toBe(expected.toUpperCase().replaceAll('|', '\u00ad'));
+    expect(russian.format(word)).toBe(expected.replaceAll('|', '\u00ad'));
+    expect(russian.format(word.toUpperCase())).toBe(expected.toUpperCase().replaceAll('|', '\u00ad'));
   });
 
   it.each([
@@ -55,18 +47,18 @@ describe('bundled Khristov data', () => {
     ['table', 'ta|ble'],
     ['present', 'present'],
   ])('formats English %s with y classified as a vowel', (word, expected) => {
-    expect(english.hyphenate(word)).toBe(expected.replaceAll('|', '\u00ad'));
-    expect(english.hyphenate(word.toUpperCase())).toBe(expected.toUpperCase().replaceAll('|', '\u00ad'));
+    expect(english.format(word)).toBe(expected.replaceAll('|', '\u00ad'));
+    expect(english.format(word.toUpperCase())).toBe(expected.toUpperCase().replaceAll('|', '\u00ad'));
   });
 
   it.each([english, russian])('preserves protected spelling and remains idempotent', (engine) => {
     const protectedText =
       'ма\u0301шина naïve first.last+tag@example-domain.com userName ISO9001 mother\u2011in\u2011law пе\u00adренос';
     const text = 'hyphenation table машина ёлочка';
-    const formatted = engine.hyphenate(text);
+    const formatted = engine.format(text);
 
-    expect(engine.hyphenate(protectedText)).toBe(protectedText);
-    expect(engine.hyphenate(formatted)).toBe(formatted);
+    expect(engine.format(protectedText)).toBe(protectedText);
+    expect(engine.format(formatted)).toBe(formatted);
     expect(formatted.replaceAll('\u00ad', '')).toBe(text);
   });
 });
