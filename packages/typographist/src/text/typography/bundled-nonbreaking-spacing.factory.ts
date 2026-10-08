@@ -117,6 +117,15 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/page',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(/(^|[)\s])(стр|гл|рис|илл?|ст|п|c)\. *(\d+)([\s.,?!;:]|$)/gim, '$1$2.\u00a0$3$4'),
+    });
+
+    rules.push({
       id: 'ru/nbsp/ooo',
       category: 'nonbreakingSpacing',
       order: 510,
