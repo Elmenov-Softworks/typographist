@@ -47,6 +47,23 @@ export const createBundledDashes = (locale: string) => {
     });
 
     rules.push({
+      id: 'ru/dash/daysMonth',
+      category: 'dashes',
+      order: 310,
+      defaults: { dash: '–' },
+      prepare: ({ dash }) => {
+        if (typeof dash !== 'string' || !/^(?:--?|‒|–|—|−)$/.test(dash)) {
+          throw new TypeError('dash must be a supported dash or minus glyph');
+        }
+
+        const range =
+          /(^|\s)([123]?\d)(?:--?|‒|–|—)([123]?\d)[ \u00a0](января|февраля|марта|апреля|мая|июня|июля|августа|сентября|октября|ноября|декабря)/g;
+
+        return (text) => text.replace(range, `$1$2${dash}$3\u00a0$4`);
+      },
+    });
+
+    rules.push({
       id: 'ru/dash/centuries',
       category: 'dashes',
       order: 310,
