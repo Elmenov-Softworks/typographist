@@ -197,3 +197,37 @@ the existing multiple-project resolver warning. No production source changed;
 workspace-wide checks and builds were not rerun. The owner-reported browser
 verification remains complete. Final acceptance and independent reviews remain
 open; this focused review does not replace them.
+
+## Consolidated acceptance evidence — 2026-10-08
+
+Reviewed the specification against the inventory, coverage audit, public migration
+documentation, consumer contracts, test suites and saved benchmark report at
+`5fa1dc00c77154a0b663a2e0b6000dfd0f101fb9`. The working tree was clean before
+verification. Earlier entries above retain their historical gaps; use this record
+and the completed browser record for the current verification status.
+
+| Criterion | Current evidence                                                                                                                                                                                                                                    |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SC-001    | All 107 reference entries have dispositions; 65 included/adapted entries have bundled handlers and recorded behavior audits. Default-profile exclusion tests cover inactive conversions. The inventory documents settings, defaults and deviations. |
+| SC-002    | Service and pipeline tests cover independent quotation, nonbreaking-spacing and hyphenation selection, combined defaults and all-disabled output.                                                                                                   |
+| SC-003    | Consumer contract tests cover custom quotation pairs and alphabets without hyphenation data. Only Russian and English typography is bundled.                                                                                                        |
+| SC-004    | Algorithm regressions cover both algorithms, default and hyphenation-only profiles, and zero/64 MiB cache budgets.                                                                                                                                  |
+| SC-005    | The post-CR/LF benchmark report records 24 configurations and 144 workload pairs, setup and repeated calls, both locales and algorithms, cache modes, input sizes, repetitions and heap-measurement limits.                                         |
+| SC-006    | Current workspace verification is recorded below. Public migration examples document category defaults, existing `rules` semantics, settings, locale capabilities and protection boundaries.                                                        |
+
+Browser evidence remains the owner-reported Chromium run: 181 passing assertions,
+no page errors, Chromium sandbox enabled. It was not rerun inside the worker
+sandbox. Built-in repeated-formatting deviations remain documented; no universal
+idempotence promise or implicit algorithm/locale fallback was added.
+
+This consolidation is an implementation-worker evidence review. Coordinator
+independent reviews and final owner acceptance remain open. It does not authorize
+publication and does not claim exhaustive parity for arbitrary text or handlers.
+
+Current checks ran with Node v24.21.0, matching `.nvmrc`: `npm test` passed all
+69 files and 1,775 tests; `npm run lint` passed with the existing multiple-project
+resolver warning. Fresh `NX_SKIP_NX_CACHE=true npm run build` and
+`NX_SKIP_NX_CACHE=true npm run typecheck` passed all five projects, including
+the type-check build prerequisite. Workspace `npm run format:check` and
+`git diff --check` also passed after the documentation update. No production
+source changed in this slice.

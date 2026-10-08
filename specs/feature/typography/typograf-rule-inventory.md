@@ -2,6 +2,13 @@
 
 Reference: npm `typograf@7.8.0`, full `typograf.all.js` build. All 107 public rules remain listed for traceability. The owner narrowed implementation to symbolic typography without content conversion. Upstream enabled defaults are reference facts, not automatic requirements.
 
+Current implementation status: all 65 included or adapted entries have bundled
+handlers. The sections below were recorded incrementally; statements that later
+capabilities or line-ending preparation remain pending describe those earlier
+slices. The completed line-ending section, [coverage audit](checklists/reference-coverage.md)
+and [consolidated acceptance evidence](checklists/requirements.md) supersede those
+status statements. Independent reviews and final owner acceptance remain open.
+
 ## Scope summary
 
 - Excluded: content or numeric conversion: 15 rules.
