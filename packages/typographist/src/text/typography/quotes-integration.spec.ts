@@ -1,5 +1,53 @@
 import { Typographist } from '@/index.js';
 
+describe('quotation pipeline interactions', () => {
+  describe.each([false, true])('useFast=%s', (useFast) => {
+    describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
+      it.each([
+        ['en', '"don\'t..."', '“don’t…”'],
+        ['ru', '"д\'Артаньян..."', '«д’Артаньян…»'],
+        ['en', '"hello" ,world!', '“hello”, world!'],
+        ['ru', '"слово" ,текст!', '«слово», текст!'],
+        ['ru', '- "Привет!"', '—\u00a0«Привет!»'],
+      ] as const)('combines selected symbolic rules for %s: %j', (locale, input, expected) => {
+        const instance = new Typographist({
+          locale,
+          useFast,
+          cacheSize,
+          categories: ['quotes', 'punctuation', 'spacing', 'dashes'],
+        });
+
+        expect(instance.format(input)).toBe(expected);
+        expect(instance.format(expected)).toBe(expected);
+      });
+
+      it.each(['en', 'ru'] as const)('preserves isolated quotes at protected boundaries in %s', (locale) => {
+        const instance = new Typographist({
+          locale,
+          useFast,
+          cacheSize,
+          protectedContent: ['Keep "RAW"'],
+          categories: ['quotes', 'punctuation', 'spacing'],
+        });
+        const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
+        const input = '"https://example.com/a-b?q=1.25" "user@example.com" "Keep "RAW""';
+        const expected = `${input} ${left}change${right}`;
+
+        expect(instance.format(`${input} "change"`)).toBe(expected);
+        expect(instance.format(expected)).toBe(expected);
+      });
+
+      it('keeps apostrophe conversion independent of quotation selection', () => {
+        const quotes = new Typographist({ useFast, cacheSize, categories: ['quotes'] });
+        const punctuation = new Typographist({ useFast, cacheSize, categories: ['punctuation'] });
+
+        expect(quotes.format('"don\'t"')).toBe("“don't”");
+        expect(punctuation.format('"don\'t"')).toBe('"don’t"');
+      });
+    });
+  });
+});
+
 describe('bundled quotation service integration', () => {
   it.each([
     ['en', '“hello ‘world’ hello”'],

@@ -567,8 +567,16 @@ Identical opening and closing outer glyphs are supported, including nested pairs
 mismatched depths are rejected during preparation. A single pair or repeated opening
 glyph disables inner-pair substitution, matching the reference. English callers can
 select en-GB pairs with `left: '‘“'` and `right: '’”'` while retaining locale `en`.
-Quotation settings are implemented. Broader protected-boundary interactions remain
-part of final acceptance verification. Consumer locales receive no implicit quotation data.
+Quotation settings are implemented. Consumer locales receive no implicit quotation data.
+Pipeline interaction tests cover apostrophe and ellipsis conversion, ordinary spacing,
+Russian direct-speech dashes and independent apostrophe category selection across
+both algorithms with caching enabled and disabled. These scenarios are stable on
+a second pass. Direct-speech formatting retains its U+00A0 before an opening quote.
+Protection splits quotation context: straight quotes immediately wrapping a protected
+URL, email or literal remain straight when their unprotected segments contain no
+neighboring lexical character. The protected bytes remain unchanged and separate
+quoted prose still formats. Nesting state is local to each unprotected segment;
+cross-segment quotation placement is not promised by the text rule contract.
 The isolated handler preserves CR/LF; Typograf's global preparation removes CR
 before its quotation handler, independently of enabled rules.
 

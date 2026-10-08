@@ -86,10 +86,12 @@ typography-only English and Russian locales.
 
 ## Remaining acceptance work
 
-- Complete broader TP-R056 protected-boundary and apostrophe, spacing and
-  direct-speech interaction coverage. Configurable pairs, duplicate removal and
-  quotation spacing are implemented. Fixed locale pairs,
-  nesting, unmatched quotes, category selection and hyphenation integration are tested.
+- TP-R056 protected-boundary, apostrophe, spacing and direct-speech interactions
+  now have 32 additional service scenarios across both algorithms and cache modes.
+  Isolated straight quotes around protected content remain unchanged because
+  quotation context is local to each unprotected segment. Configurable pairs,
+  duplicate removal, quotation spacing, fixed locale pairs, nesting, unmatched
+  quotes, category selection and hyphenation integration are also tested.
 - Audit behavior scenarios for each implemented entry. A declaration alone does
   not establish positive, negative, settings and interaction coverage.
 - Resolve the documented reference-wide CR/LF preparation gap. Upstream normalizes
