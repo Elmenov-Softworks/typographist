@@ -54,6 +54,18 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       },
     },
     {
+      id: 'common/nbsp/afterNumber',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => {
+        const letters = locale === 'ru' ? 'а-яё' : 'a-z';
+        const numberBeforeWord = new RegExp(`(^|\\s)(\\d{1,5}) ([${letters}]+)`, 'gi');
+
+        return (text) => text.replace(numberBeforeWord, '$1$2\u00a0$3');
+      },
+    },
+    {
       id: 'common/nbsp/afterParagraphMark',
       category: 'nonbreakingSpacing',
       order: 510,

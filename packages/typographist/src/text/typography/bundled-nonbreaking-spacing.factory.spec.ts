@@ -45,7 +45,7 @@ describe('bundled nonbreaking mark spacing', () => {
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
     const protectedText = 'https://example.com/§1/¶2 user@example.com Keep §1 ¶2';
     const input = `${content} ${protectedText} §1.25 ¶1/2 §2026-10-08`;
-    const output = `${content} ${protectedText} §${space}1.25 ¶\u00a01/2 §${space}2026-10-08`;
+    const output = `${locale === 'ru' ? content.replace('100 руб.', '100\u00a0руб.') : content} ${protectedText} §${space}1.25 ¶\u00a01/2 §${space}2026-10-08`;
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
@@ -125,7 +125,7 @@ describe('Russian nonbreaking particle spacing', () => {
     const protectedText = 'https://example.com/он user@example.com Он ли тут';
 
     expect(service.format(`${content} ${protectedText} она же там`)).toBe(
-      `${content} ${protectedText} она\u00a0же там`,
+      `${content.replace('100 руб.', '100\u00a0руб.')} ${protectedText} она\u00a0же там`,
     );
     expect(service.format('')).toBe('');
     expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
@@ -198,7 +198,9 @@ describe('nonbreaking spacing before short terminal numbers', () => {
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
     const protectedText = `https://example.com/12 user@example.com ${word} 12`;
 
-    expect(service.format(`${content} ${protectedText} ${word} 2`)).toBe(`${content} ${protectedText} ${word}\u00a02`);
+    expect(service.format(`${content} ${protectedText} ${word} 2`)).toBe(
+      `${locale === 'ru' ? content.replace('100 руб.', '100\u00a0руб.') : content} ${protectedText} ${word}\u00a02`,
+    );
     expect(service.format('')).toBe('');
     expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
 

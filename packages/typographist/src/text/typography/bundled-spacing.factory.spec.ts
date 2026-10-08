@@ -341,7 +341,7 @@ describe('bundled spacing reference scenarios', () => {
     expect(legacy.format('2027год')).toBe('2027год');
     expect(new Typographist({ locale: 'en', categories: ['spacing'] }).format('2027год')).toBe('2027год');
     expect(new Typographist({ locale: 'ru', categories: ['spacing'] }).format('2027год')).toBe('2027 год');
-    expect(new Typographist({ locale: 'ru' }).format('2027год')).toBe('2027 год');
+    expect(new Typographist({ locale: 'ru' }).format('2027год')).toBe('2027\u00a0год');
   });
 
   it('does not bundle spacing for consumer locales', () => {

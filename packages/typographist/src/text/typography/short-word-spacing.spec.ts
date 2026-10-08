@@ -59,7 +59,7 @@ describe('nonbreaking spacing after short words', () => {
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
     const input = `${content} https://example.com/a user@example.com ${phrase}`;
 
-    expect(service.format(input)).toBe(input);
+    expect(service.format(input)).toBe(locale === 'ru' ? input.replace('100 руб.', '100\u00a0руб.') : input);
     expect(service.format('')).toBe('');
     expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
     expect(service.format(locale === 'ru' ? 'я\u00adб тут' : 'a\u00adb word')).toBe(
