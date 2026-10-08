@@ -378,3 +378,27 @@ All 146 tests in the three affected test files passed on Node v24.21.0. No new
 upstream comparison was run; existing isolated comparisons and the documented
 century adaptation remain the reference evidence. Other nonbreaking-spacing
 audits, CR/LF preparation and browser verification remain open.
+
+### Russian single-year and see abbreviation behavior audit
+
+Reviewed TP-R063 and TP-R064 against the bundled handlers and isolated fixtures.
+Single-year fixtures cover four-digit boundaries, leading zeros, supplied lowercase
+labels, punctuation and unsupported whitespace. See/name abbreviation fixtures
+cover supplied case, alphabet and digit boundaries, punctuation, combining marks
+and non-overlapping reference traversal. Both rules reject unknown settings;
+neither supplies implicit English or consumer-locale behavior. Existing fixtures
+cover disabled categories, protected content and whitespace-only composition changes.
+
+Eight new pipeline scenarios combine these rules with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected outputs apply the hyphenation-only profile to explicitly normalized text.
+The see rule consumes the newline after its first match and skips the immediately
+following name abbreviation; the tests retain that traversal. They check repeated
+formatting, disabled nonbreaking spacing, all-disabled formatting, protected
+literals, URLs and emails. Numeric notation, case, repeated words, mixed scripts,
+combining marks and supplementary Unicode characters remain unchanged.
+
+All 149 tests in the three affected test files passed on Node v24.21.0. No new
+upstream comparison was run; existing isolated fixtures remain the reference
+evidence. Other nonbreaking-spacing audits, CR/LF preparation and browser
+verification remain open.
