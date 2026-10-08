@@ -2,7 +2,7 @@ import type { ITypographistRules } from '@/rules/typographist-rules.interfaces.j
 import type { RuleSets } from '@/rules/rule-sets.types.js';
 
 /**
- * Supplies locale rules from Knuth–Liang and Khristov datasets, or from a subclass's own storage.
+ * Supplies locale rules from independent Knuth–Liang or Khristov datasets, or a subclass's own storage.
  * Typographist calls compile once per registration with its configured useFast flag.
  *
  * @example
@@ -27,7 +27,8 @@ export class TypographistRules<TLocale extends string = string> implements ITypo
 
   /**
    * Selects Khristov rules in fast mode and Knuth–Liang rules in standard mode.
-   * Throws when no datasets were supplied. Typographist validates and prepares the returned data on registration.
+   * Throws when the selected dataset is absent; never substitutes the other algorithm's data.
+   * Typographist validates and prepares the returned data on registration.
    */
   compile(useFast: boolean) {
     if (this.#ruleSets === null) {
@@ -36,9 +37,7 @@ export class TypographistRules<TLocale extends string = string> implements ITypo
 
     const selected = useFast ? this.#ruleSets.fast : this.#ruleSets.standard;
 
-    const result: unknown = selected;
-
-    if (result == null) {
+    if (selected == null) {
       throw new TypeError('Supply data for the selected hyphenation algorithm');
     }
 

@@ -204,10 +204,24 @@ describe('public package API', () => {
     const missing = new TypographistRules({ standard, fast });
     Reflect.set(missing, 'compile', () => standard);
     expect(() => new Typographist({ rules: [missing], useFast: true })).toThrow('requires Khristov');
-    const incomplete: unknown = Reflect.construct(TypographistRules, [{ standard }]);
-    if (!(incomplete instanceof TypographistRules)) throw new Error('Missing rules instance');
+    const incomplete = new TypographistRules({ standard });
+    expect(new Typographist({ rules: [incomplete] }).format('abcd')).toBe('a\u00adbcd');
     expect(() => new Typographist({ rules: [incomplete], useFast: true })).toThrow('Supply data');
+    const fastOnly = new TypographistRules({ fast });
+    expect(new Typographist({ rules: [fastOnly], useFast: true }).format('baba')).toBe('ba\u00adba');
+    expect(() => new Typographist({ rules: [fastOnly] })).toThrow('Supply data');
+    expect(() => new Typographist({ rules: [new TypographistRules({})] })).toThrow('Supply data');
     expect(() => new Typographist({ rules: [new TypographistRules()] })).toThrow('Supply rule sets');
+  });
+
+  it.each([false, true])('retains registered rules when selected data is absent with useFast=%s', (useFast) => {
+    const instance = new Typographist({ useFast });
+    const before = instance.format('hyphenation');
+
+    expect(() => {
+      instance.addRules(new TypographistRules({}));
+    }).toThrow('Supply data');
+    expect(instance.format('hyphenation')).toBe(before);
   });
 
   it.each([false, true])('retains registration when selected data is incompatible with useFast=%s', (useFast) => {
