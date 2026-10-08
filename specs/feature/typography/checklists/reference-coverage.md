@@ -324,3 +324,30 @@ All 173 tests in the five affected files passed on Node v24.21.0. No new upstrea
 comparison was run; existing isolated comparisons remain the reference evidence.
 Other nonbreaking-spacing audits, CR/LF preparation and browser verification
 remain open.
+
+### Russian label nonbreaking spacing behavior audit
+
+Reviewed TP-R065–TP-R069 against the bundled handlers and their isolated tests.
+Ruble/kopek fixtures preserve currency labels, digit sequences, decimal and fraction
+notation; unsupported case and whitespace remain unchanged. Postscript fixtures
+preserve supplied letters, case, periods and colons, including Cyrillic forms.
+Page-reference fixtures cover supported abbreviations, digit boundaries and the
+reference's non-overlapping traversal. Organization fixtures cover uppercase
+abbreviations, alphabet boundaries and adjacent matches. Large-number-label
+fixtures preserve supplied case, decimal/fraction notation and label punctuation.
+All five rules reject unknown settings and have no configurable values. Existing
+fixtures cover Russian-only registration, disabled categories and protected content.
+
+Eight new pipeline scenarios combine these five rules with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected output uses the hyphenation-only profile on explicitly normalized text.
+They preserve numeric notation, case, repeated words, mixed scripts, combining
+marks, URLs, emails and a protected literal containing all five label forms.
+They check repeated formatting, disabled nonbreaking spacing and all-disabled
+formatting. English receives ordinary whitespace cleanup without Russian label
+binding.
+
+All 139 tests in the six affected test files passed on Node v24.21.0. No new
+upstream comparison was run; existing isolated comparisons and documented
+adaptations remain the reference evidence. Remaining nonbreaking-spacing audits,
+CR/LF preparation and browser verification remain open.
