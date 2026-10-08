@@ -7,6 +7,13 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
+      id: 'common/nbsp/replaceNbsp',
+      category: 'nonbreakingSpacing',
+      order: 0,
+      defaults: {},
+      prepare: () => (text) => text.replace(/\u00a0/g, ' '),
+    },
+    {
       id: 'common/nbsp/beforeShortLastWord',
       category: 'nonbreakingSpacing',
       order: 510,

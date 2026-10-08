@@ -61,7 +61,7 @@ describe('nonbreaking spacing after short words', () => {
 
     expect(service.format(input)).toBe(locale === 'ru' ? input.replace('100 руб.', '100\u00a0руб.') : input);
     expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
+    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t ');
     expect(service.format(locale === 'ru' ? 'я\u00adб тут' : 'a\u00adb word')).toBe(
       locale === 'ru' ? 'я\u00adб тут' : 'a\u00adb word',
     );
