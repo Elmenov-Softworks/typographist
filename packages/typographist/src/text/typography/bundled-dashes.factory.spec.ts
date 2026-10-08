@@ -185,7 +185,9 @@ describe('bundled prose dashes', () => {
 
     const unchanged = '- start a-b 1-2 -3 2026-10-08 +7-999-123-45-67 a --- b a\t- b a -\tb a − b';
 
-    expect(format(unchanged)).toBe(locale === 'ru' ? unchanged.replace(/^- /, '—\u00a0') : unchanged);
+    const normalized = unchanged.replace(' -3 ', ' −3 ');
+
+    expect(format(unchanged)).toBe(locale === 'ru' ? normalized.replace(/^- /, '—\u00a0') : normalized);
     expect(format('end -')).toBe('end -');
     expect(format('')).toBe('');
     expect(format(' \r\n\t ')).toBe(' \r\n\t ');

@@ -7,6 +7,14 @@ export const createBundledDashes = (locale: string) => {
 
   const rules: TextRule[] = [
     {
+      id: 'common/dash/minus',
+      category: 'dashes',
+      order: 300,
+      defaults: {},
+      prepare: () => (text) =>
+        text.replace(/(^|[\s([{])-(\d+(?:[.,/]\d+)*)(?![.,/]\d)(?=$|[\s)\]},;!?]|\.(?=\s|$))/g, '$1−$2'),
+    },
+    {
       id: locale === 'ru' ? 'ru/dash/main' : 'en-US/dash/main',
       category: 'dashes',
       order: 305,
