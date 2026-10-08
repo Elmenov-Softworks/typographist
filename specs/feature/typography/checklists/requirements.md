@@ -46,3 +46,11 @@ the category default change, hyphenation-only migration, settings, protection an
 consumer text locales, and explicitly identifies the missing bundled quote handler.
 The existing benchmark report explicitly measures an earlier implementation;
 it does not establish performance of the completed feature.
+
+## Reference coverage audit — 2026-10-08
+
+[The source coverage audit](reference-coverage.md) accounts for all 107 inventory
+entries: 64 of the 65 included or adapted entries have bundled implementations,
+including the shared English mapping for TP-R034. TP-R056 remains missing.
+The audit does not claim complete behavior coverage and records the remaining
+quotation, CR/LF preparation, browser and final benchmark checks.
