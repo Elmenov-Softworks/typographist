@@ -42,6 +42,23 @@ describe.each(['en', 'ru'] as const)('Unary minus formatting for %s', (locale) =
     expect(service.format(expected)).toBe(expected);
   });
 
+  it.each([
+    ['3', '-3suffix -3e-4 -3', '-3suffix -3e-4 −3'],
+    ['3', 'id3-4 -3_foo -3-е (-3)', 'id3-4 -3_foo -3-е (−3)'],
+    ['345', '-345suffix -345e-4 -345', '-345suffix -345e-4 −345'],
+    ['3.25', '-3.25suffix -3.25e-4 (-3.25)', '-3.25suffix -3.25e-4 (−3.25)'],
+    ['3e', '-3e-4 -3e+4 -3e4', '-3e-4 -3e+4 -3e4'],
+    ['3', '-13suffix -13e-4 -13.25 -13/4', '-13suffix -13e-4 −13.25 −13/4'],
+    ['3.25', 'id3.25-4 -13.25suffix -13.25', 'id3.25-4 -13.25suffix −13.25'],
+    ['345/67', '-345/67suffix -345/67', '-345/67suffix −345/67'],
+    ['-3', '-3 -3suffix -3e-4 -4', '-3 -3suffix -3e-4 −4'],
+  ])('classifies complete numeric tokens across protected %j', (protectedLiteral, input, expected) => {
+    const service = new Typographist({ locale, categories: ['dashes'], protectedContent: [protectedLiteral] });
+
+    expect(service.format(input)).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+
   it('validates settings and keeps consumer locales explicit', () => {
     expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
       'Invalid setting',

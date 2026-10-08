@@ -181,12 +181,13 @@ export const createBundledDashes = (locale: string) => {
     ...rule,
     prepare: (settings) => {
       const handler = rule.prepare(settings);
+      const usesTokenContext = rule.id === 'common/dash/minus';
 
       return (text, context) => {
-        const before = context?.precedingCharacter ?? '';
-        const after = context?.followingCharacter ?? '';
-        const prefix = /[\p{L}\p{M}\p{N}_-]/u.test(before) ? before : '';
-        const suffix = /[\p{L}\p{M}\p{N}_-]/u.test(after) ? after : '';
+        const before = (usesTokenContext ? context?.precedingToken : null) ?? context?.precedingCharacter ?? '';
+        const after = (usesTokenContext ? context?.followingToken : null) ?? context?.followingCharacter ?? '';
+        const prefix = usesTokenContext || /[\p{L}\p{M}\p{N}_-]/u.test(before) ? before : '';
+        const suffix = usesTokenContext || /[\p{L}\p{M}\p{N}_-]/u.test(after) ? after : '';
         const result = handler(prefix + text + suffix, context);
 
         return result.slice(prefix.length, result.length - suffix.length);
