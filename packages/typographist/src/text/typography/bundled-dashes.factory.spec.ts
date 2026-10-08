@@ -3,6 +3,62 @@ import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.uti
 import { Typographist } from '@/typographist/typographist.js';
 
 describe('bundled prose dashes', () => {
+  it('matches Russian century reference fixtures while protecting words and identifiers', () => {
+    const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/centuries');
+    const format = prepareTextPipeline(rules, 'ru');
+    const fixtures = [
+      ['X-XI вв.', 'X–XI вв.'],
+      ['XV -- XVI', 'XV–XVI'],
+      ['I\u00a0-\u00a0V', 'I–V'],
+      ['XV‒XX', 'XV–XX'],
+      ['x-xi', 'x-xi'],
+      ['X−V', 'X−V'],
+      ['X\t-V', 'X\t-V'],
+    ] as const;
+
+    for (const [input, output] of fixtures) {
+      expect(format(input)).toBe(output);
+      expect(format(output)).toBe(output);
+    }
+
+    const unchanged = 'MIX-V X-VIDEO _X-V X-V1 X-V-X X\u0301-V 2026-10-08 +7-999-123-45-67';
+
+    expect(format(unchanged)).toBe(unchanged);
+    expect(format('')).toBe('');
+    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
+    expect(createBundledDashes('en').some((rule) => rule.id === 'ru/dash/centuries')).toBe(false);
+
+    for (const dash of ['-', '--', '‒', '–', '—', '−']) {
+      expect(prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/centuries': { dash } } })('X-XI')).toBe(
+        `X${dash}XI`,
+      );
+    }
+
+    for (const dash of ['', 'word', '1', '$&', '——']) {
+      expect(() => prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/centuries': { dash } } })).toThrow(
+        'dash must be',
+      );
+    }
+  });
+
+  it('combines century ranges with prose dashes, protections and both hyphenation algorithms', () => {
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content} X-XI XV - XVI https://example.com/X-XI X-XI@example.com I-V`;
+    const output = `${content} X–XI XV–XVI https://example.com/X-XI X-XI@example.com I-V`;
+    const service = new Typographist({ locale: 'ru', categories: ['dashes'], protectedContent: ['I-V'] });
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
+
+    for (const useFast of [false, true]) {
+      const combined = new Typographist({ locale: 'ru', useFast });
+      const hyphenation = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+
+      expect(combined.format('X-XI')).toBe(hyphenation.format('X–XI'));
+    }
+  });
+
   it('matches Russian month reference fixtures with symbolic settings and identifier protection', () => {
     const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/month');
     const format = prepareTextPipeline(rules, 'ru');
