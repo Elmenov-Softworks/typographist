@@ -117,6 +117,20 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/centuries',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) =>
+        text
+          .replace(/(^|\s)([VIX]+)[ \u00a0]?(в\.?)(?=[,;:?!"‘“»]|$)/gm, '$1$2\u00a0$3')
+          .replace(
+            /(^|\s)([VIX]+(?:--?|‒|–|—)[VIX]+)[ \u00a0]?(в\.?(?:[ \u00a0]?в\.?)?)(?=[,;:?!"‘“»]|$)/gm,
+            '$1$2\u00a0$3',
+          ),
+    });
+
+    rules.push({
       id: 'ru/nbsp/dayMonth',
       category: 'nonbreakingSpacing',
       order: 510,
