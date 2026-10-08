@@ -117,6 +117,26 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/abbr',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => {
+        const abbreviation = /(^|\s)([а-яё]{1,3})\. ?([а-яё]{1,3})\./g;
+        const domainSuffixes = ['рф', 'ру', 'рус', 'орг', 'укр', 'бг', 'срб'];
+        const insertSpace = (match: string, boundary: string, first: string, second: string) => {
+          if ((first === 'дд' && second === 'мм') || domainSuffixes.includes(second)) {
+            return match;
+          }
+
+          return `${boundary}${first}.\u00a0${second}.`;
+        };
+
+        return (text) => text.replace(abbreviation, insertSpace).replace(abbreviation, insertSpace);
+      },
+    });
+
+    rules.push({
       id: 'ru/nbsp/addr',
       category: 'nonbreakingSpacing',
       order: 510,
