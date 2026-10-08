@@ -296,3 +296,31 @@ ESLint and formatting passed on Node v24.21.0. No new upstream comparison was
 run; existing isolated fixtures and documented default deviations remain the
 reference evidence. Other nonbreaking-spacing audits, CR/LF preparation and
 browser verification remain open.
+
+### Short-word nonbreaking spacing behavior audit
+
+Reviewed TP-R079–TP-R082 against the bundled handlers and adjacent isolated
+fixtures. Sentence-final words cover locale alphabets, case, punctuation and
+uppercase sentence continuations; LF is deliberately not a continuation boundary.
+Terminal numbers cover digit limits, suffix punctuation, line endings and unchanged
+numeric notation. Listed-word and length-based rules cover their supported opening
+boundaries, adjacent words, locale alphabets and unsupported whitespace. The three
+length settings accept positive safe integers and reject invalid values; all four
+rules reject unknown settings. Existing tests cover category selection, protection,
+consumer locales and reference traversal.
+
+Eight new pipeline scenarios combine all four rules with ordinary spacing and
+hyphenation across both locales, both algorithms and zero/64 MiB cache budgets.
+Expected output uses the hyphenation-only profile on explicitly normalized text.
+They preserve numeric notation, case, repeated words, mixed scripts, combining
+marks, URLs, emails and a protected literal. They check disabled nonbreaking
+spacing, all-disabled formatting and repeated calls. Russian `если` receives a
+soft hyphen on the first call, preventing its listed-word match after NBSP
+normalization on the second call; its following space becomes ordinary. The third
+call is stable. The inventory now documents this interaction rather than promising
+pipeline idempotence.
+
+All 173 tests in the five affected files passed on Node v24.21.0. No new upstream
+comparison was run; existing isolated comparisons remain the reference evidence.
+Other nonbreaking-spacing audits, CR/LF preparation and browser verification
+remain open.
