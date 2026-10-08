@@ -99,3 +99,29 @@ locales. Heap observations retain the documented measurement limitations.
 No runtime code changed. The per-rule behavior audit, CR/LF preparation and
 browser runtime verification remain open. The full test suite and workspace
 checks were not rerun for this benchmark-data slice; the core build passed.
+
+## Workspace verification after line-ending preparation — 2026-10-08
+
+Verified at `84b2d425b969e43ac7b1971a736cd7beb1506220` with Node v24.21.0,
+matching `.nvmrc`. The working tree was clean before verification.
+
+| Command                                   | Result                                                                      |
+| ----------------------------------------- | --------------------------------------------------------------------------- |
+| `npm test`                                | Passed: 69 files, 1,768 tests.                                              |
+| `NX_SKIP_NX_CACHE=true npm run build`     | Passed: all five projects without Nx cache reuse.                           |
+| `NX_SKIP_NX_CACHE=true npm run typecheck` | Passed: root and all five project checks, plus the core build prerequisite. |
+| `npm run lint`                            | Passed; the resolver emitted its multiple-project performance warning.      |
+| `npm run format:check`                    | Passed before this record update; targeted formatting passed after editing. |
+
+A Node ESM check imported the freshly built core entry point and passed 32
+assertions across Russian and English, both algorithms, and zero/64 MiB cache
+budgets. Spacing plus hyphenation matched hyphenation-only formatting of explicitly
+LF-normalized input. The hyphenation-only profile preserved CR/LF after removing
+soft hyphens; all-disabled formatting preserved the exact input. Default formatting
+preserved configured literal content containing CRLF, lone CR and indentation.
+
+This verifies emitted imports and line-ending behavior in Node, not a browser
+runtime. No runtime code changed in this slice. Browser verification and final
+acceptance review remain open; these passing checks do not establish completion
+of every reference behavior scenario. The benchmark report still predates the
+line-ending preparation change.
