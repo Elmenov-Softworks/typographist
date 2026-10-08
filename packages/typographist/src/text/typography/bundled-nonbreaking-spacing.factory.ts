@@ -7,6 +7,13 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
+      id: 'common/nbsp/dpi',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) => text.replace(/(\d) ?(lpi|dpi)(?!\w)/, '$1\u00a0$2'),
+    },
+    {
       id: 'common/nbsp/beforeShortLastNumber',
       category: 'nonbreakingSpacing',
       order: 510,
