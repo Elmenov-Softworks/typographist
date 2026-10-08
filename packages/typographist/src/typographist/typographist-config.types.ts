@@ -9,6 +9,6 @@ export type TypographistConfig<TCustomLocale extends string = never> = {
   readonly rules?: readonly TypographistRules<Locale | TCustomLocale>[];
   /** Exact, case-sensitive words to preserve; copied at construction and empty by default. */
   readonly excludedWords?: readonly string[];
-  /** Requests fast rule sets and the fast strategy; defaults to false. Both strategies currently use Knuth–Liang. */
+  /** Selects heuristic Khristov hyphenation when true; false or omitted selects Knuth–Liang. */
   readonly useFast?: boolean;
 };

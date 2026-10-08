@@ -37,7 +37,10 @@ describe('pinned bundled language data', () => {
   it('keeps data immutable and replaces locale rules independently', () => {
     const english = createBundledRules()[0];
     if (english === undefined) throw new Error('Missing bundled English rules');
+    const fast = english.compile(true);
+    if (!('vowels' in fast)) throw new Error('Missing bundled English Khristov rules');
     const replacement = new TypographistRules({
+      fast,
       standard: { ...english.compile(false), patterns: [], exceptions: [] },
     });
     const instance = new Typographist();

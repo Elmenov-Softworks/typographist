@@ -60,4 +60,12 @@ describe('scanCandidates', () => {
 
     expect(words(`${marked} ${embedded} ${trailing} d`)).toEqual([marked, embedded, 'c', 'd']);
   });
+
+  it('keeps many internal separators and independent calls intact', () => {
+    const joined = "a'".repeat(10000) + 'b';
+
+    expect(words(`${joined}' next`)).toEqual([joined, 'next']);
+    expect(words('other')).toEqual(['other']);
+    expect(words(joined)).toEqual([joined]);
+  });
 });

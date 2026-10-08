@@ -18,9 +18,10 @@ typographist.format('асбест', 'ru'); // 'ас\u00adбест'
 ```
 
 Configuration defaults to `locale: 'en'`, English and Russian rules, no excluded
-words, and `useFast: false`. Both values of `useFast` currently select
-Knuth–Liang; the flag reserves selection of a future fast algorithm. `Locale`
-contains only the bundled locales, `'en' | 'ru'`. The bundled `en` rules use US English
+words, and `useFast: false`. Standard mode uses Knuth–Liang patterns. Set
+`useFast: true` to select the Khristov heuristic in the modification by Dymchenko
+and Varsanofyev. For example, fast mode formats `hyphenation` as
+`hyp\u00adhe\u00adna\u00adtion`. `Locale` contains only the bundled locales, `'en' | 'ru'`. The bundled `en` rules use US English
 patterns. Selecting a locale does not automatically detect languages within
 text. Unsupported words remain unchanged.
 
@@ -41,25 +42,35 @@ and rule data are snapshotted during preparation. Excluded words use exact,
 case-sensitive matches. Existing soft hyphens, identifiers, addresses and
 unsupported complete words retain the existing preservation behavior.
 
-Custom plugins extend `TypographistRules` and implement its single `compile`
-operation. The plugin owns storage and can select different rule data based on
-`useFast`. No runtime algorithm or normalization internals are needed:
+Custom plugins extend `TypographistRules`. Its constructor requires both
+algorithm datasets; subclasses can instead override the synchronous `compile`
+operation when they own the storage. No runtime algorithm or normalization
+internals are needed:
 
 ```ts
 import { TypographistRules } from '@elmenov-softworks/typographist';
-import type { CompiledRules } from '@elmenov-softworks/typographist';
 
 class GermanRules extends TypographistRules<'de'> {
-  override compile(_useFast: boolean) {
-    const rules: CompiledRules<'de'> = {
+  constructor() {
+    const shared = {
       locale: 'de',
       alphabet: 'abcdefghijklmnopqrstuvwxyzäöüß',
       leftMin: 2,
       rightMin: 2,
-      patterns: ['a1b'], // Replace with complete language data.
-    };
+    } as const;
 
-    return rules;
+    super({
+      standard: {
+        ...shared,
+        patterns: ['a1b'], // Replace with complete language patterns.
+      },
+      fast: {
+        ...shared,
+        vowels: 'aeiouyäöü',
+        consonants: 'bcdfghjklmnpqrstvwxzß',
+        specialLetters: '',
+      },
+    });
   }
 }
 
@@ -80,13 +91,42 @@ not promise language coverage for externally supplied rules.
 
 Supplying `rules` in the constructor replaces the bundled list. `compile` runs
 once per registration and receives the configured `useFast` value. The base
-class also accepts `{ standard, fast? }` rule sets in its constructor; when
-`fast` is omitted it reuses `standard`. Subclasses can inherit this compiler
-or override it with a normal method or function property. `compile` returns
-locale, alphabet, break minima, patterns and optional explicit exceptions.
-Patterns must match the alphabet's NFC lowercase form. Exception positions are
-increasing interior UTF-16 offsets at grapheme boundaries; an empty positions
-array prevents hyphenation. Minima count original graphemes.
+class accepts `{ standard, fast }`: `standard` is `CompiledRules` with
+Knuth–Liang patterns, and `fast` is `KhristovRules` with `vowels`, `consonants`,
+and `specialLetters`. Both share `LanguageRules`: locale, alphabet, break minima
+and optional explicit exceptions. Subclasses can inherit this compiler or
+override it with a normal method or function property. An override must return
+Khristov data for `compile(true)` and Knuth–Liang data for `compile(false)`.
+
+Migration is required for custom rules that previously supplied only patterns
+or relied on an omitted `fast` dataset. Supply both datasets, including a
+complete classification of the supported alphabet for Khristov. Missing or
+incompatible selected data fails registration; there is no fallback to another
+algorithm. Invalid replacement data leaves the previous registration usable.
+
+Patterns and classifications must match the alphabet's NFC lowercase form.
+The vowel, consonant and special-letter sets must partition that alphabet
+without duplicates or overlap; the special-letter set may be empty. Exception
+positions are increasing interior UTF-16 offsets at grapheme boundaries; an
+empty positions array prevents hyphenation. Exceptions replace all algorithm
+suggestions in both modes. Minima count original graphemes and apply to
+exceptions too. Matching normalizes words, while reconstruction preserves their
+original case, characters and Unicode representation.
+
+Bundled English uses vowels `aeiouy`, consonants `bcdfghjklmnpqrstvwxz`, and no
+special letters. `y` is always a vowel, including at the start of a word.
+Bundled Russian uses vowels `аеёиоуыэюя`, consonants `бвгджзклмнпрстфхцчшщ`,
+and special letters `йьъ`. The minima remain 2/3 for English and 2/2 for Russian.
+Both modes retain the existing explicit exceptions: `table` becomes
+`ta\u00adble`, and `present` remains unchanged.
+
+Khristov applies ordered character-class rules with each suggested break acting
+as a barrier for later matches. It can split vowel groups and consonant digraphs
+differently from dictionary hyphenation: `beautiful` becomes
+`be\u00adauti\u00adful`, and `вьюга` becomes `вь\u00adюга`. Use standard mode when
+these linguistic distinctions matter. Fast mode does not consult Knuth–Liang
+to repair ordinary words. No accuracy percentage or universal language coverage
+is promised; additional locales need suitable supplied data.
 
 The public class coordinates a locale registry and a selected algorithm
 strategy. Stateful registration stays in the registry; word analysis, pattern
