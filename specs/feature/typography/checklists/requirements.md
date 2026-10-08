@@ -125,3 +125,21 @@ runtime. No runtime code changed in this slice. Browser verification and final
 acceptance review remain open; these passing checks do not establish completion
 of every reference behavior scenario. The benchmark report still predates the
 line-ending preparation change.
+
+## Benchmarks after line-ending preparation — 2026-10-08
+
+Freshly built the core with Node v24.21.0 at
+`0ee270b797d89c6a83c9eeac1db6329d86440b76`; the working tree was clean during
+build and measurement. The existing harness completed all 24 configurations and
+144 workload pairs. Every assertion passed: lexical/digit preservation,
+deterministic output, uncached equivalence and exact disabled-profile output.
+The saved report and raw results now measure the implementation including CR/LF
+normalization. All six inputs are unchanged from the preceding run and contain
+no CR/LF; this measures the added preparation pass on those inputs, not a
+line-ending-heavy workload. Setup and repeated calls remain separate, and the
+existing process-wide heap measurement limitations still apply.
+
+No runtime or harness code changed. Core build, report integrity checks, targeted
+formatting and diff checks passed. Workspace tests, lint and type checks were
+not rerun for this data/documentation slice. Browser runtime verification and
+final acceptance review remain open.
