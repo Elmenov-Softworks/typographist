@@ -85,6 +85,8 @@ export const prepareTextPipeline = (
 
   const transform = (text: string, start: number, original: string) => {
     const context = {
+      precedingCharacter: original.slice(Math.max(0, start - 2), start).match(/.$/su)?.[0] ?? '',
+      followingCharacter: original.slice(start + text.length, start + text.length + 2).match(/^./su)?.[0] ?? '',
       startsLine: start === 0 || /[\r\n\u2028\u2029]/.test(original.charAt(start - 1)),
       startsText: start === 0,
       endsText: start + text.length === original.length,

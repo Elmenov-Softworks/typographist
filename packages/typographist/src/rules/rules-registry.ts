@@ -62,7 +62,22 @@ export class RulesRegistry {
       ].map((rule) => [rule.id, { ...rule.defaults }]),
     );
 
+    const settingsMap: unknown = options.settings;
+
+    if (
+      settingsMap !== undefined &&
+      (typeof settingsMap !== 'object' || settingsMap === null || Array.isArray(settingsMap))
+    ) {
+      throw new TypeError('Text rule settings must be a non-null, non-array object');
+    }
+
     for (const [id, overrides] of Object.entries(options.settings ?? {})) {
+      const overrideMap: unknown = overrides;
+
+      if (typeof overrideMap !== 'object' || overrideMap === null || Array.isArray(overrideMap)) {
+        throw new TypeError(`Settings for text rule ${id} must be a non-null, non-array object`);
+      }
+
       const defaults = this.#declaredSettings.get(id);
 
       if (defaults === undefined) {

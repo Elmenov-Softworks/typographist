@@ -154,6 +154,24 @@ describe('service text pipeline', () => {
     expect(service.format('table  table other')).toBe(`table  table ${legacy.format('other')}`);
   });
 
+  it.each([42, true, false, null, 'settings', [], () => null])(
+    'rejects malformed outer settings maps: %s',
+    (settings) => {
+      expect(() => {
+        Reflect.construct(Typographist, [{ settings }]);
+      }).toThrow('Text rule settings must be a non-null, non-array object');
+    },
+  );
+
+  it.each([42, true, false, null, 'settings', [], () => null, undefined])(
+    'rejects malformed per-rule settings maps even with no categories selected: %s',
+    (overrides) => {
+      expect(() => {
+        Reflect.construct(Typographist, [{ categories: [], settings: { 'ru/dash/years': overrides } }]);
+      }).toThrow('Settings for text rule ru/dash/years must be a non-null, non-array object');
+    },
+  );
+
   it('validates rule settings through the service boundary', () => {
     expect(() => new Typographist({ textRules: [spacing], settings: { missing: {} } })).toThrow('Unknown text rule');
     expect(() => {

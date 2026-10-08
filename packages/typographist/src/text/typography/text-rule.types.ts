@@ -7,6 +7,9 @@ export type TextRuleSettings = Readonly<Record<string, string | number | boolean
 /** Original boundaries of an unprotected segment. */
 export type TextRuleContext = {
   readonly startsLine: boolean;
+  /** Original adjacent characters across protected boundaries; empty at complete-text edges. */
+  readonly precedingCharacter?: string;
+  readonly followingCharacter?: string;
   /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */
   readonly startsText?: boolean;
   /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */

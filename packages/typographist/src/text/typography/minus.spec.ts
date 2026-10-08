@@ -27,6 +27,21 @@ describe.each(['en', 'ru'] as const)('Unary minus formatting for %s', (locale) =
     expect(format(expected)).toBe(expected);
   });
 
+  it.each([
+    ['id', 'id-3 (-4)', 'id-3 (−4)'],
+    ['suffix', '-3suffix -4', '-3suffix −4'],
+    ['id', 'id-2020-2025 гг. -4', 'id-2020-2025 гг. −4'],
+    ['suffix', 'X-Vsuffix -4', 'X-Vsuffix −4'],
+    ['_', '_-3 -3_ -4', '_-3 -3_ −4'],
+    ['𐐀', '𐐀-3 -3𐐀 -4', '𐐀-3 -3𐐀 −4'],
+    ['keep', 'keep -3 -4 keep', 'keep −3 −4 keep'],
+  ])('preserves identifier boundaries around protected %j', (protectedLiteral, input, expected) => {
+    const service = new Typographist({ locale, categories: ['dashes'], protectedContent: [protectedLiteral] });
+
+    expect(service.format(input)).toBe(expected);
+    expect(service.format(expected)).toBe(expected);
+  });
+
   it('validates settings and keeps consumer locales explicit', () => {
     expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
       'Invalid setting',

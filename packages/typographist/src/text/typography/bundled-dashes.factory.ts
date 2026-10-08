@@ -177,5 +177,20 @@ export const createBundledDashes = (locale: string) => {
     });
   }
 
-  return rules;
+  return rules.map<TextRule>((rule) => ({
+    ...rule,
+    prepare: (settings) => {
+      const handler = rule.prepare(settings);
+
+      return (text, context) => {
+        const before = context?.precedingCharacter ?? '';
+        const after = context?.followingCharacter ?? '';
+        const prefix = /[\p{L}\p{M}\p{N}_-]/u.test(before) ? before : '';
+        const suffix = /[\p{L}\p{M}\p{N}_-]/u.test(after) ? after : '';
+        const result = handler(prefix + text + suffix, context);
+
+        return result.slice(prefix.length, result.length - suffix.length);
+      };
+    },
+  }));
 };
