@@ -1,5 +1,7 @@
 # Hyphenation benchmarks
 
+For the text typography category matrix, see [typography benchmarks](typography/README.md).
+
 For cache profiles and the same three external libraries, build the core and run:
 
 ```sh
