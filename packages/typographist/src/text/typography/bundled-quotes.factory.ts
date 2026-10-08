@@ -15,7 +15,7 @@ export const createBundledQuotes = (locale: string) => {
       id: 'common/punctuation/quote',
       category: 'quotes',
       order: 410,
-      defaults: { left, right },
+      defaults: { left, right, removeDuplicateQuotes: locale === 'ru' },
       prepare: (settings) => {
         if (
           typeof settings.left !== 'string' ||
@@ -57,7 +57,30 @@ export const createBundledQuotes = (locale: string) => {
             });
 
           if (left.charAt(1) === '' || left.charAt(1) === outerLeft) {
-            return normalized;
+            if (!settings.removeDuplicateQuotes) {
+              return normalized;
+            }
+
+            if (!identicalOuter) {
+              return normalized.split(outerLeft.repeat(2)).join(outerLeft).split(outerRight.repeat(2)).join(outerRight);
+            }
+
+            if (left.length > 1) {
+              return normalized;
+            }
+
+            let result = '';
+
+            for (let index = 0; index < normalized.length; index++) {
+              result += normalized.charAt(index);
+              const direction = directions.get(index);
+
+              if (direction !== undefined && directions.get(index + 1) === direction) {
+                index++;
+              }
+            }
+
+            return result;
           }
 
           const leftCount = identicalOuter

@@ -567,8 +567,7 @@ Identical opening and closing outer glyphs are supported, including nested pairs
 mismatched depths are rejected during preparation. A single pair or repeated opening
 glyph disables inner-pair substitution, matching the reference. English callers can
 select en-GB pairs with `left: '‘“'` and `right: '’”'` while retaining locale `en`.
-Quotation spacing, duplicate removal and broader
-protected-boundary interactions remain incomplete. Consumer locales receive no implicit quotation data.
+Quotation spacing and broader protected-boundary interactions remain incomplete. Consumer locales receive no implicit quotation data.
 The isolated handler preserves CR/LF; Typograf's global preparation removes CR
 before its quotation handler, independently of enabled rules.
 
@@ -580,3 +579,17 @@ Identical-outer settings have six service fixtures matching isolated Typograf 7.
 covering balanced nesting, depth capping, unmatched quotes and supplementary Unicode.
 Direction tracking uses input positions rather than temporary characters, preserving
 literal private-use characters. A single identical pair is also tested.
+
+The boolean `removeDuplicateQuotes` setting defaults to `true` for Russian and
+`false` for English. After quotation placement, it replaces each nonoverlapping
+pair of adjacent outer opening or closing glyphs with one glyph, only when a
+single pair or repeated opening pair disables nesting substitution. Distinct
+nested pairs remain intact. Identical outer glyphs use tracked directions for a
+single pair; with multiple pairs they retain reference nesting behavior without
+duplicate removal. Protected literals bypass removal.
+
+Eleven service tests cover defaults, opt-in and opt-out settings, nesting,
+nonoverlapping runs, identical glyph directions, Unicode, content preservation,
+protection and invalid setting types. Eight isolated Typograf 7.8.0 fixtures match.
+Runs of three or more duplicate glyphs can shrink again on a second formatting
+pass, matching the reference; this setting does not guarantee idempotence.

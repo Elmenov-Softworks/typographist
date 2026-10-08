@@ -113,3 +113,65 @@ describe('quotation pair settings', () => {
     ).toThrow(TypeError);
   });
 });
+
+describe('duplicate quotation removal', () => {
+  it.each([
+    ['""word""', '«word»'],
+    ['"""word"""', '««word»»'],
+    ['««word» word»', '«word» word»'],
+    ['«word «word»»', '«word «word»'],
+    ['""😀 é 1.25""', '«😀 é 1.25»'],
+  ])('removes nonoverlapping duplicate pairs in %j', (input, expected) => {
+    const instance = new Typographist({
+      locale: 'ru',
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '«', right: '»' } },
+    });
+
+    expect(instance.format(input)).toBe(expected);
+  });
+
+  it('preserves nested pairs and allows disabling the Russian default', () => {
+    expect(new Typographist({ locale: 'ru', categories: ['quotes'] }).format('""word""')).toBe('«„word“»');
+
+    const instance = new Typographist({
+      locale: 'ru',
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '««', right: '»»', removeDuplicateQuotes: false } },
+    });
+
+    expect(instance.format('""word""')).toBe('««word»»');
+  });
+
+  it('is opt-in for English and preserves protected literals', () => {
+    const settings = { left: '«', right: '»' };
+    const disabled = new Typographist({ categories: ['quotes'], settings: { 'common/punctuation/quote': settings } });
+    const enabled = new Typographist({
+      categories: ['quotes'],
+      protectedContent: ['""Keep""'],
+      settings: { 'common/punctuation/quote': { ...settings, removeDuplicateQuotes: true } },
+    });
+
+    expect(disabled.format('""word""')).toBe('««word»»');
+    expect(enabled.format('""Keep"" ""word""')).toBe('""Keep"" «word»');
+  });
+
+  it.each([
+    ['""word""', '”word”'],
+    ['"""word"""', '””word””'],
+    ['"one "two" three"', '”one ”two” three”'],
+  ])('distinguishes opening and closing duplicates for identical glyphs in %j', (input, expected) => {
+    const instance = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '”', right: '”', removeDuplicateQuotes: true } },
+    });
+
+    expect(instance.format(input)).toBe(expected);
+  });
+
+  it('rejects nonboolean duplicate-removal settings', () => {
+    expect(
+      () => new Typographist({ settings: { 'common/punctuation/quote': { removeDuplicateQuotes: 'true' } } }),
+    ).toThrow(TypeError);
+  });
+});
