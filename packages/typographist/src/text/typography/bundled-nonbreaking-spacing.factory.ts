@@ -91,6 +91,25 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
 
   if (locale === 'ru') {
     rules.push({
+      id: 'ru/nbsp/addr',
+      category: 'nonbreakingSpacing',
+      order: 510,
+      defaults: {},
+      prepare: () => (text) =>
+        text
+          .replace(/(\s|^)(дом|д\.|кв\.|под\.|п-д) *(\d+)/gi, '$1$2\u00a0$3')
+          .replace(/(\s|^)(мкр-н|мк-н|мкр\.|мкрн)\s/gi, '$1$2\u00a0')
+          .replace(/(\s|^)(эт\.) *(-?\d+)/gi, '$1$2\u00a0$3')
+          .replace(/(\s|^)(\d+) +(этаж)([^а-яё]|$)/gi, '$1$2\u00a0$3$4')
+          .replace(/(\s|^)(литер)\s([А-Я]|$)/gi, '$1$2\u00a0$3')
+          .replace(
+            /(\s|^)(обл|кр|ст|пос|с|д|ул|пер|пр|пр-т|просп|пл|бул|б-р|наб|ш|туп|оф|комн?|уч|вл|влад|стр|кор)\. *([а-яёa-z\d]+)/gi,
+            '$1$2.\u00a0$3',
+          )
+          .replace(/(\D[ \u00a0]|^)г\. ?([А-ЯЁ])/gm, '$1г.\u00a0$2'),
+    });
+
+    rules.push({
       id: 'ru/nbsp/afterNumberSign',
       category: 'nonbreakingSpacing',
       order: 510,
