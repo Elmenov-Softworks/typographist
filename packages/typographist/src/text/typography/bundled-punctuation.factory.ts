@@ -30,6 +30,17 @@ export const createBundledPunctuation = (locale: string) => {
 
   rules.push(
     {
+      id: 'common/punctuation/apostrophe',
+      category: 'punctuation',
+      order: 410,
+      defaults: {},
+      prepare: () => {
+        const apostrophe = locale === 'ru' ? /([а-яё])'([а-яё])/gi : /([a-z])'([a-z])/gi;
+
+        return (text) => text.replace(apostrophe, '$1’$2');
+      },
+    },
+    {
       id: 'common/punctuation/hellip',
       category: 'punctuation',
       order: 410,

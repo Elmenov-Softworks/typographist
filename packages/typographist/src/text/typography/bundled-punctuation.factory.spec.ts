@@ -4,6 +4,20 @@ import { Typographist } from '@/typographist/typographist.js';
 
 const scenarios = [
   {
+    locale: 'en',
+    id: 'common/punctuation/apostrophe',
+    input: "Don't O'NEIL a'b'c д'Артаньян Ё'Ж",
+    output: "Don’t O’NEIL a’b'c д'Артаньян Ё'Ж",
+    unchanged: "'word' 1'2 a'я e\u0301'a 😀'a a’b",
+  },
+  {
+    locale: 'ru',
+    id: 'common/punctuation/apostrophe',
+    input: "Don't O'NEIL a'b'c д'Артаньян Ё'Ж",
+    output: "Don't O'NEIL a'b'c д’Артаньян Ё’Ж",
+    unchanged: "'word' 1'2 a'я e\u0301'a 😀'a a’b",
+  },
+  {
     locale: 'ru',
     id: 'ru/punctuation/hellipQuestion',
     input: '?… !... …,',
@@ -24,6 +38,25 @@ const scenarios = [
 ];
 
 describe('bundled punctuation reference scenarios', () => {
+  it.each(['en', 'ru'] as const)('normalizes apostrophes with protection and category selection for %s', (locale) => {
+    const service = new Typographist({ locale, categories: ['punctuation'], protectedContent: ["Keep'this д'Ар"] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
+    const input = `${content} Don't д'Артаньян https://example.com/a'b user@example.com Keep'this д'Ар`;
+    const output = `${content} ${locale === 'en' ? "Don’t д'Артаньян" : "Don't д’Артаньян"} https://example.com/a'b user@example.com Keep'this д'Ар`;
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['spacing'] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format("a'b я'ё")).toBe("a'b я'ё");
+  });
+
+  it('retains reference apostrophe traversal across repeated passes', () => {
+    const service = new Typographist({ categories: ['punctuation'] });
+
+    expect(service.format("a'b'c")).toBe("a’b'c");
+    expect(service.format("a’b'c")).toBe('a’b’c');
+  });
   it.each(scenarios)(
     '$locale $id preserves reference positive and negative cases',
     ({ locale, id, input, output, unchanged }) => {
