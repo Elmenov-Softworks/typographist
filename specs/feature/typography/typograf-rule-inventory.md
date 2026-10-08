@@ -526,6 +526,12 @@ Dates, numeric ranges, hyphenated phone numbers, identifier suffixes, scientific
 
 The handler preserves all existing bytes, including a terminal CR (which becomes CR/LF), and appends LF to empty text. It applies only at the complete-text end, never between protected segments. A terminal protected URL, email or configured literal remains intact; LF is appended outside it. Consumer locales receive no implicit rule. `final-newline.spec.ts` covers reference cases, Unicode, content preservation, settings, categories, protection, trimming, repeated formatting and both algorithms. Further specification capabilities remain pending.
 
+## Repeated-formatting regressions
+
+`packages/typographist/src/text/repeated-formatting.spec.ts` checks successive default passes and repeated original inputs for both bundled locales, both algorithms, and cache budgets of zero and 64 MiB. Stable scenarios cover empty and whitespace-only text, CR/LF, quotes with ellipses, supplementary characters and combining marks, protected addresses, numeric notation, configured literals and existing soft hyphens in the hyphenation-only profile.
+
+The matrix also records the TP-R051 day–month interaction: the first pass binds the month with NBSP and hyphenates it; the second pass normalizes that NBSP because the inserted soft hyphens prevent the month rule from matching again. The third pass is stable for this fixture. Reformatting the original input still produces the original first-pass result, with either cache budget. These scenarios do not promise idempotence for every built-in input or consumer handler.
+
 ## Default-profile exclusion regressions
 
 `packages/typographist/src/text/content-preservation.spec.ts` checks the default profile for both bundled locales, both hyphenation algorithms, and cache budgets of zero and 64 MiB. Individually labelled fixtures cover all 29 excluded non-HTML rules: TP-R001–TP-R010, TP-R038, TP-R039, TP-R041, TP-R042, TP-R044–TP-R047, TP-R050, TP-R055, TP-R062, TP-R089–TP-R095 and TP-R099. They compare all non-whitespace characters after removing permitted soft hyphens, retaining punctuation, case, letters, digits and numeric delimiters. Each fixture also checks a second formatting pass and repeated formatting of the original input with the same instance.
