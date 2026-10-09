@@ -563,3 +563,21 @@ build, typecheck, lint, formatting and diff checks under Node v24.21.0. This
 consolidation does not rerun those checks or claim new browser or benchmark
 results. Historical browser and benchmark evidence remains available as
 pre-correction evidence only. Full independent review remains outstanding.
+
+## Reduced-scope verification — 2026-10-09
+
+Rechecked source revision `758eb87f70ec995bf9eaf5e21e2a56ad5cf1deca`
+under Node v24.21.0, starting from a clean working tree. `npm test` passed
+all 3,537 tests in 93 files. `npm run build`, `npm run typecheck`,
+`npm run lint` and `npm run format:check` passed. Nx reused all five build
+tasks and all six project typecheck/prerequisite tasks; the root TypeScript
+check ran directly. ESLint reported the existing multiple-project resolver
+performance warning.
+
+The retained bundle contains 38 reference IDs and no bundled spacing factory.
+Declarative rule sets require standard and fast datasets. Bundled quote settings
+default to `spacing: true`, with no duplicate-removal setting. This verification
+does not constitute an independent full review. No browser checks, reference
+comparisons or benchmark measurements were rerun. Implementation corrections and
+scope records are complete; coordinator review and owner review remain required
+before publication. Publication is not authorized.
