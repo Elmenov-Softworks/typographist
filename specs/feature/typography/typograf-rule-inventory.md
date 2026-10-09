@@ -2,22 +2,36 @@
 
 Reference: npm `typograf@7.8.0`, full `typograf.all.js` build. All 107 public rules remain listed for traceability. The owner narrowed implementation to symbolic typography without content conversion. Upstream enabled defaults are reference facts, not automatic requirements.
 
-Current implementation status: all 65 included or adapted entries have bundled
-handlers. The sections below were recorded incrementally; statements that later
-capabilities or line-ending preparation remain pending describe those earlier
-slices. The completed line-ending section, [coverage audit](checklists/reference-coverage.md)
-and [consolidated acceptance evidence](checklists/requirements.md) supersede those
-status statements. Independent reviews and final owner acceptance remain open.
+Owner correction — 2026-10-09: the current bundle retains 38 reference entries
+(34 included and four adapted), removes 27 formerly included entries, and keeps
+42 excluded entries. All 107 reference IDs remain recorded. The 27 removals are
+TP-R011–TP-R032, TP-R053, TP-R054, TP-R058, TP-R060 and TP-R076.
+The supplemental line-ending normalization capability is also removed: together
+with TP-R011–TP-R032, this removes all 23 bundled spacing capabilities and their
+factory. Removed settings are rejected rather than ignored.
+
+Defaults select quotes, dashes, punctuation, nonbreaking spacing and hyphenation.
+Consumer `spacing` rules remain explicitly selectable. Existing whitespace,
+NBSPs and repeated signs are preserved except for retained symbolic glyph changes
+and prescribed nonbreaking bindings. Quote multiplicity is preserved; duplicate
+quote deletion and its setting are removed. Russian and English quote-boundary
+spacing defaults to narrow NBSP with an explicit `spacing: false` override.
+Declarative hyphenation data requires both standard and fast datasets;
+subclass compilation and typography-only locales remain supported.
+
+Earlier audit sections and their passing reference comparisons are historical.
+They describe the implementation at the time of each slice, including subsequently
+removed behavior. Earlier benchmark timings and owner-reported browser evidence
+predate the scope reduction and do not validate the corrected implementation.
+Later correction records supersede earlier pending statements. Full independent
+review of the revised scope remains open; publication is not authorized.
 
 ## Scope summary
 
-- Excluded: content or numeric conversion: 15 rules.
-- Excluded: symbolic abbreviation, unit or notation conversion: 4 rules.
-- Include: punctuation / whitespace: 61 rules.
-- Excluded: word spelling / joining: 9 rules.
-- Excluded: infer missing grammatical punctuation: 1 rules.
-- Excluded: HTML / optical alignment: 13 rules.
-- Adapt: spacing only; preserve letters, digits, case and abbreviation spelling: 4 rules.
+- Retained: symbolic glyphs and nonbreaking bindings: 34 rules.
+- Adapted: nonbreaking bindings preserving supplied notation: four rules.
+- Removed by the owner preservation correction: 27 rules.
+- Excluded from the original scope: 42 rules, including all 13 HTML rules.
 
 The four adapted rules may supply nonbreaking-spacing behavior only. Do not copy their letter, case, abbreviation, or unit rewriting. Numeric range separators may become dashes without changing the surrounding digits; minus signs may be normalized without changing a number's value or notation. Number grouping, decimal separators, fractions, currencies, dates and phone-number formatting are excluded.
 

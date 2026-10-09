@@ -1,10 +1,28 @@
 # Specification review checklist
 
-Owner correction — 2026-10-09: punctuation formatting retains apostrophe and ellipsis
-glyph conversion only. TP-R053, TP-R054, TP-R058 and TP-R060 are removed from
-the bundle; repeated signs and their order remain as supplied. Earlier audit,
-benchmark and acceptance evidence predates this reduced scope. Other owner
-scope corrections remain pending implementation in subsequent slices.
+Owner correction — 2026-10-09: the current bundle retains 38 reference entries
+(34 included and four adapted), removes 27 formerly included entries, and keeps
+42 excluded entries. All 107 reference IDs remain recorded. The 27 removals are
+TP-R011–TP-R032, TP-R053, TP-R054, TP-R058, TP-R060 and TP-R076.
+The supplemental line-ending normalization capability is also removed: together
+with TP-R011–TP-R032, this removes all 23 bundled spacing capabilities and their
+factory. Removed settings are rejected rather than ignored.
+
+Defaults select quotes, dashes, punctuation, nonbreaking spacing and hyphenation.
+Consumer `spacing` rules remain explicitly selectable. Existing whitespace,
+NBSPs and repeated signs are preserved except for retained symbolic glyph changes
+and prescribed nonbreaking bindings. Quote multiplicity is preserved; duplicate
+quote deletion and its setting are removed. Russian and English quote-boundary
+spacing defaults to narrow NBSP with an explicit `spacing: false` override.
+Declarative hyphenation data requires both standard and fast datasets;
+subclass compilation and typography-only locales remain supported.
+
+Earlier audit sections and their passing reference comparisons are historical.
+They describe the implementation at the time of each slice, including subsequently
+removed behavior. Earlier benchmark timings and owner-reported browser evidence
+predate the scope reduction and do not validate the corrected implementation.
+Later correction records supersede earlier pending statements. Full independent
+review of the revised scope remains open; publication is not authorized.
 
 - [x] Record current behavior and the repository baseline.
 - [x] Pin the reference package and Spec Kit template revision.
@@ -529,3 +547,19 @@ override service scenarios across both locales, algorithms and cache modes.
 Workspace build, typecheck, lint, formatting and diff checks passed. The build
 reported one cached task out of five. No browser or reference comparison was
 rerun for this slice. Changes remain uncommitted for the coordinator.
+
+## Consolidated reduced-scope acceptance — 2026-10-09
+
+The recorded correction slices remove all requested punctuation cleanup, bundled
+spacing, NBSP normalization, duplicate-quote deletion and single-dataset
+construction. They retain consumer extension contracts, both algorithms,
+protection, Unicode, ordering and shared configurable LRU behavior. Q6 boundary
+spacing preserves extra whitespace and protected bytes, with default-on ru/en
+behavior and an explicit override. The approved specification and contracts now
+describe this scope; the inventory retains full-reference provenance.
+
+Latest recorded runtime validation is the Q6 slice: 3,537 passing tests, workspace
+build, typecheck, lint, formatting and diff checks under Node v24.21.0. This
+consolidation does not rerun those checks or claim new browser or benchmark
+results. Historical browser and benchmark evidence remains available as
+pre-correction evidence only. Full independent review remains outstanding.

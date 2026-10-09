@@ -1,20 +1,38 @@
 # Reference coverage audit — 2026-10-08
 
-Owner correction — 2026-10-09: punctuation formatting retains apostrophe and ellipsis
-glyph conversion only. TP-R053, TP-R054, TP-R058 and TP-R060 are removed from
-the bundle; repeated signs and their order remain as supplied. Earlier audit,
-benchmark and acceptance evidence predates this reduced scope. Other owner
-scope corrections remain pending implementation in subsequent slices.
+Owner correction — 2026-10-09: the current bundle retains 38 reference entries
+(34 included and four adapted), removes 27 formerly included entries, and keeps
+42 excluded entries. All 107 reference IDs remain recorded. The 27 removals are
+TP-R011–TP-R032, TP-R053, TP-R054, TP-R058, TP-R060 and TP-R076.
+The supplemental line-ending normalization capability is also removed: together
+with TP-R011–TP-R032, this removes all 23 bundled spacing capabilities and their
+factory. Removed settings are rejected rather than ignored.
+
+Defaults select quotes, dashes, punctuation, nonbreaking spacing and hyphenation.
+Consumer `spacing` rules remain explicitly selectable. Existing whitespace,
+NBSPs and repeated signs are preserved except for retained symbolic glyph changes
+and prescribed nonbreaking bindings. Quote multiplicity is preserved; duplicate
+quote deletion and its setting are removed. Russian and English quote-boundary
+spacing defaults to narrow NBSP with an explicit `spacing: false` override.
+Declarative hyphenation data requires both standard and fast datasets;
+subclass compilation and typography-only locales remain supported.
+
+Earlier audit sections and their passing reference comparisons are historical.
+They describe the implementation at the time of each slice, including subsequently
+removed behavior. Earlier benchmark timings and owner-reported browser evidence
+predate the scope reduction and do not validate the corrected implementation.
+Later correction records supersede earlier pending statements. Full independent
+review of the revised scope remains open; publication is not authorized.
 
 This audit checks the saved 107-rule inventory against bundled handler declarations.
 It is a source coverage check, not proof that every reference fixture or interaction
 passes. The inventory remains the source for defaults, settings and deviations.
 
-All 65 included or adapted reference entries have bundled handler declarations.
-TP-R034 maps to the existing English prose-dash handler rather than a separate
-regional locale. TP-R056 supplies configurable quotation pairs, duplicate removal
-and quotation spacing. The 42 excluded entries
-remain excluded; default-profile exclusion tests are recorded in the inventory.
+Current source coverage comprises all 38 retained reference entries. TP-R034
+maps to the shared English prose-dash handler. TP-R056 supplies configurable
+quotation pairs, nesting and boundary spacing without duplicate deletion.
+The table below keeps removed IDs visible for traceability; their source entries
+record removal rather than a production handler.
 
 ### Supplemental hyphenation, minus and registration audit
 
@@ -50,15 +68,15 @@ data and failed-replacement behavior. No new browser run or upstream comparison
 was performed, and no production source changed. This closes this supplemental
 evidence review; final acceptance and independent reviews remain open.
 
-## Included and adapted entries
+## Retained and removed reference entries
 
 | Trace ID | Reference ID                              | Bundled source                                        |
 | -------- | ----------------------------------------- | ----------------------------------------------------- |
 | TP-R011  | `common/space/replaceTab`                 | Removed on 2026-10-09; tabs preserved                 |
 | TP-R012  | `common/space/trimLeft`                   | Removed on 2026-10-09; outer whitespace retained      |
 | TP-R013  | `common/space/trimRight`                  | Removed on 2026-10-09; outer whitespace retained      |
-| TP-R014  | `common/space/delTrailingBlanks`          | `bundled-spacing.factory.ts`                          |
-| TP-R015  | `common/space/delRepeatSpace`             | `bundled-spacing.factory.ts`                          |
+| TP-R014  | `common/space/delTrailingBlanks`          | Removed by owner correction (2026-10-09)              |
+| TP-R015  | `common/space/delRepeatSpace`             | Removed by owner correction (2026-10-09)              |
 | TP-R016  | `common/space/delRepeatN`                 | Removed (2026-10-09)                                  |
 | TP-R017  | `ru/space/year`                           | Removed by owner correction                           |
 | TP-R018  | `ru/space/afterHellip`                    | Removed by owner correction                           |
@@ -75,7 +93,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R029  | `common/space/afterExclamationMark`       | Removed by owner correction (2026-10-09)              |
 | TP-R030  | `common/space/afterQuestionMark`          | Removed by owner correction (2026-10-09)              |
 | TP-R031  | `common/space/afterComma`                 | Removed by owner correction                           |
-| TP-R032  | `common/space/afterColon`                 | `bundled-spacing.factory.ts`                          |
+| TP-R032  | `common/space/afterColon`                 | Removed by owner correction (2026-10-09)              |
 | TP-R033  | `ru/dash/main`                            | `bundled-dashes.factory.ts`                           |
 | TP-R034  | `en-GB/dash/main`                         | `bundled-dashes.factory.ts` (shared English behavior) |
 | TP-R035  | `en-US/dash/main`                         | `bundled-dashes.factory.ts`                           |
