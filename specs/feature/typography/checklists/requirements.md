@@ -335,9 +335,8 @@ boundaries. Other spacing cleanup remains pending removal; preservation tests
 isolate it where needed. Earlier trimming audits and benchmarks predate this
 correction and do not validate the reduced scope.
 
-Until TP-R017 is removed, the retained Russian year-spacing handler can insert
-its gap on the second pass after leading indentation is removed on the first.
-The locale interaction regression records this temporary behavior explicitly.
+The former TP-R017 second-pass gap insertion is removed by the year-label
+preservation correction below.
 
 ### Empty-line preservation correction (2026-10-09)
 
@@ -483,3 +482,17 @@ no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
 protected bytes remain unchanged. Custom spacing rules remain supported.
 Historical audits and timings predate this removal. Russian year and ellipsis
 spacing removal and default quotation spacing remain pending.
+
+Owner correction, 2026-10-09: TP-R017 (`ru/space/year`) and its settings
+are removed. Joined year labels such as `2027год` retain their supplied gap;
+existing spaces, tabs, CR/LF and NBSPs are preserved by this removal. Retained
+nonbreaking bindings still apply where their own boundaries match. Custom spacing
+rules remain supported. Historical audits and timings predate this removal.
+Russian ellipsis spacing removal and default quotation spacing remain pending.
+
+Year-label removal validation: all 3,451 tests, workspace build, type checking,
+lint, formatting and diff checks passed under Node v24.21.0. Public-service
+regressions cover both locales, both algorithms, enabled and disabled caching,
+repeat formatting, protected content and rejection of removed settings. Changes
+remain uncommitted for the coordinator. Ellipsis spacing removal, quotation
+defaults and full independent review remain open.

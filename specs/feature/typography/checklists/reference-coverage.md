@@ -60,7 +60,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R014  | `common/space/delTrailingBlanks`          | `bundled-spacing.factory.ts`                          |
 | TP-R015  | `common/space/delRepeatSpace`             | `bundled-spacing.factory.ts`                          |
 | TP-R016  | `common/space/delRepeatN`                 | Removed (2026-10-09)                                  |
-| TP-R017  | `ru/space/year`                           | `bundled-spacing.factory.ts`                          |
+| TP-R017  | `ru/space/year`                           | Removed by owner correction                           |
 | TP-R018  | `ru/space/afterHellip`                    | `bundled-spacing.factory.ts`                          |
 | TP-R019  | `common/space/squareBracket`              | Removed: owner correction                             |
 | TP-R020  | `common/space/insertFinalNewline`         | Removed by owner correction (2026-10-09)              |
@@ -630,3 +630,10 @@ no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
 protected bytes remain unchanged. Custom spacing rules remain supported.
 Historical audits and timings predate this removal. Russian year and ellipsis
 spacing removal and default quotation spacing remain pending.
+
+Owner correction, 2026-10-09: TP-R017 (`ru/space/year`) and its settings
+are removed. Joined year labels such as `2027год` retain their supplied gap;
+existing spaces, tabs, CR/LF and NBSPs are preserved by this removal. Retained
+nonbreaking bindings still apply where their own boundaries match. Custom spacing
+rules remain supported. Historical audits and timings predate this removal.
+Russian ellipsis spacing removal and default quotation spacing remain pending.

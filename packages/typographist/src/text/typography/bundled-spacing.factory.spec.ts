@@ -173,53 +173,6 @@ describe('bundled spacing reference scenarios', () => {
     expect(new Typographist({ locale: 'ru', categories: ['punctuation'] }).format('я...Я')).toBe('я…Я');
   });
 
-  it('spaces Russian year labels with reference boundaries and traversal', () => {
-    const id = 'ru/space/year';
-    const rules = createBundledSpacing('ru').filter((rule) => rule.id === id);
-    const format = prepareTextPipeline(rules, 'ru');
-
-    expect(rules).toHaveLength(1);
-    for (const label of ['год', 'года', 'году', 'годе', 'годом']) {
-      expect(format(`2026${label}`)).toBe(`2026 ${label}`);
-      expect(format(`x\u00a0123${label}!`)).toBe(`x\u00a0123 ${label}!`);
-    }
-    const unchanged = '26год 12345год 2026Год 2026годовой 2026годё 1.2026год\n2026год\t2026год';
-
-    expect(format(unchanged)).toBe(unchanged);
-    expect(format('2026год😀')).toBe('2026 год😀');
-    expect(format('2026год\u0301')).toBe('2026 год\u0301');
-    expect(format('2026год 2027год')).toBe('2026 год 2027год');
-    expect(format(format('2026год 2027год'))).toBe('2026 год 2027 год');
-    expect(format('')).toBe('');
-    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
-    expect(() => prepareTextPipeline(rules, 'ru', { settings: { [id]: { unknown: true } } })).toThrow(
-      'Invalid setting',
-    );
-    expect(createBundledSpacing('en').some((rule) => rule.id === id)).toBe(false);
-  });
-
-  it.each([false, true])('combines Russian year spacing and hyphenation with useFast=%s', (useFast) => {
-    const service = new Typographist({
-      locale: 'ru',
-      useFast,
-      categories: ['spacing', 'punctuation', 'hyphenation'],
-      protectedContent: ['2026год'],
-    });
-    const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
-    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
-    const input = `${content} 2027год... https://example.com/2028год user2029год@example.com 2026год`;
-    const normalized = `${content} 2027 год… https://example.com/2028год user2029год@example.com 2026год`;
-    const output = legacy.format(normalized);
-
-    expect(service.format(input)).toBe(output);
-    expect(service.format(output)).toBe(output);
-    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
-    expect(legacy.format('2027год')).toBe('2027год');
-    expect(new Typographist({ locale: 'en', categories: ['spacing'] }).format('2027год')).toBe('2027год');
-    expect(new Typographist({ locale: 'ru', categories: ['spacing'] }).format('2027год')).toBe('2027 год');
-    expect(new Typographist({ locale: 'ru' }).format('2027год')).toBe('2027\u00a0год');
-  });
-
   it('does not bundle spacing for consumer locales', () => {
     expect(createBundledSpacing('custom')).toEqual([]);
     const service = new Typographist({

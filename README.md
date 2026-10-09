@@ -377,3 +377,10 @@ no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
 protected bytes remain unchanged. Custom spacing rules remain supported.
 Historical audits and timings predate this removal. Russian year and ellipsis
 spacing removal and default quotation spacing remain pending.
+
+Owner correction, 2026-10-09: TP-R017 (`ru/space/year`) and its settings
+are removed. Joined year labels such as `2027год` retain their supplied gap;
+existing spaces, tabs, CR/LF and NBSPs are preserved by this removal. Retained
+nonbreaking bindings still apply where their own boundaries match. Custom spacing
+rules remain supported. Historical audits and timings predate this removal.
+Russian ellipsis spacing removal and default quotation spacing remain pending.
