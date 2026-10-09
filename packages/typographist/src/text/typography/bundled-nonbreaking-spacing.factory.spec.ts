@@ -139,7 +139,7 @@ describe('bundled nonbreaking mark spacing', () => {
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
     expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t ');
+    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
     expect(service.format('a\u00adb §1')).toBe(`a\u00adb §${space}1`);
 
     for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
@@ -217,7 +217,7 @@ describe('Russian nonbreaking particle spacing', () => {
       `${content.replace('100 руб.', '100\u00a0руб.')} ${protectedText} она\u00a0же там`,
     );
     expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t ');
+    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
     expect(service.format('а\u00adб бы тут')).toBe('а\u00adб\u00a0бы тут');
 
     for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
@@ -291,7 +291,7 @@ describe('nonbreaking spacing before short terminal numbers', () => {
       `${locale === 'ru' ? content.replace('100 руб.', '100\u00a0руб.') : content} ${protectedText} ${word}\u00a02`,
     );
     expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t ');
+    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
 
     for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
       expect(new Typographist({ locale, categories, excludedWords: [word] }).format(`${word} 12`)).toBe(`${word} 12`);

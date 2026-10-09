@@ -107,7 +107,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R073  | `ru/nbsp/afterNumberSign`                 | `bundled-nonbreaking-spacing.factory.ts`              |
 | TP-R074  | `ru/nbsp/addr`                            | `bundled-nonbreaking-spacing.factory.ts`              |
 | TP-R075  | `ru/nbsp/abbr`                            | `bundled-nonbreaking-spacing.factory.ts`              |
-| TP-R076  | `common/nbsp/replaceNbsp`                 | `bundled-nonbreaking-spacing.factory.ts`              |
+| TP-R076  | `common/nbsp/replaceNbsp`                 | Removed by owner on 2026-10-09                        |
 | TP-R078  | `common/nbsp/dpi`                         | `bundled-nonbreaking-spacing.factory.ts`              |
 | TP-R079  | `common/nbsp/beforeShortLastWord`         | `bundled-nonbreaking-spacing.factory.ts`              |
 | TP-R080  | `common/nbsp/beforeShortLastNumber`       | `bundled-nonbreaking-spacing.factory.ts`              |
@@ -520,3 +520,5 @@ tests; after the final default-profile assertions, all 29 affected tests, packag
 type checking, targeted ESLint and formatting passed on Node v24.21.0. Browser
 verification and final acceptance review remain open. Workspace-wide type
 checking, lint and builds were not rerun for this slice.
+
+NBSP scope correction (2026-10-09): TP-R076 is removed. Historical audits above predate its removal. Existing NBSP preservation replaces normalization acceptance; see `existing-nbsp-preservation.spec.ts`.

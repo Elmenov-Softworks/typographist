@@ -56,7 +56,6 @@ const referenceOrder = [
   'ru/nbsp/afterNumberSign',
   'ru/nbsp/addr',
   'ru/nbsp/abbr',
-  'common/nbsp/replaceNbsp',
   'common/nbsp/dpi',
   'common/nbsp/beforeShortLastWord',
   'common/nbsp/beforeShortLastNumber',

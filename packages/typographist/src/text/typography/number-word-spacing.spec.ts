@@ -47,7 +47,7 @@ describe('nonbreaking spacing after numbers', () => {
       `${content} ${protectedText} 100\u00a0${word}`,
     );
     expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t ');
+    expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
 
     for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
       expect(new Typographist({ locale, categories, excludedWords: [word] }).format(`100 ${word}`)).toBe(`100 ${word}`);

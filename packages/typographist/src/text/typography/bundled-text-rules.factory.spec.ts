@@ -22,7 +22,6 @@ describe('complete bundled reference ordering', () => {
 
     expect(rules.filter((rule) => rule.order === 0).map((rule) => rule.id)).toEqual([
       'common/space/normalizeLineEndings',
-      'common/nbsp/replaceNbsp',
     ]);
 
     for (const priority of new Set(rules.map((rule) => rule.order))) {

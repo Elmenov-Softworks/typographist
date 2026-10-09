@@ -25,7 +25,7 @@ describe('Short-word nonbreaking spacing interactions', () => {
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
-    const repeated = configuration.locale === 'ru' ? expected.replace('ли\u00a0', 'ли ') : expected;
+    const repeated = expected;
 
     expect(service.format(expected)).toBe(repeated);
     expect(service.format(repeated)).toBe(repeated);

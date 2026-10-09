@@ -250,3 +250,7 @@ Under Node v24.21.0, all 2,078 tests and workspace type checking, lint,
 formatting and build passed. This validates this slice only. Bundled spacing,
 NBSP replacement, quotation correction and algorithm-data contract changes still
 require subsequent slices, followed by independent review of the reduced scope.
+
+Owner scope correction (2026-10-09), N1: bundled `common/nbsp/replaceNbsp` is removed, including its settings and standalone tests. Existing NBSPs must remain instead of being normalized to ordinary spaces before retained language bindings. Historical verification and timings predate this correction. Other approved scope corrections are tracked in subsequent implementation slices.
+
+N1 slice validation on Node v24.21.0: all 2,095 tests passed; workspace typecheck, lint, formatting, build and diff checks passed. Nx reused one of six typecheck tasks and two of five build tasks. Spacing removal, quotation correction and required dual-dataset restoration remain pending. Default whitespace-only NBSP preservation still depends on the pending spacing-factory removal; the N1 slice verifies that boundary with nonbreaking bindings selected. No publication or Git mutation was performed.

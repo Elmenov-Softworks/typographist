@@ -64,6 +64,6 @@ describe('Russian day–month range dashes', () => {
     const expected = legacy.format('Типографика 1–3\u00a0января');
 
     expect(service.format('Типографика 1-3  января')).toBe(expected);
-    expect(service.format(expected)).toBe(legacy.format('Типографика 1–3 января'));
+    expect(service.format(expected)).toBe(expected);
   });
 });

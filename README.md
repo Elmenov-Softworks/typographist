@@ -130,6 +130,10 @@ cleanup. Protected literals retain their original line endings. Disabling
 `spacing`, including the hyphenation-only profile, preserves line endings. Consumer
 locales receive this preparation only if they supply it themselves.
 
+Existing NBSPs are preserved instead of being converted to ordinary spaces before
+nonbreaking bindings. The removed `common/nbsp/replaceNbsp` builtin ID is rejected
+in settings.
+
 A typography-only locale needs no fabricated patterns or letter classifications:
 
 ```ts
@@ -171,9 +175,9 @@ explicitly selecting `hyphenation` for a typography-only locale throws. Successf
 replacement clears the shared word cache; failed registration preserves prior
 state. Supply algorithm data through `TypographistRules` when hyphenation is needed.
 
-Built-in repeated-formatting scenarios are tested, with a documented exception:
-Russian day–month range formatting can change on its second default pass because
-later nonbreaking spacing affects the earlier range rule's next input. See the
+Built-in repeated-formatting scenarios are tested. Russian day–month range bindings
+remain stable after removal of NBSP normalization. Some nonglobal bindings require
+additional passes when several matches occur in one segment. See the
 [catalogue's repeated-formatting notes](specs/feature/typography/typograf-rule-inventory.md#repeated-formatting-regressions).
 Bundled quotation handling, reference coverage and completed-feature benchmarks
 are implemented and recorded. Complete independent review and final owner acceptance

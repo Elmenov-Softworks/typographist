@@ -41,15 +41,14 @@ describe.each(['en', 'ru'] as const)('repeated formatting for %s', (locale) => {
 });
 
 describe.each([false, true])('default day–month interaction with useFast=%s', (useFast) => {
-  it.each([0, 64])('retains the documented second-pass spacing change with cacheSize=%s', (cacheSize) => {
+  it.each([0, 64])('preserves the existing binding on a second pass with cacheSize=%s', (cacheSize) => {
     const service = new Typographist({ locale: 'ru', useFast, cacheSize });
     const hyphenation = new Typographist({ locale: 'ru', useFast, cacheSize, categories: ['hyphenation'] });
     const once = service.format('1-3 января');
     const twice = service.format(once);
 
     expect(once).toBe(hyphenation.format('1–3\u00a0января'));
-    expect(twice).toBe(hyphenation.format('1–3 января'));
-    expect(twice).not.toBe(once);
+    expect(twice).toBe(once);
     expect(service.format(twice)).toBe(twice);
     expect(service.format('1-3 января')).toBe(once);
   });
