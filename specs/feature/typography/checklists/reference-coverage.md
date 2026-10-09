@@ -59,7 +59,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R013  | `common/space/trimRight`                  | Removed on 2026-10-09; outer whitespace retained      |
 | TP-R014  | `common/space/delTrailingBlanks`          | `bundled-spacing.factory.ts`                          |
 | TP-R015  | `common/space/delRepeatSpace`             | `bundled-spacing.factory.ts`                          |
-| TP-R016  | `common/space/delRepeatN`                 | `bundled-spacing.factory.ts`                          |
+| TP-R016  | `common/space/delRepeatN`                 | Removed (2026-10-09)                                  |
 | TP-R017  | `ru/space/year`                           | `bundled-spacing.factory.ts`                          |
 | TP-R018  | `ru/space/afterHellip`                    | `bundled-spacing.factory.ts`                          |
 | TP-R019  | `common/space/squareBracket`              | `bundled-spacing.factory.ts`                          |

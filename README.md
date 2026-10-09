@@ -40,14 +40,6 @@ punctuation.format('Wait...'); // 'Wait…', without soft hyphens
 
 const unchanged = new Typographist({ categories: [] });
 unchanged.format('  Wait...  '); // '  Wait...  '
-
-const spaced = new Typographist({
-  categories: ['spacing'],
-  settings: {
-    'common/space/delRepeatN': { maxConsecutiveLineBreaks: 1 },
-  },
-});
-spaced.format('a\n\n\nb'); // 'a\nb'
 ```
 
 Explicit category lists replace the default selection; an empty list disables
@@ -57,8 +49,9 @@ rule IDs, undeclared setting names and mismatched primitive types are rejected.
 Bundled rule settings apply only where that rule supports the registered locale;
 Russian settings can coexist with English and consumer typography-only locales.
 They do not add bundled capabilities to consumer locales.
-Enabled rules also validate setting ranges during preparation. Tab expansion and
-final-newline insertion have been removed; their settings are invalid. See the
+Enabled rules also validate setting ranges during preparation. Tab expansion,
+final-newline insertion and repeated-line-break cleanup have been removed; their
+settings are invalid. See the
 [rule catalogue](specs/feature/typography/typograf-rule-inventory.md) for individual
 defaults, settings, ordering, reference IDs and deviations.
 

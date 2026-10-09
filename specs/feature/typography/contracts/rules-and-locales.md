@@ -91,3 +91,11 @@ are removed, including their settings. The bundle no longer trims whole-text
 boundaries. Other spacing cleanup remains pending removal; preservation tests
 isolate it where needed. Earlier trimming audits and benchmarks predate this
 correction and do not validate the reduced scope.
+
+### Empty-line preservation correction (2026-10-09)
+
+TP-R016 (`common/space/delRepeatN`) and its settings are removed. Repeated
+empty lines and mixed CR/LF sequences remain intact. Public-service tests cover
+both locales, algorithms, cache modes, protected content and repeat formatting.
+Earlier cleanup audits and benchmarks predate this correction. Remaining builtin
+spacing removal and default quotation spacing are pending.

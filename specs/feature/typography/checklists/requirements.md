@@ -338,3 +338,11 @@ correction and do not validate the reduced scope.
 Until TP-R017 is removed, the retained Russian year-spacing handler can insert
 its gap on the second pass after leading indentation is removed on the first.
 The locale interaction regression records this temporary behavior explicitly.
+
+### Empty-line preservation correction (2026-10-09)
+
+TP-R016 (`common/space/delRepeatN`) and its settings are removed. Repeated
+empty lines and mixed CR/LF sequences remain intact. Public-service tests cover
+both locales, algorithms, cache modes, protected content and repeat formatting.
+Earlier cleanup audits and benchmarks predate this correction. Remaining builtin
+spacing removal and default quotation spacing are pending.
