@@ -10,7 +10,7 @@ describe('Russian initials spacing', () => {
   it.each([
     ['А.С.Пушкин', 'А.\u00a0С.\u00a0Пушкин'],
     ['А. С. Пушкин', 'А.\u00a0С.\u00a0Пушкин'],
-    ['Ё.\u202fИ.\u00a0Ёлкин', 'Ё.\u00a0И.\u00a0Ёлкин'],
+    ['Ё.\u202fИ.\u00a0Ёлкин', 'Ё.\u202fИ.\u00a0Ёлкин'],
     ['(А.С.Пушкин), «М.Ю.Лермонтов»', '(А.\u00a0С.\u00a0Пушкин), «М.\u00a0Ю.\u00a0Лермонтов»'],
     [
       '„А.С.Пушкин“ ‚М.Ю.Лермонтов‘ "Л.Н.Толстой"',
@@ -97,7 +97,7 @@ describe('bundled nonbreaking mark spacing', () => {
     const rules = createBundledNonbreakingSpacing(locale).filter((rule) => rule.id === id);
     const format = prepareTextPipeline(rules, locale);
     const space = locale === 'ru' ? '\u202f' : '\u00a0';
-    const output = `§${space}1 §${space}2 §${space}3 §${space}4 §${space}I §${space}V §${space}X`;
+    const output = `§${space}1 §${space}2 §\u00a03 §${space}4 §${space}I §${space}V §${space}X`;
     const unchanged = '§\t1 §  1 §\u202f1 §i §A §😀 §\n1 §\r1 §e\u0301 ¶1';
 
     expect(rules).toHaveLength(1);
@@ -477,5 +477,29 @@ describe('equal-priority bundled nonbreaking interactions', () => {
 
     expect(service.format(input)).toBe(expected);
     expect(service.format(expected)).toBe(expected);
+  });
+});
+
+describe('supplied nonbreaking separators', () => {
+  it.each([false, true])('preserves separators across profiles with useFast=%s', (useFast) => {
+    for (const cacheSize of [0, 64]) {
+      for (const categories of [null, ['nonbreakingSpacing']] as const) {
+        const service = new Typographist({
+          locale: 'ru',
+          useFast,
+          cacheSize,
+          ...(categories === null ? {} : { categories }),
+          excludedWords: ['Пушкин'],
+        });
+
+        for (const space of ['\u00a0', '\u202f']) {
+          const text = `§${space}12\n№${space}12\nА.${space}С.${space}Пушкин`;
+
+          expect(service.format(text)).toBe(text);
+          expect(service.format(service.format(text))).toBe(text);
+          expect(service.format(`А.${space}С. Пушкин`)).toBe(`А.${space}С.\u00a0Пушкин`);
+        }
+      }
+    }
   });
 });

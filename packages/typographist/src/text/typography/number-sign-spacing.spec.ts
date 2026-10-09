@@ -7,7 +7,7 @@ describe('Russian number-sign spacing', () => {
   const rules = createBundledNonbreakingSpacing('ru').filter((rule) => rule.id === id);
   const format = prepareTextPipeline(rules, 'ru');
 
-  it.each(['', ' ', '\u00a0', '\u2009'])('inserts narrow nonbreaking spacing for separator %j', (space) => {
+  it.each(['', ' ', '\u2009'])('inserts narrow nonbreaking spacing for separator %j', (space) => {
     const text = `№${space}12345, №${space}п/п`;
     const expected = '№\u202f12345, №\u202fп/п';
 
@@ -15,12 +15,24 @@ describe('Russian number-sign spacing', () => {
     expect(format(expected)).toBe(expected);
   });
 
-  it.each(['', ' \r\n\t', '№  12', '№\t12', '№\n12', '№\r12', '№П/П', '№п / п', '№word', '№−12', '№'])(
-    'preserves unsupported input %j',
-    (text) => {
-      expect(format(text)).toBe(text);
-    },
-  );
+  it.each([
+    '',
+    ' \r\n\t',
+    '№  12',
+    '№\t12',
+    '№\n12',
+    '№\r12',
+    '№П/П',
+    '№п / п',
+    '№word',
+    '№\u00a012',
+    '№\u00a0п/п',
+    '№\u202f12',
+    '№−12',
+    '№',
+  ])('preserves unsupported input %j', (text) => {
+    expect(format(text)).toBe(text);
+  });
 
   it('preserves notation, letters and adjacent number signs', () => {
     expect(format('😀 №№12 №1.25 №1/2 №2026-10-08 №123-45 MiXeD мiкс')).toBe(

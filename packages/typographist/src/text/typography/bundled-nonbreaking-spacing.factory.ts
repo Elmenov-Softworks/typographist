@@ -91,7 +91,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       prepare: () => {
         const replacement = locale === 'ru' ? '§\u202f' : '§\u00a0';
 
-        return (text) => text.replace(/§[ \u00a0\u2009]?(?=\d|I|V|X)/g, replacement);
+        return (text) => text.replace(/§[ \u2009]?(?=\d|I|V|X)/g, replacement);
       },
     },
     {
@@ -250,7 +250,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       category: 'nonbreakingSpacing',
       order: 510,
       defaults: {},
-      prepare: () => (text) => text.replace(/№[ \u00a0\u2009]?(\d|п\/п)/g, '№\u202f$1'),
+      prepare: () => (text) => text.replace(/№[ \u2009]?(\d|п\/п)/g, '№\u202f$1'),
     });
 
     rules.push({
@@ -260,8 +260,17 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       defaults: {},
       prepare: () => (text) =>
         text.replace(
-          /(^|[(\u00a0\u202f «„‚"])([А-ЯЁ])\.[\u00a0\u202f ]?([А-ЯЁ])\.[\u00a0\u202f ]?([А-ЯЁ][а-яё]+)/gm,
-          '$1$2.\u00a0$3.\u00a0$4',
+          /(^|[(\u00a0\u202f «„‚"])([А-ЯЁ])\.([\u00a0\u202f ]?)([А-ЯЁ])\.([\u00a0\u202f ]?)([А-ЯЁ][а-яё]+)/gm,
+          (
+            _match,
+            boundary: string,
+            first: string,
+            firstSpace: string,
+            second: string,
+            secondSpace: string,
+            name: string,
+          ) =>
+            `${boundary}${first}.${firstSpace === '' || firstSpace === ' ' ? '\u00a0' : firstSpace}${second}.${secondSpace === '' || secondSpace === ' ' ? '\u00a0' : secondSpace}${name}`,
         ),
     });
 
