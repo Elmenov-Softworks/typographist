@@ -5,15 +5,7 @@ export const createBundledSpacing = (locale: string) => {
     return [];
   }
 
-  const rules: TextRule[] = [
-    {
-      id: 'common/space/afterColon',
-      category: 'spacing',
-      order: 210,
-      defaults: {},
-      prepare: () => (text) => text.replace(/(\D):([^)",:.?\s/\\])/g, '$1: $2'),
-    },
-  ];
+  const rules: TextRule[] = [];
 
   if (locale === 'ru') {
     rules.unshift({
@@ -33,7 +25,7 @@ export const createBundledSpacing = (locale: string) => {
     });
   }
 
-  const referenceOrder = ['ru/space/year', 'ru/space/afterHellip', 'common/space/afterColon'];
+  const referenceOrder = ['ru/space/year', 'ru/space/afterHellip'];
 
   return rules.sort(
     (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),

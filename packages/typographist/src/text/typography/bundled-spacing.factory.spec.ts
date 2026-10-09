@@ -2,15 +2,6 @@ import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.
 import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
 import { Typographist } from '@/typographist/typographist.js';
 
-const scenarios = [
-  {
-    id: 'common/space/afterColon',
-    input: 'word:next слово:далее a:1',
-    output: 'word: next слово: далее a: 1',
-    unchanged: ':start 12:30 1:2 a:) a:" a:, a:. a:? a:/ a:\\ a: next a:\u00a0next',
-  },
-];
-
 describe('bundled spacing reference scenarios', () => {
   it.each(
     (['en', 'ru'] as const).flatMap((locale) =>
@@ -31,7 +22,7 @@ describe('bundled spacing reference scenarios', () => {
     const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
     const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word}(  works  ) [  text  ] word ,next;next!next?next: next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
+    const normalized = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -76,20 +67,6 @@ describe('bundled spacing reference scenarios', () => {
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a . ! !')).toBe('a . ! !');
   });
 
-  it.each(['en', 'ru'] as const)('matches isolated rule behavior for %s', (locale) => {
-    for (const { id, input, output, unchanged } of scenarios) {
-      const rules = createBundledSpacing(locale).filter((rule) => rule.id === id);
-      const format = prepareTextPipeline(rules, locale);
-
-      expect(rules).toHaveLength(1);
-      expect(format(input)).toBe(output);
-      expect(format(unchanged)).toBe(unchanged);
-      expect(() => prepareTextPipeline(rules, locale, { settings: { [id]: { unknown: true } } })).toThrow(
-        'Invalid setting',
-      );
-    }
-  });
-
   it.each(['en', 'ru'] as const)('preserves composition and protected content for %s', (locale) => {
     const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep\t  this'] });
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
@@ -129,11 +106,11 @@ describe('bundled spacing reference scenarios', () => {
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('1 % ( a ) ;')).toBe('1 % ( a ) ;');
   });
 
-  it.each(['en', 'ru'] as const)('spaces colons while preserving notation and protection for %s', (locale) => {
+  it.each(['en', 'ru'] as const)('preserves colons, notation and protection for %s', (locale) => {
     const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep:this'] });
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
     const input = `${content} 12:30 https://example.com:8080/a user@example.com Keep:this word:next`;
-    const output = `${content} 12:30 https://example.com:8080/a user@example.com Keep:this word: next`;
+    const output = `${content} 12:30 https://example.com:8080/a user@example.com Keep:this word:next`;
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);

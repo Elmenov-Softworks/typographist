@@ -101,7 +101,7 @@ describe('service text pipeline', () => {
   it('keeps bundled settings from supplying capabilities to consumer typography-only locales', () => {
     const service = new Typographist<'custom'>({
       categories: ['dashes', 'spacing'],
-      settings: { 'ru/dash/years': { dash: '—' }, 'common/space/afterColon': {} },
+      settings: { 'ru/dash/years': { dash: '—' } },
       textLocales: [{ locale: 'custom', textRules: [spacing] }],
     });
 
