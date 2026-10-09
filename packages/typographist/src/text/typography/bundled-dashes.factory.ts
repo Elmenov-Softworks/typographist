@@ -35,11 +35,11 @@ export const createBundledDashes = (locale: string) => {
         }
 
         const range =
-          /(?<![\p{L}\p{M}\p{N}_-])(\d{4})[ \u00a0]?(?:--?|‒|–|—)[ \u00a0]?(\d{4})(?=[ \u00a0]?г(?:г?\.?|од(?:а|у|ом|ы|ов|ам|ами|ах)?)(?![\p{L}\p{M}\p{N}_-]))/gu;
+          /(?<![\p{L}\p{M}\p{N}_-])(\d{4})([ \u00a0]?)(?:--?|‒|–|—)([ \u00a0]?)(\d{4})(?=[ \u00a0]?г(?:г?\.?|од(?:а|у|ом|ы|ов|ам|ами|ах)?)(?![\p{L}\p{M}\p{N}_-]))/gu;
 
         return (text) =>
-          text.replace(range, (match: string, from: string, to: string) =>
-            Number(from) < Number(to) ? `${from}${dash}${to}` : match,
+          text.replace(range, (match: string, from: string, before: string, after: string, to: string) =>
+            Number(from) < Number(to) ? `${from}${before}${dash}${after}${to}` : match,
           );
       },
     });
@@ -118,9 +118,9 @@ export const createBundledDashes = (locale: string) => {
         }
 
         const range =
-          /(?<![\p{L}\p{M}\p{N}_-])([XIV]+)[ \u00a0]?(?:--?|‒|–|—)[ \u00a0]?([XIV]+)(?![\p{L}\p{M}\p{N}_-])/gu;
+          /(?<![\p{L}\p{M}\p{N}_-])([XIV]+)([ \u00a0]?)(?:--?|‒|–|—)([ \u00a0]?)([XIV]+)(?![\p{L}\p{M}\p{N}_-])/gu;
 
-        return (text) => text.replace(range, `$1${dash}$2`);
+        return (text) => text.replace(range, `$1$2${dash}$3$4`);
       },
     });
 
@@ -136,11 +136,11 @@ export const createBundledDashes = (locale: string) => {
 
         const weekday = '(понедельник|вторник|среда|четверг|пятница|суббота|воскресенье)';
         const range = new RegExp(
-          `(?<![\\p{L}\\p{M}\\p{N}_-])${weekday} ?(?:--?|‒|–|—) ?${weekday}(?![\\p{L}\\p{M}\\p{N}_-])`,
+          `(?<![\\p{L}\\p{M}\\p{N}_-])${weekday}( ?)(?:--?|‒|–|—)( ?)${weekday}(?![\\p{L}\\p{M}\\p{N}_-])`,
           'giu',
         );
 
-        return (text) => text.replace(range, `$1${dash}$2`);
+        return (text) => text.replace(range, `$1$2${dash}$3$4`);
       },
     });
 
@@ -161,14 +161,14 @@ export const createBundledDashes = (locale: string) => {
         const ranges = months.map(
           (names) =>
             new RegExp(
-              `(?<![\\p{L}\\p{M}\\p{N}_-])(${names}) ?(?:--?|‒|–|—) ?(${names})(?![\\p{L}\\p{M}\\p{N}_-])`,
+              `(?<![\\p{L}\\p{M}\\p{N}_-])(${names})( ?)(?:--?|‒|–|—)( ?)(${names})(?![\\p{L}\\p{M}\\p{N}_-])`,
               'giu',
             ),
         );
 
         return (text) => {
           for (const range of ranges) {
-            text = text.replace(range, `$1${dash}$2`);
+            text = text.replace(range, `$1$2${dash}$3$4`);
           }
 
           return text;

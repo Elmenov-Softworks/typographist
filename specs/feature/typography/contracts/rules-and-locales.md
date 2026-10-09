@@ -56,3 +56,5 @@ deletion and reject the removed `removeDuplicateQuotes` setting. Preserve source
 quote counts during locale glyph replacement, nesting and unmatched-quote handling.
 Historical duplicate-removal audit evidence predates this correction. Builtin
 spacing removal and the Q6 quote-boundary spacing correction remain pending.
+
+Owner correction, 2026-10-09: bundled range handlers preserve existing whitespace around matched separators. The year, century, weekday and month handlers change the separator glyph only. Existing prose-dash nonbreaking bindings still apply before range formatting; additional spaces, tabs and line endings are not consumed by these dash handlers.

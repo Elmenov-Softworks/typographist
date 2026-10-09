@@ -279,3 +279,7 @@ Quotation multiplicity correction validation: Node v24.21.0; all 2,133 tests,
 workspace type checks, lint, formatting, builds and diff checks passed. The targeted
 quotation integration suite passed 129 tests. Changes are left uncommitted for the
 coordinator. Remaining owner corrections and full independent review are open.
+
+Range-whitespace correction, 2026-10-09: year, century, weekday and month handlers preserve matched boundary whitespace. Public-service regressions cover asymmetric gaps, existing NBSPs, repeated spaces, tabs, CR/LF, protected content and repeat formatting across both algorithms and cache modes. Builtin spacing removal and Q6 quotation spacing remain pending; previous full-feature benchmark and audit evidence does not validate this reduced implementation.
+
+Validation for this correction under Node v24.21.0: all 2,169 tests, workspace build, typecheck, lint, formatting and diff checks passed. Changes remain uncommitted for the coordinator; full independent review of the revised scope is still required.

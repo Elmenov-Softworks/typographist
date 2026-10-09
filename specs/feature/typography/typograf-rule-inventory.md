@@ -684,3 +684,5 @@ single-dataset construction is removed. Subclass `compile(useFast)` remains
 available, both algorithms remain supported without fallback, and typography-only
 locales still require no hyphenation data. Historical audit and benchmark evidence
 predates this correction; spacing and quotation corrections remain pending.
+
+Owner correction, 2026-10-09: TP-R036 (years), TP-R037 (weekdays), TP-R043 (months) and TP-R052 (centuries) retain matched whitespace around separators. Earlier descriptions of removing these spaces and reference matches for those cases are historical. This intentional deviation preserves user input under the reduced scope; reference IDs and provenance remain unchanged.

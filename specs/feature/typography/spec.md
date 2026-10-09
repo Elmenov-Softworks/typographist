@@ -158,3 +158,5 @@ deletion and reject the removed `removeDuplicateQuotes` setting. Preserve source
 quote counts during locale glyph replacement, nesting and unmatched-quote handling.
 Historical duplicate-removal audit evidence predates this correction. Builtin
 spacing removal and the Q6 quote-boundary spacing correction remain pending.
+
+Owner correction, 2026-10-09: retained range glyph rules must preserve existing whitespace rather than deleting gaps. Russian year, century, weekday and month handlers now retain their matched boundary spaces, including existing NBSPs. Their existing recognition boundaries, separator settings and protection contracts remain in force. Builtin spacing removal and quotation-boundary corrections remain pending.

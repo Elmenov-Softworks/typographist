@@ -298,3 +298,5 @@ or `{"type":"major"}`. The release Action consumes the request once.
 Quotation formatting preserves repeated source quotes. The former
 `removeDuplicateQuotes` setting is removed and rejected; custom quotation pairs
 and nesting remain supported.
+
+Russian year, century, weekday and month range rules preserve existing gaps around the separator while changing its glyph. The prose-dash rule may replace the nearest preceding ordinary space with NBSP; it preserves additional whitespace. For example, with only `dashes` selected, `XV --XVI` becomes `XV –XVI`.

@@ -8,8 +8,8 @@ describe('bundled prose dashes', () => {
     const format = prepareTextPipeline(rules, 'ru');
     const fixtures = [
       ['X-XI вв.', 'X–XI вв.'],
-      ['XV -- XVI', 'XV–XVI'],
-      ['I\u00a0-\u00a0V', 'I–V'],
+      ['XV -- XVI', 'XV – XVI'],
+      ['I\u00a0-\u00a0V', 'I\u00a0–\u00a0V'],
       ['XV‒XX', 'XV–XX'],
       ['x-xi', 'x-xi'],
       ['X−V', 'X−V'],
@@ -44,7 +44,7 @@ describe('bundled prose dashes', () => {
   it('combines century ranges with prose dashes, protections and both hyphenation algorithms', () => {
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
     const input = `${content} X-XI XV - XVI https://example.com/X-XI X-XI@example.com I-V`;
-    const output = `${content} X–XI XV–XVI https://example.com/X-XI X-XI@example.com I-V`;
+    const output = `${content} X–XI XV\u00a0– XVI https://example.com/X-XI X-XI@example.com I-V`;
     const service = new Typographist({ locale: 'ru', categories: ['dashes'], protectedContent: ['I-V'] });
 
     expect(service.format(input)).toBe(output);
@@ -64,8 +64,8 @@ describe('bundled prose dashes', () => {
     const format = prepareTextPipeline(rules, 'ru');
     const fixtures = [
       ['январь-март', 'январь–март'],
-      ['В МАЕ -- Июне', 'В МАЕ–Июне'],
-      ['май ‒июнь', 'май–июнь'],
+      ['В МАЕ -- Июне', 'В МАЕ – Июне'],
+      ['май ‒июнь', 'май –июнь'],
       ['июль—август', 'июль–август'],
       ['января-марта', 'января-марта'],
       ['январь-феврале', 'январь-феврале'],
@@ -120,10 +120,10 @@ describe('bundled prose dashes', () => {
     const format = prepareTextPipeline(rules, 'ru');
     const fixtures = [
       ['понедельник-пятница', 'понедельник–пятница'],
-      ['ВТОРНИК -- Суббота', 'ВТОРНИК–Суббота'],
-      ['среда ‒четверг', 'среда–четверг'],
+      ['ВТОРНИК -- Суббота', 'ВТОРНИК – Суббота'],
+      ['среда ‒четверг', 'среда –четверг'],
       ['пятница–воскресенье', 'пятница–воскресенье'],
-      ['суббота — понедельник', 'суббота–понедельник'],
+      ['суббота — понедельник', 'суббота – понедельник'],
     ] as const;
 
     for (const [input, output] of fixtures) {
