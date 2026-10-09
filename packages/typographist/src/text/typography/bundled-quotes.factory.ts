@@ -15,7 +15,7 @@ export const createBundledQuotes = (locale: string) => {
       id: 'common/punctuation/quote',
       category: 'quotes',
       order: 410,
-      defaults: { left, right, spacing: false },
+      defaults: { left, right, spacing: true },
       prepare: (settings) => {
         if (
           typeof settings.left !== 'string' ||

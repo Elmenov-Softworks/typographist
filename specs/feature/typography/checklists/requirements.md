@@ -514,3 +514,18 @@ Historical checks and benchmark timings predate this correction.
 Category-default slice validation under Node v24.21.0: all 3,521 tests, workspace
 build, typecheck, lint, formatting and diff checks passed. No browser checks or
 new benchmark measurements were run for this slice.
+
+Default quotation spacing correction — 2026-10-09: Q6 now enables narrow NBSP
+at quote/content boundaries for Russian and English. The explicit `spacing: false`
+override remains supported. Public-service tests cover both algorithms and cache
+modes, extra spaces, tabs, CR/LF, empty lines, repeated punctuation, existing NBSPs,
+protected literals and repeated formatting. Glyph-only fixtures explicitly disable
+spacing. This supersedes earlier pending-default statements; historical full-feature
+benchmarks and audits predate the reduced scope. Consolidated scope documentation
+and full independent review remain pending.
+
+Q6 validation under Node v24.21.0: all 3,537 tests passed, including 16 default/
+override service scenarios across both locales, algorithms and cache modes.
+Workspace build, typecheck, lint, formatting and diff checks passed. The build
+reported one cached task out of five. No browser or reference comparison was
+rerun for this slice. Changes remain uncommitted for the coordinator.

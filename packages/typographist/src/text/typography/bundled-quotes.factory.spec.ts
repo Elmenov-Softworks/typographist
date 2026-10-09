@@ -24,7 +24,10 @@ const fixtures = [
 
 describe('bundled quotation preparation', () => {
   describe.each(['en', 'ru'])('%s reference fixtures', (locale) => {
-    const format = prepareTextPipeline(createBundledQuotes(locale), locale, { categories: ['quotes'] });
+    const format = prepareTextPipeline(createBundledQuotes(locale), locale, {
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { spacing: false } },
+    });
 
     it.each(fixtures)('formats %j', (input, english, russian) => {
       expect(format(input)).toBe(locale === 'ru' ? russian : english);
@@ -33,7 +36,10 @@ describe('bundled quotation preparation', () => {
 
   it('honors category selection and literal protection', () => {
     const rules = createBundledQuotes('en');
-    const format = prepareTextPipeline(rules, 'en', { protectedContent: ['"Keep"'] });
+    const format = prepareTextPipeline(rules, 'en', {
+      protectedContent: ['"Keep"'],
+      settings: { 'common/punctuation/quote': { spacing: false } },
+    });
 
     expect(format('"Keep" "change" https://example.com/a user@example.com')).toBe(
       '"Keep" “change” https://example.com/a user@example.com',

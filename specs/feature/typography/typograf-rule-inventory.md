@@ -629,20 +629,15 @@ Public-service tests cover repeated runs, unmatched quotes, protected literals,
 Unicode, nesting, identical outer glyphs, both algorithms and cache modes.
 Historical duplicate-removal comparisons predate this correction.
 
-The boolean `spacing` setting defaults to `false` for both bundled locales. When
-enabled, it removes one ordinary space, NBSP or narrow NBSP immediately inside each
-configured pair before quotation placement, then inserts narrow NBSP (U+202F)
-after opening and before closing glyphs. Tabs, line breaks and extra spaces are
-preserved. Spacing belongs to `quotes`, so it
-does not require the `spacing` or `nonbreakingSpacing` category. Prepared regular
-expressions are omitted when the setting is disabled.
-
-Identical outer glyphs retain opening/closing direction through spacing without
-reserving temporary characters. As in the reference's internal buffer handling,
-preexisting spaces around identical configured glyphs are not stripped before
-placement. Protected literals and addresses bypass the handler. Spacing does not
-change letters or numeric notation and does not act on segments containing no
-recognized quotation glyphs.
+The boolean `spacing` setting defaults to `true` for both bundled locales. It
+replaces the nearest ordinary space immediately inside each configured pair with
+narrow NBSP (U+202F), or inserts narrow NBSP when no gap exists. Additional spaces,
+existing NBSPs, tabs and line endings remain unchanged. No gap is inserted beside
+nonordinary whitespace or across protected boundaries. Spacing belongs to
+`quotes`, independent of the `spacing` and `nonbreakingSpacing` categories.
+Set `spacing: false` to convert quotation glyphs without adding boundary spacing.
+Identical outer glyphs retain opening/closing direction without temporary characters.
+Locale pairs, nesting, custom pairs and symbolic unmatched quotes remain supported.
 
 Historical pre-correction verification: twenty-seven service scenarios covered spacing settings, nesting, unmatched pairs,
 existing spaces, Unicode, protected content, duplicate-removal ordering, disabled
@@ -767,3 +762,12 @@ spacing factory are now removed. Custom spacing rules remain supported.
 Ellipsis conversion preserves boundary gaps, repeated signs, tabs, CR/LF and
 existing NBSPs. Historical audits and benchmark timings predate this reduction.
 Default quotation spacing and independent review remain pending.
+
+Default quotation spacing correction — 2026-10-09: Q6 now enables narrow NBSP
+at quote/content boundaries for Russian and English. The explicit `spacing: false`
+override remains supported. Public-service tests cover both algorithms and cache
+modes, extra spaces, tabs, CR/LF, empty lines, repeated punctuation, existing NBSPs,
+protected literals and repeated formatting. Glyph-only fixtures explicitly disable
+spacing. This supersedes earlier pending-default statements; historical full-feature
+benchmarks and audits predate the reduced scope. Consolidated scope documentation
+and full independent review remain pending.

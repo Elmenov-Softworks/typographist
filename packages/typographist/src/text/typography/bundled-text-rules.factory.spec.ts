@@ -34,7 +34,7 @@ describe('complete bundled reference ordering', () => {
     const instance = new Typographist({
       locale,
       categories: ['quotes', 'punctuation'],
-      settings: { 'common/punctuation/quote': { left: '...', right: '...' } },
+      settings: { 'common/punctuation/quote': { spacing: false, left: '...', right: '...' } },
     });
 
     expect(instance.format('"""word"""')).toBe('…word…');
@@ -44,7 +44,7 @@ describe('complete bundled reference ordering', () => {
     const instance = new Typographist({
       locale: 'en',
       categories: ['quotes', 'punctuation'],
-      settings: { 'common/punctuation/quote': { left: '!', right: '?' } },
+      settings: { 'common/punctuation/quote': { spacing: false, left: '!', right: '?' } },
     });
 
     expect(instance.format('""word""')).toBe('!!word??');

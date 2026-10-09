@@ -329,3 +329,12 @@ available for explicitly selected consumer rules, but is excluded from defaults.
 Public-service regressions cover shared rules, typography-only locales and locale
 replacement. Default quotation spacing and independent review remain pending.
 Historical checks and benchmark timings predate this correction.
+
+Default quotation spacing correction — 2026-10-09: Q6 now enables narrow NBSP
+at quote/content boundaries for Russian and English. The explicit `spacing: false`
+override remains supported. Public-service tests cover both algorithms and cache
+modes, extra spaces, tabs, CR/LF, empty lines, repeated punctuation, existing NBSPs,
+protected literals and repeated formatting. Glyph-only fixtures explicitly disable
+spacing. This supersedes earlier pending-default statements; historical full-feature
+benchmarks and audits predate the reduced scope. Consolidated scope documentation
+and full independent review remain pending.

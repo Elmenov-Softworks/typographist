@@ -19,6 +19,12 @@ typographist.format('table'); // 'ta\u00adble'
 typographist.format('асбест', 'ru'); // 'ас\u00adбест'
 ```
 
+Quotation spacing defaults to narrow NBSP (U+202F) immediately inside Russian
+and English quotation pairs. It replaces one ordinary boundary space or inserts
+a gap when none exists, preserving additional whitespace and existing NBSPs.
+Tabs, line endings and protected bytes remain unchanged. Use
+`settings: { 'common/punctuation/quote': { spacing: false } }` to disable it.
+
 Omitting `categories` selects `quotes`, `dashes`, `punctuation`,
 `nonbreakingSpacing`, and `hyphenation`. Consumer `spacing` rules require explicit
 category selection. This changes the previous
@@ -29,7 +35,7 @@ algorithm, independently of selected text categories.
 
 | Category             | Behavior                                                           |
 | -------------------- | ------------------------------------------------------------------ |
-| `quotes`             | Bundled Russian and English quotation pairs and nesting.           |
+| `quotes`             | Russian and English quotation pairs, nesting and boundary NBSPs.   |
 | `dashes`             | Supported prose and range separators, and clear unary minus signs. |
 | `punctuation`        | Apostrophe and ellipsis glyph conversion; repeated signs stay.     |
 | `spacing`            | Consumer-supplied spacing rules; no bundled rules.                 |
@@ -393,3 +399,12 @@ spacing factory are now removed. Custom spacing rules remain supported.
 Ellipsis conversion preserves boundary gaps, repeated signs, tabs, CR/LF and
 existing NBSPs. Historical audits and benchmark timings predate this reduction.
 Default quotation spacing and independent review remain pending.
+
+Default quotation spacing correction — 2026-10-09: Q6 now enables narrow NBSP
+at quote/content boundaries for Russian and English. The explicit `spacing: false`
+override remains supported. Public-service tests cover both algorithms and cache
+modes, extra spaces, tabs, CR/LF, empty lines, repeated punctuation, existing NBSPs,
+protected literals and repeated formatting. Glyph-only fixtures explicitly disable
+spacing. This supersedes earlier pending-default statements; historical full-feature
+benchmarks and audits predate the reduced scope. Consolidated scope documentation
+and full independent review remain pending.
