@@ -201,3 +201,12 @@ empty lines and mixed CR/LF sequences remain intact. Public-service tests cover
 both locales, algorithms, cache modes, protected content and repeat formatting.
 Earlier cleanup audits and benchmarks predate this correction. Remaining builtin
 spacing removal and default quotation spacing are pending.
+
+### Trailing-whitespace preservation correction (2026-10-09)
+
+TP-R014 (`common/space/delTrailingBlanks`) and its settings are removed.
+Trailing ordinary spaces, tabs and existing NBSPs remain before line endings.
+Earlier cleanup audits and benchmarks predate this correction. Remaining spacing
+removal and default quotation spacing are pending. Reference metadata is retained
+for provenance; historical handler and ordering rows do not describe this rule
+as an active capability.

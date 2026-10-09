@@ -346,3 +346,10 @@ empty lines and mixed CR/LF sequences remain intact. Public-service tests cover
 both locales, algorithms, cache modes, protected content and repeat formatting.
 Earlier cleanup audits and benchmarks predate this correction. Remaining builtin
 spacing removal and default quotation spacing are pending.
+
+### Trailing-whitespace preservation correction (2026-10-09)
+
+Removed TP-R014 and its settings; replaced obsolete cleanup fixtures with public
+service preservation tests for both locales, algorithms and cache modes, including
+protected fragments and repeat formatting. Earlier cleanup evidence predates the
+reduced scope. Remaining spacing removal and default quotation spacing are open.

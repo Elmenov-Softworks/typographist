@@ -99,3 +99,7 @@ empty lines and mixed CR/LF sequences remain intact. Public-service tests cover
 both locales, algorithms, cache modes, protected content and repeat formatting.
 Earlier cleanup audits and benchmarks predate this correction. Remaining builtin
 spacing removal and default quotation spacing are pending.
+
+Trailing-whitespace deletion (`common/space/delTrailingBlanks`) is removed. Its
+settings are rejected even when spacing is disabled. Custom spacing rules remain
+available through the existing text-rule contract.

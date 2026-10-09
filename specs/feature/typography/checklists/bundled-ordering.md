@@ -46,3 +46,12 @@ punctuation created by quotation settings, and consumer registration order at
 priority 410. Consumer rules remain appended in supplied order; the generic
 pipeline still uses stable priority sorting. No consumer IDs receive reference
 ranks. Existing interaction suites cover the remaining priority groups.
+
+### Trailing-whitespace preservation correction (2026-10-09)
+
+TP-R014 (`common/space/delTrailingBlanks`) and its settings are removed.
+Trailing ordinary spaces, tabs and existing NBSPs remain before line endings.
+Earlier cleanup audits and benchmarks predate this correction. Remaining spacing
+removal and default quotation spacing are pending. Reference metadata is retained
+for provenance; historical handler and ordering rows do not describe this rule
+as an active capability.

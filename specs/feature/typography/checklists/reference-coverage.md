@@ -534,3 +534,12 @@ scope. Remaining bundled spacing removal and default quotation spacing are pendi
 
 TP-R020 final-newline insertion was removed on 2026-10-09. Its earlier audit is
 historical; final-newline-preservation.spec.ts verifies the reduced contract.
+
+### Trailing-whitespace preservation correction (2026-10-09)
+
+TP-R014 (`common/space/delTrailingBlanks`) and its settings are removed.
+Trailing ordinary spaces, tabs and existing NBSPs remain before line endings.
+Earlier cleanup audits and benchmarks predate this correction. Remaining spacing
+removal and default quotation spacing are pending. Reference metadata is retained
+for provenance; historical handler and ordering rows do not describe this rule
+as an active capability.

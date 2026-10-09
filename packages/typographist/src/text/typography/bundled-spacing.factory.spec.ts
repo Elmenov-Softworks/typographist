@@ -53,7 +53,6 @@ const scenarios = [
     output: 'a! b? c: d; e,',
     unchanged: 'a . ! ! :) a\t,',
   },
-  { id: 'common/space/delTrailingBlanks', input: 'a  \nb\t\n', output: 'a\nb\n', unchanged: 'a  \r\nb  ' },
   { id: 'common/space/delRepeatSpace', input: 'a  b\t\tc', output: 'a b c', unchanged: '  a\n  b\u00a0\u00a0c' },
   { id: 'common/space/squareBracket', input: '[  a  ]', output: '[a]', unchanged: '[\ta\t] ( a )' },
   {
@@ -105,7 +104,7 @@ describe('bundled spacing reference scenarios', () => {
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
     const input = '\tTypography\tworks  \n\n\n  Типографика\tработает\nKeep\t  this\n\n\nend\t ';
-    const cleaned = 'Typography\tworks\n\n\nТипографика\tработает\nKeep\t  this\n\n\nend ';
+    const cleaned = 'Typography\tworks  \n\n\nТипографика\tработает\nKeep\t  this\n\n\nend ';
     const expected = legacy.format(cleaned);
 
     expect(service.format(input)).toBe(expected);
@@ -207,7 +206,7 @@ describe('bundled spacing reference scenarios', () => {
     const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
     const output = service.format('[  table\tword  ]  \nnext');
 
-    expect(output).toBe(legacy.format('[table\tword]\nnext'));
+    expect(output).toBe(legacy.format('[table\tword]  \nnext'));
     expect(service.format(output)).toBe(output);
     expect(legacy.format('a\tb')).toBe('a\tb');
     expect(new Typographist({ categories: [] }).format('a\tb')).toBe('a\tb');
