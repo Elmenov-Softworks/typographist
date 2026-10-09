@@ -78,7 +78,7 @@ describe('nonbreaking spacing after short words', () => {
     const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
     const expected = legacy.format('a\u00a0table');
 
-    expect(service.format('a  table')).toBe(expected);
+    expect(service.format('a table')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 

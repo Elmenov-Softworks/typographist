@@ -59,7 +59,7 @@ describe('nonbreaking spacing after numbers', () => {
     const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
     const expected = legacy.format('100\u00a0examples');
 
-    expect(service.format('100  examples')).toBe(expected);
+    expect(service.format('100 examples')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 

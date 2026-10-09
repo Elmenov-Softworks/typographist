@@ -543,3 +543,12 @@ Earlier cleanup audits and benchmarks predate this correction. Remaining spacing
 removal and default quotation spacing are pending. Reference metadata is retained
 for provenance; historical handler and ordering rows do not describe this rule
 as an active capability.
+
+### Repeated-space preservation correction (2026-10-09)
+
+TP-R015 (`common/space/delRepeatSpace`) and its settings are removed.
+Repeated ordinary spaces and tabs remain between content characters. The
+public-service preservation matrix covers both locales, both algorithms, cache
+modes, protected content and repeated formatting. Earlier cleanup audits and
+benchmarks predate this correction. Remaining spacing removal and default
+quotation spacing are pending.

@@ -18,7 +18,7 @@ describe('Numeric-range dash interactions', () => {
     const normalizedRanges = '2020–2021 гг. 9:00–18:30 20–30-е годы 1–3\u00a0января';
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const addresses = 'https://example.com/2020-2021 user-name@example.com id2020-2021г';
-    const input = `Typography  ${ranges}\n${content}\n${addresses}\n${protectedRange}`;
+    const input = `Typography ${ranges}\n${content}\n${addresses}\n${protectedRange}`;
     const normalized = `Typography ${configuration.locale === 'ru' ? normalizedRanges : ranges}\n${content}\n${addresses}\n${protectedRange}`;
     const expected = legacy.format(normalized);
 

@@ -68,7 +68,7 @@ describe.each(['ru', 'en'] as const)('resolution-unit spacing for %s', (locale) 
     const legacy = new Typographist({ locale, useFast, categories: ['hyphenation'] });
     const expected = legacy.format('Resolution 300 dpi');
 
-    expect(service.format('Resolution 300  dpi')).toBe(expected);
+    expect(service.format('Resolution 300 dpi')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

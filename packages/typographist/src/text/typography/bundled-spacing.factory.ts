@@ -7,13 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/delRepeatSpace',
-      category: 'spacing',
-      order: 209,
-      defaults: {},
-      prepare: () => (text) => text.replace(/([^\n \t])[ \t]{2,}(?![\n \t])/g, '$1 '),
-    },
-    {
       id: 'common/space/delLeadingBlanks',
       category: 'spacing',
       order: 210,
@@ -139,7 +132,6 @@ export const createBundledSpacing = (locale: string) => {
   }
 
   const referenceOrder = [
-    'common/space/delRepeatSpace',
     'ru/space/year',
     'ru/space/afterHellip',
     'common/space/squareBracket',

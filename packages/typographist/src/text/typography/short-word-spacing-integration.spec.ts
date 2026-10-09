@@ -16,12 +16,12 @@ describe('Short-word nonbreaking spacing interactions', () => {
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'], protectedContent });
     const phrases =
       configuration.locale === 'ru'
-        ? ['если  проверка', 'я  проверяю', 'вижу  кот. Далее', 'пример  12']
-        : ['the  examples', 'a  table', 'hello  cat. Next', 'example  12'];
+        ? ['если проверка', 'я проверяю', 'вижу кот. Далее', 'пример 12']
+        : ['the examples', 'a table', 'hello cat. Next', 'example 12'];
     const content = '$100 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const addresses = 'https://example.com/the/a user@example.com';
     const input = `${phrases.join('\n')}\n${content}\n${addresses}\n${protectedText}`;
-    const normalized = `${phrases.map((phrase) => phrase.replace('  ', '\u00a0')).join('\n')}\n${content}\n${addresses}\n${protectedText}`;
+    const normalized = `${phrases.map((phrase) => phrase.replace(' ', '\u00a0')).join('\n')}\n${content}\n${addresses}\n${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -37,10 +37,6 @@ describe('Short-word nonbreaking spacing interactions', () => {
         categories: ['spacing', 'hyphenation'],
         protectedContent,
       }).format(input),
-    ).toBe(
-      legacy.format(
-        `${phrases.map((phrase) => phrase.replace('  ', ' ')).join('\n')}\n${content}\n${addresses}\n${protectedText}`,
-      ),
-    );
+    ).toBe(legacy.format(`${phrases.join('\n')}\n${content}\n${addresses}\n${protectedText}`));
   });
 });

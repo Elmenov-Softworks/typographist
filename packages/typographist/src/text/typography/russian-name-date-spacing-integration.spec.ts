@@ -14,7 +14,7 @@ describe('Russian name and date spacing interactions', () => {
       protectedContent,
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'], protectedContent });
-    const labels = 'А.  С.  Пушкин\n12  января\nXV  в.\nXV-XVI  в. в.';
+    const labels = 'А. С. Пушкин\n12 января\nXV в.\nXV-XVI в. в.';
     const spaced = 'А. С. Пушкин\n12 января\nXV в.\nXV-XVI в. в.';
     const bound = 'А.\u00a0С.\u00a0Пушкин\n12\u00a0января\nXV\u00a0в.\nXV-XVI\u00a0в.\u00a0в.';
     const content = '$100 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';

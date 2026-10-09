@@ -53,7 +53,6 @@ const scenarios = [
     output: 'a! b? c: d; e,',
     unchanged: 'a . ! ! :) a\t,',
   },
-  { id: 'common/space/delRepeatSpace', input: 'a  b\t\tc', output: 'a b c', unchanged: '  a\n  b\u00a0\u00a0c' },
   { id: 'common/space/squareBracket', input: '[  a  ]', output: '[a]', unchanged: '[\ta\t] ( a )' },
   {
     id: 'common/space/delLeadingBlanks',
@@ -104,7 +103,7 @@ describe('bundled spacing reference scenarios', () => {
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
     const input = '\tTypography\tworks  \n\n\n  Типографика\tработает\nKeep\t  this\n\n\nend\t ';
-    const cleaned = 'Typography\tworks  \n\n\nТипографика\tработает\nKeep\t  this\n\n\nend ';
+    const cleaned = 'Typography\tworks  \n\n\nТипографика\tработает\nKeep\t  this\n\n\nend\t ';
     const expected = legacy.format(cleaned);
 
     expect(service.format(input)).toBe(expected);

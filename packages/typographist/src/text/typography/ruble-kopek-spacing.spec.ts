@@ -67,7 +67,7 @@ describe('Russian ruble and kopek label spacing', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('Типографика 100 руб. 25 коп.');
 
-    expect(service.format('Типографика 100  руб. 25коп.')).toBe(expected);
+    expect(service.format('Типографика 100 руб. 25коп.')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

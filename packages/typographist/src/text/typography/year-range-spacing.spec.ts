@@ -63,7 +63,7 @@ describe('Russian year-range spacing', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('2025–2026\u00a0г.\u00a0г. примеры');
 
-    expect(service.format('2025-2026  г.г. примеры')).toBe(expected);
+    expect(service.format('2025-2026 г.г. примеры')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

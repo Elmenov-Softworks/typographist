@@ -14,7 +14,7 @@ describe('Russian label spacing interactions', () => {
       protectedContent,
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'], protectedContent });
-    const labels = '100  руб. 25коп.\nP.  S.: Типографика\nстр.  12345\nООО  Компания\n2  МЛН.';
+    const labels = '100 руб. 25коп.\nP. S.: Типографика\nстр. 12345\nООО Компания\n2 МЛН.';
     const spaced = '100 руб. 25коп.\nP. S.: Типографика\nстр. 12345\nООО Компания\n2 МЛН.';
     const bound =
       '100\u00a0руб. 25\u00a0коп.\nP.\u00a0S.: Типографика\nстр.\u00a012345\nООО\u00a0Компания\n2\u00a0МЛН.';

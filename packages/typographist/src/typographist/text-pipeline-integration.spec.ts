@@ -26,8 +26,8 @@ describe('service text pipeline', () => {
     });
 
     expect(service.format('A  B', 'custom')).toBe('A_B');
-    expect(service.format('A  B', 'en')).toBe('A B');
-    expect(service.format('A  B', 'ru')).toBe('A B');
+    expect(service.format('A  B', 'en')).toBe('A  B');
+    expect(service.format('A  B', 'ru')).toBe('A  B');
     expect(
       () =>
         new Typographist<'custom'>({

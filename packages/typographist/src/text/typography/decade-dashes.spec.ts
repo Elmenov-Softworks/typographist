@@ -62,7 +62,7 @@ describe('Russian decade-range dashes', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('Типографика 1980–1990-е годы');
 
-    expect(service.format('Типографика 1980-1990-е  годы')).toBe(expected);
+    expect(service.format('Типографика 1980-1990-е годы')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

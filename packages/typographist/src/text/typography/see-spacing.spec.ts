@@ -80,7 +80,7 @@ describe('Russian see/name abbreviation spacing', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('Типографика см. 12345');
 
-    expect(service.format('Типографика см.  12345')).toBe(expected);
+    expect(service.format('Типографика см. 12345')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

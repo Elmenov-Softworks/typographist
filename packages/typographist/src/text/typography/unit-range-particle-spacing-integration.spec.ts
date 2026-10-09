@@ -14,7 +14,7 @@ describe('Unit, year-range and particle spacing interactions', () => {
       protectedContent,
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'], protectedContent });
-    const labels = '300  dpi\n12м2\n2025-2026  г.г.\nона  же там';
+    const labels = '300 dpi\n12м2\n2025-2026 г.г.\nона же там';
     const spaced = '300 dpi\n12м2\n2025-2026 г.г.\nона же там';
     const bound =
       configuration.locale === 'ru'

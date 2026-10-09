@@ -78,7 +78,7 @@ describe('Russian abbreviation spacing', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('Типографика т. д.');
 
-    expect(service.format('Типографика т.  д.')).toBe(expected);
+    expect(service.format('Типографика т. д.')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

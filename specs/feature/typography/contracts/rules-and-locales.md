@@ -103,3 +103,12 @@ spacing removal and default quotation spacing are pending.
 Trailing-whitespace deletion (`common/space/delTrailingBlanks`) is removed. Its
 settings are rejected even when spacing is disabled. Custom spacing rules remain
 available through the existing text-rule contract.
+
+### Repeated-space preservation correction (2026-10-09)
+
+TP-R015 (`common/space/delRepeatSpace`) and its settings are removed.
+Repeated ordinary spaces and tabs remain between content characters. The
+public-service preservation matrix covers both locales, both algorithms, cache
+modes, protected content and repeated formatting. Earlier cleanup audits and
+benchmarks predate this correction. Remaining spacing removal and default
+quotation spacing are pending.

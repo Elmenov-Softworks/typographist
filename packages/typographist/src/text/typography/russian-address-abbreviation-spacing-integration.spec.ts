@@ -14,7 +14,7 @@ describe('Russian number-sign, address and abbreviation spacing interactions', (
       protectedContent,
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'], protectedContent });
-    const labels = '№  12345\nУЛ.  Московская дом12\nт.  д.';
+    const labels = '№ 12345\nУЛ. Московская дом12\nт. д.';
     const spaced = '№ 12345\nУЛ. Московская дом12\nт. д.';
     const bound = '№\u202f12345\nУЛ.\u00a0Московская дом\u00a012\nт.\u00a0д.';
     const content = '$100 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';

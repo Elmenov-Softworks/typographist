@@ -50,7 +50,7 @@ Bundled rule settings apply only where that rule supports the registered locale;
 Russian settings can coexist with English and consumer typography-only locales.
 They do not add bundled capabilities to consumer locales.
 Enabled rules also validate setting ranges during preparation. Tab expansion,
-final-newline insertion, trailing-whitespace deletion and repeated-line-break
+final-newline insertion, trailing-whitespace deletion, repeated-space collapsing and repeated-line-break
 cleanup have been removed; their
 settings are invalid. See the
 [rule catalogue](specs/feature/typography/typograf-rule-inventory.md) for individual

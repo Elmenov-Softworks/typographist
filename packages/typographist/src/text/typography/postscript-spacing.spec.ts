@@ -69,7 +69,7 @@ describe('Russian postscript spacing', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('P. S.: Типографика');
 
-    expect(service.format('P.  S.: Типографика')).toBe(expected);
+    expect(service.format('P. S.: Типографика')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

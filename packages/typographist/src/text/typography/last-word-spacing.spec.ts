@@ -83,7 +83,7 @@ describe('nonbreaking spacing before short sentence-final words', () => {
     const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
     const expected = legacy.format('hello cat.');
 
-    expect(service.format('hello  cat.')).toBe(expected);
+    expect(service.format('hello cat.')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 

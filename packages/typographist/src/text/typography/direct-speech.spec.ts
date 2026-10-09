@@ -59,7 +59,7 @@ describe('Russian direct-speech dashes', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('—\u00a0Типографика');
 
-    expect(service.format('-  Типографика')).toBe(expected);
+    expect(service.format('- Типографика')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

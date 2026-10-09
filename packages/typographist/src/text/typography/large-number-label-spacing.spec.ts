@@ -65,7 +65,7 @@ describe('Russian large-number-label spacing', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('Типографика 1 млн.');
 
-    expect(service.format('Типографика 1  млн.')).toBe(expected);
+    expect(service.format('Типографика 1 млн.')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

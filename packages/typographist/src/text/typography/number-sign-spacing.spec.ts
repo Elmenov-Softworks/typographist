@@ -52,7 +52,7 @@ describe('Russian number-sign spacing', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('№\u202f12345\u00a0примеры');
 
-    expect(service.format('№  12345 примеры')).toBe(expected);
+    expect(service.format('№ 12345 примеры')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });

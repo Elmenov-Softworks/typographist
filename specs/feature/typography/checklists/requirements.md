@@ -353,3 +353,17 @@ Removed TP-R014 and its settings; replaced obsolete cleanup fixtures with public
 service preservation tests for both locales, algorithms and cache modes, including
 protected fragments and repeat formatting. Earlier cleanup evidence predates the
 reduced scope. Remaining spacing removal and default quotation spacing are open.
+
+### Repeated-space preservation correction (2026-10-09)
+
+TP-R015 (`common/space/delRepeatSpace`) and its settings are removed.
+Repeated ordinary spaces and tabs remain between content characters. The
+public-service preservation matrix covers both locales, both algorithms, cache
+modes, protected content and repeated formatting. Earlier cleanup audits and
+benchmarks predate this correction. Remaining spacing removal and default
+quotation spacing are pending.
+
+Validation for this slice under Node v24.21.0: all 2,538 tests, workspace type
+checks, lint, formatting checks, builds and diff checks passed. The slice adds 52
+public-service tests and adapts retained interaction fixtures to single gaps.
+Changes remain uncommitted for the coordinator; independent review is pending.

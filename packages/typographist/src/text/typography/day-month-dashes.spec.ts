@@ -63,7 +63,7 @@ describe('Russian day–month range dashes', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const expected = legacy.format('Типографика 1–3\u00a0января');
 
-    expect(service.format('Типографика 1-3  января')).toBe(expected);
+    expect(service.format('Типографика 1-3 января')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
   });
 });
