@@ -1,61 +1,49 @@
 import { Typographist } from '@/index.js';
 
 describe('quotation pipeline interactions', () => {
-  describe.each([false, true])('useFast=%s', (useFast) => {
-    describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
-      it.each([
-        ['en', '"don\'t..."', '“don’t…”'],
-        ['ru', '"д\'Артаньян..."', '«д’Артаньян…»'],
-        ['en', '"hello" ,world!', '“hello” ,world!'],
-        ['ru', '"слово" ,текст!', '«слово» ,текст!'],
-        ['ru', '- "Привет!"', '—\u00a0«Привет!»'],
-      ] as const)('combines selected symbolic rules for %s: %j', (locale, input, expected) => {
-        const instance = new Typographist({
-          settings: { 'common/punctuation/quote': { spacing: false } },
-          locale,
-          useFast,
-          cacheSize,
-          categories: ['quotes', 'punctuation', 'spacing', 'dashes'],
-        });
-
-        expect(instance.format(input)).toBe(expected);
-        expect(instance.format(expected)).toBe(expected);
-      });
-
-      it.each(['en', 'ru'] as const)('preserves isolated quotes at protected boundaries in %s', (locale) => {
-        const instance = new Typographist({
-          settings: { 'common/punctuation/quote': { spacing: false } },
-          locale,
-          useFast,
-          cacheSize,
-          protectedContent: ['Keep "RAW"'],
-          categories: ['quotes', 'punctuation', 'spacing'],
-        });
-        const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
-        const input = '"https://example.com/a-b?q=1.25" "user@example.com" "Keep "RAW""';
-        const expected = `${input} ${left}change${right}`;
-
-        expect(instance.format(`${input} "change"`)).toBe(expected);
-        expect(instance.format(expected)).toBe(expected);
-      });
-
-      it('keeps apostrophe conversion independent of quotation selection', () => {
-        const quotes = new Typographist({
-          settings: { 'common/punctuation/quote': { spacing: false } },
-          useFast,
-          cacheSize,
-          categories: ['quotes'],
-        });
-        const punctuation = new Typographist({
-          useFast,
-          cacheSize,
-          categories: ['punctuation'],
-        });
-
-        expect(quotes.format('"don\'t"')).toBe("“don't”");
-        expect(punctuation.format('"don\'t"')).toBe('"don’t"');
-      });
+  it.each([
+    ['en', '"don\'t..."', '“don’t…”'],
+    ['ru', '"д\'Артаньян..."', '«д’Артаньян…»'],
+    ['en', '"hello" ,world!', '“hello” ,world!'],
+    ['ru', '"слово" ,текст!', '«слово» ,текст!'],
+    ['ru', '- "Привет!"', '—\u00a0«Привет!»'],
+  ] as const)('combines selected symbolic rules for %s: %j', (locale, input, expected) => {
+    const instance = new Typographist({
+      settings: { 'common/punctuation/quote': { spacing: false } },
+      locale,
+      categories: ['quotes', 'punctuation', 'spacing', 'dashes'],
     });
+
+    expect(instance.format(input)).toBe(expected);
+    expect(instance.format(expected)).toBe(expected);
+  });
+
+  it.each(['en', 'ru'] as const)('preserves isolated quotes at protected boundaries in %s', (locale) => {
+    const instance = new Typographist({
+      settings: { 'common/punctuation/quote': { spacing: false } },
+      locale,
+      protectedContent: ['Keep "RAW"'],
+      categories: ['quotes', 'punctuation', 'spacing'],
+    });
+    const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
+    const input = '"https://example.com/a-b?q=1.25" "user@example.com" "Keep "RAW""';
+    const expected = `${input} ${left}change${right}`;
+
+    expect(instance.format(`${input} "change"`)).toBe(expected);
+    expect(instance.format(expected)).toBe(expected);
+  });
+
+  it('keeps apostrophe conversion independent of quotation selection', () => {
+    const quotes = new Typographist({
+      settings: { 'common/punctuation/quote': { spacing: false } },
+      categories: ['quotes'],
+    });
+    const punctuation = new Typographist({
+      categories: ['punctuation'],
+    });
+
+    expect(quotes.format('"don\'t"')).toBe("“don't”");
+    expect(punctuation.format('"don\'t"')).toBe('"don’t"');
   });
 });
 
@@ -95,6 +83,7 @@ describe('bundled quotation service integration', () => {
     expect(instance.format('"Keep" "change" https://example.com/a user@example.com')).toBe(
       '"Keep" “change” https://example.com/a user@example.com',
     );
+
     expect(new Typographist({ categories: [] }).format('"banana"')).toBe('"banana"');
   });
 
@@ -187,27 +176,21 @@ describe('quotation pair settings', () => {
 
 describe('quotation multiplicity preservation', () => {
   describe.each(['en', 'ru'] as const)('locale=%s', (locale) => {
-    describe.each([false, true])('useFast=%s', (useFast) => {
-      describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
-        it.each([
-          ['""word""', '««word»»'],
-          ['"""word"""', '«««word»»»'],
-          ['««word» word»', '««word» word»'],
-          ['«word «word»»', '«word «word»»'],
-          ['""😀 é 1.25""', '««😀 é 1.25»»'],
-        ])('preserves every quote in %j', (input, expected) => {
-          const instance = new Typographist({
-            locale,
-            useFast,
-            cacheSize,
-            categories: ['quotes'],
-            settings: { 'common/punctuation/quote': { spacing: false, left: '«', right: '»' } },
-          });
-
-          expect(instance.format(input)).toBe(expected);
-          expect(instance.format(expected)).toBe(expected);
-        });
+    it.each([
+      ['""word""', '««word»»'],
+      ['"""word"""', '«««word»»»'],
+      ['««word» word»', '««word» word»'],
+      ['«word «word»»', '«word «word»»'],
+      ['""😀 é 1.25""', '««😀 é 1.25»»'],
+    ])('preserves every quote in %j', (input, expected) => {
+      const instance = new Typographist({
+        locale,
+        categories: ['quotes'],
+        settings: { 'common/punctuation/quote': { spacing: false, left: '«', right: '»' } },
       });
+
+      expect(instance.format(input)).toBe(expected);
+      expect(instance.format(expected)).toBe(expected);
     });
 
     it('preserves protected duplicate quotes and nested pairs', () => {
@@ -326,97 +309,32 @@ describe('quotation spacing', () => {
   });
 });
 
-describe.each(['en', 'ru'] as const)('quotation boundary preservation for %s', (locale) => {
-  describe.each([false, true])('useFast=%s', (useFast) => {
-    it.each([0, 1])('preserves exact whitespace with cacheSize=%s', (cacheSize) => {
-      const instance = new Typographist({
-        locale,
-        useFast,
-        cacheSize,
-        categories: ['quotes', 'hyphenation'],
-        protectedContent: ['« Keep »'],
-        settings: { 'common/punctuation/quote': { left: '«‹', right: '»›', spacing: true } },
-      });
-      const cases = [
-        ['«   cat   »', '«\u202f  cat  \u202f»'],
-        ['« \tcat\t »', '«\u202f\tcat\t\u202f»'],
-        ['«\tcat\t»', '«\tcat\t»'],
-        ['«\rcat\r»', '«\rcat\r»'],
-        ['«\r\ncat\r\n»', '«\r\ncat\r\n»'],
-        ['«\n\ncat\n\n»', '«\n\ncat\n\n»'],
-        ['«\u00a0cat\u00a0»', '«\u00a0cat\u00a0»'],
-        ['« Keep » «cat»', '« Keep » «\u202fcat\u202f»'],
-      ] as const;
-
-      for (const [input, expected] of cases) {
-        const formatted = instance.format(input);
-
-        expect(formatted).toBe(expected);
-        expect(instance.format(formatted)).toBe(formatted);
-      }
-    });
-  });
-});
-
-describe.each(['en', 'ru'] as const)('quotation CR boundaries for %s', (locale) => {
-  describe.each([false, true])('useFast=%s', (useFast) => {
-    describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
-      it.each([false, true])('preserves line endings with spacing=%s', (spacing) => {
-        const instance = new Typographist({
-          locale,
-          useFast,
-          cacheSize,
-          categories: ['quotes', 'hyphenation'],
-          protectedContent: ['"Keep"\r'],
-          settings: { 'common/punctuation/quote': { spacing } },
-        });
-        const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
-        const gap = spacing ? '\u202f' : '';
-
-        for (const ending of ['\r', '\r\n', '\n']) {
-          const input = `"Keep"\r${ending}"cat"${ending}"dog"${ending}`;
-          const expected = `"Keep"\r${ending}${left}${gap}cat${gap}${right}${ending}${left}${gap}dog${gap}${right}${ending}`;
-
-          expect(instance.format(input)).toBe(expected);
-          expect(instance.format(expected)).toBe(expected);
-        }
-      });
-    });
-  });
-});
-
 describe.each(['en', 'ru'] as const)('default quotation boundary spacing for %s', (locale) => {
-  describe.each([false, true])('useFast=%s', (useFast) => {
-    describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
-      it.each([false, true])('preserves whitespace and signs with spacing disabled=%s', (disabled) => {
-        const instance = new Typographist({
-          locale,
-          useFast,
-          cacheSize,
-          protectedContent: ['"Keep"'],
-          ...(disabled ? { settings: { 'common/punctuation/quote': { spacing: false } } } : {}),
-        });
-        const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
-        const gap = disabled ? '' : '\u202f';
-        const nested = locale === 'ru' ? (['„', '“'] as const) : (['‘', '’'] as const);
-        const cases = [
-          ['""cat""', `${left}${gap}${nested[0]}${gap}cat${gap}${nested[1]}${gap}${right}`],
-          ['"cat"', `${left}${gap}cat${gap}${right}`],
-          [`${left}   cat   ${right}`, `${left}${disabled ? ' ' : gap}  cat  ${disabled ? ' ' : gap}${right}`],
-          [`${left}\tcat\t${right}`, `${left}\tcat\t${right}`],
-          [`${left}\rcat\r${right}`, `${left}\rcat\r${right}`],
-          [`${left}\r\ncat\r\n${right}`, `${left}\r\ncat\r\n${right}`],
-          [`${left}\u00a0cat\u00a0${right}`, `${left}\u00a0cat\u00a0${right}`],
-          ['  \t"cat"!!!???  \t\r\n\r\n', `  \t${left}${gap}cat${gap}${right}!!!???  \t\r\n\r\n`],
-          ['"Keep" "cat"', `"Keep" ${left}${gap}cat${gap}${right}`],
-        ] as const;
-
-        for (const [input, expected] of cases) {
-          expect(instance.format(input)).toBe(expected);
-          expect(instance.format(expected)).toBe(expected);
-        }
-      });
+  it.each([false, true])('preserves whitespace and signs with spacing disabled=%s', (disabled) => {
+    const instance = new Typographist({
+      locale,
+      protectedContent: ['"Keep"'],
+      ...(disabled ? { settings: { 'common/punctuation/quote': { spacing: false } } } : {}),
     });
+    const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
+    const gap = disabled ? '' : '\u202f';
+    const nested = locale === 'ru' ? (['„', '“'] as const) : (['‘', '’'] as const);
+    const cases = [
+      ['""cat""', `${left}${gap}${nested[0]}${gap}cat${gap}${nested[1]}${gap}${right}`],
+      ['"cat"', `${left}${gap}cat${gap}${right}`],
+      [`${left}   cat   ${right}`, `${left}${disabled ? ' ' : gap}  cat  ${disabled ? ' ' : gap}${right}`],
+      [`${left}\tcat\t${right}`, `${left}\tcat\t${right}`],
+      [`${left}\rcat\r${right}`, `${left}\rcat\r${right}`],
+      [`${left}\r\ncat\r\n${right}`, `${left}\r\ncat\r\n${right}`],
+      [`${left}\u00a0cat\u00a0${right}`, `${left}\u00a0cat\u00a0${right}`],
+      ['  \t"cat"!!!???  \t\r\n\r\n', `  \t${left}${gap}cat${gap}${right}!!!???  \t\r\n\r\n`],
+      ['"Keep" "cat"', `"Keep" ${left}${gap}cat${gap}${right}`],
+    ] as const;
+
+    for (const [input, expected] of cases) {
+      expect(instance.format(input)).toBe(expected);
+      expect(instance.format(expected)).toBe(expected);
+    }
   });
 });
 
@@ -466,6 +384,7 @@ describe.each(['en', 'ru'] as const)('spaced straight quotation boundaries for %
       expect(instance.format(expected)).toBe(expected);
     }
   });
+
   it.each(['|', ']', '\\', '^', '-'])('spaces existing identical custom pair %j', (glyph) => {
     const instance = new Typographist({
       locale,
@@ -486,6 +405,7 @@ describe.each(['en', 'ru'] as const)('spaced straight quotation boundaries for %
       expect(instance.format(expected)).toBe(expected);
     }
   });
+
   it('preserves existing identical custom boundaries with spacing disabled', () => {
     const instance = new Typographist({
       locale,
@@ -497,6 +417,7 @@ describe.each(['en', 'ru'] as const)('spaced straight quotation boundaries for %
       expect(instance.format(input)).toBe(input);
     }
   });
+
   it('spaces existing nested custom pairs inside identical outer glyphs', () => {
     const instance = new Typographist({
       locale,

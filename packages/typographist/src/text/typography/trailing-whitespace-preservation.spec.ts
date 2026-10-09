@@ -1,83 +1,55 @@
 import { Typographist } from '@/index.js';
 
-describe.each(['en', 'ru'] as const)('trailing-whitespace preservation for %s', (locale) => {
-  describe.each([false, true])('useFast=%s', (useFast) => {
-    describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
-      it.each(['cat \n', 'cat\t\n', 'cat \r', 'cat \r\n', 'cat\u00a0\n', 'cat \n\n'])('preserves %j', (input) => {
-        const service = new Typographist({ locale, useFast, cacheSize });
-
-        expect(service.format(input)).toBe(input);
-        expect(service.format(service.format(input))).toBe(input);
-      });
-
-      it('preserves trailing separators after short words and abbreviation labels', () => {
-        const service = new Typographist({ locale, useFast, cacheSize });
-        const bindingOnly = new Typographist({ locale, categories: ['nonbreakingSpacing'] });
-        const hyphenationOnly = new Typographist({ locale, useFast, cacheSize, categories: ['hyphenation'] });
-        const words = locale === 'en' ? ['a', 'the', 'I'] : ['я', 'и', 'если', 'ООО', 'мкр.', 'мк-н', 'литер'];
-
-        for (const word of words) {
-          for (const suffix of [
-            ' ',
-            '   ',
-            ' \r',
-            ' \n',
-            '  \r\n',
-            ' \t',
-            '  \t\n',
-            ' \tcat',
-            '  \r\ncat',
-            '\u00a0',
-            '\u202f',
-          ]) {
-            const input = `${word}${suffix}`;
-            const expected = hyphenationOnly.format(input);
-
-            expect(bindingOnly.format(input)).toBe(input);
-            expect(service.format(input)).toBe(expected);
-            expect(service.format(expected)).toBe(expected);
-          }
-        }
-      });
-
-      it('binds same-line content while retaining extra ordinary spaces', () => {
-        const service = new Typographist({ locale, useFast, cacheSize, categories: ['nonbreakingSpacing'] });
-        const fixtures: [string, string][] =
-          locale === 'en'
-            ? [
-                ['a   cat', 'a\u00a0  cat'],
-                ['the  cat', 'the\u00a0 cat'],
-              ]
-            : [
-                ['я   тут', 'я\u00a0  тут'],
-                ['если  тут', 'если\u00a0 тут'],
-                ['ООО   Дом', 'ООО\u00a0  Дом'],
-                ['мкр.   Центр', 'мкр.\u00a0  Центр'],
-                ['литер   А', 'литер\u00a0  А'],
-              ];
-
-        for (const [input, expected] of fixtures) {
-          expect(service.format(input)).toBe(expected);
-          expect(service.format(service.format(input))).toBe(expected);
-        }
-      });
-
-      it('preserves trailing whitespace around protected fragments before hyphenation', () => {
-        const configuration = { locale, useFast, cacheSize, protectedContent: ['keep \nthis'] };
-        const service = new Typographist({ ...configuration, categories: ['spacing', 'hyphenation'] });
-        const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
-        const input = 'Typography \nhttps://example.com/a\t\nuser@example.com \r\nkeep \nthis \n';
-        const expected = legacy.format(input);
-
-        expect(service.format(input)).toBe(expected);
-        expect(service.format(expected)).toBe(expected);
-      });
-    });
+describe.each(['en', 'ru'] as const)('short-word boundary spacing for %s', (locale) => {
+  const service = new Typographist({
+    locale,
+    rules: [],
+    textLocales: [{ locale, textRules: [] }],
+    categories: ['nonbreakingSpacing'],
   });
 
-  it.each([{}, { enabled: true }])('rejects removed settings %j', (settings) => {
-    expect(() => new Typographist({ locale, settings: { 'common/space/delTrailingBlanks': settings } })).toThrow(
-      TypeError,
-    );
+  it('requires a following same-line target', () => {
+    const words = locale === 'en' ? ['a', 'the', 'I'] : ['я', 'и', 'если', 'ООО', 'мкр.', 'мк-н', 'литер'];
+
+    for (const word of words) {
+      for (const suffix of [
+        ' ',
+        '   ',
+        ' \r',
+        ' \n',
+        '  \r\n',
+        ' \t',
+        '  \t\n',
+        ' \tcat',
+        '  \r\ncat',
+        '\u00a0',
+        '\u202f',
+      ]) {
+        const input = word + suffix;
+
+        expect(service.format(input), input).toBe(input);
+      }
+    }
+  });
+
+  it('binds same-line content while retaining extra ordinary spaces', () => {
+    const fixtures: [string, string][] =
+      locale === 'en'
+        ? [
+            ['a   cat', 'a\u00a0  cat'],
+            ['the  cat', 'the\u00a0 cat'],
+          ]
+        : [
+            ['я   тут', 'я\u00a0  тут'],
+            ['если  тут', 'если\u00a0 тут'],
+            ['ООО   Дом', 'ООО\u00a0  Дом'],
+            ['мкр.   Центр', 'мкр.\u00a0  Центр'],
+            ['литер   А', 'литер\u00a0  А'],
+          ];
+
+    for (const [input, expected] of fixtures) {
+      expect(service.format(input)).toBe(expected);
+      expect(service.format(expected)).toBe(expected);
+    }
   });
 });

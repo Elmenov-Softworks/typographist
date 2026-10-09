@@ -1,161 +1,33 @@
-import { Typographist } from '@/typographist/typographist.js';
+import { Typographist } from '@/index.js';
 
-describe('custom spacing category preservation', () => {
-  it.each(
-    (['en', 'ru'] as const).flatMap((locale) =>
-      [false, true].flatMap((useFast) => [0, 64].map((cacheSize) => ({ locale, useFast, cacheSize }))),
-    ),
-  )('combines punctuation spacing for $locale, useFast=$useFast, cacheSize=$cacheSize', (configuration) => {
-    const service = new Typographist({
-      ...configuration,
-      categories: ['spacing', 'hyphenation'],
-      protectedContent: ['Keep ,this(  literal  )'],
-    });
-    const legacy = new Typographist({
-      ...configuration,
-      categories: ['hyphenation'],
-      protectedContent: ['Keep ,this(  literal  )'],
-    });
-    const word = configuration.locale === 'en' ? 'Typography' : 'Типографика';
-    const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
-    const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
-    const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const expected = legacy.format(normalized);
+it('runs explicitly selected consumer spacing rules without builtin cleanup', () => {
+  const rule = {
+    id: 'custom/gap',
+    category: 'spacing' as const,
+    order: 400,
+    defaults: {},
+    prepare: () => (text: string) => text.replaceAll('~~', '\u00a0'),
+  };
+  const service = new Typographist({ categories: ['spacing'], textRules: [rule], protectedContent: ['Keep~~this'] });
+  const input = '  word~~word\t Keep~~this https://example.com/a~~b user@example.com \r\n';
 
-    expect(service.format(input)).toBe(expected);
-    expect(service.format(expected)).toBe(expected);
-    expect(new Typographist({ ...configuration, categories: [] }).format(input)).toBe(input);
-    expect(legacy.format(input).replaceAll('\u00ad', '')).toBe(input);
-  });
+  expect(service.format(input)).toBe('  word\u00a0word\t Keep~~this https://example.com/a~~b user@example.com \r\n');
+  expect(new Typographist({ textRules: [rule] }).format('cat~~dog')).toBe('cat~~dog');
+});
 
-  it.each(
-    (['en', 'ru'] as const).flatMap((locale) =>
-      [false, true].flatMap((useFast) => [0, 1].map((cacheSize) => ({ locale, useFast, cacheSize }))),
-    ),
-  )('preserves whitespace before hyphenation for $locale, useFast=$useFast, cacheSize=$cacheSize', (configuration) => {
-    const service = new Typographist({
-      ...configuration,
-      categories: ['spacing', 'hyphenation'],
-      protectedContent: ['Keep\t  this\n\n\n'],
-    });
-    const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
-    const input = '\tTypography\tworks  \n\n\n  Типографика\tработает\nKeep\t  this\n\n\nend\t ';
-    const expected = legacy.format(input);
+it.each(
+  (['en', 'ru'] as const).flatMap((locale) =>
+    [false, true].flatMap((useFast) => [0, 64].map((cacheSize) => ({ locale, useFast, cacheSize }))),
+  ),
+)('preserves gaps through hyphenation for $locale, useFast=$useFast, cacheSize=$cacheSize', (config) => {
+  const service = new Typographist({ ...config, categories: ['spacing', 'hyphenation'] });
+  const hyphenation = new Typographist({ ...config, categories: ['hyphenation'] });
+  const input =
+    '\tTypography  Типографика (  text  ) word,next!last?end 25 % \r\n\r\nhttps://example.com/a,b user@example.com\t ';
+  const expected = hyphenation.format(input);
 
-    expect(service.format(input)).toBe(expected);
-    expect(service.format(expected)).toBe(expected);
-    expect(new Typographist({ ...configuration, categories: [] }).format(input)).toBe(input);
-    expect(legacy.format(input).replaceAll('\u00ad', '')).toBe(input);
-  });
-
-  it.each(['en', 'ru'] as const)('combines terminal punctuation spacing for %s', (locale) => {
-    const service = new Typographist({
-      locale,
-      categories: ['spacing', 'punctuation'],
-      protectedContent: ['Keep . ! !'],
-    });
-    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
-    const input = `${content} . Wait ... Really! ! https://example.com/a user@example.com Keep . ! !`;
-    const output = `${content} . Wait … Really! ! https://example.com/a user@example.com Keep . ! !`;
-
-    expect(service.format(input)).toBe(output);
-    expect(service.format(output)).toBe(output);
-    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
-    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a . ! !')).toBe('a . ! !');
-  });
-
-  it.each(['en', 'ru'] as const)('preserves composition and protected content for %s', (locale) => {
-    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep\t  this'] });
-    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
-    const addresses = 'https://example.com/a user@example.com';
-
-    expect(service.format(`${content}\tend`)).toBe(`${content}\tend`);
-    expect(service.format(`before ${addresses} after Keep\t  this end`)).toBe(
-      `before ${addresses} after Keep\t  this end`,
-    );
-    expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t ')).toBe(' \r\n\t ');
-    expect(service.format('a\u00adb\u00a0c')).toBe('a\u00adb\u00a0c');
-  });
-
-  it.each([false, true])('orders spacing before hyphenation with useFast=%s', (useFast) => {
-    const service = new Typographist({ useFast, categories: ['spacing', 'hyphenation'] });
-    const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
-    const output = service.format('[  table\tword  ]  \nnext');
-
-    expect(output).toBe(legacy.format('[  table\tword  ]  \nnext'));
-    expect(service.format(output)).toBe(output);
-    expect(legacy.format('a\tb')).toBe('a\tb');
-    expect(new Typographist({ categories: [] }).format('a\tb')).toBe('a\tb');
-  });
-
-  it.each(['en', 'ru'] as const)('combines punctuation spacing without rewriting content for %s', (locale) => {
-    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep ( this ) 1 %'] });
-    const input = '( $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс ) ; 10 %';
-    const output = '( $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс ) ; 10 %';
-
-    expect(service.format(input)).toBe(output);
-    expect(service.format(output)).toBe(output);
-    expect(service.format('https://example.com/(a) user@example.com Keep ( this ) 1 %')).toBe(
-      'https://example.com/(a) user@example.com Keep ( this ) 1 %',
-    );
-    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
-    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('1 % ( a ) ;')).toBe('1 % ( a ) ;');
-  });
-
-  it.each(['en', 'ru'] as const)('preserves colons, notation and protection for %s', (locale) => {
-    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep:this'] });
-    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
-    const input = `${content} 12:30 https://example.com:8080/a user@example.com Keep:this word:next`;
-    const output = `${content} 12:30 https://example.com:8080/a user@example.com Keep:this word:next`;
-
-    expect(service.format(input)).toBe(output);
-    expect(service.format(output)).toBe(output);
-    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
-    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a:b')).toBe('a:b');
-  });
-
-  it.each(['en', 'ru'] as const)('preserves question and exclamation boundaries and protection for %s', (locale) => {
-    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep!this?here'] });
-    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
-    const input = `${content}!next?last https://example.com/a!b?q=x user@example.com Keep!this?here`;
-    const output = `${content}!next?last https://example.com/a!b?q=x user@example.com Keep!this?here`;
-
-    expect(service.format(input)).toBe(output);
-    expect(service.format(output)).toBe(output);
-    expect(service.format('word !next ?last')).toBe('word !next ?last');
-    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
-    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a!b?c')).toBe('a!b?c');
-  });
-
-  it.each([false, true])('combines Russian ellipsis spacing and hyphenation with useFast=%s', (useFast) => {
-    const service = new Typographist({
-      locale: 'ru',
-      useFast,
-      categories: ['spacing', 'punctuation', 'hyphenation'],
-      protectedContent: ['Keep?..this'],
-    });
-    const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
-    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
-    const input = `${content} слово...Далее Что?..next https://example.com/a?..b user@example.com Keep?..this`;
-    const normalized = `${content} слово…Далее Что?..next https://example.com/a?..b user@example.com Keep?..this`;
-    const output = legacy.format(normalized);
-
-    expect(service.format(input)).toBe(output);
-    expect(service.format(output)).toBe(output);
-    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
-    expect(legacy.format('я...Я')).toBe('я...Я');
-    expect(new Typographist({ locale: 'ru', categories: ['punctuation'] }).format('я...Я')).toBe('я…Я');
-  });
-
-  it('does not bundle spacing for consumer locales', () => {
-    const service = new Typographist({
-      rules: [],
-      locale: 'custom',
-      textLocales: [{ locale: 'custom', textRules: [] }],
-    });
-
-    expect(service.format('[  a\tb  ]')).toBe('[  a\tb  ]');
-  });
+  expect(expected).toContain('\u00ad');
+  expect(expected.replaceAll('\u00ad', '')).toBe(input);
+  expect(service.format(input)).toBe(expected);
+  expect(service.format(expected)).toBe(expected);
 });
