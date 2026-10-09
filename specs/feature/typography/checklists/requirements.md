@@ -457,3 +457,15 @@ TP-R029 removal validation under Node v24.21.0: all 3,186 tests, workspace
 build, typecheck, lint, formatting and diff checks passed. Changes remain
 uncommitted for the coordinator; independent review of the reduced scope remains
 pending.
+
+Owner correction, 2026-10-09: TP-R030 (`common/space/afterQuestionMark`)
+and its settings are removed. Question marks preserve supplied boundary gaps,
+including no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs
+and protected bytes remain unchanged. Custom spacing rules remain supported.
+Historical audits and timings predate this removal. Remaining spacing removals
+and default quotation spacing are pending.
+
+TP-R030 removal validation under Node v24.21.0: all 3,254 tests, workspace
+build, typecheck and lint passed. Formatting was corrected after the initial
+check; the final formatting and diff checks passed. Changes remain uncommitted
+for the coordinator; independent review of the reduced scope remains pending.

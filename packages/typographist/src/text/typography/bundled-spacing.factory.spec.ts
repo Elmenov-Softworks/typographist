@@ -4,12 +4,6 @@ import { Typographist } from '@/typographist/typographist.js';
 
 const scenarios = [
   {
-    id: 'common/space/afterQuestionMark',
-    input: '?start word?next слово?далее 1?2 ?, ?: ?/ ?\\ ?( ?😀',
-    output: '? start word? next слово? далее 1? 2 ? , ? : ? / ? \\ ? ( ? 😀',
-    unchanged: '?. ?… ?! ?; ?? ?[ ?] ?) ?« ?‹ ?» ?› ?„ ?“ ?‟ ?” ?" ? next ?\t ?\n ?\u00a0',
-  },
-  {
     id: 'common/space/afterComma',
     input: 'word,next слово,далее 1,a a,1 a,( a,😀',
     output: 'word, next слово, далее 1, a a, 1 a, ( a, 😀',
@@ -43,7 +37,7 @@ describe('bundled spacing reference scenarios', () => {
     const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
     const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word}(  works  ) [  text  ] word , next;next!next? next: next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
+    const normalized = `${word}(  works  ) [  text  ] word , next;next!next?next: next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -174,21 +168,18 @@ describe('bundled spacing reference scenarios', () => {
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a,b')).toBe('a,b');
   });
 
-  it.each(['en', 'ru'] as const)(
-    'spaces question marks while preserving exclamation boundaries and protection for %s',
-    (locale) => {
-      const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep!this?here'] });
-      const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
-      const input = `${content}!next?last https://example.com/a!b?q=x user@example.com Keep!this?here`;
-      const output = `${content}!next? last https://example.com/a!b?q=x user@example.com Keep!this?here`;
+  it.each(['en', 'ru'] as const)('preserves question and exclamation boundaries and protection for %s', (locale) => {
+    const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep!this?here'] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content}!next?last https://example.com/a!b?q=x user@example.com Keep!this?here`;
+    const output = `${content}!next?last https://example.com/a!b?q=x user@example.com Keep!this?here`;
 
-      expect(service.format(input)).toBe(output);
-      expect(service.format(output)).toBe(output);
-      expect(service.format('word !next ?last')).toBe('word !next ? last');
-      expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
-      expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a!b?c')).toBe('a!b?c');
-    },
-  );
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(service.format('word !next ?last')).toBe('word !next ?last');
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a!b?c')).toBe('a!b?c');
+  });
 
   it('spaces Russian ellipses using reference letter boundaries', () => {
     const id = 'ru/space/afterHellip';

@@ -7,13 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/afterQuestionMark',
-      category: 'spacing',
-      order: 210,
-      defaults: {},
-      prepare: () => (text) => text.replace(/\?([^).…!;?\s[\]«‹»›„“‟”"])/g, '? $1'),
-    },
-    {
       id: 'common/space/afterComma',
       category: 'spacing',
       order: 210,
@@ -57,7 +50,6 @@ export const createBundledSpacing = (locale: string) => {
   const referenceOrder = [
     'ru/space/year',
     'ru/space/afterHellip',
-    'common/space/afterQuestionMark',
     'common/space/afterComma',
     'common/space/afterColon',
   ];
