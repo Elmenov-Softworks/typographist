@@ -83,11 +83,11 @@ export const createBundledDashes = (locale: string) => {
       defaults: {},
       prepare: () => (text, context) =>
         text
-          .replace(/(["»‘“,])[ |\u00a0]?(--?|‒|–|—)[ |\u00a0]/g, '$1\u00a0— ')
+          .replace(/(["»‘“,])[ \u00a0]?(--?|‒|–|—)([ \u00a0])/g, '$1\u00a0—$3')
           .replace(/^(--?|‒|–|—)[ \u00a0]/gm, (match: string, _dash: string, offset: number) =>
             offset === 0 && context?.startsLine === false ? match : '—\u00a0',
           )
-          .replace(/([.…?!])[ \u00a0](--?|‒|–|—)[ \u00a0]/g, '$1 —\u00a0'),
+          .replace(/([.…?!])([ \u00a0])(--?|‒|–|—)[ \u00a0]/g, '$1$2—\u00a0'),
     });
 
     rules.push({
