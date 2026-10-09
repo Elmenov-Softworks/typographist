@@ -56,3 +56,11 @@ The last three doublings took approximately twice as long. This is evidence for 
 The minus handler now scans only hyphen candidates in each unprotected segment. Internal boundary metadata references the original text and segment end, so a candidate can inspect a numeric continuation across protection without copying an adjoining token. Numeric scans stop at the first nonnumeric continuation; separate hyphen candidates have disjoint numeric runs. Segments without hyphens perform no numeric classification. Public adjoining-token getters remain complete and lazy for consumer handlers, and protected bytes remain unchanged. Behavior regressions cover many protected fragments, repeated hyphen candidates, long protected numeric runs, scientific notation and existing soft hyphens. Unit tests contain no timing assertions.
 
 Correction validation passed: 1,857 tests, workspace type checking, lint, formatting and builds. The coordinator still owns the commit and complete independent re-review.
+
+## Scope cleanup comparison
+
+[scope-cleanup.json](scope-cleanup.json) compares complete default `format` calls
+against `6469d88` on Node v24.21.0. Both algorithms, zero/64 MiB caches and ru/en
+use matched inputs and settings. See its procedure and the current
+[acceptance record](../checklists/requirements.md) for limitations. These results
+are separate from the historical full-feature measurements above.
