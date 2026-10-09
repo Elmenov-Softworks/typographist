@@ -469,3 +469,10 @@ TP-R030 removal validation under Node v24.21.0: all 3,254 tests, workspace
 build, typecheck and lint passed. Formatting was corrected after the initial
 check; the final formatting and diff checks passed. Changes remain uncommitted
 for the coordinator; independent review of the reduced scope remains pending.
+
+Owner correction, 2026-10-09: TP-R031 (`common/space/afterComma`)
+and its settings are removed. Commas preserve supplied boundary gaps, including
+no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
+protected bytes remain unchanged. Custom spacing rules remain supported.
+Historical audits and timings predate this removal. Remaining spacing removals
+and default quotation spacing are pending.

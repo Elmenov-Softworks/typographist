@@ -7,20 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/afterComma',
-      category: 'spacing',
-      order: 210,
-      defaults: {},
-      prepare: () => {
-        const afterComma = locale === 'ru' ? /(.),([^)",:.?\s/\\»“‘])/g : /(.),([^)",:.?\s/\\”’])/g;
-
-        return (text) =>
-          text.replace(afterComma, (match: string, before: string, after: string) =>
-            /\d/.test(before) && /\d/.test(after) ? match : `${before}, ${after}`,
-          );
-      },
-    },
-    {
       id: 'common/space/afterColon',
       category: 'spacing',
       order: 210,
@@ -47,12 +33,7 @@ export const createBundledSpacing = (locale: string) => {
     });
   }
 
-  const referenceOrder = [
-    'ru/space/year',
-    'ru/space/afterHellip',
-    'common/space/afterComma',
-    'common/space/afterColon',
-  ];
+  const referenceOrder = ['ru/space/year', 'ru/space/afterHellip', 'common/space/afterColon'];
 
   return rules.sort(
     (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),

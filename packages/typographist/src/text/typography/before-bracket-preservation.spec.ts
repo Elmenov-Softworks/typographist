@@ -20,7 +20,7 @@ describe.each(['en', 'ru'] as const)('opening bracket boundary preservation for 
         const service = new Typographist({ ...configuration, categories: ['spacing', 'punctuation', 'hyphenation'] });
         const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
         const input = 'Typography(test) .(x) ! (x) ? (x) ,(x) ; (x) ...(x) )(x) Keep...(this)';
-        const expected = legacy.format(input.replace(' ...(x)', ' …(x)').replace(',(x)', ', (x)'));
+        const expected = legacy.format(input.replace(' ...(x)', ' …(x)'));
 
         expect(service.format(input)).toBe(expected);
         expect(service.format(expected)).toBe(expected);
