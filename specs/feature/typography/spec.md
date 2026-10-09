@@ -280,3 +280,10 @@ no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
 protected bytes remain unchanged. Custom spacing rules remain supported.
 Historical audits and timings predate this removal. Remaining spacing removals
 and default quotation spacing are pending.
+
+Owner correction, 2026-10-09: TP-R029 (`common/space/afterExclamationMark`)
+and its settings are removed. Exclamation marks preserve the supplied boundary
+gap, including no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated
+signs and protected bytes remain unchanged. Custom spacing rules remain supported.
+Historical audits and timings predate this removal. Remaining spacing removals
+and default quotation spacing are pending.

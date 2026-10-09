@@ -11,7 +11,6 @@ const referenceOrder = [
   'ru/space/afterHellip',
   'common/space/bracket',
   'common/space/afterSemicolon',
-  'common/space/afterExclamationMark',
   'common/space/afterQuestionMark',
   'common/space/afterComma',
   'common/space/afterColon',

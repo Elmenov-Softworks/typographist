@@ -445,3 +445,15 @@ and default quotation spacing are pending.
 TP-R028 removal validation under Node v24.21.0: all 3,118 tests, workspace
 build, typecheck, lint, formatting and diff checks passed. Git mutations remain
 with the coordinator; independent review of the reduced scope remains pending.
+
+Owner correction, 2026-10-09: TP-R029 (`common/space/afterExclamationMark`)
+and its settings are removed. Exclamation marks preserve the supplied boundary
+gap, including no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated
+signs and protected bytes remain unchanged. Custom spacing rules remain supported.
+Historical audits and timings predate this removal. Remaining spacing removals
+and default quotation spacing are pending.
+
+TP-R029 removal validation under Node v24.21.0: all 3,186 tests, workspace
+build, typecheck, lint, formatting and diff checks passed. Changes remain
+uncommitted for the coordinator; independent review of the reduced scope remains
+pending.

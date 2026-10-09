@@ -72,7 +72,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R026  | `common/space/bracket`                    | Removed by owner correction; preservation regressions |
 | TP-R027  | `common/space/beforeBracket`              | Removed by owner correction; preservation regressions |
 | TP-R028  | `common/space/afterSemicolon`             | Removed by owner correction; preservation regressions |
-| TP-R029  | `common/space/afterExclamationMark`       | `bundled-spacing.factory.ts`                          |
+| TP-R029  | `common/space/afterExclamationMark`       | Removed by owner correction (2026-10-09)              |
 | TP-R030  | `common/space/afterQuestionMark`          | `bundled-spacing.factory.ts`                          |
 | TP-R031  | `common/space/afterComma`                 | `bundled-spacing.factory.ts`                          |
 | TP-R032  | `common/space/afterColon`                 | `bundled-spacing.factory.ts`                          |
@@ -600,5 +600,12 @@ Owner correction, 2026-10-09: TP-R028 (`common/space/afterSemicolon`) and its
 settings are removed. Semicolons preserve the supplied boundary gap, including
 no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
 protected bytes remain unchanged. Custom spacing rules remain supported.
+Historical audits and timings predate this removal. Remaining spacing removals
+and default quotation spacing are pending.
+
+Owner correction, 2026-10-09: TP-R029 (`common/space/afterExclamationMark`)
+and its settings are removed. Exclamation marks preserve the supplied boundary
+gap, including no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated
+signs and protected bytes remain unchanged. Custom spacing rules remain supported.
 Historical audits and timings predate this removal. Remaining spacing removals
 and default quotation spacing are pending.
