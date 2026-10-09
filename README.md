@@ -294,3 +294,6 @@ Russian year, century, weekday and month range rules preserve existing gaps arou
 Whole-text trimming (`common/space/trimLeft` and `common/space/trimRight`)
 is removed. Both former settings are rejected. Other ordinary whitespace cleanup
 is still pending removal under the owner scope correction.
+
+Line-leading whitespace cleanup (`common/space/delLeadingBlanks`) is removed.
+Indentation remains intact, and the former settings are rejected.

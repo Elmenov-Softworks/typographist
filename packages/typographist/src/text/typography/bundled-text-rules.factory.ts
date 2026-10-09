@@ -10,7 +10,6 @@ const referenceOrder = [
   'ru/space/year',
   'ru/space/afterHellip',
   'common/space/squareBracket',
-  'common/space/delLeadingBlanks',
   'common/space/delBetweenExclamationMarks',
   'common/space/delBeforePunctuation',
   'common/space/delBeforePercent',

@@ -17,13 +17,11 @@ describe('Locale spacing interactions', () => {
     const addresses = 'https://example.com/2028год...Далее user2029год@example.com';
     const input = `\t2027год...Далее\n  Typography\n\t${content}\n${addresses}\nKeep\t2026год...Далее\n  literal\n  `;
     const start = configuration.locale === 'ru' ? '2027год… Далее' : '2027год…Далее';
-    const normalized = `${start}\nTypography\n${content}\n${addresses}\nKeep\t2026год...Далее\n  literal\n`;
+    const normalized = `\t${start}\n  Typography\n\t${content}\n${addresses}\nKeep\t2026год...Далее\n  literal\n  `;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
-    expect(service.format(expected)).toBe(
-      configuration.locale === 'ru' ? expected.replace('2027год', '2027 год') : expected,
-    );
+    expect(service.format(expected)).toBe(expected);
     expect(new Typographist({ ...configuration, categories: [], protectedContent }).format(input)).toBe(input);
     expect(legacy.format(input).replaceAll('\u00ad', '')).toBe(input);
   });

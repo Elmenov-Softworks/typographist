@@ -219,3 +219,12 @@ public-service preservation matrix covers both locales, both algorithms, cache
 modes, protected content and repeated formatting. Earlier cleanup audits and
 benchmarks predate this correction. Remaining spacing removal and default
 quotation spacing are pending.
+
+### Indentation preservation correction (2026-10-09)
+
+TP-R021 (`common/space/delLeadingBlanks`) and its settings are removed.
+Line-leading ordinary spaces and tabs remain intact, including after CR, LF,
+CR/LF and Unicode line separators. Public-service tests cover both locales,
+algorithms, cache modes, protected boundaries and repeated formatting. Earlier
+cleanup audits and benchmarks predate this correction. Remaining spacing removal
+and default quotation spacing are pending.

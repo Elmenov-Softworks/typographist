@@ -7,16 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/delLeadingBlanks',
-      category: 'spacing',
-      order: 210,
-      defaults: {},
-      prepare: () => (text, context) =>
-        text.replace(/(^|[\r\n\u2028\u2029])[ \t]+/g, (match: string, boundary: string, offset: number) =>
-          offset === 0 && boundary === '' && context?.startsLine === false ? match : boundary,
-        ),
-    },
-    {
       id: 'common/space/squareBracket',
       category: 'spacing',
       order: 210,
@@ -135,7 +125,6 @@ export const createBundledSpacing = (locale: string) => {
     'ru/space/year',
     'ru/space/afterHellip',
     'common/space/squareBracket',
-    'common/space/delLeadingBlanks',
     'common/space/delBetweenExclamationMarks',
     'common/space/delBeforePunctuation',
     'common/space/delBeforePercent',

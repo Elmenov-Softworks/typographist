@@ -367,3 +367,12 @@ Validation for this slice under Node v24.21.0: all 2,538 tests, workspace type
 checks, lint, formatting checks, builds and diff checks passed. The slice adds 52
 public-service tests and adapts retained interaction fixtures to single gaps.
 Changes remain uncommitted for the coordinator; independent review is pending.
+
+### Indentation preservation correction (2026-10-09)
+
+TP-R021 (`common/space/delLeadingBlanks`) and its settings are removed.
+Line-leading ordinary spaces and tabs remain intact, including after CR, LF,
+CR/LF and Unicode line separators. Public-service tests cover both locales,
+algorithms, cache modes, protected boundaries and repeated formatting. Earlier
+cleanup audits and benchmarks predate this correction. Remaining spacing removal
+and default quotation spacing are pending.

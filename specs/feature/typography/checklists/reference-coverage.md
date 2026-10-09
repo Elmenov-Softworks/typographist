@@ -64,7 +64,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R018  | `ru/space/afterHellip`                    | `bundled-spacing.factory.ts`                          |
 | TP-R019  | `common/space/squareBracket`              | `bundled-spacing.factory.ts`                          |
 | TP-R020  | `common/space/insertFinalNewline`         | Removed by owner correction (2026-10-09)              |
-| TP-R021  | `common/space/delLeadingBlanks`           | `bundled-spacing.factory.ts`                          |
+| TP-R021  | `common/space/delLeadingBlanks`           | Removed by owner scope correction                     |
 | TP-R022  | `common/space/delBetweenExclamationMarks` | `bundled-spacing.factory.ts`                          |
 | TP-R023  | `common/space/delBeforePunctuation`       | `bundled-spacing.factory.ts`                          |
 | TP-R024  | `common/space/delBeforePercent`           | `bundled-spacing.factory.ts`                          |
@@ -552,3 +552,12 @@ public-service preservation matrix covers both locales, both algorithms, cache
 modes, protected content and repeated formatting. Earlier cleanup audits and
 benchmarks predate this correction. Remaining spacing removal and default
 quotation spacing are pending.
+
+### Indentation preservation correction (2026-10-09)
+
+TP-R021 (`common/space/delLeadingBlanks`) and its settings are removed.
+Line-leading ordinary spaces and tabs remain intact, including after CR, LF,
+CR/LF and Unicode line separators. Public-service tests cover both locales,
+algorithms, cache modes, protected boundaries and repeated formatting. Earlier
+cleanup audits and benchmarks predate this correction. Remaining spacing removal
+and default quotation spacing are pending.
