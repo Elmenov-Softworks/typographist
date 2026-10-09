@@ -434,3 +434,14 @@ this removal.
 
 TP-R027 removal validation under Node v24.21.0: all 3,052 tests, workspace
 build, typecheck, lint and formatting checks passed.
+
+Owner correction, 2026-10-09: TP-R028 (`common/space/afterSemicolon`) and its
+settings are removed. Semicolons preserve the supplied boundary gap, including
+no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
+protected bytes remain unchanged. Custom spacing rules remain supported.
+Historical audits and timings predate this removal. Remaining spacing removals
+and default quotation spacing are pending.
+
+TP-R028 removal validation under Node v24.21.0: all 3,118 tests, workspace
+build, typecheck, lint, formatting and diff checks passed. Git mutations remain
+with the coordinator; independent review of the reduced scope remains pending.

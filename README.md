@@ -342,3 +342,10 @@ settings are removed. Opening parentheses preserve the supplied boundary gap,
 including no gap, repeated spaces, tabs, line endings and existing NBSPs.
 Custom spacing rules remain supported. Historical audits and timings predate
 this removal.
+
+Owner correction, 2026-10-09: TP-R028 (`common/space/afterSemicolon`) and its
+settings are removed. Semicolons preserve the supplied boundary gap, including
+no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
+protected bytes remain unchanged. Custom spacing rules remain supported.
+Historical audits and timings predate this removal. Remaining spacing removals
+and default quotation spacing are pending.
