@@ -268,3 +268,14 @@ missing declarative datasets at runtime and compile time; existing subclass,
 typography-only locale, algorithm and cache regressions remain passing. Changes
 are uncommitted for coordinator review. This validates A8 only; the remaining
 owner corrections and full independent review are still open.
+
+Owner scope correction (2026-10-09), quotation multiplicity: remove duplicate-quote
+deletion and reject the removed `removeDuplicateQuotes` setting. Preserve source
+quote counts during locale glyph replacement, nesting and unmatched-quote handling.
+Historical duplicate-removal audit evidence predates this correction. Builtin
+spacing removal and the Q6 quote-boundary spacing correction remain pending.
+
+Quotation multiplicity correction validation: Node v24.21.0; all 2,133 tests,
+workspace type checks, lint, formatting, builds and diff checks passed. The targeted
+quotation integration suite passed 129 tests. Changes are left uncommitted for the
+coordinator. Remaining owner corrections and full independent review are open.

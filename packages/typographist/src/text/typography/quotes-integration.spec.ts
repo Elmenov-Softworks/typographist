@@ -162,65 +162,56 @@ describe('quotation pair settings', () => {
   });
 });
 
-describe('duplicate quotation removal', () => {
-  it.each([
-    ['""word""', '«word»'],
-    ['"""word"""', '««word»»'],
-    ['««word» word»', '«word» word»'],
-    ['«word «word»»', '«word «word»'],
-    ['""😀 é 1.25""', '«😀 é 1.25»'],
-  ])('removes nonoverlapping duplicate pairs in %j', (input, expected) => {
-    const instance = new Typographist({
-      locale: 'ru',
-      categories: ['quotes'],
-      settings: { 'common/punctuation/quote': { left: '«', right: '»' } },
+describe('quotation multiplicity preservation', () => {
+  describe.each(['en', 'ru'] as const)('locale=%s', (locale) => {
+    describe.each([false, true])('useFast=%s', (useFast) => {
+      describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
+        it.each([
+          ['""word""', '««word»»'],
+          ['"""word"""', '«««word»»»'],
+          ['««word» word»', '««word» word»'],
+          ['«word «word»»', '«word «word»»'],
+          ['""😀 é 1.25""', '««😀 é 1.25»»'],
+        ])('preserves every quote in %j', (input, expected) => {
+          const instance = new Typographist({
+            locale,
+            useFast,
+            cacheSize,
+            categories: ['quotes'],
+            settings: { 'common/punctuation/quote': { left: '«', right: '»' } },
+          });
+
+          expect(instance.format(input)).toBe(expected);
+          expect(instance.format(expected)).toBe(expected);
+        });
+      });
     });
 
-    expect(instance.format(input)).toBe(expected);
-  });
+    it('preserves protected duplicate quotes and nested pairs', () => {
+      const instance = new Typographist({ locale, categories: ['quotes'], protectedContent: ['""Keep""'] });
+      const expected = locale === 'ru' ? '«„word“»' : '“‘word’”';
 
-  it('preserves nested pairs and allows disabling the Russian default', () => {
-    expect(new Typographist({ locale: 'ru', categories: ['quotes'] }).format('""word""')).toBe('«„word“»');
-
-    const instance = new Typographist({
-      locale: 'ru',
-      categories: ['quotes'],
-      settings: { 'common/punctuation/quote': { left: '««', right: '»»', removeDuplicateQuotes: false } },
+      expect(instance.format('""Keep"" ""word""')).toBe(`""Keep"" ${expected}`);
     });
 
-    expect(instance.format('""word""')).toBe('««word»»');
-  });
-
-  it('is opt-in for English and preserves protected literals', () => {
-    const settings = { left: '«', right: '»' };
-    const disabled = new Typographist({ categories: ['quotes'], settings: { 'common/punctuation/quote': settings } });
-    const enabled = new Typographist({
-      categories: ['quotes'],
-      protectedContent: ['""Keep""'],
-      settings: { 'common/punctuation/quote': { ...settings, removeDuplicateQuotes: true } },
+    it.each([true, false, 'true'])('rejects the removed duplicate-removal setting %j', (value) => {
+      expect(
+        () =>
+          new Typographist({
+            locale,
+            settings: { 'common/punctuation/quote': { removeDuplicateQuotes: value } },
+          }),
+      ).toThrow(TypeError);
     });
-
-    expect(disabled.format('""word""')).toBe('««word»»');
-    expect(enabled.format('""Keep"" ""word""')).toBe('""Keep"" «word»');
   });
 
-  it.each([
-    ['""word""', '”word”'],
-    ['"""word"""', '””word””'],
-    ['"one "two" three"', '”one ”two” three”'],
-  ])('distinguishes opening and closing duplicates for identical glyphs in %j', (input, expected) => {
+  it('preserves duplicates with identical outer glyphs', () => {
     const instance = new Typographist({
       categories: ['quotes'],
-      settings: { 'common/punctuation/quote': { left: '”', right: '”', removeDuplicateQuotes: true } },
+      settings: { 'common/punctuation/quote': { left: '”', right: '”' } },
     });
 
-    expect(instance.format(input)).toBe(expected);
-  });
-
-  it('rejects nonboolean duplicate-removal settings', () => {
-    expect(
-      () => new Typographist({ settings: { 'common/punctuation/quote': { removeDuplicateQuotes: 'true' } } }),
-    ).toThrow(TypeError);
+    expect(instance.format('"""word"""')).toBe('”””word”””');
   });
 });
 
@@ -263,20 +254,6 @@ describe('quotation spacing', () => {
     });
 
     expect(instance.format(input)).toBe(expected);
-  });
-
-  it('applies spacing before duplicate removal', () => {
-    for (const [left, right] of [
-      ['«', '»'],
-      ['”', '”'],
-    ] as const) {
-      const instance = new Typographist({
-        categories: ['quotes'],
-        settings: { 'common/punctuation/quote': { left, right, spacing: true, removeDuplicateQuotes: true } },
-      });
-
-      expect(instance.format('""word""')).toBe(`${left}\u202f${left}word\u202f${right}`);
-    }
   });
 
   it.each(['en', 'ru'] as const)('defaults to no spacing for %s and honors category selection', (locale) => {

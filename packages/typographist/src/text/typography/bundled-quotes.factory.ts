@@ -15,7 +15,7 @@ export const createBundledQuotes = (locale: string) => {
       id: 'common/punctuation/quote',
       category: 'quotes',
       order: 410,
-      defaults: { left, right, removeDuplicateQuotes: locale === 'ru', spacing: false },
+      defaults: { left, right, spacing: false },
       prepare: (settings) => {
         if (
           typeof settings.left !== 'string' ||
@@ -101,27 +101,6 @@ export const createBundledQuotes = (locale: string) => {
             }
           }
 
-          if (settings.removeDuplicateQuotes && left.length === 1) {
-            const deduplicated: typeof characters = [];
-
-            for (let index = 0; index < characters.length; index++) {
-              const before = characters[index];
-              const after = characters[index + 1];
-
-              if (before === undefined) {
-                continue;
-              }
-
-              deduplicated.push(before);
-
-              if (before.direction !== null && before.direction === after?.direction) {
-                index++;
-              }
-            }
-
-            characters = deduplicated;
-          }
-
           return characters.map(({ character }) => character).join('');
         };
 
@@ -142,7 +121,7 @@ export const createBundledQuotes = (locale: string) => {
             }
           }
 
-          let normalized = text
+          const normalized = text
             .replace(opening, (_match: string, before: string, quotes: string, offset: number) => {
               if (identicalOuter) {
                 for (let index = 0; index < quotes.length; index++) {
@@ -163,31 +142,7 @@ export const createBundledQuotes = (locale: string) => {
             });
 
           if (left.charAt(1) === '' || left.charAt(1) === outerLeft) {
-            normalized = setSpacing(normalized, directions);
-            if (!settings.removeDuplicateQuotes) {
-              return normalized;
-            }
-
-            if (!identicalOuter) {
-              return normalized.split(outerLeft.repeat(2)).join(outerLeft).split(outerRight.repeat(2)).join(outerRight);
-            }
-
-            if (left.length > 1 || settings.spacing) {
-              return normalized;
-            }
-
-            let result = '';
-
-            for (let index = 0; index < normalized.length; index++) {
-              result += normalized.charAt(index);
-              const direction = directions.get(index);
-
-              if (direction !== undefined && directions.get(index + 1) === direction) {
-                index++;
-              }
-            }
-
-            return result;
+            return setSpacing(normalized, directions);
           }
 
           const leftCount = identicalOuter

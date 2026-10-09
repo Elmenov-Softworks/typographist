@@ -614,25 +614,20 @@ covering balanced nesting, depth capping, unmatched quotes and supplementary Uni
 Direction tracking uses input positions rather than temporary characters, preserving
 literal private-use characters. A single identical pair is also tested.
 
-The boolean `removeDuplicateQuotes` setting defaults to `true` for Russian and
-`false` for English. After quotation placement, it replaces each nonoverlapping
-pair of adjacent outer opening or closing glyphs with one glyph, only when a
-single pair or repeated opening pair disables nesting substitution. Distinct
-nested pairs remain intact. Identical outer glyphs use tracked directions for a
-single pair; with multiple pairs they retain reference nesting behavior without
-duplicate removal. Protected literals bypass removal.
-
-Eleven service tests cover defaults, opt-in and opt-out settings, nesting,
-nonoverlapping runs, identical glyph directions, Unicode, content preservation,
-protection and invalid setting types. Eight isolated Typograf 7.8.0 fixtures match.
-Runs of three or more duplicate glyphs can shrink again on a second formatting
-pass, matching the reference; this setting does not guarantee idempotence.
+Owner correction (2026-10-09): duplicate quotation deletion is removed.
+The bundled handler preserves every source quotation glyph while applying locale
+pairs and nesting. The removed `removeDuplicateQuotes` setting is rejected,
+including boolean values. The upstream settings in the catalogue and metadata
+remain reference provenance, not the supported local configuration.
+Public-service tests cover repeated runs, unmatched quotes, protected literals,
+Unicode, nesting, identical outer glyphs, both algorithms and cache modes.
+Historical duplicate-removal comparisons predate this correction.
 
 The boolean `spacing` setting defaults to `false` for both bundled locales. When
 enabled, it removes one ordinary space, NBSP or narrow NBSP immediately inside each
 configured pair before quotation placement, then inserts narrow NBSP (U+202F)
 after opening and before closing glyphs. Tabs, line breaks and extra spaces are
-preserved. Spacing runs before duplicate removal and belongs to `quotes`, so it
+preserved. Spacing belongs to `quotes`, so it
 does not require the `spacing` or `nonbreakingSpacing` category. Prepared regular
 expressions are omitted when the setting is disabled.
 
@@ -643,11 +638,12 @@ placement. Protected literals and addresses bypass the handler. Spacing does not
 change letters or numeric notation and does not act on segments containing no
 recognized quotation glyphs.
 
-Twenty-seven service scenarios cover spacing settings, nesting, unmatched pairs,
+Historical pre-correction verification: twenty-seven service scenarios covered spacing settings, nesting, unmatched pairs,
 existing spaces, Unicode, protected content, duplicate-removal ordering, disabled
 categories, repeated formatting and invalid types. An isolated Typograf 7.8.0
 comparison matched 120 fixtures across English and Russian, distinct and identical
-pairs, and duplicate-removal settings. Final feature acceptance remains separate.
+pairs, and duplicate-removal settings. These comparisons predate removal of duplicate
+quotation deletion and do not establish acceptance of the revised Q6 scope.
 
 ### Reference line-ending preparation (outside the 107-rule inventory)
 

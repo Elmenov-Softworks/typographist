@@ -152,3 +152,9 @@ single-dataset construction is removed. Subclass `compile(useFast)` remains
 available, both algorithms remain supported without fallback, and typography-only
 locales still require no hyphenation data. Historical audit and benchmark evidence
 predates this correction; spacing and quotation corrections remain pending.
+
+Owner scope correction (2026-10-09), quotation multiplicity: remove duplicate-quote
+deletion and reject the removed `removeDuplicateQuotes` setting. Preserve source
+quote counts during locale glyph replacement, nesting and unmatched-quote handling.
+Historical duplicate-removal audit evidence predates this correction. Builtin
+spacing removal and the Q6 quote-boundary spacing correction remain pending.

@@ -27,7 +27,7 @@ algorithm, independently of selected text categories.
 
 | Category             | Behavior                                                           |
 | -------------------- | ------------------------------------------------------------------ |
-| `quotes`             | Bundled Russian and English quotation pairs, nesting and cleanup.  |
+| `quotes`             | Bundled Russian and English quotation pairs and nesting.           |
 | `dashes`             | Supported prose and range separators, and clear unary minus signs. |
 | `punctuation`        | Apostrophe and ellipsis glyph conversion; repeated signs stay.     |
 | `spacing`            | Ordinary whitespace cleanup and punctuation spacing.               |
@@ -294,3 +294,7 @@ Releases and documentation publication run in GitHub Actions after updates to
 `master`. All five packages share one version, with patch releases by default.
 For a minor or major release, add `.release/request.json` with `{"type":"minor"}`
 or `{"type":"major"}`. The release Action consumes the request once.
+
+Quotation formatting preserves repeated source quotes. The former
+`removeDuplicateQuotes` setting is removed and rejected; custom quotation pairs
+and nesting remain supported.
