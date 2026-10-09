@@ -785,3 +785,11 @@ protected literals and repeated formatting. Glyph-only fixtures explicitly disab
 spacing. This supersedes earlier pending-default statements; historical full-feature
 benchmarks and audits predate the reduced scope. Consolidated scope documentation
 and full independent review remain pending.
+
+Quotation review corrections — 2026-10-09: straight quotation boundaries now
+recognize existing same-line spaces, tabs and nonbreaking spaces without consuming
+them. Q6 replaces only the nearest ordinary boundary space; additional whitespace
+remains. Line-crossing straight boundaries stay unchanged. Spacing eligibility
+includes configured quotation glyphs, including existing `「」` pairs. Public-service
+regressions cover both locales, spacing disabled, protected boundary interactions
+and repeated formatting.

@@ -274,7 +274,7 @@ describe('quotation spacing', () => {
     ['"one "two" three"', '”\u202fone ’\u202ftwo\u202f’ three\u202f”'],
     ['""word""', '”\u202f’\u202fword\u202f’\u202f”'],
     ['"😀 é"', '”\u202f😀 é\u202f”'],
-    ['« word »', '« word »'],
+    ['« word »', '”\u202fword\u202f”'],
   ])('uses quote direction with identical glyphs for %j', (input, expected) => {
     const instance = new Typographist({
       categories: ['quotes'],
@@ -417,5 +417,53 @@ describe.each(['en', 'ru'] as const)('default quotation boundary spacing for %s'
         }
       });
     });
+  });
+});
+
+describe.each(['en', 'ru'] as const)('spaced straight quotation boundaries for %s', (locale) => {
+  it.each([false, true])('preserves boundary bytes with spacing=%s', (spacing) => {
+    const instance = new Typographist({
+      locale,
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { spacing } },
+    });
+    const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
+    const boundary = spacing ? '\u202f' : ' ';
+    const cases = [
+      ['" cat "', `${left}${boundary}cat${boundary}${right}`],
+      ['"   cat   "', `${left}${boundary}  cat  ${boundary}${right}`],
+      ['"\tcat\t"', `${left}\tcat\t${right}`],
+      ['" \tcat\t "', `${left}${boundary}\tcat\t${boundary}${right}`],
+      ['"\u00a0cat\u00a0"', `${left}\u00a0cat\u00a0${right}`],
+      ['"\ncat\n"', '"\ncat\n"'],
+      ['"\rcat\r"', '"\rcat\r"'],
+      ['"\r\ncat\r\n"', '"\r\ncat\r\n"'],
+    ] as const;
+
+    for (const [input, expected] of cases) {
+      expect(instance.format(input)).toBe(expected);
+      expect(instance.format(expected)).toBe(expected);
+    }
+  });
+
+  it.each([false, true])('spaces existing configured quotation glyphs with spacing=%s', (spacing) => {
+    const instance = new Typographist({
+      locale,
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '「', right: '」', spacing } },
+    });
+    const gap = spacing ? '\u202f' : ' ';
+    const cases = [
+      ['「 cat 」', `「${gap}cat${gap}」`],
+      ['「   cat   」', `「${gap}  cat  ${gap}」`],
+      ['「\tcat\t」', '「\tcat\t」'],
+      ['「\r\ncat\r\n」', '「\r\ncat\r\n」'],
+      ['「\u00a0cat\u00a0」', '「\u00a0cat\u00a0」'],
+    ] as const;
+
+    for (const [input, expected] of cases) {
+      expect(instance.format(input)).toBe(expected);
+      expect(instance.format(expected)).toBe(expected);
+    }
   });
 });
