@@ -29,7 +29,7 @@ algorithm, independently of selected text categories.
 | -------------------- | ------------------------------------------------------------------ |
 | `quotes`             | Bundled Russian and English quotation pairs, nesting and cleanup.  |
 | `dashes`             | Supported prose and range separators, and clear unary minus signs. |
-| `punctuation`        | Apostrophes, ellipses and supported punctuation cleanup.           |
+| `punctuation`        | Apostrophe and ellipsis glyph conversion; repeated signs stay.     |
 | `spacing`            | Ordinary whitespace cleanup and punctuation spacing.               |
 | `nonbreakingSpacing` | Supported word, abbreviation, number-label and unit bindings.      |
 | `hyphenation`        | Soft hyphens from the selected existing algorithm.                 |

@@ -228,7 +228,7 @@ describe('bundled spacing reference scenarios', () => {
     });
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
     const input = `${content} . Wait ... Really! ! https://example.com/a user@example.com Keep . ! !`;
-    const output = `${content}. Wait… Really${locale === 'ru' ? '!' : '!!'} https://example.com/a user@example.com Keep . ! !`;
+    const output = `${content}. Wait… Really!! https://example.com/a user@example.com Keep . ! !`;
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);

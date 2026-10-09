@@ -17,31 +17,8 @@ const scenarios = [
     output: "Don't O'NEIL a'b'c д’Артаньян Ё’Ж",
     unchanged: "'word' 1'2 a'я e\u0301'a 😀'a a’b",
   },
-  {
-    locale: 'ru',
-    id: 'ru/punctuation/hellipQuestion',
-    input: '?… !... …,',
-    output: '?.. !.. …',
-    unchanged: '..... ?..',
-  },
-  { locale: 'ru', id: 'ru/punctuation/exclamation', input: '!! !!!!', output: '! !!!', unchanged: '! !!! !!!!!' },
-  { locale: 'ru', id: 'ru/punctuation/exclamationQuestion', input: '!?', output: '?!', unchanged: '!!? !?? ?!' },
   { locale: 'ru', id: 'common/punctuation/hellip', input: '... ....', output: '… …', unchanged: '.. .....' },
   { locale: 'en', id: 'common/punctuation/hellip', input: '... ....', output: '… ….', unchanged: '.. .....' },
-  {
-    locale: 'en',
-    id: 'common/punctuation/delDoublePunctuation',
-    input: ',, :: .. ;; ??',
-    output: ', : . ; ?',
-    unchanged: ',,, ::: ... ;;; ??? !.. ?..',
-  },
-  {
-    locale: 'ru',
-    id: 'common/punctuation/delDoublePunctuation',
-    input: ',, :: .. ;; ??',
-    output: ', : . ; ?',
-    unchanged: ',,, ::: ... ;;; ??? !.. ?..',
-  },
 ];
 
 describe('bundled punctuation reference scenarios', () => {
@@ -93,28 +70,36 @@ describe('bundled punctuation reference scenarios', () => {
     const service = new Typographist({ locale: 'ru', categories: ['punctuation'] });
     const output = service.format('Что?... Да!! Нет!? ....');
 
-    expect(output).toBe('Что?.. Да! Нет?! …');
+    expect(output).toBe('Что?… Да!! Нет!? …');
     expect(service.format(output)).toBe(output);
   });
 
-  it.each(['en', 'ru'] as const)('orders ellipsis and duplicate punctuation for %s', (locale) => {
+  it.each(['en', 'ru'] as const)('converts ellipsis while preserving repeated punctuation for %s', (locale) => {
     const service = new Typographist({ locale, categories: ['punctuation'] });
     const input = 'word.... word.. word...,, word?? word:: word;;';
-    const output = `word${locale === 'ru' ? '…' : '….'} word. word…, word? word: word;`;
-    const secondOutput = locale === 'ru' ? output.replace('…,', '…') : output;
+    const output = `word${locale === 'ru' ? '…' : '….'} word.. word…,, word?? word:: word;;`;
 
     expect(service.format(input)).toBe(output);
-    expect(service.format(output)).toBe(secondOutput);
-    expect(service.format(secondOutput)).toBe(secondOutput);
+    expect(service.format(output)).toBe(output);
     expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a.. a??')).toBe('a.. a??');
   });
 
-  it('retains reference behavior when adjacent exclamation runs need a second pass', () => {
-    const service = new Typographist({ locale: 'ru', categories: ['punctuation'] });
+  it.each(['en', 'ru'] as const)('preserves repeated signs and whitespace for %s', (locale) => {
+    const service = new Typographist({ locale, categories: ['punctuation'] });
+    const input = '  !! !!!! !? ?? ,, :: ;; .. …, ?… !…\t\r\n  \n';
 
-    expect(service.format('!! !!')).toBe('! !!');
-    expect(service.format('! !!')).toBe('! !');
+    expect(service.format(input)).toBe(input);
+    expect(service.format(service.format(input))).toBe(input);
+  });
+
+  it.each([
+    'common/punctuation/delDoublePunctuation',
+    'ru/punctuation/hellipQuestion',
+    'ru/punctuation/exclamation',
+    'ru/punctuation/exclamationQuestion',
+  ])('rejects removed rule settings for %s', (id) => {
+    expect(() => new Typographist({ locale: 'ru', settings: { [id]: {} } })).toThrow(`Unknown text rule: ${id}`);
   });
 
   it.each([false, true])('runs punctuation before hyphenation with useFast=%s', (useFast) => {

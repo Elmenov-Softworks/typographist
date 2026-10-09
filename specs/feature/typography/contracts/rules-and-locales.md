@@ -1,5 +1,11 @@
 # Rules and locale contracts
 
+Owner correction — 2026-10-09: punctuation formatting retains apostrophe and ellipsis
+glyph conversion only. TP-R053, TP-R054, TP-R058 and TP-R060 are removed from
+the bundle; repeated signs and their order remain as supplied. Earlier audit,
+benchmark and acceptance evidence predates this reduced scope. Other owner
+scope corrections remain pending implementation in subsequent slices.
+
 **Status:** Approved, part of the text typography specification.
 
 ## Language independence

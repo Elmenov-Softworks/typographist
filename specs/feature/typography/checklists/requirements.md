@@ -1,5 +1,11 @@
 # Specification review checklist
 
+Owner correction — 2026-10-09: punctuation formatting retains apostrophe and ellipsis
+glyph conversion only. TP-R053, TP-R054, TP-R058 and TP-R060 are removed from
+the bundle; repeated signs and their order remain as supplied. Earlier audit,
+benchmark and acceptance evidence predates this reduced scope. Other owner
+scope corrections remain pending implementation in subsequent slices.
+
 - [x] Record current behavior and the repository baseline.
 - [x] Pin the reference package and Spec Kit template revision.
 - [x] Catalogue all public reference rules and mark scope exclusions.
@@ -231,3 +237,16 @@ resolver warning. Fresh `NX_SKIP_NX_CACHE=true npm run build` and
 the type-check build prerequisite. Workspace `npm run format:check` and
 `git diff --check` also passed after the documentation update. No production
 source changed in this slice.
+
+## Owner scope correction: punctuation slice — 2026-10-09
+
+Removed TP-R053, TP-R054, TP-R058 and TP-R060 handlers and their obsolete
+positive fixtures. Public-service tests preserve repeated punctuation, sign order,
+spaces, tabs and CR/LF in the punctuation-only profile; removed settings fail
+with an unknown-rule error. Apostrophe and ellipsis conversion, protection,
+category selection and deterministic ordering remain covered.
+
+Under Node v24.21.0, all 2,078 tests and workspace type checking, lint,
+formatting and build passed. This validates this slice only. Bundled spacing,
+NBSP replacement, quotation correction and algorithm-data contract changes still
+require subsequent slices, followed by independent review of the reduced scope.

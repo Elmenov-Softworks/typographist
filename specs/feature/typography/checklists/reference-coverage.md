@@ -1,5 +1,11 @@
 # Reference coverage audit — 2026-10-08
 
+Owner correction — 2026-10-09: punctuation formatting retains apostrophe and ellipsis
+glyph conversion only. TP-R053, TP-R054, TP-R058 and TP-R060 are removed from
+the bundle; repeated signs and their order remain as supplied. Earlier audit,
+benchmark and acceptance evidence predates this reduced scope. Other owner
+scope corrections remain pending implementation in subsequent slices.
+
 This audit checks the saved 107-rule inventory against bundled handler declarations.
 It is a source coverage check, not proof that every reference fixture or interaction
 passes. The inventory remains the source for defaults, settings and deviations.

@@ -35,7 +35,7 @@ describe('complete bundled reference ordering', () => {
     }
   });
 
-  it.each(['en', 'ru'] as const)('runs quotation settings before ellipsis and punctuation cleanup for %s', (locale) => {
+  it.each(['en', 'ru'] as const)('runs quotation settings before ellipsis conversion for %s', (locale) => {
     const instance = new Typographist({
       locale,
       categories: ['quotes', 'punctuation'],
@@ -45,14 +45,14 @@ describe('complete bundled reference ordering', () => {
     expect(instance.format('"""word"""')).toBe('…word…');
   });
 
-  it('cleans repeated punctuation produced by quotation settings', () => {
+  it('preserves repeated punctuation produced by quotation settings', () => {
     const instance = new Typographist({
       locale: 'en',
       categories: ['quotes', 'punctuation'],
-      settings: { 'common/punctuation/quote': { left: '!!', right: '??' } },
+      settings: { 'common/punctuation/quote': { left: '!', right: '?' } },
     });
 
-    expect(instance.format('"word"')).toBe('!word?');
+    expect(instance.format('""word""')).toBe('!!word??');
   });
 
   it('retains consumer registration order at equal priority after bundled rules', () => {

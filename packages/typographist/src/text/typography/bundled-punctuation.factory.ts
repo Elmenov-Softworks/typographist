@@ -7,39 +7,7 @@ export const createBundledPunctuation = (locale: string) => {
 
   const rules: TextRule[] = [];
 
-  if (locale === 'ru') {
-    rules.push(
-      {
-        id: 'ru/punctuation/hellipQuestion',
-        category: 'punctuation',
-        order: 410,
-        defaults: {},
-        prepare: () => (text) =>
-          text.replace(/(^|[^.])(\.{3}|…),/g, '$1…').replace(/([!?])(\.{3}|…)(?=[^.]|$)/g, '$1..'),
-      },
-      {
-        id: 'ru/punctuation/exclamation',
-        category: 'punctuation',
-        order: 410,
-        defaults: {},
-        prepare: () => (text) =>
-          text.replace(/(^|[^!])!{2}($|[^!])/gm, '$1!$2').replace(/(^|[^!])!{4}($|[^!])/gm, '$1!!!$2'),
-      },
-    );
-  }
-
   rules.push(
-    {
-      id: 'common/punctuation/apostrophe',
-      category: 'punctuation',
-      order: 410,
-      defaults: {},
-      prepare: () => {
-        const apostrophe = locale === 'ru' ? /([а-яё])'([а-яё])/gi : /([a-z])'([a-z])/gi;
-
-        return (text) => text.replace(apostrophe, '$1’$2');
-      },
-    },
     {
       id: 'common/punctuation/hellip',
       category: 'punctuation',
@@ -51,40 +19,17 @@ export const createBundledPunctuation = (locale: string) => {
           : (text) => text.replace(/(^|[^.])\.{3}(\.?)(?=[^.]|$)/g, '$1…$2'),
     },
     {
-      id: 'common/punctuation/delDoublePunctuation',
+      id: 'common/punctuation/apostrophe',
       category: 'punctuation',
       order: 410,
       defaults: {},
-      prepare: () => (text) =>
-        text
-          .replace(/(^|[^,]),,(?!,)/g, '$1,')
-          .replace(/(^|[^:])::(?!:)/g, '$1:')
-          .replace(/(^|[^!?.])\.\.(?!\.)/g, '$1.')
-          .replace(/(^|[^;]);;(?!;)/g, '$1;')
-          .replace(/(^|[^?])\?\?(?!\?)/g, '$1?'),
+      prepare: () => {
+        const apostrophe = locale === 'ru' ? /([а-яё])'([а-яё])/gi : /([a-z])'([a-z])/gi;
+
+        return (text) => text.replace(apostrophe, '$1’$2');
+      },
     },
   );
 
-  if (locale === 'ru') {
-    rules.push({
-      id: 'ru/punctuation/exclamationQuestion',
-      category: 'punctuation',
-      order: 415,
-      defaults: {},
-      prepare: () => (text) => text.replace(/(^|[^!])!\?([^?]|$)/g, '$1?!$2'),
-    });
-  }
-
-  const referenceOrder = [
-    'ru/punctuation/hellipQuestion',
-    'ru/punctuation/exclamation',
-    'common/punctuation/hellip',
-    'common/punctuation/delDoublePunctuation',
-    'common/punctuation/apostrophe',
-    'ru/punctuation/exclamationQuestion',
-  ];
-
-  return rules.sort(
-    (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),
-  );
+  return rules;
 };
