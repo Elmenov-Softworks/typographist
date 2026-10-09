@@ -154,7 +154,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
         text.replace(
           /(^|\s|\()(см|им)\.[ \u00a0]?([а-яё0-9a-z]+)([\s.,?!]|$)/gi,
           (_match, boundary: string, abbreviation: string, word: string, suffix: string) =>
-            `${boundary === '\u00a0' ? ' ' : boundary}${abbreviation}.\u00a0${word}${suffix}`,
+            `${boundary}${abbreviation}.\u00a0${word}${suffix}`,
         ),
     });
 
@@ -164,7 +164,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       order: 510,
       defaults: {},
       prepare: () => (text) =>
-        text.replace(/(^|[)\s])(стр|гл|рис|илл?|ст|п|c)\. *(\d+)([\s.,?!;:]|$)/gim, '$1$2.\u00a0$3$4'),
+        text.replace(/(^|[)\s])(стр|гл|рис|илл?|ст|п|c)\. ?( *)(\d+)([\s.,?!;:]|$)/gim, '$1$2.\u00a0$3$4$5'),
     });
 
     rules.push({
@@ -233,14 +233,14 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       defaults: {},
       prepare: () => (text) =>
         text
-          .replace(/(\s|^)(дом|д\.|кв\.|под\.|п-д) *(\d+)/gi, '$1$2\u00a0$3')
-          .replace(/(\s|^)(мкр-н|мк-н|мкр\.|мкрн)\s/gi, '$1$2\u00a0')
-          .replace(/(\s|^)(эт\.) *(-?\d+)/gi, '$1$2\u00a0$3')
-          .replace(/(\s|^)(\d+) +(этаж)([^а-яё]|$)/gi, '$1$2\u00a0$3$4')
-          .replace(/(\s|^)(литер)\s([А-Я]|$)/gi, '$1$2\u00a0$3')
+          .replace(/(\s|^)(дом|д\.|кв\.|под\.|п-д) ?( *)(\d+)/gi, '$1$2\u00a0$3$4')
+          .replace(/(\s|^)(мкр-н|мк-н|мкр\.|мкрн) /gi, '$1$2\u00a0')
+          .replace(/(\s|^)(эт\.) ?( *)(-?\d+)/gi, '$1$2\u00a0$3$4')
+          .replace(/(\s|^)(\d+) ( *)(этаж)([^а-яё]|$)/gi, '$1$2\u00a0$3$4$5')
+          .replace(/(\s|^)(литер) ([А-Я]|$)/gi, '$1$2\u00a0$3')
           .replace(
-            /(\s|^)(обл|кр|ст|пос|с|д|ул|пер|пр|пр-т|просп|пл|бул|б-р|наб|ш|туп|оф|комн?|уч|вл|влад|стр|кор)\. *([а-яёa-z\d]+)/gi,
-            '$1$2.\u00a0$3',
+            /(\s|^)(обл|кр|ст|пос|с|д|ул|пер|пр|пр-т|просп|пл|бул|б-р|наб|ш|туп|оф|комн?|уч|вл|влад|стр|кор)\. ?( *)([а-яёa-z\d]+)/gi,
+            '$1$2.\u00a0$3$4',
           )
           .replace(/(\D[ \u00a0]|^)г\. ?([А-ЯЁ])/gm, '$1г.\u00a0$2'),
     });
@@ -274,7 +274,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
         text.replace(
           /(^|[\s,.(])(\d+)[ \u00a0]?(мм?|см|км|дм|гм|mm?|km|cm|dm)([23²³])?([\s).!?,;]|$)/gm,
           (_match, boundary: string, number: string, unit: string, exponent: string | undefined, suffix: string) =>
-            `${boundary}${number}\u00a0${unit}${exponent ?? ''}${suffix === '\u00a0' ? ' ' : suffix}`,
+            `${boundary}${number}\u00a0${unit}${exponent ?? ''}${suffix}`,
         ),
     });
 
@@ -298,7 +298,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       prepare: () => (text) =>
         text
           .replace(/([А-ЯЁа-яё]) (ли|ль|же|ж|бы|б)(?=[,;:?!"‘“»])/g, '$1\u00a0$2')
-          .replace(/([А-ЯЁа-яё])[ \u00a0](ли|ль|же|ж|бы|б)[ \u00a0]/g, '$1\u00a0$2 '),
+          .replace(/([А-ЯЁа-яё])[ \u00a0](ли|ль|же|ж|бы|б)([ \u00a0])/g, '$1\u00a0$2$3'),
     });
   }
 

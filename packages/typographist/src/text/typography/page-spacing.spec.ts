@@ -10,7 +10,7 @@ describe('Russian page-reference spacing', () => {
   it.each([
     ['стр. 12', 'стр. 12'],
     ['ГЛ.12', 'ГЛ. 12'],
-    ['рис.   001', 'рис. 001'],
+    ['рис.   001', 'рис.   001'],
     ['ил. 2, илл. 3', 'ил. 2, илл. 3'],
     ['ст. 4; п. 5: c. 6!', 'ст. 4; п. 5: c. 6!'],
     [')стр. 12?', ')стр. 12?'],
@@ -82,7 +82,7 @@ describe('Russian page-reference spacing', () => {
   it.each([false, true])('combines ordinary spacing and hyphenation with useFast=%s', (useFast) => {
     const service = new Typographist({ locale: 'ru', useFast });
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
-    const expected = legacy.format('Типографика стр. 12345');
+    const expected = legacy.format('Типографика стр.  12345');
 
     expect(service.format('Типографика стр.  12345')).toBe(expected);
     expect(service.format(expected)).toBe(expected);

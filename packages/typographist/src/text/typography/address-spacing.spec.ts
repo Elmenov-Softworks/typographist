@@ -8,10 +8,10 @@ describe('Russian address spacing', () => {
   const format = prepareTextPipeline(rules, 'ru');
 
   it.each([
-    ['дом12 д.  34 кв.5 под.6 п-д7', 'дом 12 д. 34 кв. 5 под. 6 п-д 7'],
-    ['мкр-н Северный мк-н\tЮжный мкр.\nЦентр мкрн Восток', 'мкр-н Северный мк-н Южный мкр. Центр мкрн Восток'],
+    ['дом12 д.  34 кв.5 под.6 п-д7', 'дом 12 д.  34 кв. 5 под. 6 п-д 7'],
+    ['мкр-н Северный мк-н\tЮжный мкр.\nЦентр мкрн Восток', 'мкр-н Северный мк-н\tЮжный мкр.\nЦентр мкрн Восток'],
     ['эт. -2 3 этаж, литер А', 'эт. -2 3 этаж, литер А'],
-    ['УЛ.Ленина обл.  Московская пр-т.Мира оф.12345', 'УЛ. Ленина обл. Московская пр-т. Мира оф. 12345'],
+    ['УЛ.Ленина обл.  Московская пр-т.Мира оф.12345', 'УЛ. Ленина обл.  Московская пр-т. Мира оф. 12345'],
     ['г.Москва, г. Ёлки', 'г. Москва, г. Ёлки'],
     ['3 ЭТАЖ ЛиТеР Б ДоМ12', '3 ЭТАЖ ЛиТеР Б ДоМ 12'],
   ])('formats %j without changing supplied spelling', (text, expected) => {
@@ -52,7 +52,7 @@ describe('Russian address spacing', () => {
   it.each([false, true])('combines spacing and hyphenation with useFast=%s', (useFast) => {
     const service = new Typographist({ locale: 'ru', useFast });
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
-    const expected = legacy.format('УЛ. Московская дом 12');
+    const expected = legacy.format('УЛ.  Московская дом 12');
 
     expect(service.format('УЛ.  Московская дом12')).toBe(expected);
     expect(service.format(expected)).toBe(expected);

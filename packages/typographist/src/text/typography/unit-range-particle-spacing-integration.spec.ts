@@ -18,7 +18,7 @@ describe('Unit, year-range and particle spacing interactions', () => {
     const spaced = '300 dpi\n12м2\n2025-2026 г.г.\nона же там';
     const bound =
       configuration.locale === 'ru'
-        ? '300\u00a0dpi\n12\u00a0м2\n2025-2026\u00a0г.\u00a0г.\nона\u00a0же там'
+        ? '300\u00a0dpi\n12\u00a0м2\n2025-2026\u00a0г.\u00a0г.\nона\u00a0же\u00a0там'
         : '300\u00a0dpi\n12м2\n2025-2026 г.г.\nона же там';
     const content = '$100 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const addresses = 'https://example.com/300dpi user12m2@example.com';

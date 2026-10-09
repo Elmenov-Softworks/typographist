@@ -178,7 +178,7 @@ describe('Russian nonbreaking particle spacing', () => {
       'Он ли тут она же там ты бы смог я б ушёл ёж ль спит Я ж тут',
       'Он\u00a0ли тут она\u00a0же там ты\u00a0бы смог я\u00a0б ушёл ёж\u00a0ль спит Я\u00a0ж тут',
     ],
-    ['Он\u00a0ли\u00a0тут', 'Он\u00a0ли тут'],
+    ['Он\u00a0ли\u00a0тут', 'Он\u00a0ли\u00a0тут'],
     ['я бы он ли тут', 'я\u00a0бы он\u00a0ли тут'],
     ['Он ли. Он ли\nОн ли', 'Он ли. Он ли\nОн ли'],
     [
@@ -214,11 +214,11 @@ describe('Russian nonbreaking particle spacing', () => {
     const protectedText = 'https://example.com/он user@example.com Он ли тут';
 
     expect(service.format(`${content} ${protectedText} она же там`)).toBe(
-      `${content.replace('100 руб.', '100\u00a0руб.')} ${protectedText} она\u00a0же там`,
+      `${content.replace('100 руб.', '100\u00a0руб.')} ${protectedText} она\u00a0же\u00a0там`,
     );
     expect(service.format('')).toBe('');
     expect(service.format(' \r\n\t\u00a0')).toBe(' \r\n\t\u00a0');
-    expect(service.format('а\u00adб бы тут')).toBe('а\u00adб\u00a0бы тут');
+    expect(service.format('а\u00adб бы тут')).toBe('а\u00adб\u00a0бы\u00a0тут');
 
     for (const categories of [[], ['spacing'], ['hyphenation']] as const) {
       expect(new Typographist({ locale: 'ru', categories }).format('он ли тут')).toBe('он ли тут');
@@ -228,7 +228,7 @@ describe('Russian nonbreaking particle spacing', () => {
   it.each([false, true])('combines spacing and hyphenation with useFast=%s', (useFast) => {
     const service = new Typographist({ locale: 'ru', useFast });
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
-    const expected = legacy.format('проверка\u00a0бы работала');
+    const expected = legacy.format('проверка\u00a0бы\u00a0работала');
 
     expect(service.format('проверка бы работала')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
@@ -470,7 +470,7 @@ describe('equal-priority bundled nonbreaking interactions', () => {
   it.each([
     ['и см. текст', 'и\u00a0см.\u00a0текст'],
     ['и им. автора', 'и\u00a0им.\u00a0автора'],
-    ['и 10 см дальше', 'и\u00a010\u00a0см дальше'],
+    ['и 10 см дальше', 'и\u00a010\u00a0см\u00a0дальше'],
     ['и 10 dpi дальше', 'и\u00a010\u00a0dpi дальше'],
   ])('retains reference bindings for %j', (input, expected) => {
     const service = new Typographist({ locale: 'ru', categories: ['nonbreakingSpacing'] });
