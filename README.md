@@ -336,3 +336,9 @@ existing NBSPs are preserved. Public-service regressions cover both locales,
 algorithms, cache modes, protected content, repeat formatting and invalid removed
 settings. Earlier bracket cleanup audits and benchmarks predate this removal.
 Remaining spacing removals and default quotation spacing are pending.
+
+Owner correction, 2026-10-09: TP-R027 (`common/space/beforeBracket`) and its
+settings are removed. Opening parentheses preserve the supplied boundary gap,
+including no gap, repeated spaces, tabs, line endings and existing NBSPs.
+Custom spacing rules remain supported. Historical audits and timings predate
+this removal.

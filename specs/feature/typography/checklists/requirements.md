@@ -425,3 +425,12 @@ Remaining spacing removals and default quotation spacing are pending.
 TP-R026 removal validation under Node v24.21.0: all 2,994 tests, workspace
 build, typecheck, lint, formatting and diff checks passed. Changes remain
 uncommitted for the coordinator. No publication was performed.
+
+Owner correction, 2026-10-09: TP-R027 (`common/space/beforeBracket`) and its
+settings are removed. Opening parentheses preserve the supplied boundary gap,
+including no gap, repeated spaces, tabs, line endings and existing NBSPs.
+Custom spacing rules remain supported. Historical audits and timings predate
+this removal.
+
+TP-R027 removal validation under Node v24.21.0: all 3,052 tests, workspace
+build, typecheck, lint and formatting checks passed.
