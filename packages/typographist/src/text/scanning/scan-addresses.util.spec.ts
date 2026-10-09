@@ -48,6 +48,11 @@ describe('scanAddresses', () => {
     ]);
   });
 
+  it('does not reuse a protected hostname as another local part or scheme', () => {
+    expect(addresses('a@b.comc@d.com')).toEqual(['a@b.comc']);
+    expect(addresses('a@b.comhttp://host')).toEqual(['a@b.comhttp']);
+  });
+
   it('handles long near-matches and retains a following valid address', () => {
     const local = 'a.'.repeat(10000);
     const host = 'a'.repeat(10000);

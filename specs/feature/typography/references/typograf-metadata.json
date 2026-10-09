@@ -1,0 +1,1324 @@
+{
+  "version": "7.8.0",
+  "sha256": "f5ea4be792c64b502d7bea2d709afb7a2c0f00630193a77012284078703f45ab",
+  "locales": [
+    "be",
+    "bg",
+    "ca",
+    "cs",
+    "da",
+    "de",
+    "el",
+    "en-GB",
+    "en-US",
+    "eo",
+    "es",
+    "et",
+    "fi",
+    "fr",
+    "ga",
+    "hu",
+    "it",
+    "lv",
+    "nl",
+    "no",
+    "pl",
+    "ro",
+    "ru",
+    "sk",
+    "sl",
+    "sr",
+    "sv",
+    "tr",
+    "uk"
+  ],
+  "groups": [
+    {
+      "name": "punctuation",
+      "title": {
+        "en-US": "Punctuation",
+        "ru": "Пунктуация"
+      }
+    },
+    {
+      "name": "optalign",
+      "title": {
+        "en-US": "Hanging punctuation",
+        "ru": "Висячая пунктуация"
+      }
+    },
+    {
+      "name": "dash",
+      "title": {
+        "en-US": "Dash and hyphen",
+        "ru": "Тире и дефис"
+      }
+    },
+    {
+      "name": "nbsp",
+      "title": {
+        "en-US": "Non-breaking space",
+        "ru": "Неразрывный пробел"
+      }
+    },
+    {
+      "name": "space",
+      "title": {
+        "en-US": "Space and line ending",
+        "ru": "Пробел и окончание строки"
+      }
+    },
+    {
+      "name": "html",
+      "title": {
+        "en-US": "HTML",
+        "ru": "HTML"
+      }
+    },
+    {
+      "name": "date",
+      "title": {
+        "en-US": "Date",
+        "ru": "Дата"
+      }
+    },
+    {
+      "name": "money",
+      "title": {
+        "en-US": "Money",
+        "ru": "Деньги"
+      }
+    },
+    {
+      "name": "number",
+      "title": {
+        "en-US": "Numbers and mathematical expressions",
+        "ru": "Числа и математические выражения"
+      }
+    },
+    {
+      "name": "symbols",
+      "title": {
+        "en-US": "Symbols and signs",
+        "ru": "Символы и знаки"
+      }
+    },
+    {
+      "name": "typo",
+      "title": {
+        "en-US": "Typos",
+        "ru": "Опечатки"
+      }
+    },
+    {
+      "name": "other",
+      "title": {
+        "en-US": "Other",
+        "ru": "Прочее"
+      }
+    }
+  ],
+  "rules": [
+    {
+      "name": "common/other/delBOM",
+      "shortName": "delBOM",
+      "queue": "start",
+      "enabled": true,
+      "locale": "common",
+      "group": "other",
+      "index": -1
+    },
+    {
+      "name": "ru/symbols/NN",
+      "shortName": "NN",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "symbols",
+      "index": 110
+    },
+    {
+      "name": "common/symbols/copy",
+      "shortName": "copy",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "symbols",
+      "index": 110
+    },
+    {
+      "name": "common/symbols/cf",
+      "shortName": "cf",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "symbols",
+      "index": 110
+    },
+    {
+      "name": "common/symbols/arrow",
+      "shortName": "arrow",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "symbols",
+      "index": 110
+    },
+    {
+      "name": "ru/number/ordinals",
+      "shortName": "ordinals",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "number",
+      "index": 150
+    },
+    {
+      "name": "ru/number/comma",
+      "shortName": "comma",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "number",
+      "index": 150
+    },
+    {
+      "name": "common/number/times",
+      "shortName": "times",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "number",
+      "index": 150
+    },
+    {
+      "name": "common/number/mathSigns",
+      "shortName": "mathSigns",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "number",
+      "index": 150
+    },
+    {
+      "name": "common/number/fraction",
+      "shortName": "fraction",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "number",
+      "index": 150
+    },
+    {
+      "name": "common/space/replaceTab",
+      "shortName": "replaceTab",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 205
+    },
+    {
+      "name": "common/space/trimLeft",
+      "shortName": "trimLeft",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 206
+    },
+    {
+      "name": "common/space/trimRight",
+      "shortName": "trimRight",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 207,
+      "live": false
+    },
+    {
+      "name": "common/space/delTrailingBlanks",
+      "shortName": "delTrailingBlanks",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 207
+    },
+    {
+      "name": "common/space/delRepeatSpace",
+      "shortName": "delRepeatSpace",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 209
+    },
+    {
+      "name": "common/space/delRepeatN",
+      "shortName": "delRepeatN",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 209,
+      "settings": {
+        "maxConsecutiveLineBreaks": 2
+      }
+    },
+    {
+      "name": "ru/space/year",
+      "shortName": "year",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "ru/space/afterHellip",
+      "shortName": "afterHellip",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/squareBracket",
+      "shortName": "squareBracket",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/insertFinalNewline",
+      "shortName": "insertFinalNewline",
+      "queue": "end",
+      "enabled": false,
+      "locale": "common",
+      "group": "space",
+      "index": 210,
+      "live": false
+    },
+    {
+      "name": "common/space/delLeadingBlanks",
+      "shortName": "delLeadingBlanks",
+      "queue": "default",
+      "enabled": false,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/delBetweenExclamationMarks",
+      "shortName": "delBetweenExclamationMarks",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/delBeforePunctuation",
+      "shortName": "delBeforePunctuation",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/delBeforePercent",
+      "shortName": "delBeforePercent",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/delBeforeDot",
+      "shortName": "delBeforeDot",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/bracket",
+      "shortName": "bracket",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/beforeBracket",
+      "shortName": "beforeBracket",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/afterSemicolon",
+      "shortName": "afterSemicolon",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/afterExclamationMark",
+      "shortName": "afterExclamationMark",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/afterQuestionMark",
+      "shortName": "afterQuestionMark",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/afterComma",
+      "shortName": "afterComma",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "common/space/afterColon",
+      "shortName": "afterColon",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "space",
+      "index": 210
+    },
+    {
+      "name": "ru/dash/main",
+      "shortName": "main",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 305
+    },
+    {
+      "name": "en-GB/dash/main",
+      "shortName": "main",
+      "queue": "default",
+      "enabled": true,
+      "locale": "en-GB",
+      "group": "dash",
+      "index": 305
+    },
+    {
+      "name": "en-US/dash/main",
+      "shortName": "main",
+      "queue": "default",
+      "enabled": true,
+      "locale": "en-US",
+      "group": "dash",
+      "index": 305
+    },
+    {
+      "name": "ru/dash/years",
+      "shortName": "years",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310,
+      "settings": {
+        "dash": "–"
+      }
+    },
+    {
+      "name": "ru/dash/weekday",
+      "shortName": "weekday",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310,
+      "settings": {
+        "dash": "–"
+      }
+    },
+    {
+      "name": "ru/dash/kakto",
+      "shortName": "kakto",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/to",
+      "shortName": "to",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/time",
+      "shortName": "time",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310,
+      "settings": {
+        "dash": "–"
+      }
+    },
+    {
+      "name": "ru/dash/taki",
+      "shortName": "taki",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/surname",
+      "shortName": "surname",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/month",
+      "shortName": "month",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310,
+      "settings": {
+        "dash": "–"
+      }
+    },
+    {
+      "name": "ru/dash/koe",
+      "shortName": "koe",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/ka",
+      "shortName": "ka",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/izza",
+      "shortName": "izza",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/izpod",
+      "shortName": "izpod",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/directSpeech",
+      "shortName": "directSpeech",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/decade",
+      "shortName": "decade",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310,
+      "settings": {
+        "dash": "–"
+      }
+    },
+    {
+      "name": "ru/dash/de",
+      "shortName": "de",
+      "queue": "default",
+      "enabled": false,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310
+    },
+    {
+      "name": "ru/dash/daysMonth",
+      "shortName": "daysMonth",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310,
+      "settings": {
+        "dash": "–"
+      }
+    },
+    {
+      "name": "ru/dash/centuries",
+      "shortName": "centuries",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "dash",
+      "index": 310,
+      "settings": {
+        "dash": "–"
+      }
+    },
+    {
+      "name": "ru/punctuation/hellipQuestion",
+      "shortName": "hellipQuestion",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "punctuation",
+      "index": 410
+    },
+    {
+      "name": "ru/punctuation/exclamation",
+      "shortName": "exclamation",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "punctuation",
+      "index": 410,
+      "live": false
+    },
+    {
+      "name": "ru/punctuation/ano",
+      "shortName": "ano",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "punctuation",
+      "index": 410
+    },
+    {
+      "name": "common/punctuation/quote",
+      "shortName": "quote",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "punctuation",
+      "index": 410,
+      "settings": {
+        "be": {
+          "left": "«“",
+          "right": "»”"
+        },
+        "bg": {
+          "left": "„’",
+          "right": "“’"
+        },
+        "ca": {
+          "left": "«“",
+          "right": "»”"
+        },
+        "cs": {
+          "left": "„‚",
+          "right": "“‘"
+        },
+        "da": {
+          "left": "»›",
+          "right": "«‹"
+        },
+        "de": {
+          "left": "„‚",
+          "right": "“‘"
+        },
+        "el": {
+          "left": "«“",
+          "right": "»”"
+        },
+        "en-GB": {
+          "left": "‘“",
+          "right": "’”"
+        },
+        "en-US": {
+          "left": "“‘",
+          "right": "”’"
+        },
+        "eo": {
+          "left": "“‘",
+          "right": "”’"
+        },
+        "es": {
+          "left": "«“",
+          "right": "»”"
+        },
+        "et": {
+          "left": "„«",
+          "right": "“»"
+        },
+        "fi": {
+          "left": "”’",
+          "right": "”’"
+        },
+        "fr": {
+          "left": "«‹",
+          "right": "»›",
+          "spacing": true
+        },
+        "ga": {
+          "left": "“‘",
+          "right": "”’"
+        },
+        "hu": {
+          "left": "„»",
+          "right": "”«"
+        },
+        "it": {
+          "left": "«“",
+          "right": "»”"
+        },
+        "lv": {
+          "left": "«„",
+          "right": "»“"
+        },
+        "nl": {
+          "left": "‘“",
+          "right": "’”"
+        },
+        "no": {
+          "left": "«’",
+          "right": "»’"
+        },
+        "pl": {
+          "left": "„«",
+          "right": "”»"
+        },
+        "ro": {
+          "left": "„«",
+          "right": "”»"
+        },
+        "ru": {
+          "left": "«„‚",
+          "right": "»“‘",
+          "removeDuplicateQuotes": true
+        },
+        "sk": {
+          "left": "„‚",
+          "right": "“‘"
+        },
+        "sl": {
+          "left": "„‚",
+          "right": "“‘"
+        },
+        "sr": {
+          "left": "„’",
+          "right": "”’"
+        },
+        "sv": {
+          "left": "”’",
+          "right": "”’"
+        },
+        "tr": {
+          "left": "“‘",
+          "right": "”’"
+        },
+        "uk": {
+          "left": "«„",
+          "right": "»“"
+        }
+      }
+    },
+    {
+      "name": "common/punctuation/hellip",
+      "shortName": "hellip",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "punctuation",
+      "index": 410
+    },
+    {
+      "name": "common/punctuation/delDoublePunctuation",
+      "shortName": "delDoublePunctuation",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "punctuation",
+      "index": 410
+    },
+    {
+      "name": "common/punctuation/apostrophe",
+      "shortName": "apostrophe",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "punctuation",
+      "index": 410
+    },
+    {
+      "name": "ru/punctuation/exclamationQuestion",
+      "shortName": "exclamationQuestion",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "punctuation",
+      "index": 415
+    },
+    {
+      "name": "common/punctuation/quoteLink",
+      "shortName": "quoteLink",
+      "queue": "show-safe-tags-html",
+      "enabled": true,
+      "locale": "common",
+      "group": "punctuation",
+      "index": 415
+    },
+    {
+      "name": "common/number/digitGrouping",
+      "shortName": "digitGrouping",
+      "queue": "default",
+      "enabled": false,
+      "locale": "common",
+      "group": "number",
+      "index": 460,
+      "settings": {
+        "space": " "
+      }
+    },
+    {
+      "name": "ru/nbsp/year",
+      "shortName": "year",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/see",
+      "shortName": "see",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/rubleKopek",
+      "shortName": "rubleKopek",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/ps",
+      "shortName": "ps",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/page",
+      "shortName": "page",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/ooo",
+      "shortName": "ooo",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/mln",
+      "shortName": "mln",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/initials",
+      "shortName": "initials",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/dayMonth",
+      "shortName": "dayMonth",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/centuries",
+      "shortName": "centuries",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/afterNumberSign",
+      "shortName": "afterNumberSign",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/addr",
+      "shortName": "addr",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/abbr",
+      "shortName": "abbr",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "common/nbsp/replaceNbsp",
+      "shortName": "replaceNbsp",
+      "queue": "utf",
+      "enabled": false,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510,
+      "live": false
+    },
+    {
+      "name": "common/nbsp/nowrap",
+      "shortName": "nowrap",
+      "queue": "end",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "common/nbsp/dpi",
+      "shortName": "dpi",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "common/nbsp/beforeShortLastWord",
+      "shortName": "beforeShortLastWord",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510,
+      "settings": {
+        "lengthLastWord": 3
+      }
+    },
+    {
+      "name": "common/nbsp/beforeShortLastNumber",
+      "shortName": "beforeShortLastNumber",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510,
+      "settings": {
+        "lengthLastNumber": 2
+      },
+      "live": false
+    },
+    {
+      "name": "common/nbsp/afterShortWordByList",
+      "shortName": "afterShortWordByList",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "common/nbsp/afterShortWord",
+      "shortName": "afterShortWord",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510,
+      "settings": {
+        "lengthShortWord": 2
+      }
+    },
+    {
+      "name": "common/nbsp/afterSectionMark",
+      "shortName": "afterSectionMark",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "common/nbsp/afterParagraphMark",
+      "shortName": "afterParagraphMark",
+      "queue": "default",
+      "enabled": true,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "common/nbsp/afterNumber",
+      "shortName": "afterNumber",
+      "queue": "default",
+      "enabled": false,
+      "locale": "common",
+      "group": "nbsp",
+      "index": 510
+    },
+    {
+      "name": "ru/nbsp/years",
+      "shortName": "years",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 515
+    },
+    {
+      "name": "ru/nbsp/m",
+      "shortName": "m",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 515
+    },
+    {
+      "name": "ru/nbsp/beforeParticle",
+      "shortName": "beforeParticle",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "nbsp",
+      "index": 515
+    },
+    {
+      "name": "ru/money/ruble",
+      "shortName": "ruble",
+      "queue": "default",
+      "enabled": false,
+      "locale": "ru",
+      "group": "money",
+      "index": 710
+    },
+    {
+      "name": "ru/money/currency",
+      "shortName": "currency",
+      "queue": "default",
+      "enabled": false,
+      "locale": "ru",
+      "group": "money",
+      "index": 710
+    },
+    {
+      "name": "ru/date/weekday",
+      "shortName": "weekday",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "date",
+      "index": 810
+    },
+    {
+      "name": "ru/date/fromISO",
+      "shortName": "fromISO",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "date",
+      "index": 810
+    },
+    {
+      "name": "ru/other/phone-number",
+      "shortName": "phone-number",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "other",
+      "index": 910,
+      "live": false
+    },
+    {
+      "name": "ru/other/accent",
+      "shortName": "accent",
+      "queue": "default",
+      "enabled": false,
+      "locale": "ru",
+      "group": "other",
+      "index": 910
+    },
+    {
+      "name": "common/other/repeatWord",
+      "shortName": "repeatWord",
+      "queue": "default",
+      "enabled": false,
+      "locale": "common",
+      "group": "other",
+      "index": 910,
+      "settings": {
+        "min": 2
+      }
+    },
+    {
+      "name": "ru/optalign/quote",
+      "shortName": "quote",
+      "queue": "default",
+      "enabled": false,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/optalign/comma",
+      "shortName": "comma",
+      "queue": "default",
+      "enabled": false,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/optalign/bracket",
+      "shortName": "bracket",
+      "queue": "default",
+      "enabled": false,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/typo/switchingKeyboardLayout",
+      "shortName": "switchingKeyboardLayout",
+      "queue": "default",
+      "enabled": true,
+      "locale": "ru",
+      "group": "typo",
+      "index": 1110
+    },
+    {
+      "name": "common/html/url",
+      "shortName": "url",
+      "queue": "end",
+      "enabled": false,
+      "locale": "common",
+      "group": "html",
+      "index": 1210,
+      "htmlAttrs": false
+    },
+    {
+      "name": "common/html/quot",
+      "shortName": "quot",
+      "queue": "hide-safe-tags",
+      "enabled": true,
+      "locale": "common",
+      "group": "html",
+      "index": 1210
+    },
+    {
+      "name": "common/html/processingAttrs",
+      "shortName": "processingAttrs",
+      "queue": "hide-safe-tags-own",
+      "enabled": false,
+      "locale": "common",
+      "group": "html",
+      "index": 1210,
+      "settings": {
+        "attrs": ["title", "placeholder"]
+      },
+      "htmlAttrs": false
+    },
+    {
+      "name": "common/html/e-mail",
+      "shortName": "e-mail",
+      "queue": "end",
+      "enabled": false,
+      "locale": "common",
+      "group": "html",
+      "index": 1210,
+      "htmlAttrs": false
+    },
+    {
+      "name": "common/html/p",
+      "shortName": "p",
+      "queue": "end",
+      "enabled": false,
+      "locale": "common",
+      "group": "html",
+      "index": 1215,
+      "htmlAttrs": false
+    },
+    {
+      "name": "common/html/nbr",
+      "shortName": "nbr",
+      "queue": "end",
+      "enabled": false,
+      "locale": "common",
+      "group": "html",
+      "index": 1220,
+      "htmlAttrs": false
+    },
+    {
+      "name": "common/html/stripTags",
+      "shortName": "stripTags",
+      "queue": "end",
+      "enabled": false,
+      "locale": "common",
+      "group": "html",
+      "index": 1309
+    },
+    {
+      "name": "common/html/escape",
+      "shortName": "escape",
+      "queue": "end",
+      "enabled": false,
+      "locale": "common",
+      "group": "html",
+      "index": 1310
+    }
+  ],
+  "inner": [
+    {
+      "name": "ru/optalign/bracket",
+      "shortName": "bracket",
+      "queue": "start",
+      "enabled": true,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/optalign/bracket",
+      "shortName": "bracket",
+      "queue": "end",
+      "enabled": true,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/optalign/comma",
+      "shortName": "comma",
+      "queue": "start",
+      "enabled": true,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/optalign/comma",
+      "shortName": "comma",
+      "queue": "end",
+      "enabled": true,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/optalign/quote",
+      "shortName": "quote",
+      "queue": "start",
+      "enabled": true,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    },
+    {
+      "name": "ru/optalign/quote",
+      "shortName": "quote",
+      "queue": "end",
+      "enabled": true,
+      "locale": "ru",
+      "group": "optalign",
+      "index": 1010,
+      "htmlAttrs": false
+    }
+  ]
+}

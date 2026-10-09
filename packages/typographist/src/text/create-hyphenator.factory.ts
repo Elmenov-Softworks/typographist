@@ -1,3 +1,4 @@
+import type { HyphenationBoundary } from '@/text/hyphenation-boundary.types.js';
 import type { WordCache } from '@/text/word-cache/word-cache.js';
 import { formatWord } from '@/text/word-breaks/format-word.util.js';
 import { formatText } from '@/text/format-text.util.js';
@@ -18,7 +19,9 @@ export const createHyphenator = (
 
     return options.cache === undefined ? compute() : options.cache.format(options.locale, word, compute);
   };
-  const hyphenate = (text: string) => formatText(text, context, format);
+  const hyphenate = (text: string, boundary?: HyphenationBoundary) => formatText(text, context, format, boundary);
 
-  return { hyphenate };
+  const preservesCandidate = (word: string) => exclusions.preserves(word) || algorithm.normalize(word) === null;
+
+  return { hyphenate, preservesCandidate };
 };

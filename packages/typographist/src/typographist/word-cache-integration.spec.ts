@@ -1,5 +1,6 @@
 import { Typographist, TypographistRules } from '@/index.js';
 import * as wordFormatting from '@/text/word-breaks/format-word.util.js';
+import type { TextRule } from '@/text/typography/text-rule.types.js';
 
 const rules = (locale = 'en', positions: readonly number[] = [2]) => {
   const common = {
@@ -23,6 +24,79 @@ const rules = (locale = 'en', positions: readonly number[] = [2]) => {
 afterEach(() => vi.restoreAllMocks());
 
 describe.each([false, true])('word cache with useFast=%s', (useFast) => {
+  it('invalidates shared entries after typography-only locale addition, replacement, and removal', () => {
+    const compute = vi.spyOn(wordFormatting, 'formatWord');
+    const instance = new Typographist({
+      useFast,
+      rules: [rules(), rules('ru')],
+    });
+    const binding: TextRule = {
+      id: 'custom/binding',
+      category: 'nonbreakingSpacing',
+      order: 1,
+      defaults: {},
+      prepare: () => (text) => text.replaceAll('  ', '\u00a0'),
+    };
+    const warm = () => {
+      expect(instance.format('bacaba')).toBe('ba\u00adcaba');
+      expect(instance.format('bacaba', 'ru')).toBe('ba\u00adcaba');
+    };
+
+    warm();
+    warm();
+    expect(compute).toHaveBeenCalledTimes(2);
+
+    instance.addTextLocale({ locale: 'custom', textRules: [binding] });
+    expect(instance.format('Abc  Abc', 'custom')).toBe('Abc\u00a0Abc');
+    warm();
+    expect(compute).toHaveBeenCalledTimes(4);
+
+    instance.addTextLocale({ locale: 'custom', textRules: [] });
+    expect(instance.format('Abc  Abc', 'custom')).toBe('Abc  Abc');
+    warm();
+    expect(compute).toHaveBeenCalledTimes(6);
+
+    expect(instance.removeRules('custom')).toBe(true);
+    expect(() => instance.format('', 'custom')).toThrow('Unregistered locale');
+    warm();
+    expect(compute).toHaveBeenCalledTimes(8);
+  });
+
+  it('preserves typography and warm entries when replacement preparation fails', () => {
+    const compute = vi.spyOn(wordFormatting, 'formatWord');
+    const binding: TextRule = {
+      id: 'custom/binding',
+      category: 'nonbreakingSpacing',
+      order: 1,
+      defaults: {},
+      prepare: () => (text) => text.replaceAll('  ', '\u00a0'),
+    };
+    const instance = new Typographist({
+      useFast,
+      rules: [rules(), rules('ru')],
+      textLocales: [{ locale: 'custom', textRules: [binding] }],
+    });
+    instance.format('bacaba');
+    instance.format('bacaba', 'ru');
+    const failing: TextRule = {
+      ...binding,
+      prepare: () => {
+        throw new Error('Typography preparation failed');
+      },
+    };
+
+    expect(() => {
+      instance.addTextLocale({ locale: 'custom', textRules: [failing] });
+    }).toThrow('Typography preparation failed');
+    expect(() => {
+      instance.addTextLocale({ locale: 'custom', textRules: [binding, binding] });
+    }).toThrow('unique');
+    expect(instance.format('Abc  Abc', 'custom')).toBe('Abc\u00a0Abc');
+    expect(instance.format('bacaba')).toBe('ba\u00adcaba');
+    expect(instance.format('bacaba', 'ru')).toBe('ba\u00adcaba');
+    expect(compute).toHaveBeenCalledTimes(2);
+  });
+
   it('reuses computed break and no-break results within and across calls', () => {
     const compute = vi.spyOn(wordFormatting, 'formatWord');
     const instance = new Typographist({ useFast, rules: [rules()] });
