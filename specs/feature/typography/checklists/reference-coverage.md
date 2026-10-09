@@ -67,7 +67,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R021  | `common/space/delLeadingBlanks`           | Removed by owner scope correction                     |
 | TP-R022  | `common/space/delBetweenExclamationMarks` | `bundled-spacing.factory.ts`                          |
 | TP-R023  | `common/space/delBeforePunctuation`       | `bundled-spacing.factory.ts`                          |
-| TP-R024  | `common/space/delBeforePercent`           | `bundled-spacing.factory.ts`                          |
+| TP-R024  | `common/space/delBeforePercent`           | Removed by owner scope correction                     |
 | TP-R025  | `common/space/delBeforeDot`               | `bundled-spacing.factory.ts`                          |
 | TP-R026  | `common/space/bracket`                    | `bundled-spacing.factory.ts`                          |
 | TP-R027  | `common/space/beforeBracket`              | `bundled-spacing.factory.ts`                          |
@@ -561,3 +561,9 @@ CR/LF and Unicode line separators. Public-service tests cover both locales,
 algorithms, cache modes, protected boundaries and repeated formatting. Earlier
 cleanup audits and benchmarks predate this correction. Remaining spacing removal
 and default quotation spacing are pending.
+
+TP-R024 (`common/space/delBeforePercent`) and its settings are removed by the
+owner correction of 2026-10-09. Ordinary spaces, existing NBSPs, tabs and line
+endings before `%`, `‰` and `‱` remain intact. Public-service preservation tests
+cover both locales, algorithms and cache modes. Earlier cleanup audits and
+benchmark timings predate this reduced scope.

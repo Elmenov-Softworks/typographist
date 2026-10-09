@@ -46,7 +46,6 @@ const scenarios = [
     unchanged: '1 .25 a .b a .. ! . a\t. a\u00a0.',
   },
   { id: 'common/space/bracket', input: '(  a  )', output: '(a)', unchanged: '(\ta\t) [ a ]' },
-  { id: 'common/space/delBeforePercent', input: '1 % 2\u00a0‰ 3 ‱', output: '1% 2‰ 3‱', unchanged: '1  % a % 2\t%' },
   {
     id: 'common/space/delBeforePunctuation',
     input: 'a ! b ? c : d ; e ,',
@@ -76,7 +75,7 @@ describe('bundled spacing reference scenarios', () => {
     const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
     const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word} (works) [text] word, next; next! next? next: next word. 25% 2‰ 3‱!! ${unchanged} ${protectedText}`;
+    const normalized = `${word} (works) [text] word, next; next! next? next: next word. 25 % 2 ‰ 3 ‱!! ${unchanged} ${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -163,7 +162,7 @@ describe('bundled spacing reference scenarios', () => {
   it.each(['en', 'ru'] as const)('combines punctuation spacing without rewriting content for %s', (locale) => {
     const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep ( this ) 1 %'] });
     const input = '( $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс ) ; 10 %';
-    const output = '($100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс); 10%';
+    const output = '($100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс); 10 %';
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);

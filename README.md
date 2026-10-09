@@ -297,3 +297,9 @@ is still pending removal under the owner scope correction.
 
 Line-leading whitespace cleanup (`common/space/delLeadingBlanks`) is removed.
 Indentation remains intact, and the former settings are rejected.
+
+TP-R024 (`common/space/delBeforePercent`) and its settings are removed by the
+owner correction of 2026-10-09. Ordinary spaces, existing NBSPs, tabs and line
+endings before `%`, `‰` and `‱` remain intact. Public-service preservation tests
+cover both locales, algorithms and cache modes. Earlier cleanup audits and
+benchmark timings predate this reduced scope.

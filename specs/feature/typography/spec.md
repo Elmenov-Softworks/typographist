@@ -228,3 +228,9 @@ CR/LF and Unicode line separators. Public-service tests cover both locales,
 algorithms, cache modes, protected boundaries and repeated formatting. Earlier
 cleanup audits and benchmarks predate this correction. Remaining spacing removal
 and default quotation spacing are pending.
+
+TP-R024 (`common/space/delBeforePercent`) and its settings are removed by the
+owner correction of 2026-10-09. Ordinary spaces, existing NBSPs, tabs and line
+endings before `%`, `‰` and `‱` remain intact. Public-service preservation tests
+cover both locales, algorithms and cache modes. Earlier cleanup audits and
+benchmark timings predate this reduced scope.

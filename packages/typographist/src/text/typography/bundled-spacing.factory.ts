@@ -28,13 +28,6 @@ export const createBundledSpacing = (locale: string) => {
       prepare: () => (text) => text.replace(/(^|[^!?:;,.…]) ([!?:;,])(?!\))/g, '$1$2'),
     },
     {
-      id: 'common/space/delBeforePercent',
-      category: 'spacing',
-      order: 210,
-      defaults: {},
-      prepare: () => (text) => text.replace(/(\d)( |\u00a0)(%|‰|‱)/g, '$1$3'),
-    },
-    {
       id: 'common/space/delBeforeDot',
       category: 'spacing',
       order: 210,
@@ -127,7 +120,6 @@ export const createBundledSpacing = (locale: string) => {
     'common/space/squareBracket',
     'common/space/delBetweenExclamationMarks',
     'common/space/delBeforePunctuation',
-    'common/space/delBeforePercent',
     'common/space/delBeforeDot',
     'common/space/bracket',
     'common/space/beforeBracket',

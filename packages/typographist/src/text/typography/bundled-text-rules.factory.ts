@@ -12,7 +12,6 @@ const referenceOrder = [
   'common/space/squareBracket',
   'common/space/delBetweenExclamationMarks',
   'common/space/delBeforePunctuation',
-  'common/space/delBeforePercent',
   'common/space/delBeforeDot',
   'common/space/bracket',
   'common/space/beforeBracket',
