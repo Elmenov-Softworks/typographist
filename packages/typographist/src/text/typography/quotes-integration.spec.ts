@@ -219,7 +219,7 @@ describe('quotation spacing', () => {
   it.each([
     ['"hello"', '«\u202fhello\u202f»'],
     ['« word »', '«\u202fword\u202f»'],
-    ['«\u00a0word\u00a0»', '«\u202fword\u202f»'],
+    ['«\u00a0word\u00a0»', '«\u00a0word\u00a0»'],
     ['«\u202fword\u202f»', '«\u202fword\u202f»'],
     ['«  word  »', '«\u202f word \u202f»'],
     ['"one "two" three"', '«\u202fone ‹\u202ftwo\u202f› three\u202f»'],
@@ -228,11 +228,11 @@ describe('quotation spacing', () => {
     ['close"', 'close\u202f»'],
     ['"😀 é"', '«\u202f😀 é\u202f»'],
     ['"$100 1.25 1/2 2026-10-08 MiXeD"', '«\u202f$100 1.25 1/2 2026-10-08 MiXeD\u202f»'],
-    ['«\tword\t»', '«\u202f\tword\t\u202f»'],
-    ['«\nword\n»', '«\u202f\nword\n\u202f»'],
+    ['«\tword\t»', '«\tword\t»'],
+    ['«\nword\n»', '«\nword\n»'],
     ['', ''],
     ['word', 'word'],
-  ])('matches reference spacing for %j', (input, expected) => {
+  ])('preserves boundary whitespace for %j', (input, expected) => {
     const instance = new Typographist({
       categories: ['quotes'],
       settings: { 'common/punctuation/quote': { left: '«‹', right: '»›', spacing: true } },
@@ -295,5 +295,37 @@ describe('quotation spacing', () => {
     expect(() => new Typographist({ settings: { 'common/punctuation/quote': { spacing: 'true' } } })).toThrow(
       TypeError,
     );
+  });
+});
+
+describe.each(['en', 'ru'] as const)('quotation boundary preservation for %s', (locale) => {
+  describe.each([false, true])('useFast=%s', (useFast) => {
+    it.each([0, 1])('preserves exact whitespace with cacheSize=%s', (cacheSize) => {
+      const instance = new Typographist({
+        locale,
+        useFast,
+        cacheSize,
+        categories: ['quotes', 'hyphenation'],
+        protectedContent: ['« Keep »'],
+        settings: { 'common/punctuation/quote': { left: '«‹', right: '»›', spacing: true } },
+      });
+      const cases = [
+        ['«   cat   »', '«\u202f  cat  \u202f»'],
+        ['« \tcat\t »', '«\u202f\tcat\t\u202f»'],
+        ['«\tcat\t»', '«\tcat\t»'],
+        ['«\rcat\r»', '«\rcat\r»'],
+        ['«\r\ncat\r\n»', '«\r\ncat\r\n»'],
+        ['«\n\ncat\n\n»', '«\n\ncat\n\n»'],
+        ['«\u00a0cat\u00a0»', '«\u00a0cat\u00a0»'],
+        ['« Keep » «cat»', '« Keep » «\u202fcat\u202f»'],
+      ] as const;
+
+      for (const [input, expected] of cases) {
+        const formatted = instance.format(input);
+
+        expect(formatted).toBe(expected);
+        expect(instance.format(formatted)).toBe(formatted);
+      }
+    });
   });
 });

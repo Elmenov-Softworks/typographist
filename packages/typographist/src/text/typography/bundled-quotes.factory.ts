@@ -31,28 +31,8 @@ export const createBundledQuotes = (locale: string) => {
         const left = settings.left;
         const right = settings.right;
 
-        const spacingPairs = Array.from(settings.spacing ? left : '').map((character, index) => ({
-          opening: new RegExp(`${character.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^\\u202f])`, 'g'),
-          closing: new RegExp(`([^\\u202f])${right.charAt(index).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'),
-          removeOpening: new RegExp(`${character.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[ \u202f\u00a0]`, 'g'),
-          removeClosing: new RegExp(
-            `[ \u202f\u00a0]${right.charAt(index).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`,
-            'g',
-          ),
-        }));
-
         const setSpacing = (text: string, directions: ReadonlyMap<number, 'opening' | 'closing'>) => {
           if (!settings.spacing) {
-            return text;
-          }
-
-          if (left.charAt(0) !== right.charAt(0)) {
-            for (const [index, pair] of spacingPairs.entries()) {
-              text = text
-                .replace(pair.opening, (_match: string, after: string) => left.charAt(index) + '\u202f' + after)
-                .replace(pair.closing, (_match: string, before: string) => before + '\u202f' + right.charAt(index));
-            }
-
             return text;
           }
 
@@ -91,9 +71,23 @@ export const createBundledQuotes = (locale: string) => {
                 const neighbor = direction === 'opening' ? after : before;
                 const glyph = direction === 'opening' ? left.charAt(depth) : right.charAt(depth);
 
-                if (quote.direction === direction && quote.character === glyph && neighbor.character !== '\u202f') {
-                  spaced.push({ character: '\u202f', direction: null }, after);
-                  index++;
+                if (
+                  (left.charAt(0) === right.charAt(0) && quote.direction !== direction) ||
+                  quote.character !== glyph ||
+                  /[^\S ]/u.test(neighbor.character)
+                ) {
+                  continue;
+                }
+
+                if (neighbor.character === ' ') {
+                  if (direction === 'opening') {
+                    spaced.push({ character: '\u202f', direction: null });
+                    index++;
+                  } else {
+                    spaced[spaced.length - 1] = { character: '\u202f', direction: null };
+                  }
+                } else {
+                  spaced.push({ character: '\u202f', direction: null });
                 }
               }
 
@@ -113,14 +107,6 @@ export const createBundledQuotes = (locale: string) => {
           const outerRight = right.charAt(0);
           const directions = new Map<number, 'opening' | 'closing'>();
           const identicalOuter = outerLeft === outerRight;
-          if (settings.spacing && !identicalOuter) {
-            for (const [index, pair] of spacingPairs.entries()) {
-              text = text
-                .replace(pair.removeOpening, () => left.charAt(index))
-                .replace(pair.removeClosing, () => right.charAt(index));
-            }
-          }
-
           const normalized = text
             .replace(opening, (_match: string, before: string, quotes: string, offset: number) => {
               if (identicalOuter) {

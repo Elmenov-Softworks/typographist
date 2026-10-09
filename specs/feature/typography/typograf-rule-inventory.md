@@ -686,3 +686,14 @@ locales still require no hyphenation data. Historical audit and benchmark eviden
 predates this correction; spacing and quotation corrections remain pending.
 
 Owner correction, 2026-10-09: TP-R036 (years), TP-R037 (weekdays), TP-R043 (months) and TP-R052 (centuries) retain matched whitespace around separators. Earlier descriptions of removing these spaces and reference matches for those cases are historical. This intentional deviation preserves user input under the reduced scope; reference IDs and provenance remain unchanged.
+
+### Q6 boundary preservation correction (2026-10-09)
+
+Quotation spacing no longer removes a boundary space before inserting U+202F.
+It replaces one adjacent ordinary space, preserves additional spaces and existing
+NBSPs, and leaves adjacent tabs and line endings intact without inserting a gap.
+The same policy applies to direction-tracked identical quotation pairs. Protected
+segments remain unchanged. Public-service regressions cover both locales,
+algorithms and cache modes, including repeated formatting. Earlier quotation
+spacing comparisons describe the previous scope. Enabling spacing by default
+and removing bundled whitespace cleanup remain pending subsequent slices.
