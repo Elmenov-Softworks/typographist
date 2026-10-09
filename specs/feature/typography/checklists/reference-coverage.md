@@ -62,7 +62,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R016  | `common/space/delRepeatN`                 | Removed (2026-10-09)                                  |
 | TP-R017  | `ru/space/year`                           | `bundled-spacing.factory.ts`                          |
 | TP-R018  | `ru/space/afterHellip`                    | `bundled-spacing.factory.ts`                          |
-| TP-R019  | `common/space/squareBracket`              | `bundled-spacing.factory.ts`                          |
+| TP-R019  | `common/space/squareBracket`              | Removed: owner correction                             |
 | TP-R020  | `common/space/insertFinalNewline`         | Removed by owner correction (2026-10-09)              |
 | TP-R021  | `common/space/delLeadingBlanks`           | Removed by owner scope correction                     |
 | TP-R022  | `common/space/delBetweenExclamationMarks` | `bundled-spacing.factory.ts`                          |

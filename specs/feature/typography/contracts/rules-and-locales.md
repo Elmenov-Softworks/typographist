@@ -133,3 +133,8 @@ owner correction of 2026-10-09. Preserve whitespace before dots; retained
 ellipsis conversion changes only the glyphs. Public-service regressions cover
 Russian, English, both algorithms, cache modes, protection and repeat formatting.
 Earlier audit and benchmark evidence predates this correction.
+
+TP-R019 (`common/space/squareBracket`) and its settings are removed by the
+owner correction of 2026-10-09. Preserve spaces, tabs, line endings and existing
+NBSPs inside square brackets. Public-service regressions cover both locales,
+algorithms and cache modes, protection, repeated formatting and invalid settings.

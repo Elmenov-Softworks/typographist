@@ -46,7 +46,6 @@ const scenarios = [
     output: 'a! b? c: d; e,',
     unchanged: 'a . ! ! :) a\t,',
   },
-  { id: 'common/space/squareBracket', input: '[  a  ]', output: '[a]', unchanged: '[\ta\t] ( a )' },
 ];
 
 describe('bundled spacing reference scenarios', () => {
@@ -69,7 +68,7 @@ describe('bundled spacing reference scenarios', () => {
     const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
     const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word} (works) [text] word, next; next! next? next: next word . 25 % 2 ‰ 3 ‱!! ${unchanged} ${protectedText}`;
+    const normalized = `${word} (works) [  text  ] word, next; next! next? next: next word . 25 % 2 ‰ 3 ‱!! ${unchanged} ${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -147,7 +146,7 @@ describe('bundled spacing reference scenarios', () => {
     const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
     const output = service.format('[  table\tword  ]  \nnext');
 
-    expect(output).toBe(legacy.format('[table\tword]  \nnext'));
+    expect(output).toBe(legacy.format('[  table\tword  ]  \nnext'));
     expect(service.format(output)).toBe(output);
     expect(legacy.format('a\tb')).toBe('a\tb');
     expect(new Typographist({ categories: [] }).format('a\tb')).toBe('a\tb');

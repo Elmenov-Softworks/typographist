@@ -150,7 +150,7 @@ describe('bundled nonbreaking mark spacing', () => {
   it.each([false, true])('combines mark spacing before hyphenation with useFast=%s', (useFast) => {
     const service = new Typographist({ useFast });
     const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
-    const expected = legacy.format('§\u00a01 ¶\u00a02 [table\tword]');
+    const expected = legacy.format('§\u00a01 ¶\u00a02 [ table\tword ]');
 
     expect(service.format('§ 1 ¶ 2 [ table\tword ]')).toBe(expected);
     expect(service.format(expected)).toBe(expected);
