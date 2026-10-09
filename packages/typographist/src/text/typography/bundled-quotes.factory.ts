@@ -90,6 +90,19 @@ export const createBundledQuotes = (locale: string) => {
                 }
 
                 if (neighbor.character === ' ') {
+                  const step = direction === 'opening' ? 1 : -1;
+                  let targetIndex = direction === 'opening' ? index + 1 : index;
+
+                  while (/[\t \u00a0\u202f]/u.test(characters[targetIndex]?.character ?? '')) {
+                    targetIndex += step;
+                  }
+
+                  const target = characters[targetIndex];
+
+                  if (target === undefined || /\s/u.test(target.character)) {
+                    continue;
+                  }
+
                   if (direction === 'opening') {
                     spaced.push({ character: '\u202f', direction: null });
                     index++;
