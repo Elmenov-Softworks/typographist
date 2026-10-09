@@ -145,3 +145,10 @@ This specification adapts GitHub Spec Kit's specification structure to the repos
 No blocking scope questions remain. The owner explicitly approved this version on 2026-10-08 and separately authorized its documentation commit. Implementation and orchestrator execution have not been requested for this specification.
 
 Owner scope correction (2026-10-09), N1: bundled `common/nbsp/replaceNbsp` is removed, including its settings and standalone tests. Existing NBSPs must remain instead of being normalized to ordinary spaces before retained language bindings. Historical verification and timings predate this correction. Other approved scope corrections are tracked in subsequent implementation slices.
+
+Owner scope correction (2026-10-09), A8: declarative `RuleSets` and
+`TypographistRules` require both standard and fast datasets. Independent
+single-dataset construction is removed. Subclass `compile(useFast)` remains
+available, both algorithms remain supported without fallback, and typography-only
+locales still require no hyphenation data. Historical audit and benchmark evidence
+predates this correction; spacing and quotation corrections remain pending.

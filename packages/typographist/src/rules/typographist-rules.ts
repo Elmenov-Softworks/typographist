@@ -2,7 +2,7 @@ import type { ITypographistRules } from '@/rules/typographist-rules.interfaces.j
 import type { RuleSets } from '@/rules/rule-sets.types.js';
 
 /**
- * Supplies locale rules from independent Knuth–Liang or Khristov datasets, or a subclass's own storage.
+ * Supplies locale rules from paired Knuth–Liang and Khristov datasets, or a subclass's own storage.
  * Typographist calls compile once per registration with its configured useFast flag.
  *
  * @example
@@ -20,14 +20,23 @@ import type { RuleSets } from '@/rules/rule-sets.types.js';
 export class TypographistRules<TLocale extends string = string> implements ITypographistRules<TLocale> {
   #ruleSets: RuleSets<TLocale> | null;
 
-  /** Stores supplied datasets; omitting them requires a subclass to override compile. */
+  /** Requires both datasets when supplied; omitting them requires a subclass to override compile. */
   constructor(ruleSets: RuleSets<TLocale> | null = null) {
+    if (ruleSets !== null) {
+      const standard: unknown = ruleSets.standard;
+      const fast: unknown = ruleSets.fast;
+
+      if (standard == null || fast == null) {
+        throw new TypeError('Supply both standard and fast hyphenation datasets');
+      }
+    }
+
     this.#ruleSets = ruleSets;
   }
 
   /**
    * Selects Khristov rules in fast mode and Knuth–Liang rules in standard mode.
-   * Throws when the selected dataset is absent; never substitutes the other algorithm's data.
+   * Never substitutes the other algorithm's data.
    * Typographist validates and prepares the returned data on registration.
    */
   compile(useFast: boolean) {
@@ -35,12 +44,6 @@ export class TypographistRules<TLocale extends string = string> implements ITypo
       throw new TypeError('Supply rule sets or override compile in a TypographistRules subclass');
     }
 
-    const selected = useFast ? this.#ruleSets.fast : this.#ruleSets.standard;
-
-    if (selected == null) {
-      throw new TypeError('Supply data for the selected hyphenation algorithm');
-    }
-
-    return selected;
+    return useFast ? this.#ruleSets.fast : this.#ruleSets.standard;
   }
 }

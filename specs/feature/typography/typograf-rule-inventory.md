@@ -681,3 +681,10 @@ in `protected-range-dashes.spec.ts` cover every range handler, identifier
 preservation, partial endpoints, valid ranges, and many protected fragments
 inside one long identifier. Unary minus retains its separate numeric eligibility
 logic and existing regression coverage.
+
+Owner scope correction (2026-10-09), A8: declarative `RuleSets` and
+`TypographistRules` require both standard and fast datasets. Independent
+single-dataset construction is removed. Subclass `compile(useFast)` remains
+available, both algorithms remain supported without fallback, and typography-only
+locales still require no hyphenation data. Historical audit and benchmark evidence
+predates this correction; spacing and quotation corrections remain pending.

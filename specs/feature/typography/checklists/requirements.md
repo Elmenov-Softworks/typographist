@@ -254,3 +254,17 @@ require subsequent slices, followed by independent review of the reduced scope.
 Owner scope correction (2026-10-09), N1: bundled `common/nbsp/replaceNbsp` is removed, including its settings and standalone tests. Existing NBSPs must remain instead of being normalized to ordinary spaces before retained language bindings. Historical verification and timings predate this correction. Other approved scope corrections are tracked in subsequent implementation slices.
 
 N1 slice validation on Node v24.21.0: all 2,095 tests passed; workspace typecheck, lint, formatting, build and diff checks passed. Nx reused one of six typecheck tasks and two of five build tasks. Spacing removal, quotation correction and required dual-dataset restoration remain pending. Default whitespace-only NBSP preservation still depends on the pending spacing-factory removal; the N1 slice verifies that boundary with nonbreaking bindings selected. No publication or Git mutation was performed.
+
+Owner scope correction (2026-10-09), A8: declarative `RuleSets` and
+`TypographistRules` require both standard and fast datasets. Independent
+single-dataset construction is removed. Subclass `compile(useFast)` remains
+available, both algorithms remain supported without fallback, and typography-only
+locales still require no hyphenation data. Historical audit and benchmark evidence
+predates this correction; spacing and quotation corrections remain pending.
+
+A8 correction validation: Node v24.21.0; all 2,096 tests, workspace type checks,
+lint, formatting, builds and diff checks passed. Public boundary tests reject
+missing declarative datasets at runtime and compile time; existing subclass,
+typography-only locale, algorithm and cache regressions remain passing. Changes
+are uncommitted for coordinator review. This validates A8 only; the remaining
+owner corrections and full independent review are still open.

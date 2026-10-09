@@ -184,8 +184,8 @@ are implemented and recorded. Complete independent review and final owner accept
 remain open; no publication is authorized. See the
 [verification record](specs/feature/typography/checklists/requirements.md).
 
-Custom plugins extend `TypographistRules`. Its constructor accepts either or both
-algorithm datasets; only the dataset selected by `useFast` is required. Subclasses
+Custom plugins extend `TypographistRules`. Its declarative constructor requires both
+standard and fast algorithm datasets. Subclasses
 can instead override the synchronous `compile`
 operation when they own the storage. No runtime algorithm or normalization
 internals are needed:
@@ -206,6 +206,12 @@ class GermanRules extends TypographistRules<'de'> {
       standard: {
         ...shared,
         patterns: ['a1b'], // Replace with complete language patterns.
+      },
+      fast: {
+        ...shared,
+        vowels: 'aeiouyäöü',
+        consonants: 'bcdfghjklmnpqrstvwxzß',
+        specialLetters: '',
       },
     });
   }
@@ -228,16 +234,16 @@ not promise language coverage for externally supplied rules.
 
 Supplying `rules` in the constructor replaces the bundled list. `compile` runs
 once per registration and receives the configured `useFast` value. The base
-class accepts `{ standard, fast }` with either dataset independently optional: `standard` is `CompiledRules` with
+class requires `{ standard, fast }`: `standard` is `CompiledRules` with
 Knuth–Liang patterns, and `fast` is `KhristovRules` with `vowels`, `consonants`,
 and `specialLetters`. Both share `LanguageRules`: locale, alphabet, break minima
 and optional explicit exceptions. Subclasses can inherit this compiler or
 override it with a normal method or function property. An override must return
 Khristov data for `compile(true)` and Knuth–Liang data for `compile(false)`.
 
-The example above supplies only standard data and works with the default
-`useFast: false`. To select `useFast: true`, supply a `fast` dataset with a
-complete classification of the supported alphabet for Khristov. Missing or
+The example above supplies both datasets. `useFast` selects the algorithm; it
+does not make either declarative dataset optional. Subclass overrides remain
+responsible for returning data compatible with the selected algorithm. Missing or
 incompatible selected data fails registration; there is no fallback to another
 algorithm. Invalid replacement data leaves the previous registration usable.
 
