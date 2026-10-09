@@ -16,9 +16,9 @@ export type TextRuleContext = {
   readonly precedingToken?: string;
   /** Original lexical/numeric continuation after the segment across a protected boundary. */
   readonly followingToken?: string;
-  /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */
+  /** Whether the segment begins at the original whole-text boundary. */
   readonly startsText?: boolean;
-  /** Omitted by legacy callers; treated as a complete-text boundary by bundled trimming rules. */
+  /** Whether the segment ends at the original whole-text boundary. */
   readonly endsText?: boolean;
 };
 

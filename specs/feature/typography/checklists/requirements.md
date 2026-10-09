@@ -326,3 +326,15 @@ The new public-service regressions cover both locales, algorithms and cache
 modes, repeat formatting, existing NBSPs, CR/LF and protected content. Changes
 remain uncommitted for the coordinator; remaining spacing removal, default
 quotation spacing and full independent review are open.
+
+### Outer-whitespace preservation correction (2026-10-09)
+
+TP-R012 (`common/space/trimLeft`) and TP-R013 (`common/space/trimRight`)
+are removed, including their settings. The bundle no longer trims whole-text
+boundaries. Other spacing cleanup remains pending removal; preservation tests
+isolate it where needed. Earlier trimming audits and benchmarks predate this
+correction and do not validate the reduced scope.
+
+Until TP-R017 is removed, the retained Russian year-spacing handler can insert
+its gap on the second pass after leading indentation is removed on the first.
+The locale interaction regression records this temporary behavior explicitly.

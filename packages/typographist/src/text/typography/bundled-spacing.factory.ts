@@ -7,20 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/trimLeft',
-      category: 'spacing',
-      order: 206,
-      defaults: {},
-      prepare: () => (text, context) => (context?.startsText === false ? text : text.trimStart()),
-    },
-    {
-      id: 'common/space/trimRight',
-      category: 'spacing',
-      order: 207,
-      defaults: {},
-      prepare: () => (text, context) => (context?.endsText === false ? text : text.trimEnd()),
-    },
-    {
       id: 'common/space/delTrailingBlanks',
       category: 'spacing',
       order: 207,
@@ -180,8 +166,6 @@ export const createBundledSpacing = (locale: string) => {
   }
 
   const referenceOrder = [
-    'common/space/trimLeft',
-    'common/space/trimRight',
     'common/space/delTrailingBlanks',
     'common/space/delRepeatSpace',
     'common/space/delRepeatN',

@@ -185,3 +185,11 @@ are rejected. Tabs are no longer expanded into four ordinary spaces. Other
 bundled whitespace cleanup remains pending removal, so this slice tests interior
 single tabs independently of those rules. Earlier tab-expansion audits and
 benchmarks predate the reduced scope and do not validate this behavior.
+
+### Outer-whitespace preservation correction (2026-10-09)
+
+TP-R012 (`common/space/trimLeft`) and TP-R013 (`common/space/trimRight`)
+are removed, including their settings. The bundle no longer trims whole-text
+boundaries. Other spacing cleanup remains pending removal; preservation tests
+isolate it where needed. Earlier trimming audits and benchmarks predate this
+correction and do not validate the reduced scope.

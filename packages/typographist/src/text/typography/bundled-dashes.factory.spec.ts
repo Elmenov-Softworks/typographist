@@ -231,7 +231,7 @@ describe('bundled prose dashes', () => {
         const inputRanges = locale === 'ru' ? 'среда-пятница\tмай-июнь  X-XI' : 'monday-friday\tMay-June  X-XI';
         const outputRanges = locale === 'ru' ? 'среда–пятница\tмай–июнь X–XI' : 'monday-friday\tMay-June X-XI';
         const input = `  ${inputRanges}\t table  -  table ${content} ${addresses} ${protectedText}  `;
-        const cleaned = `${outputRanges} table\u00a0— table ${content} ${addresses} ${protectedText}`;
+        const cleaned = `${outputRanges} table\u00a0— table ${content} ${addresses} ${protectedText}  `;
         const service = new Typographist({
           locale,
           useFast,

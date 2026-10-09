@@ -106,73 +106,13 @@ describe('bundled spacing reference scenarios', () => {
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
     const input = '\tTypography\tworks  \n\n\n  Типографика\tработает\nKeep\t  this\n\n\nend\t ';
-    const cleaned = 'Typography\tworks\n\nТипографика\tработает\nKeep\t  this\n\n\nend';
+    const cleaned = 'Typography\tworks\n\nТипографика\tработает\nKeep\t  this\n\n\nend ';
     const expected = legacy.format(cleaned);
 
     expect(service.format(input)).toBe(expected);
     expect(service.format(expected)).toBe(expected);
     expect(new Typographist({ ...configuration, categories: [] }).format(input)).toBe(input);
     expect(legacy.format(input).replaceAll('\u00ad', '')).toBe(input);
-  });
-
-  describe('whole-text trimming', () => {
-    it.each(['en', 'ru'] as const)('trims only outer whitespace for %s', (locale) => {
-      const ids = ['common/space/trimLeft', 'common/space/trimRight'];
-      const rules = createBundledSpacing(locale).filter((rule) => ids.includes(rule.id));
-      const format = prepareTextPipeline(rules, locale);
-      const content = '😀 е́ $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс\u00ad';
-      const whitespace = ' \t\r\n\u00a0\u2028\u2029\u202f\u2009\ufeff';
-
-      expect(rules).toHaveLength(2);
-      expect(format(`${whitespace}${content}${whitespace}`)).toBe(content);
-      expect(format(whitespace)).toBe('');
-      expect(format('')).toBe('');
-      expect(format(`a${whitespace}b`)).toBe(`a${whitespace}b`);
-      expect(format('\u200ba\u200b')).toBe('\u200ba\u200b');
-      expect(format(format(`${whitespace}${content}${whitespace}`))).toBe(content);
-
-      for (const rule of rules) {
-        const isolated = prepareTextPipeline([rule], locale);
-        const expected = rule.id === ids[0] ? 'a  ' : '  a';
-
-        expect(isolated('  a  ')).toBe(expected);
-        expect(rule.prepare({})('  a  ')).toBe(expected);
-        expect(() => prepareTextPipeline([rule], locale, { settings: { [rule.id]: { unknown: true } } })).toThrow(
-          'Invalid setting',
-        );
-      }
-    });
-
-    it.each(['en', 'ru'] as const)('preserves protected boundaries for %s', (locale) => {
-      const rules = createBundledSpacing(locale).filter((rule) => /trim(Left|Right)$/.test(rule.id));
-      const format = prepareTextPipeline(rules, locale, { protectedContent: [' kept ', 'TOKEN'] });
-
-      expect(format('  a TOKEN b  ')).toBe('a TOKEN b');
-      expect(format('  https://example.com  user@example.com  ')).toBe('https://example.com  user@example.com');
-      expect(format(' kept ')).toBe(' kept ');
-      expect(format('  kept  ')).toBe(' kept ');
-      expect(format('TOKEN  middle  TOKEN')).toBe('TOKEN  middle  TOKEN');
-      expect(format('TOKEN\n  middle\nTOKEN')).toBe('TOKEN\n  middle\nTOKEN');
-      expect(format('TOKEN  ')).toBe('TOKEN');
-      expect(format('  TOKEN')).toBe('TOKEN');
-    });
-
-    it.each([false, true])('combines trimming and hyphenation with useFast=%s', (useFast) => {
-      for (const locale of ['en', 'ru'] as const) {
-        const content = locale === 'en' ? 'Typography works' : 'Типографика работает';
-        const service = new Typographist({ locale, useFast, categories: ['spacing', 'hyphenation'] });
-        const legacy = new Typographist({ locale, useFast, categories: ['hyphenation'] });
-        const expected = legacy.format(content);
-
-        expect(service.format(` \r\n\t${content}\n `)).toBe(expected);
-        expect(service.format(expected)).toBe(expected);
-        expect(new Typographist({ locale, categories: ['spacing'] }).format(' \n[a  b]\n ')).toBe('[a b]');
-        expect(new Typographist({ locale }).format(' \n1.25\n ')).toBe('1.25');
-        for (const categories of [[], ['hyphenation'], ['quotes']] as const) {
-          expect(new Typographist({ locale, categories }).format(' \n1.25\n ')).toBe(' \n1.25\n ');
-        }
-      }
-    });
   });
 
   it.each(['en', 'ru'] as const)('cleans indentation without changing composition for %s', (locale) => {
@@ -265,7 +205,7 @@ describe('bundled spacing reference scenarios', () => {
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
-    expect(service.format('\n\n\n')).toBe('');
+    expect(service.format('\n\n\n')).toBe('\n\n');
     expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('\n\n\n')).toBe('\n\n\n');
   });
@@ -294,7 +234,7 @@ describe('bundled spacing reference scenarios', () => {
       `before ${addresses} after Keep\t  this end`,
     );
     expect(service.format('')).toBe('');
-    expect(service.format(' \r\n\t ')).toBe('');
+    expect(service.format(' \r\n\t ')).toBe('\r\n');
     expect(service.format('a\u00adb\u00a0c')).toBe('a\u00adb\u00a0c');
   });
 

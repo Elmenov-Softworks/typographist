@@ -296,3 +296,7 @@ Quotation formatting preserves repeated source quotes. The former
 and nesting remain supported.
 
 Russian year, century, weekday and month range rules preserve existing gaps around the separator while changing its glyph. The prose-dash rule may replace the nearest preceding ordinary space with NBSP; it preserves additional whitespace. For example, with only `dashes` selected, `XV --XVI` becomes `XV –XVI`.
+
+Whole-text trimming (`common/space/trimLeft` and `common/space/trimRight`)
+is removed. Both former settings are rejected. Other ordinary whitespace cleanup
+is still pending removal under the owner scope correction.
