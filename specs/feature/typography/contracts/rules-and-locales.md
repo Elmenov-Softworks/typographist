@@ -75,3 +75,11 @@ settings are rejected. Formatting never appends a final newline implicitly.
 The reference metadata remains for provenance; earlier final-newline audit and
 benchmark evidence predates this correction. Remaining spacing removal and
 default quotation spacing are pending.
+
+### Tab preservation correction (2026-10-09)
+
+TP-R011 (`common/space/replaceTab`) is removed from the bundle and its settings
+are rejected. Tabs are no longer expanded into four ordinary spaces. Other
+bundled whitespace cleanup remains pending removal, so this slice tests interior
+single tabs independently of those rules. Earlier tab-expansion audits and
+benchmarks predate the reduced scope and do not validate this behavior.

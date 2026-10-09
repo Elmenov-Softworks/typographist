@@ -53,7 +53,6 @@ const scenarios = [
     output: 'a! b? c: d; e,',
     unchanged: 'a . ! ! :) a\t,',
   },
-  { id: 'common/space/replaceTab', input: '\ta\tb', output: '    a    b', unchanged: 'a  b\u00a0c' },
   { id: 'common/space/delTrailingBlanks', input: 'a  \nb\t\n', output: 'a\nb\n', unchanged: 'a  \r\nb  ' },
   { id: 'common/space/delRepeatSpace', input: 'a  b\t\tc', output: 'a b c', unchanged: '  a\n  b\u00a0\u00a0c' },
   { id: 'common/space/squareBracket', input: '[  a  ]', output: '[a]', unchanged: '[\ta\t] ( a )' },
@@ -107,7 +106,7 @@ describe('bundled spacing reference scenarios', () => {
     });
     const legacy = new Typographist({ ...configuration, categories: ['hyphenation'] });
     const input = '\tTypography\tworks  \n\n\n  Типографика\tработает\nKeep\t  this\n\n\nend\t ';
-    const cleaned = 'Typography works\n\nТипографика работает\nKeep\t  this\n\n\nend';
+    const cleaned = 'Typography\tworks\n\nТипографика\tработает\nKeep\t  this\n\n\nend';
     const expected = legacy.format(cleaned);
 
     expect(service.format(input)).toBe(expected);
@@ -290,7 +289,7 @@ describe('bundled spacing reference scenarios', () => {
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
     const addresses = 'https://example.com/a user@example.com';
 
-    expect(service.format(`${content}\tend`)).toBe(`${content} end`);
+    expect(service.format(`${content}\tend`)).toBe(`${content}\tend`);
     expect(service.format(`before ${addresses} after Keep\t  this end`)).toBe(
       `before ${addresses} after Keep\t  this end`,
     );
@@ -304,7 +303,7 @@ describe('bundled spacing reference scenarios', () => {
     const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
     const output = service.format('[  table\tword  ]  \nnext');
 
-    expect(output).toBe(legacy.format('[table word]\nnext'));
+    expect(output).toBe(legacy.format('[table\tword]\nnext'));
     expect(service.format(output)).toBe(output);
     expect(legacy.format('a\tb')).toBe('a\tb');
     expect(new Typographist({ categories: [] }).format('a\tb')).toBe('a\tb');

@@ -19,7 +19,7 @@ describe('Common nonbreaking spacing interactions', () => {
     const content = '$100 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const addresses = 'https://example.com/300dpi user300dpi@example.com';
     const input = `Typography\u00a0  formatting\n§  1 ¶\t2\n300dpi\n100  ${word}\n${content}\n${addresses}\n${protectedText}`;
-    const normalized = `Typography\u00a0 formatting\n§${sectionSpace}1 ¶\u00a02\n300\u00a0dpi\n100\u00a0${word}\n${content}\n${addresses}\n${protectedText}`;
+    const normalized = `Typography\u00a0 formatting\n§${sectionSpace}1 ¶\t2\n300\u00a0dpi\n100\u00a0${word}\n${content}\n${addresses}\n${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -34,7 +34,7 @@ describe('Common nonbreaking spacing interactions', () => {
       }).format(input),
     ).toBe(
       legacy.format(
-        `Typography\u00a0 formatting\n§ 1 ¶ 2\n300dpi\n100 ${word}\n${content}\n${addresses}\n${protectedText}`,
+        `Typography\u00a0 formatting\n§ 1 ¶\t2\n300dpi\n100 ${word}\n${content}\n${addresses}\n${protectedText}`,
       ),
     );
   });

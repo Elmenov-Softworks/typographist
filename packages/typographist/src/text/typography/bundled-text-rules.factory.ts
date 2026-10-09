@@ -7,7 +7,6 @@ import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.
 
 const referenceOrder = [
   'common/dash/minus',
-  'common/space/replaceTab',
   'common/space/trimLeft',
   'common/space/trimRight',
   'common/space/delTrailingBlanks',

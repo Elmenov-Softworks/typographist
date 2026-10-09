@@ -7,13 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/replaceTab',
-      category: 'spacing',
-      order: 205,
-      defaults: {},
-      prepare: () => (text) => text.replace(/\t/g, '    '),
-    },
-    {
       id: 'common/space/trimLeft',
       category: 'spacing',
       order: 206,
@@ -187,7 +180,6 @@ export const createBundledSpacing = (locale: string) => {
   }
 
   const referenceOrder = [
-    'common/space/replaceTab',
     'common/space/trimLeft',
     'common/space/trimRight',
     'common/space/delTrailingBlanks',

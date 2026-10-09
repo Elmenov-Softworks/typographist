@@ -311,3 +311,18 @@ interaction test passed separately (8 tests). Initial concurrent lint reported
 unresolved built-package types; lint passed when rerun after builds completed.
 Changes remain uncommitted for the coordinator. Remaining spacing and quotation
 corrections and full independent review are open; publication is not authorized.
+
+### Tab preservation correction (2026-10-09)
+
+TP-R011 (`common/space/replaceTab`) is removed from the bundle and its settings
+are rejected. Tabs are no longer expanded into four ordinary spaces. Other
+bundled whitespace cleanup remains pending removal, so this slice tests interior
+single tabs independently of those rules. Earlier tab-expansion audits and
+benchmarks predate the reduced scope and do not validate this behavior.
+
+Tab-expansion removal validation under Node v24.21.0: all 2,330 tests passed,
+along with workspace typecheck, lint, formatting, build and diff checks.
+The new public-service regressions cover both locales, algorithms and cache
+modes, repeat formatting, existing NBSPs, CR/LF and protected content. Changes
+remain uncommitted for the coordinator; remaining spacing removal, default
+quotation spacing and full independent review are open.

@@ -54,7 +54,7 @@ evidence review; final acceptance and independent reviews remain open.
 
 | Trace ID | Reference ID                              | Bundled source                                        |
 | -------- | ----------------------------------------- | ----------------------------------------------------- |
-| TP-R011  | `common/space/replaceTab`                 | `bundled-spacing.factory.ts`                          |
+| TP-R011  | `common/space/replaceTab`                 | Removed on 2026-10-09; tabs preserved                 |
 | TP-R012  | `common/space/trimLeft`                   | `bundled-spacing.factory.ts`                          |
 | TP-R013  | `common/space/trimRight`                  | `bundled-spacing.factory.ts`                          |
 | TP-R014  | `common/space/delTrailingBlanks`          | `bundled-spacing.factory.ts`                          |
