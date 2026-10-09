@@ -20,7 +20,9 @@ const spacing: TextRule = {
 describe('prepared text pipeline', () => {
   it('supports a custom locale without hyphenation data and prepares once', () => {
     const prepare = vi.fn(spacing.prepare);
-    const format = prepareTextPipeline([{ ...spacing, locales: ['custom'], prepare }], 'custom');
+    const format = prepareTextPipeline([{ ...spacing, locales: ['custom'], prepare }], 'custom', {
+      categories: ['spacing'],
+    });
 
     expect(format('A  B')).toBe('A B');
     expect(format('C  D')).toBe('C D');
@@ -61,7 +63,10 @@ describe('prepared text pipeline', () => {
       ...spacing,
       prepare: () => (text) => text.replaceAll('-', '—'),
     };
-    const format = prepareTextPipeline([rule], 'custom', { protectedContent: ['a-b-c', 'b-c', '😀-x'] });
+    const format = prepareTextPipeline([rule], 'custom', {
+      categories: ['spacing'],
+      protectedContent: ['a-b-c', 'b-c', '😀-x'],
+    });
 
     expect(format('a-b-c - https://site.test/a-b x-y@mail.test - 😀-x')).toBe(
       'a-b-c — https://site.test/a-b x-y@mail.test — 😀-x',
@@ -83,6 +88,7 @@ describe('prepared text pipeline', () => {
       },
     };
     const format = prepareTextPipeline([{ ...spacing, prepare: () => () => '!' }, inspect], 'custom', {
+      categories: ['spacing'],
       protectedContent: [before, after],
     });
 
@@ -97,6 +103,7 @@ describe('prepared text pipeline', () => {
     const settings = { separator: '\u00a0' };
     const protectedContent = ['A  B'];
     const format = prepareTextPipeline([spacing], 'custom', {
+      categories: ['spacing'],
       settings: { 'custom/spacing': settings },
       protectedContent,
     });
@@ -123,7 +130,7 @@ describe('prepared text pipeline', () => {
 
   it('rejects asynchronous or non-string handler results', () => {
     const prepare = vi.fn().mockReturnValue(() => Promise.resolve('text'));
-    const format = prepareTextPipeline([{ ...spacing, prepare }], 'custom');
+    const format = prepareTextPipeline([{ ...spacing, prepare }], 'custom', { categories: ['spacing'] });
 
     expect(() => format('text')).toThrow('synchronously');
   });

@@ -119,6 +119,31 @@ describe('service text pipeline', () => {
     );
   });
 
+  it.each([false, true])('requires explicit consumer spacing selection with useFast=%s', (useFast) => {
+    const input = 'table  table\t\r\n  end  ';
+    const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
+    const defaultService = new Typographist({ useFast, textRules: [spacing] });
+    const selected = new Typographist({ useFast, textRules: [spacing], categories: ['spacing', 'hyphenation'] });
+
+    expect(defaultService.format(input)).toBe(legacy.format(input));
+    expect(selected.format(input)).toBe(legacy.format(input.replaceAll('  ', ' ')));
+  });
+
+  it('requires explicit spacing selection for typography-only locales', () => {
+    const configuration = {
+      rules: [],
+      locale: 'custom',
+      textLocales: [{ locale: 'custom', textRules: [spacing] }],
+    };
+    const service = new Typographist(configuration);
+    const selected = new Typographist({ ...configuration, categories: ['spacing'] });
+
+    expect(service.format('A  B\t\r\n')).toBe('A  B\t\r\n');
+    expect(selected.format('A  B\t\r\n')).toBe('A B\t\r\n');
+    service.addTextLocale({ locale: 'custom', textRules: [spacing] });
+    expect(service.format('A  B')).toBe('A  B');
+  });
+
   it('runs selected text rules without hyphenation', () => {
     const service = new Typographist({ textRules: [spacing], categories: ['spacing'] });
 
@@ -128,7 +153,7 @@ describe('service text pipeline', () => {
   it('applies typography before the selected hyphenation algorithm', () => {
     for (const useFast of [false, true]) {
       const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
-      const combined = new Typographist({ useFast, textRules: [spacing] });
+      const combined = new Typographist({ useFast, textRules: [spacing], categories: ['spacing', 'hyphenation'] });
 
       expect(combined.format('table  table')).toBe(legacy.format('table table'));
     }

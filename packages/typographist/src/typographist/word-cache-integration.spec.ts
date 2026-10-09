@@ -26,13 +26,16 @@ afterEach(() => vi.restoreAllMocks());
 describe.each([false, true])('word cache with useFast=%s', (useFast) => {
   it('invalidates shared entries after typography-only locale addition, replacement, and removal', () => {
     const compute = vi.spyOn(wordFormatting, 'formatWord');
-    const instance = new Typographist({ useFast, rules: [rules(), rules('ru')] });
-    const spacing: TextRule = {
-      id: 'custom/spacing',
-      category: 'spacing',
+    const instance = new Typographist({
+      useFast,
+      rules: [rules(), rules('ru')],
+    });
+    const binding: TextRule = {
+      id: 'custom/binding',
+      category: 'nonbreakingSpacing',
       order: 1,
       defaults: {},
-      prepare: () => (text) => text.replaceAll('  ', ' '),
+      prepare: () => (text) => text.replaceAll('  ', '\u00a0'),
     };
     const warm = () => {
       expect(instance.format('bacaba')).toBe('ba\u00adcaba');
@@ -43,8 +46,8 @@ describe.each([false, true])('word cache with useFast=%s', (useFast) => {
     warm();
     expect(compute).toHaveBeenCalledTimes(2);
 
-    instance.addTextLocale({ locale: 'custom', textRules: [spacing] });
-    expect(instance.format('Abc  Abc', 'custom')).toBe('Abc Abc');
+    instance.addTextLocale({ locale: 'custom', textRules: [binding] });
+    expect(instance.format('Abc  Abc', 'custom')).toBe('Abc\u00a0Abc');
     warm();
     expect(compute).toHaveBeenCalledTimes(4);
 
@@ -61,22 +64,22 @@ describe.each([false, true])('word cache with useFast=%s', (useFast) => {
 
   it('preserves typography and warm entries when replacement preparation fails', () => {
     const compute = vi.spyOn(wordFormatting, 'formatWord');
-    const spacing: TextRule = {
-      id: 'custom/spacing',
-      category: 'spacing',
+    const binding: TextRule = {
+      id: 'custom/binding',
+      category: 'nonbreakingSpacing',
       order: 1,
       defaults: {},
-      prepare: () => (text) => text.replaceAll('  ', ' '),
+      prepare: () => (text) => text.replaceAll('  ', '\u00a0'),
     };
     const instance = new Typographist({
       useFast,
       rules: [rules(), rules('ru')],
-      textLocales: [{ locale: 'custom', textRules: [spacing] }],
+      textLocales: [{ locale: 'custom', textRules: [binding] }],
     });
     instance.format('bacaba');
     instance.format('bacaba', 'ru');
     const failing: TextRule = {
-      ...spacing,
+      ...binding,
       prepare: () => {
         throw new Error('Typography preparation failed');
       },
@@ -86,9 +89,9 @@ describe.each([false, true])('word cache with useFast=%s', (useFast) => {
       instance.addTextLocale({ locale: 'custom', textRules: [failing] });
     }).toThrow('Typography preparation failed');
     expect(() => {
-      instance.addTextLocale({ locale: 'custom', textRules: [spacing, spacing] });
+      instance.addTextLocale({ locale: 'custom', textRules: [binding, binding] });
     }).toThrow('unique');
-    expect(instance.format('Abc  Abc', 'custom')).toBe('Abc Abc');
+    expect(instance.format('Abc  Abc', 'custom')).toBe('Abc\u00a0Abc');
     expect(instance.format('bacaba')).toBe('ba\u00adcaba');
     expect(instance.format('bacaba', 'ru')).toBe('ba\u00adcaba');
     expect(compute).toHaveBeenCalledTimes(2);

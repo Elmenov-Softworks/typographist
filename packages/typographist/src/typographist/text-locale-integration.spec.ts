@@ -31,6 +31,7 @@ describe('typography-only locales', () => {
     };
     const service = new Typographist({
       locale: 'custom',
+      categories: ['quotes', 'spacing'],
       rules: [],
       textRules: [spacing],
       textLocales: [{ locale: 'custom', textRules: [quotes] }],
@@ -46,6 +47,7 @@ describe('typography-only locales', () => {
     const handler = vi.fn().mockReturnValueOnce(result).mockReturnValue('valid');
     const service = new Typographist({
       locale: 'custom',
+      categories: ['quotes', 'spacing'],
       rules: [],
       textLocales: [{ locale: 'custom', textRules: [{ ...spacing, prepare: () => handler }] }],
     });
@@ -57,6 +59,7 @@ describe('typography-only locales', () => {
   it.each([false, true])('applies available capabilities without algorithm data (useFast=%s)', (useFast) => {
     const service = new Typographist({
       locale: 'custom',
+      categories: ['quotes', 'spacing'],
       useFast,
       rules: [],
       textLocales: [{ locale: 'custom', textRules: [spacing] }],
@@ -86,6 +89,7 @@ describe('typography-only locales', () => {
   it('accepts valid bundled settings without applying bundled rules to consumer locales', () => {
     const service = new Typographist({
       locale: 'custom',
+      categories: ['quotes', 'spacing'],
       rules: [],
       textLocales: [{ locale: 'custom', textRules: [spacing] }],
       settings: { 'ru/dash/years': { dash: '—' } },
@@ -109,6 +113,7 @@ describe('typography-only locales', () => {
   it('preserves the old locale after a failed replacement and accepts valid replacement', () => {
     const service = new Typographist({
       locale: 'custom',
+      categories: ['quotes', 'spacing'],
       textLocales: [{ locale: 'custom', textRules: [spacing] }],
     });
 
@@ -129,6 +134,7 @@ describe('typography-only locales', () => {
     const disabled = new Typographist({ locale: 'custom', textLocales: [definition], categories: [] });
     const protectedService = new Typographist({
       locale: 'custom',
+      categories: ['quotes', 'spacing'],
       textLocales: [definition],
       protectedContent: ['Abc  Abc'],
     });

@@ -51,7 +51,7 @@ export const prepareTextPipeline = (
   declaredIds: ReadonlySet<string> = new Set(rules.map((rule) => rule.id)),
   preservesCandidate = (_word: string) => false,
 ) => {
-  const selected = options.categories ?? categories;
+  const selected = options.categories ?? categories.filter((category) => category !== 'spacing');
   const protectedContent = [...(options.protectedContent ?? [])];
   const ids = new Set<string>();
 

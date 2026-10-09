@@ -503,3 +503,14 @@ spacing factory are now removed. Custom spacing rules remain supported.
 Ellipsis conversion preserves boundary gaps, repeated signs, tabs, CR/LF and
 existing NBSPs. Historical audits and benchmark timings predate this reduction.
 Default quotation spacing and independent review remain pending.
+
+Category-default correction: omitted categories now select quotes, dashes,
+punctuation, nonbreaking spacing and hyphenation. The `spacing` category remains
+available for explicitly selected consumer rules, but is excluded from defaults.
+Public-service regressions cover shared rules, typography-only locales and locale
+replacement. Default quotation spacing and independent review remain pending.
+Historical checks and benchmark timings predate this correction.
+
+Category-default slice validation under Node v24.21.0: all 3,521 tests, workspace
+build, typecheck, lint, formatting and diff checks passed. No browser checks or
+new benchmark measurements were run for this slice.

@@ -19,7 +19,9 @@ typographist.format('table'); // 'ta\u00adble'
 typographist.format('асбест', 'ru'); // 'ас\u00adбест'
 ```
 
-Omitting `categories` selects all available categories. This changes the previous
+Omitting `categories` selects `quotes`, `dashes`, `punctuation`,
+`nonbreakingSpacing`, and `hyphenation`. Consumer `spacing` rules require explicit
+category selection. This changes the previous
 hyphenation-only default: punctuation and whitespace can now change before soft
 hyphens are inserted. To retain the previous behavior, use
 `categories: ['hyphenation']` as above. `useFast` changes only the hyphenation

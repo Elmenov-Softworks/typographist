@@ -41,7 +41,7 @@ export type TextRule = {
   readonly prepare: (settings: TextRuleSettings) => TextRuleHandler;
 };
 
-/** Preparation options copied before formatting; omitted categories enable every capability. */
+/** Preparation options copied before formatting; omitted categories enable all capabilities except consumer spacing. */
 export type TextPipelineOptions = {
   /** Explicit selection, including an empty list to disable all text rules. */
   readonly categories?: readonly FormattingCategory[];
