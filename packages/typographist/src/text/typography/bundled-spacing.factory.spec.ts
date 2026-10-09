@@ -34,12 +34,6 @@ const scenarios = [
     unchanged: ':start 12:30 1:2 a:) a:" a:, a:. a:? a:/ a:\\ a: next a:\u00a0next',
   },
   { id: 'common/space/bracket', input: '(  a  )', output: '(a)', unchanged: '(\ta\t) [ a ]' },
-  {
-    id: 'common/space/delBeforePunctuation',
-    input: 'a ! b ? c : d ; e ,',
-    output: 'a! b? c: d; e,',
-    unchanged: 'a . ! ! :) a\t,',
-  },
 ];
 
 describe('bundled spacing reference scenarios', () => {
@@ -62,7 +56,7 @@ describe('bundled spacing reference scenarios', () => {
     const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
     const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word} (works) [  text  ] word, next; next! next? next: next word . 25 % 2 ‰ 3 ‱! ! ${unchanged} ${protectedText}`;
+    const normalized = `${word} (works) [  text  ] word , next; next! next? next: next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -149,7 +143,7 @@ describe('bundled spacing reference scenarios', () => {
   it.each(['en', 'ru'] as const)('combines punctuation spacing without rewriting content for %s', (locale) => {
     const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep ( this ) 1 %'] });
     const input = '( $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс ) ; 10 %';
-    const output = '($100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс); 10 %';
+    const output = '($100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс) ; 10 %';
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
@@ -211,7 +205,7 @@ describe('bundled spacing reference scenarios', () => {
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
-    expect(service.format('word ;next')).toBe('word; next');
+    expect(service.format('word ;next')).toBe('word ; next');
     expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a;b')).toBe('a;b');
   });
@@ -232,7 +226,7 @@ describe('bundled spacing reference scenarios', () => {
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
-    expect(service.format('word ,next')).toBe('word, next');
+    expect(service.format('word ,next')).toBe('word , next');
     expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a,b')).toBe('a,b');
   });
@@ -245,7 +239,7 @@ describe('bundled spacing reference scenarios', () => {
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
-    expect(service.format('word !next ?last')).toBe('word! next? last');
+    expect(service.format('word !next ?last')).toBe('word ! next ? last');
     expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a!b?c')).toBe('a!b?c');
   });

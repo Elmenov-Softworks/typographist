@@ -7,13 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/delBeforePunctuation',
-      category: 'spacing',
-      order: 210,
-      defaults: {},
-      prepare: () => (text) => text.replace(/(^|[^!?:;,.…]) ([!?:;,])(?!\))/g, '$1$2'),
-    },
-    {
       id: 'common/space/bracket',
       category: 'spacing',
       order: 210,
@@ -96,7 +89,6 @@ export const createBundledSpacing = (locale: string) => {
   const referenceOrder = [
     'ru/space/year',
     'ru/space/afterHellip',
-    'common/space/delBeforePunctuation',
     'common/space/bracket',
     'common/space/beforeBracket',
     'common/space/afterSemicolon',

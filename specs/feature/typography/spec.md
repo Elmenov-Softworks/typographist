@@ -254,7 +254,9 @@ protection, repeated formatting and invalid settings. Earlier cleanup audits and
 benchmark timings predate this correction. Remaining spacing removals and default
 quotation spacing are pending.
 
-The still-pending `common/space/delBeforePunctuation` can delete an ordinary
-space before a repeated sign, including one from a multiple-space gap. This
-slice does not claim complete boundary-whitespace preservation until that rule
-is removed.
+TP-R023 (`common/space/delBeforePunctuation`) and its settings are removed by
+the owner correction of 2026-10-09. Preserve ordinary spaces, tabs, line endings
+and existing NBSPs before punctuation, including repeated signs. Public-service
+regressions cover both locales, algorithms, cache modes, protected content and
+repeat formatting. Earlier cleanup audits and benchmarks predate this correction.
+Remaining spacing removals and default quotation spacing are pending.

@@ -6,8 +6,8 @@ describe('quotation pipeline interactions', () => {
       it.each([
         ['en', '"don\'t..."', '“don’t…”'],
         ['ru', '"д\'Артаньян..."', '«д’Артаньян…»'],
-        ['en', '"hello" ,world!', '“hello”, world!'],
-        ['ru', '"слово" ,текст!', '«слово», текст!'],
+        ['en', '"hello" ,world!', '“hello” , world!'],
+        ['ru', '"слово" ,текст!', '«слово» , текст!'],
         ['ru', '- "Привет!"', '—\u00a0«Привет!»'],
       ] as const)('combines selected symbolic rules for %s: %j', (locale, input, expected) => {
         const instance = new Typographist({
