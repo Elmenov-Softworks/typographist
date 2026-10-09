@@ -19,7 +19,10 @@ export const createBundledDashes = (locale: string) => {
       category: 'dashes',
       order: 305,
       defaults: {},
-      prepare: () => (text) => text.replace(/[ \u00a0](--?|‒|–|—)([ \u00a0\n])/g, '\u00a0—$2'),
+      prepare: () => (text) =>
+        text
+          .replace(/([ \u00a0])(--?|‒|–|—)(?=[ \u00a0\n])/g, '$1—')
+          .replace(/ (?=—[ \u00a0\n])(?<=\S[^\S\r\n\u2028\u2029]* )/g, '\u00a0'),
     },
   ];
 

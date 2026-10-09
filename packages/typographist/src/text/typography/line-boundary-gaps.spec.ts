@@ -1,6 +1,30 @@
 import { Typographist } from '@/index.js';
 
 describe('symbolic gaps require same-line content', () => {
+  it.each(['en', 'ru'] as const)('preserves indentation before prose dashes in %s', (locale) => {
+    for (const profile of [{}, { categories: ['dashes'] }] as const) {
+      const service = new Typographist({ locale, ...profile });
+
+      for (const lineBreak of ['', '\r', '\n', '\r\n', '\u2028', '\u2029']) {
+        for (const indentation of ['  ', '\t ', ' \t ', '\u00a0 ', '\u202f ']) {
+          for (const dash of ['—', '-', '--', '–']) {
+            for (const suffix of [' ', '  ', ' \r\n', ' cat']) {
+              const input = (lineBreak ? 'cat' + lineBreak : '') + indentation + dash + suffix;
+              const expected = (lineBreak ? 'cat' + lineBreak : '') + indentation + '—' + suffix;
+
+              expect(service.format(input)).toBe(expected);
+              expect(service.format(expected)).toBe(expected);
+            }
+          }
+        }
+      }
+
+      expect(service.format('cat  - dog')).toBe('cat \u00a0— dog');
+      expect(service.format('cat\t - dog')).toBe('cat\t\u00a0— dog');
+      expect(service.format('cat\u00a0— dog')).toBe('cat\u00a0— dog');
+    }
+  });
+
   it.each(['en', 'ru'] as const)('preserves whitespace-only boundaries with default quote spacing in %s', (locale) => {
     const pair = locale === 'ru' ? { left: '«', right: '»' } : { left: '“', right: '”' };
     const service = new Typographist({ locale, categories: ['quotes'] });
