@@ -793,3 +793,9 @@ remains. Line-crossing straight boundaries stay unchanged. Spacing eligibility
 includes configured quotation glyphs, including existing `「」` pairs. Public-service
 regressions cover both locales, spacing disabled, protected boundary interactions
 and repeated formatting.
+
+Identical custom-pair correction — 2026-10-09: Q6 recognizes configured glyphs
+at every depth when the outer pair is identical. Opening direction survives the
+closing-recognition pass. Exact-output tests cover regex punctuation glyphs,
+nested custom pairs, extra spaces, tabs, CR/LF, existing NBSPs, spacing disabled
+and repeated formatting in both locales.

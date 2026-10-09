@@ -7,8 +7,6 @@ export const createBundledQuotes = (locale: string) => {
 
   const left = locale === 'ru' ? '«„‚' : '“‘';
   const right = locale === 'ru' ? '»“‘' : '”’';
-  const opening = /(^|[ \r\n\t\u00a0[(])([«‹»›„“‟”"]+)(?=[ \t\u00a0\u202f]*[^\s«‹»›„“‟”"])/gim;
-  const closing = /([^\s«‹»›„“‟”"][ \t\u00a0\u202f]+|\S)([«‹»›„“‟”"]+)(?=[ \r\n\t\u00a0!?.:;#*,…)\]\\]|$)/gim;
 
   const rules: TextRule[] = [
     {
@@ -30,6 +28,18 @@ export const createBundledQuotes = (locale: string) => {
 
         const left = settings.left;
         const right = settings.right;
+        const identicalOuter = left.charAt(0) === right.charAt(0);
+        const openingGlyphs = '«‹»›„“‟”"' + (identicalOuter ? left.replace(/[\\\]\-^]/g, '\\$&') : '');
+        const closingGlyphs = '«‹»›„“‟”"' + (identicalOuter ? right.replace(/[\\\]\-^]/g, '\\$&') : '');
+        const quoteGlyphs = openingGlyphs + closingGlyphs;
+        const opening = new RegExp(
+          String.raw`(^|[ \r\n\t\u00a0[(])([${openingGlyphs}]+)(?=[ \t\u00a0\u202f]*[^\s${quoteGlyphs}])`,
+          'gim',
+        );
+        const closing = new RegExp(
+          String.raw`([^\s${quoteGlyphs}][ \t\u00a0\u202f]+|\S)([${closingGlyphs}]+)(?=[ \r\n\t\u00a0!?.:;#*,…)\]\\]|$)`,
+          'gim',
+        );
 
         const setSpacing = (text: string, directions: ReadonlyMap<number, 'opening' | 'closing'>) => {
           if (!settings.spacing) {
@@ -110,7 +120,6 @@ export const createBundledQuotes = (locale: string) => {
           const outerLeft = left.charAt(0);
           const outerRight = right.charAt(0);
           const directions = new Map<number, 'opening' | 'closing'>();
-          const identicalOuter = outerLeft === outerRight;
           const normalized = text
             .replace(opening, (_match: string, before: string, quotes: string, offset: number) => {
               if (identicalOuter) {
@@ -124,7 +133,11 @@ export const createBundledQuotes = (locale: string) => {
             .replace(closing, (_match: string, before: string, quotes: string, offset: number) => {
               if (identicalOuter) {
                 for (let index = 0; index < quotes.length; index++) {
-                  directions.set(offset + before.length + index, 'closing');
+                  const position = offset + before.length + index;
+
+                  if (!directions.has(position)) {
+                    directions.set(position, 'closing');
+                  }
                 }
               }
 

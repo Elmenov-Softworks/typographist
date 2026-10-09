@@ -466,4 +466,46 @@ describe.each(['en', 'ru'] as const)('spaced straight quotation boundaries for %
       expect(instance.format(expected)).toBe(expected);
     }
   });
+  it.each(['|', ']', '\\', '^', '-'])('spaces existing identical custom pair %j', (glyph) => {
+    const instance = new Typographist({
+      locale,
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: glyph, right: glyph } },
+    });
+    const cases = [
+      [`${glyph}cat${glyph}`, `${glyph}\u202fcat\u202f${glyph}`],
+      [`${glyph} cat ${glyph}`, `${glyph}\u202fcat\u202f${glyph}`],
+      [`${glyph}   cat   ${glyph}`, `${glyph}\u202f  cat  \u202f${glyph}`],
+      [`${glyph}\tcat\t${glyph}`, `${glyph}\tcat\t${glyph}`],
+      [`${glyph}\u00a0cat\u00a0${glyph}`, `${glyph}\u00a0cat\u00a0${glyph}`],
+      [`${glyph}\r\ncat\r\n${glyph}`, `${glyph}\r\ncat\r\n${glyph}`],
+    ] as const;
+
+    for (const [input, expected] of cases) {
+      expect(instance.format(input)).toBe(expected);
+      expect(instance.format(expected)).toBe(expected);
+    }
+  });
+  it('preserves existing identical custom boundaries with spacing disabled', () => {
+    const instance = new Typographist({
+      locale,
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '|', right: '|', spacing: false } },
+    });
+
+    for (const input of ['|cat|', '| cat |', '|   cat   |', '|\tcat\t|', '|\r\ncat\r\n|']) {
+      expect(instance.format(input)).toBe(input);
+    }
+  });
+  it('spaces existing nested custom pairs inside identical outer glyphs', () => {
+    const instance = new Typographist({
+      locale,
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '|「', right: '|」' } },
+    });
+    const expected = '|\u202fone 「\u202ftwo\u202f」 three\u202f|';
+
+    expect(instance.format('| one 「 two 」 three |')).toBe(expected);
+    expect(instance.format(expected)).toBe(expected);
+  });
 });

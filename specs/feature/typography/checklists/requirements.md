@@ -581,3 +581,18 @@ does not constitute an independent full review. No browser checks, reference
 comparisons or benchmark measurements were rerun. Implementation corrections and
 scope records are complete; coordinator review and owner review remain required
 before publication. Publication is not authorized.
+
+## Independent correction review — 2026-10-09
+
+A separate read-only reviewer inspected all bundled typography handlers, ordering,
+the text pipeline and protection, registry, paired dataset contracts, focused
+preservation tests and corrected scope documents. The four original findings are
+resolved. The review found a nested custom-pair spacing gap under identical outer
+glyphs; the correction and repeat-formatting regression were re-reviewed with no
+unresolved findings. The reviewer did not rerun configured checks, browser
+verification or benchmarks, or exhaustively inspect every hyphenation test.
+
+Local validation of this correction passed 3,564 tests, workspace build, typecheck,
+lint, formatting and diff checks under Node v24.21.0. Browser and benchmark evidence remains historical. Changes
+are uncommitted because the coordinator owns Git mutations. Owner review remains
+required before publication; publication is not authorized.
