@@ -63,7 +63,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R017  | `ru/space/year`                           | `bundled-spacing.factory.ts`                          |
 | TP-R018  | `ru/space/afterHellip`                    | `bundled-spacing.factory.ts`                          |
 | TP-R019  | `common/space/squareBracket`              | `bundled-spacing.factory.ts`                          |
-| TP-R020  | `common/space/insertFinalNewline`         | `bundled-spacing.factory.ts`                          |
+| TP-R020  | `common/space/insertFinalNewline`         | Removed by owner correction (2026-10-09)              |
 | TP-R021  | `common/space/delLeadingBlanks`           | `bundled-spacing.factory.ts`                          |
 | TP-R022  | `common/space/delBetweenExclamationMarks` | `bundled-spacing.factory.ts`                          |
 | TP-R023  | `common/space/delBeforePunctuation`       | `bundled-spacing.factory.ts`                          |
@@ -531,3 +531,6 @@ Public-service regressions cover exact CR/LF sequences with both algorithms,
 cache enabled and disabled, protected content and repeated formatting.
 Earlier normalization evidence is historical and does not validate the reduced
 scope. Remaining bundled spacing removal and default quotation spacing are pending.
+
+TP-R020 final-newline insertion was removed on 2026-10-09. Its earlier audit is
+historical; final-newline-preservation.spec.ts verifies the reduced contract.

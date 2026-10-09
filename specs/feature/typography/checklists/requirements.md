@@ -296,3 +296,18 @@ Public-service regressions cover exact CR/LF sequences with both algorithms,
 cache enabled and disabled, protected content and repeated formatting.
 Earlier normalization evidence is historical and does not validate the reduced
 scope. Remaining bundled spacing removal and default quotation spacing are pending.
+
+### Final-newline preservation correction (2026-10-09)
+
+TP-R020 (`common/space/insertFinalNewline`) is removed from the bundle and its
+settings are rejected. Formatting never appends a final newline implicitly.
+The reference metadata remains for provenance; earlier final-newline audit and
+benchmark evidence predates this correction. Remaining spacing removal and
+default quotation spacing are pending.
+
+Final-newline slice validation under Node v24.21.0: all 2,284 tests passed;
+workspace typecheck, build, formatting and diff checks passed. The final adapted
+interaction test passed separately (8 tests). Initial concurrent lint reported
+unresolved built-package types; lint passed when rerun after builds completed.
+Changes remain uncommitted for the coordinator. Remaining spacing and quotation
+corrections and full independent review are open; publication is not authorized.

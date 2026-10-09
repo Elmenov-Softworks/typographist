@@ -169,3 +169,11 @@ Public-service regressions cover exact CR/LF sequences with both algorithms,
 cache enabled and disabled, protected content and repeated formatting.
 Earlier normalization evidence is historical and does not validate the reduced
 scope. Remaining bundled spacing removal and default quotation spacing are pending.
+
+### Final-newline preservation correction (2026-10-09)
+
+TP-R020 (`common/space/insertFinalNewline`) is removed from the bundle and its
+settings are rejected. Formatting never appends a final newline implicitly.
+The reference metadata remains for provenance; earlier final-newline audit and
+benchmark evidence predates this correction. Remaining spacing removal and
+default quotation spacing are pending.

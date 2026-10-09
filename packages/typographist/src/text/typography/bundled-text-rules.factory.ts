@@ -16,7 +16,6 @@ const referenceOrder = [
   'ru/space/year',
   'ru/space/afterHellip',
   'common/space/squareBracket',
-  'common/space/insertFinalNewline',
   'common/space/delLeadingBlanks',
   'common/space/delBetweenExclamationMarks',
   'common/space/delBeforePunctuation',

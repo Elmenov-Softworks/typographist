@@ -7,21 +7,6 @@ export const createBundledSpacing = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/space/insertFinalNewline',
-      category: 'spacing',
-      order: 1300,
-      defaults: { enabled: false },
-      prepare:
-        ({ enabled }) =>
-        (text, context) =>
-          enabled &&
-          context?.endsText !== false &&
-          !text.endsWith('\n') &&
-          !(text.length === 0 && context?.precedingCharacter === '\n')
-            ? `${text}\n`
-            : text,
-    },
-    {
       id: 'common/space/replaceTab',
       category: 'spacing',
       order: 205,
@@ -211,7 +196,6 @@ export const createBundledSpacing = (locale: string) => {
     'ru/space/year',
     'ru/space/afterHellip',
     'common/space/squareBracket',
-    'common/space/insertFinalNewline',
     'common/space/delLeadingBlanks',
     'common/space/delBetweenExclamationMarks',
     'common/space/delBeforePunctuation',

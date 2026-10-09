@@ -45,10 +45,9 @@ const spaced = new Typographist({
   categories: ['spacing'],
   settings: {
     'common/space/delRepeatN': { maxConsecutiveLineBreaks: 1 },
-    'common/space/insertFinalNewline': { enabled: true },
   },
 });
-spaced.format('a\n\n\nb'); // 'a\nb\n'
+spaced.format('a\n\n\nb'); // 'a\nb'
 ```
 
 Explicit category lists replace the default selection; an empty list disables
