@@ -8,7 +8,7 @@ export type TextRuleSettings = Readonly<Record<string, string | number | boolean
 export type TextRuleContext = {
   /** Whether the segment originally began at a line boundary. */
   readonly startsLine: boolean;
-  /** Original adjacent characters across protected boundaries; empty at complete-text edges. */
+  /** Original character before the segment across a protected boundary; empty at the text start. */
   readonly precedingCharacter?: string;
   /** Original character after the segment across a protected boundary; empty at the text end. */
   readonly followingCharacter?: string;
@@ -41,9 +41,9 @@ export type TextRule = {
   readonly prepare: (settings: TextRuleSettings) => TextRuleHandler;
 };
 
-/** Preparation options copied before formatting; omitted categories enable all capabilities except consumer spacing. */
+/** Pipeline configuration; omitted categories enable all capabilities except consumer spacing. */
 export type TextPipelineOptions = {
-  /** Explicit selection, including an empty list to disable all text rules. */
+  /** Explicit selection, including an empty list to disable text rules and hyphenation. */
   readonly categories?: readonly FormattingCategory[];
   /** Per-rule setting overrides. Unknown IDs or setting names are rejected. */
   readonly settings?: Readonly<Record<string, TextRuleSettings>>;

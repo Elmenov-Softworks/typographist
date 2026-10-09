@@ -6,6 +6,8 @@ import type { RuleSets } from '@/rules/rule-sets.types.js';
  * Typographist calls compile once per registration with its configured useFast flag.
  *
  * @example
+ * import { TypographistRules } from '@elmenov-softworks/typographist';
+ *
  * const rules = new TypographistRules({
  *   standard: {
  *     locale: 'en', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'],

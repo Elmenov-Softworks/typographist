@@ -10,6 +10,8 @@ import type { TextLocale } from '@/text/typography/text-locale.types.js';
  * Custom locale types can be inferred from configured plugins or declared as a generic union.
  *
  * @example
+ * import { Typographist } from '@elmenov-softworks/typographist';
+ *
  * const typographist = new Typographist({ locale: 'ru' });
  * typographist.format('машина');
  * typographist.format('table', 'en'); // Uses English rules for this call only.
@@ -87,6 +89,8 @@ export class Typographist<TCustomLocale extends string = never> {
    * Formats text synchronously using the requested locale or the configured default.
    * An override affects only this call; selecting an unregistered locale throws even for empty text.
    * Preserves excluded words, recognized addresses, identifiers, unsupported words, and existing soft hyphens.
+   * Bundled rules preserve extra whitespace and supplied nonbreaking spaces; bindings require same-line content.
+   * Quote spacing uses narrow nonbreaking spaces by default for English and Russian.
    * Reuses cached results for the same locale and exact source word when caching is enabled.
    */
   format(text: string, locale: Locale | TCustomLocale = this.#locale) {
