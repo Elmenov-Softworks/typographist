@@ -260,3 +260,10 @@ and existing NBSPs before punctuation, including repeated signs. Public-service
 regressions cover both locales, algorithms, cache modes, protected content and
 repeat formatting. Earlier cleanup audits and benchmarks predate this correction.
 Remaining spacing removals and default quotation spacing are pending.
+
+Owner correction, 2026-10-09: TP-R026 (`common/space/bracket`) and its
+settings are removed. Round-bracket interior spaces, tabs, line endings and
+existing NBSPs are preserved. Public-service regressions cover both locales,
+algorithms, cache modes, protected content, repeat formatting and invalid removed
+settings. Earlier bracket cleanup audits and benchmarks predate this removal.
+Remaining spacing removals and default quotation spacing are pending.

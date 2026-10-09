@@ -414,3 +414,14 @@ workspace build, typecheck, lint, formatting and diff checks passed. The slice a
 84 public-service preservation and removed-setting regressions and adapts retained
 interaction fixtures. Remaining spacing removals, default quotation spacing and
 independent review are pending. No publication is authorized.
+
+Owner correction, 2026-10-09: TP-R026 (`common/space/bracket`) and its
+settings are removed. Round-bracket interior spaces, tabs, line endings and
+existing NBSPs are preserved. Public-service regressions cover both locales,
+algorithms, cache modes, protected content, repeat formatting and invalid removed
+settings. Earlier bracket cleanup audits and benchmarks predate this removal.
+Remaining spacing removals and default quotation spacing are pending.
+
+TP-R026 removal validation under Node v24.21.0: all 2,994 tests, workspace
+build, typecheck, lint, formatting and diff checks passed. Changes remain
+uncommitted for the coordinator. No publication was performed.

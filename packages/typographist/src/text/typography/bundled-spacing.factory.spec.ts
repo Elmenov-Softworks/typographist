@@ -33,7 +33,6 @@ const scenarios = [
     output: 'word: next слово: далее a: 1',
     unchanged: ':start 12:30 1:2 a:) a:" a:, a:. a:? a:/ a:\\ a: next a:\u00a0next',
   },
-  { id: 'common/space/bracket', input: '(  a  )', output: '(a)', unchanged: '(\ta\t) [ a ]' },
 ];
 
 describe('bundled spacing reference scenarios', () => {
@@ -56,7 +55,7 @@ describe('bundled spacing reference scenarios', () => {
     const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
     const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word} (works) [  text  ] word , next; next! next? next: next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
+    const normalized = `${word} (  works  ) [  text  ] word , next; next! next? next: next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -143,7 +142,7 @@ describe('bundled spacing reference scenarios', () => {
   it.each(['en', 'ru'] as const)('combines punctuation spacing without rewriting content for %s', (locale) => {
     const service = new Typographist({ locale, categories: ['spacing'], protectedContent: ['Keep ( this ) 1 %'] });
     const input = '( $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс ) ; 10 %';
-    const output = '($100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс) ; 10 %';
+    const output = '( $100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс ) ; 10 %';
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);
@@ -176,7 +175,7 @@ describe('bundled spacing reference scenarios', () => {
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
     const addresses = 'https://example.com/a(b) user@example.com';
     const lexicalInput = locale === 'ru' ? 'слово(  тест  )' : 'word(  test  )';
-    const lexicalOutput = locale === 'ru' ? 'слово (тест)' : 'word (test)';
+    const lexicalOutput = locale === 'ru' ? 'слово (  тест  )' : 'word (  test  )';
 
     expect(service.format(`${content} ${addresses} Keep(a) слово(б) ${lexicalInput}`)).toBe(
       `${content} ${addresses} Keep(a) слово(б) ${lexicalOutput}`,

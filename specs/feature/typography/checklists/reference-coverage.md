@@ -69,7 +69,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R023  | `common/space/delBeforePunctuation`       | Removed by owner correction (2026-10-09)              |
 | TP-R024  | `common/space/delBeforePercent`           | Removed by owner scope correction                     |
 | TP-R025  | `common/space/delBeforeDot`               | Removed: owner correction                             |
-| TP-R026  | `common/space/bracket`                    | `bundled-spacing.factory.ts`                          |
+| TP-R026  | `common/space/bracket`                    | Removed by owner correction; preservation regressions |
 | TP-R027  | `common/space/beforeBracket`              | `bundled-spacing.factory.ts`                          |
 | TP-R028  | `common/space/afterSemicolon`             | `bundled-spacing.factory.ts`                          |
 | TP-R029  | `common/space/afterExclamationMark`       | `bundled-spacing.factory.ts`                          |
@@ -581,4 +581,11 @@ the owner correction of 2026-10-09. Preserve ordinary spaces, tabs, line endings
 and existing NBSPs before punctuation, including repeated signs. Public-service
 regressions cover both locales, algorithms, cache modes, protected content and
 repeat formatting. Earlier cleanup audits and benchmarks predate this correction.
+Remaining spacing removals and default quotation spacing are pending.
+
+Owner correction, 2026-10-09: TP-R026 (`common/space/bracket`) and its
+settings are removed. Round-bracket interior spaces, tabs, line endings and
+existing NBSPs are preserved. Public-service regressions cover both locales,
+algorithms, cache modes, protected content, repeat formatting and invalid removed
+settings. Earlier bracket cleanup audits and benchmarks predate this removal.
 Remaining spacing removals and default quotation spacing are pending.
