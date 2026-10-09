@@ -13,6 +13,7 @@ describe.each(['en', 'ru'] as const)('trailing-whitespace preservation for %s', 
       it('preserves trailing separators after short words and abbreviation labels', () => {
         const service = new Typographist({ locale, useFast, cacheSize });
         const bindingOnly = new Typographist({ locale, categories: ['nonbreakingSpacing'] });
+        const hyphenationOnly = new Typographist({ locale, useFast, cacheSize, categories: ['hyphenation'] });
         const words = locale === 'en' ? ['a', 'the', 'I'] : ['я', 'и', 'если', 'ООО', 'мкр.', 'мк-н', 'литер'];
 
         for (const word of words) {
@@ -30,9 +31,7 @@ describe.each(['en', 'ru'] as const)('trailing-whitespace preservation for %s', 
             '\u202f',
           ]) {
             const input = `${word}${suffix}`;
-            const expected = new Typographist({ locale, useFast, cacheSize, categories: ['hyphenation'] }).format(
-              input,
-            );
+            const expected = hyphenationOnly.format(input);
 
             expect(bindingOnly.format(input)).toBe(input);
             expect(service.format(input)).toBe(expected);
