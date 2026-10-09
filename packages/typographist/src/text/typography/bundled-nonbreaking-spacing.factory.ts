@@ -314,34 +314,5 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
     });
   }
 
-  const referenceOrder = [
-    'ru/nbsp/year',
-    'ru/nbsp/see',
-    'ru/nbsp/rubleKopek',
-    'ru/nbsp/ps',
-    'ru/nbsp/page',
-    'ru/nbsp/ooo',
-    'ru/nbsp/mln',
-    'ru/nbsp/initials',
-    'ru/nbsp/dayMonth',
-    'ru/nbsp/centuries',
-    'ru/nbsp/afterNumberSign',
-    'ru/nbsp/addr',
-    'ru/nbsp/abbr',
-    'common/nbsp/dpi',
-    'common/nbsp/beforeShortLastWord',
-    'common/nbsp/beforeShortLastNumber',
-    'common/nbsp/afterShortWordByList',
-    'common/nbsp/afterShortWord',
-    'common/nbsp/afterSectionMark',
-    'common/nbsp/afterParagraphMark',
-    'common/nbsp/afterNumber',
-    'ru/nbsp/years',
-    'ru/nbsp/m',
-    'ru/nbsp/beforeParticle',
-  ];
-
-  return rules.sort(
-    (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),
-  );
+  return rules;
 };

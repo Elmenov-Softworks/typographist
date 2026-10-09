@@ -41,108 +41,76 @@ export const createBundledQuotes = (locale: string) => {
           'gim',
         );
 
+        const quotationGlyphs = left + right + '«‹»›„“‟”"';
+        const hasQuotes = new RegExp(`[${quotationGlyphs.replace(/[\\\]\-^]/g, '\\$&')}]`, 'u');
+
         const setSpacing = (text: string, directions: ReadonlyMap<number, 'opening' | 'closing'>) => {
           if (!settings.spacing) {
             return text;
           }
 
-          let characters: { character: string; direction: null | 'opening' | 'closing' }[] = Array.from(text).map(
-            (character) => ({
-              character,
-              direction: null,
-            }),
-          );
-          let offset = 0;
+          const openingTargets = new Uint8Array(text.length);
+          const closingTargets = new Uint8Array(text.length);
+          let openingContent = false;
+          let closingContent = false;
 
-          for (const character of characters) {
-            character.direction = directions.get(offset) ?? null;
-            offset += character.character.length;
+          for (let offset = 0; offset < text.length; offset++) {
+            const before = text.charAt(offset);
+            const reverse = text.length - offset - 1;
+            const after = text.charAt(reverse);
+
+            if (!/[\t \u00a0\u202f]/u.test(before) && !right.includes(before)) {
+              closingContent = !/\s/u.test(before) && !quotationGlyphs.includes(before);
+            }
+
+            if (!/[\t \u00a0\u202f]/u.test(after) && !left.includes(after)) {
+              openingContent = !/\s/u.test(after) && !quotationGlyphs.includes(after);
+            }
+
+            closingTargets[offset] = closingContent ? 1 : 0;
+            openingTargets[reverse] = openingContent ? 1 : 0;
           }
 
-          for (let depth = 0; depth < left.length; depth++) {
-            for (const direction of ['opening', 'closing'] as const) {
-              const spaced: typeof characters = [];
-              const contentTargets = new Uint8Array(characters.length);
-              const step = direction === 'opening' ? -1 : 1;
-              const inwardGlyphs = direction === 'opening' ? left : right;
-              const quotationGlyphs = left + right + '«‹»›„“‟”"';
-              let hasContentTarget = false;
+          const openingAt = (offset: number) =>
+            left.includes(text.charAt(offset)) && (!identicalOuter || directions.get(offset) === 'opening');
+          const closingAt = (offset: number) =>
+            right.includes(text.charAt(offset)) && (!identicalOuter || directions.get(offset) === 'closing');
+          const parts: string[] = [];
+          let copied = 0;
 
-              for (
-                let index = direction === 'opening' ? characters.length - 1 : 0;
-                index >= 0 && index < characters.length;
-                index += step
+          for (let offset = 0; offset < text.length; offset++) {
+            const character = text.charAt(offset);
+
+            if (character === ' ') {
+              if (
+                (offset > 0 && openingAt(offset - 1) && openingTargets[offset] === 1) ||
+                (offset + 1 < text.length && closingAt(offset + 1) && closingTargets[offset] === 1)
               ) {
-                const character = characters[index];
-
-                if (character === undefined) {
-                  continue;
-                }
-
-                if (!/[\t \u00a0\u202f]/u.test(character.character) && !inwardGlyphs.includes(character.character)) {
-                  hasContentTarget = !/\s/u.test(character.character) && !quotationGlyphs.includes(character.character);
-                }
-
-                contentTargets[index] = hasContentTarget ? 1 : 0;
+                parts.push(text.slice(copied, offset), '\u202f');
+                copied = offset + 1;
               }
-
-              for (let index = 0; index < characters.length; index++) {
-                const before = characters[index];
-                const after = characters[index + 1];
-
-                if (before === undefined) {
-                  continue;
-                }
-
-                spaced.push(before);
-
-                if (after === undefined) {
-                  continue;
-                }
-
-                const quote = direction === 'opening' ? before : after;
-                const neighbor = direction === 'opening' ? after : before;
-                const glyph = direction === 'opening' ? left.charAt(depth) : right.charAt(depth);
-
-                if (
-                  (left.charAt(0) === right.charAt(0) && quote.direction !== direction) ||
-                  quote.character !== glyph ||
-                  /[^\S ]/u.test(neighbor.character)
-                ) {
-                  continue;
-                }
-
-                const targetIndex = direction === 'opening' ? index + 1 : index;
-
-                if (contentTargets[targetIndex] !== 1) {
-                  continue;
-                }
-
-                if (neighbor.character === ' ') {
-                  if (direction === 'opening') {
-                    spaced.push({ character: '\u202f', direction: null });
-                    index++;
-                  } else {
-                    spaced[spaced.length - 1] = { character: '\u202f', direction: null };
-                  }
-                } else {
-                  spaced.push({ character: '\u202f', direction: null });
-                }
+            } else if (offset > 0 && !/\s/u.test(character) && !/\s/u.test(text.charAt(offset - 1))) {
+              if (
+                (openingAt(offset - 1) && openingTargets[offset] === 1) ||
+                (closingAt(offset) && closingTargets[offset - 1] === 1)
+              ) {
+                parts.push(text.slice(copied, offset), '\u202f');
+                copied = offset;
               }
-
-              characters = spaced;
             }
           }
 
-          return characters.map(({ character }) => character).join('');
+          if (copied === 0) {
+            return text;
+          }
+
+          parts.push(text.slice(copied));
+
+          return parts.join('');
         };
 
         return (text) => {
-          if (
-            settings.spacing &&
-            !/[«‹»›„“‟”"]/u.test(text) &&
-            !Array.from(left + right).some((glyph) => text.includes(glyph))
-          ) {
+          if (!hasQuotes.test(text)) {
             return text;
           }
 

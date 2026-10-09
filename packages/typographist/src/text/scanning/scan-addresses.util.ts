@@ -55,6 +55,11 @@ const hostnameEnd = (text: string, start: number) => {
 
 export const scanAddresses = (text: string) => {
   const spans: CandidateSpan[] = [];
+
+  if (!/@|:\/\/|www\./i.test(text)) {
+    return spans;
+  }
+
   let schemeStart: number | null = null;
   let localStart: number | null = null;
   let invalidLocalDots = false;

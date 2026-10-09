@@ -209,6 +209,10 @@ export const prepareTextPipeline = (
       }
     }
 
+    if (spans.length === 0) {
+      return transform(text, 0, text, tokenAt, candidateAt);
+    }
+
     spans.sort((left, right) => left.start - right.start);
     const parts: string[] = [];
     let copied = 0;
