@@ -697,3 +697,12 @@ segments remain unchanged. Public-service regressions cover both locales,
 algorithms and cache modes, including repeated formatting. Earlier quotation
 spacing comparisons describe the previous scope. Enabling spacing by default
 and removing bundled whitespace cleanup remain pending subsequent slices.
+
+### Quotation CR boundary correction
+
+Quotation recognition accepts lone CR alongside LF at opening and closing
+boundaries. It preserves each CR, CRLF and LF byte sequence; quote-boundary
+spacing never inserts a gap across those line endings. Public-service regressions
+cover both locales, algorithms, cache modes, explicit spacing settings, protected
+literals and repeat formatting. Default-on Q6 spacing and bundled spacing removal
+remain pending; historical cleanup evidence does not validate the reduced scope.

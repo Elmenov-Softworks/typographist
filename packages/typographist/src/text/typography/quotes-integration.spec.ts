@@ -329,3 +329,30 @@ describe.each(['en', 'ru'] as const)('quotation boundary preservation for %s', (
     });
   });
 });
+
+describe.each(['en', 'ru'] as const)('quotation CR boundaries for %s', (locale) => {
+  describe.each([false, true])('useFast=%s', (useFast) => {
+    describe.each([0, 1])('cacheSize=%s', (cacheSize) => {
+      it.each([false, true])('preserves line endings with spacing=%s', (spacing) => {
+        const instance = new Typographist({
+          locale,
+          useFast,
+          cacheSize,
+          categories: ['quotes', 'hyphenation'],
+          protectedContent: ['"Keep"\r'],
+          settings: { 'common/punctuation/quote': { spacing } },
+        });
+        const [left, right] = locale === 'ru' ? (['«', '»'] as const) : (['“', '”'] as const);
+        const gap = spacing ? '\u202f' : '';
+
+        for (const ending of ['\r', '\r\n', '\n']) {
+          const input = `"Keep"\r${ending}"cat"${ending}"dog"${ending}`;
+          const expected = `"Keep"\r${ending}${left}${gap}cat${gap}${right}${ending}${left}${gap}dog${gap}${right}${ending}`;
+
+          expect(instance.format(input)).toBe(expected);
+          expect(instance.format(expected)).toBe(expected);
+        }
+      });
+    });
+  });
+});

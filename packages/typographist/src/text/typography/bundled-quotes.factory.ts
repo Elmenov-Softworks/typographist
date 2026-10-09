@@ -7,8 +7,8 @@ export const createBundledQuotes = (locale: string) => {
 
   const left = locale === 'ru' ? '«„‚' : '“‘';
   const right = locale === 'ru' ? '»“‘' : '”’';
-  const opening = /(^|[ \n\t\u00a0[(])([«‹»›„“‟”"]+)(?=\S)/gim;
-  const closing = /(\S)([«‹»›„“‟”"]+)(?=[ \n\t\u00a0!?.:;#*,…)\]\\]|$)/gim;
+  const opening = /(^|[ \r\n\t\u00a0[(])([«‹»›„“‟”"]+)(?=\S)/gim;
+  const closing = /(\S)([«‹»›„“‟”"]+)(?=[ \r\n\t\u00a0!?.:;#*,…)\]\\]|$)/gim;
 
   const rules: TextRule[] = [
     {
