@@ -3,14 +3,9 @@ import { createBundledDashes } from '@/text/typography/bundled-dashes.factory.js
 import { createBundledNonbreakingSpacing } from '@/text/typography/bundled-nonbreaking-spacing.factory.js';
 import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.factory.js';
 import { createBundledQuotes } from '@/text/typography/bundled-quotes.factory.js';
-import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.js';
 
 const referenceOrder = [
   'common/dash/minus',
-  'ru/space/year',
-  'ru/space/afterHellip',
-  'common/space/bracket',
-  'common/space/afterSemicolon',
   'ru/dash/main',
   'en-US/dash/main',
   'ru/dash/years',
@@ -52,7 +47,6 @@ const referenceOrder = [
 
 const createLocaleRules = (locale: string) =>
   [
-    ...createBundledSpacing(locale),
     ...createBundledDashes(locale),
     ...createBundledPunctuation(locale),
     ...createBundledQuotes(locale),

@@ -496,3 +496,10 @@ regressions cover both locales, both algorithms, enabled and disabled caching,
 repeat formatting, protected content and rejection of removed settings. Changes
 remain uncommitted for the coordinator. Ellipsis spacing removal, quotation
 defaults and full independent review remain open.
+
+Owner correction, 2026-10-09: TP-R018 (`ru/space/afterHellip`) and its
+settings are removed. All 23 bundled spacing capabilities and the bundled
+spacing factory are now removed. Custom spacing rules remain supported.
+Ellipsis conversion preserves boundary gaps, repeated signs, tabs, CR/LF and
+existing NBSPs. Historical audits and benchmark timings predate this reduction.
+Default quotation spacing and independent review remain pending.

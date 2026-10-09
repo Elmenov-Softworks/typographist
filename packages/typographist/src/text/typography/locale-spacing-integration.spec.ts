@@ -16,7 +16,7 @@ describe('Locale spacing interactions', () => {
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const addresses = 'https://example.com/2028год...Далее user2029год@example.com';
     const input = `\t2027год...Далее\n  Typography\n\t${content}\n${addresses}\nKeep\t2026год...Далее\n  literal\n  `;
-    const start = configuration.locale === 'ru' ? '2027год… Далее' : '2027год…Далее';
+    const start = '2027год…Далее';
     const normalized = `\t${start}\n  Typography\n\t${content}\n${addresses}\nKeep\t2026год...Далее\n  literal\n  `;
     const expected = legacy.format(normalized);
 

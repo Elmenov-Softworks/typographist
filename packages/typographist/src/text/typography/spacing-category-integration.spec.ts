@@ -1,8 +1,6 @@
-import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.js';
-import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
 import { Typographist } from '@/typographist/typographist.js';
 
-describe('bundled spacing reference scenarios', () => {
+describe('custom spacing category preservation', () => {
   it.each(
     (['en', 'ru'] as const).flatMap((locale) =>
       [false, true].flatMap((useFast) => [0, 64].map((cacheSize) => ({ locale, useFast, cacheSize }))),
@@ -131,28 +129,6 @@ describe('bundled spacing reference scenarios', () => {
     expect(new Typographist({ locale, categories: ['hyphenation'] }).format('a!b?c')).toBe('a!b?c');
   });
 
-  it('spaces Russian ellipses using reference letter boundaries', () => {
-    const id = 'ru/space/afterHellip';
-    const rules = createBundledSpacing('ru').filter((rule) => rule.id === id);
-    const format = prepareTextPipeline(rules, 'ru');
-
-    expect(rules).toHaveLength(1);
-    expect(format('слово...Далее слово…Ёж Что?..next Да!..Слово')).toBe(
-      'слово... Далее слово… Ёж Что?.. next Да!.. Слово',
-    );
-    const unchanged = 'Слово...далее A...Б а....Б а…б !...а ?..1 ?..😀 а…\u0301Б а… Б';
-
-    expect(format(unchanged)).toBe(unchanged);
-    expect(format('')).toBe('');
-    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
-    expect(format('а...Б...В')).toBe('а... Б...В');
-    expect(format('а... Б...В')).toBe('а... Б...В');
-    expect(() => prepareTextPipeline(rules, 'ru', { settings: { [id]: { unknown: true } } })).toThrow(
-      'Invalid setting',
-    );
-    expect(createBundledSpacing('en').some((rule) => rule.id === id)).toBe(false);
-  });
-
   it.each([false, true])('combines Russian ellipsis spacing and hyphenation with useFast=%s', (useFast) => {
     const service = new Typographist({
       locale: 'ru',
@@ -163,7 +139,7 @@ describe('bundled spacing reference scenarios', () => {
     const legacy = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
     const input = `${content} слово...Далее Что?..next https://example.com/a?..b user@example.com Keep?..this`;
-    const normalized = `${content} слово… Далее Что?.. next https://example.com/a?..b user@example.com Keep?..this`;
+    const normalized = `${content} слово…Далее Что?..next https://example.com/a?..b user@example.com Keep?..this`;
     const output = legacy.format(normalized);
 
     expect(service.format(input)).toBe(output);
@@ -174,7 +150,6 @@ describe('bundled spacing reference scenarios', () => {
   });
 
   it('does not bundle spacing for consumer locales', () => {
-    expect(createBundledSpacing('custom')).toEqual([]);
     const service = new Typographist({
       rules: [],
       locale: 'custom',
