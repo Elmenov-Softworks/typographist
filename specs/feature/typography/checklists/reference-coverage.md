@@ -68,7 +68,7 @@ evidence review; final acceptance and independent reviews remain open.
 | TP-R022  | `common/space/delBetweenExclamationMarks` | `bundled-spacing.factory.ts`                          |
 | TP-R023  | `common/space/delBeforePunctuation`       | `bundled-spacing.factory.ts`                          |
 | TP-R024  | `common/space/delBeforePercent`           | Removed by owner scope correction                     |
-| TP-R025  | `common/space/delBeforeDot`               | `bundled-spacing.factory.ts`                          |
+| TP-R025  | `common/space/delBeforeDot`               | Removed: owner correction                             |
 | TP-R026  | `common/space/bracket`                    | `bundled-spacing.factory.ts`                          |
 | TP-R027  | `common/space/beforeBracket`              | `bundled-spacing.factory.ts`                          |
 | TP-R028  | `common/space/afterSemicolon`             | `bundled-spacing.factory.ts`                          |

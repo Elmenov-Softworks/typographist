@@ -39,12 +39,6 @@ const scenarios = [
     output: 'a!!?? b',
     unchanged: 'a!  ! b?\t? c!\u00a0!',
   },
-  {
-    id: 'common/space/delBeforeDot',
-    input: 'a . b ... c .\n',
-    output: 'a. b... c.\n',
-    unchanged: '1 .25 a .b a .. ! . a\t. a\u00a0.',
-  },
   { id: 'common/space/bracket', input: '(  a  )', output: '(a)', unchanged: '(\ta\t) [ a ]' },
   {
     id: 'common/space/delBeforePunctuation',
@@ -75,7 +69,7 @@ describe('bundled spacing reference scenarios', () => {
     const unchanged = '$100 100 руб. 12345 1.25 1,25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс 😀 е́';
     const protectedText = 'https://example.com/a,b?c:d user@example.com Keep ,this(  literal  )';
     const input = `${word}(  works  ) [  text  ] word ,next;next!next?next:next word . 25 % 2 ‰ 3 ‱ ! ! ${unchanged} ${protectedText}`;
-    const normalized = `${word} (works) [text] word, next; next! next? next: next word. 25 % 2 ‰ 3 ‱!! ${unchanged} ${protectedText}`;
+    const normalized = `${word} (works) [text] word, next; next! next? next: next word . 25 % 2 ‰ 3 ‱!! ${unchanged} ${protectedText}`;
     const expected = legacy.format(normalized);
 
     expect(service.format(input)).toBe(expected);
@@ -112,7 +106,7 @@ describe('bundled spacing reference scenarios', () => {
     });
     const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс';
     const input = `${content} . Wait ... Really! ! https://example.com/a user@example.com Keep . ! !`;
-    const output = `${content}. Wait… Really!! https://example.com/a user@example.com Keep . ! !`;
+    const output = `${content} . Wait … Really!! https://example.com/a user@example.com Keep . ! !`;
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);

@@ -303,3 +303,9 @@ owner correction of 2026-10-09. Ordinary spaces, existing NBSPs, tabs and line
 endings before `%`, `‰` and `‱` remain intact. Public-service preservation tests
 cover both locales, algorithms and cache modes. Earlier cleanup audits and
 benchmark timings predate this reduced scope.
+
+TP-R025 (`common/space/delBeforeDot`) and its settings are removed by the
+owner correction of 2026-10-09. Preserve whitespace before dots; retained
+ellipsis conversion changes only the glyphs. Public-service regressions cover
+Russian, English, both algorithms, cache modes, protection and repeat formatting.
+Earlier audit and benchmark evidence predates this correction.
