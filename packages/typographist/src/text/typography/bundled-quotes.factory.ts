@@ -28,7 +28,9 @@ export const createBundledQuotes = (locale: string) => {
 
         const left = settings.left;
         const right = settings.right;
-        const identicalOuter = left.charAt(0) === right.charAt(0);
+        const outerLeft = left.charAt(0);
+        const outerRight = right.charAt(0);
+        const identicalOuter = outerLeft === outerRight;
         const openingGlyphs = '«‹»›„“‟”"' + (identicalOuter ? left.replace(/[\\\]\-^]/g, '\\$&') : '');
         const closingGlyphs = '«‹»›„“‟”"' + (identicalOuter ? right.replace(/[\\\]\-^]/g, '\\$&') : '');
         const quoteGlyphs = openingGlyphs + closingGlyphs;
@@ -44,58 +46,99 @@ export const createBundledQuotes = (locale: string) => {
         const quotationGlyphs = left + right + '«‹»›„“‟”"';
         const hasQuotes = new RegExp(`[${quotationGlyphs.replace(/[\\\]\-^]/g, '\\$&')}]`, 'u');
 
+        const nestingQuotes = new RegExp(
+          '[' + (outerLeft + outerRight + '"').replace(/[\\\]\-^]/g, '\\$&') + ']',
+          'gu',
+        );
+
+        const spacingQuotes = new RegExp('[' + (left + right).replace(/[\\\]\-^]/g, '\\$&') + ']', 'gu');
+
         const setSpacing = (text: string, directions: ReadonlyMap<number, 'opening' | 'closing'>) => {
           if (!settings.spacing) {
             return text;
           }
 
-          const openingTargets = new Uint8Array(text.length);
-          const closingTargets = new Uint8Array(text.length);
+          const whitespace = /\s/u;
+          const gap = (character: string) =>
+            character === ' ' || character === '\t' || character === '\u00a0' || character === '\u202f';
+          // Reuse skipped quote runs as boundaries advance, keeping nested spacing linear.
+          let openingEnd = -1;
           let openingContent = false;
+          let lastClosingOffset = -1;
           let closingContent = false;
 
-          for (let offset = 0; offset < text.length; offset++) {
-            const before = text.charAt(offset);
-            const reverse = text.length - offset - 1;
-            const after = text.charAt(reverse);
+          const openingContentAt = (offset: number) => {
+            if (offset > openingEnd) {
+              openingEnd = offset;
 
-            if (!/[\t \u00a0\u202f]/u.test(before) && !right.includes(before)) {
-              closingContent = !/\s/u.test(before) && !quotationGlyphs.includes(before);
+              while (
+                openingEnd < text.length &&
+                (gap(text.charAt(openingEnd)) || left.includes(text.charAt(openingEnd)))
+              ) {
+                openingEnd += 1;
+              }
+
+              const character = text.charAt(openingEnd);
+              openingContent =
+                openingEnd < text.length && !whitespace.test(character) && !quotationGlyphs.includes(character);
             }
 
-            if (!/[\t \u00a0\u202f]/u.test(after) && !left.includes(after)) {
-              openingContent = !/\s/u.test(after) && !quotationGlyphs.includes(after);
+            return openingContent;
+          };
+
+          const closingContentAt = (offset: number) => {
+            let position = offset;
+
+            while (
+              position > lastClosingOffset &&
+              (gap(text.charAt(position)) || right.includes(text.charAt(position)))
+            ) {
+              position -= 1;
             }
 
-            closingTargets[offset] = closingContent ? 1 : 0;
-            openingTargets[reverse] = openingContent ? 1 : 0;
-          }
+            if (position > lastClosingOffset) {
+              const character = text.charAt(position);
+              closingContent = !whitespace.test(character) && !quotationGlyphs.includes(character);
+            }
 
-          const openingAt = (offset: number) =>
-            left.includes(text.charAt(offset)) && (!identicalOuter || directions.get(offset) === 'opening');
-          const closingAt = (offset: number) =>
-            right.includes(text.charAt(offset)) && (!identicalOuter || directions.get(offset) === 'closing');
+            lastClosingOffset = offset;
+
+            return closingContent;
+          };
           const parts: string[] = [];
           let copied = 0;
+          let lastBoundary = -1;
+          const bind = (offset: number, replaced: number) => {
+            if (offset === lastBoundary) {
+              return;
+            }
 
-          for (let offset = 0; offset < text.length; offset++) {
-            const character = text.charAt(offset);
+            parts.push(text.slice(copied, offset), '\u202f');
+            copied = offset + replaced;
+            lastBoundary = offset;
+          };
 
-            if (character === ' ') {
-              if (
-                (offset > 0 && openingAt(offset - 1) && openingTargets[offset] === 1) ||
-                (offset + 1 < text.length && closingAt(offset + 1) && closingTargets[offset] === 1)
-              ) {
-                parts.push(text.slice(copied, offset), '\u202f');
-                copied = offset + 1;
+          for (const match of text.matchAll(spacingQuotes)) {
+            const offset = match.index;
+            const character = match[0];
+
+            if (offset > 0 && right.includes(character) && (!identicalOuter || directions.get(offset) === 'closing')) {
+              const before = text.charAt(offset - 1);
+
+              if ((before === ' ' || !whitespace.test(before)) && closingContentAt(offset - 1)) {
+                bind(before === ' ' ? offset - 1 : offset, before === ' ' ? 1 : 0);
               }
-            } else if (offset > 0 && !/\s/u.test(character) && !/\s/u.test(text.charAt(offset - 1))) {
-              if (
-                (openingAt(offset - 1) && openingTargets[offset] === 1) ||
-                (closingAt(offset) && closingTargets[offset - 1] === 1)
-              ) {
-                parts.push(text.slice(copied, offset), '\u202f');
-                copied = offset;
+            }
+
+            if (
+              offset + 1 < text.length &&
+              left.includes(character) &&
+              (!identicalOuter || directions.get(offset) === 'opening')
+            ) {
+              const after = text.charAt(offset + 1);
+
+              if ((after === ' ' || !whitespace.test(after)) && openingContentAt(offset + 1)) {
+                bind(offset + 1, after === ' ' ? 1 : 0);
               }
             }
           }
@@ -114,8 +157,6 @@ export const createBundledQuotes = (locale: string) => {
             return text;
           }
 
-          const outerLeft = left.charAt(0);
-          const outerRight = right.charAt(0);
           const directions = new Map<number, 'opening' | 'closing'>();
           const normalized = text
             .replace(opening, (_match: string, before: string, quotes: string, offset: number) => {
@@ -151,29 +192,26 @@ export const createBundledQuotes = (locale: string) => {
           const rightCount = identicalOuter ? directions.size - leftCount : normalized.split(outerRight).length - 1;
           const maxLevel = leftCount === rightCount ? left.length : Math.min(left.length, 2);
           let level = 0;
-          let result = '';
-
-          let offset = 0;
-
-          for (const character of normalized) {
+          const result = normalized.replace(nestingQuotes, (character: string, offset: number) => {
             const direction = directions.get(offset);
 
             if (identicalOuter ? direction === 'opening' : character === outerLeft) {
-              result += left.charAt(Math.min(level, maxLevel - 1));
+              const quote = left.charAt(Math.min(level, maxLevel - 1));
               level = Math.min(level + 1, maxLevel);
+
+              return quote;
             } else if (identicalOuter ? direction === 'closing' : character === outerRight) {
               level = Math.max(0, level - 1);
-              result += right.charAt(level);
-            } else {
-              if (character === '"') {
-                level = 0;
-              }
 
-              result += character;
+              return right.charAt(level);
             }
 
-            offset += character.length;
-          }
+            if (character === '"') {
+              level = 0;
+            }
+
+            return character;
+          });
 
           return setSpacing(result, directions);
         };

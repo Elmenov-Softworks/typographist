@@ -152,7 +152,7 @@ export class RulesRegistry {
       createBundledTextRules(key, [...this.#textRules, ...localeRules]),
       key,
       this.#options,
-      (text) => text,
+      undefined,
       new Set([...this.#declaredSettings.keys(), ...localeRules.map((rule) => rule.id)]),
     );
 
@@ -212,7 +212,7 @@ export class RulesRegistry {
       createBundledTextRules(key, this.#textRules),
       key,
       this.#options,
-      hyphenationEnabled ? service.hyphenate : (text) => text,
+      hyphenationEnabled ? service.hyphenate : undefined,
       new Set(this.#declaredSettings.keys()),
       service.preservesCandidate,
     );

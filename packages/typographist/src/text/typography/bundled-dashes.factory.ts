@@ -1,6 +1,8 @@
 import { prepareMinus } from '@/text/typography/prepare-minus.util.js';
 import type { TextRule } from '@/text/typography/text-rule.types.js';
 
+const identifierCharacter = /[\p{L}\p{M}\p{N}_-]/u;
+
 export const createBundledDashes = (locale: string) => {
   if (locale !== 'en' && locale !== 'ru') {
     return [];
@@ -142,12 +144,11 @@ export const createBundledDashes = (locale: string) => {
         }
 
         const weekday = '(понедельник|вторник|среда|четверг|пятница|суббота|воскресенье)';
-        const range = new RegExp(
-          `(?<![\\p{L}\\p{M}\\p{N}_-])${weekday}( ?)(?:--?|‒|–|—)( ?)${weekday}(?![\\p{L}\\p{M}\\p{N}_-])`,
-          'giu',
-        );
+        const candidate = `${weekday}( ?)(?:--?|‒|–|—)( ?)${weekday}`;
+        const hasRange = new RegExp(candidate, 'iu');
+        const range = new RegExp(`(?<![\\p{L}\\p{M}\\p{N}_-])${candidate}(?![\\p{L}\\p{M}\\p{N}_-])`, 'giu');
 
-        return (text) => text.replace(range, `$1$2${dash}$3$4`);
+        return (text) => (hasRange.test(text) ? text.replace(range, `$1$2${dash}$3$4`) : text);
       },
     });
 
@@ -165,17 +166,20 @@ export const createBundledDashes = (locale: string) => {
           'январь|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь',
           'январе|феврале|марте|апреле|мае|июне|июле|августе|сентябре|октябре|ноябре|декабре',
         ];
-        const ranges = months.map(
-          (names) =>
-            new RegExp(
-              `(?<![\\p{L}\\p{M}\\p{N}_-])(${names})( ?)(?:--?|‒|–|—)( ?)(${names})(?![\\p{L}\\p{M}\\p{N}_-])`,
-              'giu',
-            ),
-        );
+        const ranges = months.map((names) => {
+          const candidate = `(${names})( ?)(?:--?|‒|–|—)( ?)(${names})`;
+
+          return {
+            hasRange: new RegExp(candidate, 'iu'),
+            range: new RegExp(`(?<![\\p{L}\\p{M}\\p{N}_-])${candidate}(?![\\p{L}\\p{M}\\p{N}_-])`, 'giu'),
+          };
+        });
 
         return (text) => {
-          for (const range of ranges) {
-            text = text.replace(range, `$1$2${dash}$3$4`);
+          for (const { hasRange, range } of ranges) {
+            if (hasRange.test(text)) {
+              text = text.replace(range, `$1$2${dash}$3$4`);
+            }
           }
 
           return text;
@@ -212,8 +216,13 @@ export const createBundledDashes = (locale: string) => {
       return (text, context) => {
         const before = context?.precedingCharacter ?? '';
         const after = context?.followingCharacter ?? '';
-        const prefix = /[\p{L}\p{M}\p{N}_-]/u.test(before) ? '_' : isRange ? before : '';
-        const suffix = /[\p{L}\p{M}\p{N}_-]/u.test(after) ? '_' : isRange ? after : '';
+
+        if (before === '' && after === '') {
+          return handler(text, context);
+        }
+
+        const prefix = identifierCharacter.test(before) ? '_' : isRange ? before : '';
+        const suffix = identifierCharacter.test(after) ? '_' : isRange ? after : '';
         const result = handler(prefix + text + suffix, context);
 
         return result.slice(prefix.length, result.length - suffix.length);

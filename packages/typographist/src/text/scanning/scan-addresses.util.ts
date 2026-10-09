@@ -55,62 +55,48 @@ const hostnameEnd = (text: string, start: number) => {
 
 export const scanAddresses = (text: string) => {
   const spans: CandidateSpan[] = [];
+  const markers = /www\.|:\/\/|@/gi;
+  let protectedEnd = 0;
+  let marker = markers.exec(text);
 
-  if (!/@|:\/\/|www\./i.test(text)) {
-    return spans;
-  }
+  while (marker !== null) {
+    const offset = marker.index;
+    let start = offset;
+    let end: number | null = null;
 
-  let schemeStart: number | null = null;
-  let localStart: number | null = null;
-  let invalidLocalDots = false;
-  let offset = 0;
-
-  while (offset < text.length) {
-    const character = text.charAt(offset);
-    const www = (character === 'w' || character === 'W') && text.slice(offset, offset + 4).toLowerCase() === 'www.';
-    const scheme = character === ':' && schemeStart !== null && text.startsWith('//', offset + 1);
-
-    if (www || scheme) {
-      const start = scheme && schemeStart !== null ? schemeStart : offset;
-      const end = urlEnd(text, offset);
-      spans.push({ start, end });
-      offset = end;
-      schemeStart = null;
-      localStart = null;
-      invalidLocalDots = false;
-      continue;
-    }
-
-    if (character === '@' && localStart !== null && !invalidLocalDots && text.charAt(offset - 1) !== '.') {
-      const end = hostnameEnd(text, offset + 1);
-
-      if (end !== null) {
-        spans.push({ start: localStart, end });
-        offset = end;
-        schemeStart = null;
-        localStart = null;
-        invalidLocalDots = false;
-        continue;
+    if (marker[0] === '@') {
+      while (start > protectedEnd && localCharacter.test(text.charAt(start - 1))) {
+        start -= 1;
       }
+
+      const local = text.slice(start, offset);
+
+      if (local.length > 0 && !local.startsWith('.') && !local.endsWith('.') && !local.includes('..')) {
+        end = hostnameEnd(text, offset + 1);
+      }
+    } else if (marker[0] === '://') {
+      while (start > protectedEnd && schemeCharacter.test(text.charAt(start - 1))) {
+        start -= 1;
+      }
+
+      while (start < offset && !asciiLetter.test(text.charAt(start))) {
+        start += 1;
+      }
+
+      if (start < offset) {
+        end = urlEnd(text, offset);
+      }
+    } else {
+      end = urlEnd(text, offset);
     }
 
-    if (!schemeCharacter.test(character)) {
-      schemeStart = null;
-    } else if (schemeStart === null && asciiLetter.test(character)) {
-      schemeStart = offset;
+    if (end !== null) {
+      spans.push({ start, end });
+      markers.lastIndex = end;
+      protectedEnd = end;
     }
 
-    if (!localCharacter.test(character)) {
-      localStart = null;
-      invalidLocalDots = false;
-    } else if (localStart === null) {
-      localStart = offset;
-      invalidLocalDots = character === '.';
-    } else if (character === '.' && text.charAt(offset - 1) === '.') {
-      invalidLocalDots = true;
-    }
-
-    offset += 1;
+    marker = markers.exec(text);
   }
 
   return spans;

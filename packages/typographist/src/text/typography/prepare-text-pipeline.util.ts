@@ -47,7 +47,7 @@ export const prepareTextPipeline = (
   rules: readonly TextRule[],
   locale: string,
   options: TextPipelineOptions = {},
-  finish: (text: string, boundary?: HyphenationBoundary) => string = (text) => text,
+  finish?: (text: string, boundary?: HyphenationBoundary) => string,
   declaredIds: ReadonlySet<string> = new Set(rules.map((rule) => rule.id)),
   preservesCandidate = (_word: string) => false,
 ) => {
@@ -116,13 +116,15 @@ export const prepareTextPipeline = (
     start: number,
     original: string,
     tokenAt: (position: number) => CandidateSpan | null,
-    candidateAt: (position: number) => (CandidateSpan & { preserved: boolean }) | null,
+    preservesBoundary: (position: number, boundary: number) => boolean,
   ) => {
     const segmentEnd = start + text.length;
+    const before = original.slice(Math.max(0, start - 2), start);
+    const after = original.slice(segmentEnd, segmentEnd + 2);
     const context = {
       [segmentBoundary]: { original, end: segmentEnd },
-      precedingCharacter: original.slice(Math.max(0, start - 2), start).match(/.$/su)?.[0] ?? '',
-      followingCharacter: original.slice(start + text.length, start + text.length + 2).match(/^./su)?.[0] ?? '',
+      precedingCharacter: (before.codePointAt(0) ?? 0) > 0xffff ? before : before.slice(-1),
+      followingCharacter: (after.codePointAt(0) ?? 0) > 0xffff ? after : after.charAt(0),
       get precedingToken() {
         const token = tokenAt(start - 1);
 
@@ -149,12 +151,13 @@ export const prepareTextPipeline = (
       text = result;
     }
 
-    const preceding = start === 0 ? null : candidateAt(start);
-    const following = segmentEnd === original.length ? null : candidateAt(segmentEnd - 1);
+    if (finish === undefined) {
+      return text;
+    }
 
     return finish(text, {
-      preserveStart: preceding !== null && preceding.start < start && preceding.preserved,
-      preserveEnd: following !== null && following.end > segmentEnd && following.preserved,
+      preserveStart: start > 0 && preservesBoundary(start, start),
+      preserveEnd: segmentEnd < original.length && preservesBoundary(segmentEnd - 1, segmentEnd),
     });
   };
 
@@ -164,17 +167,30 @@ export const prepareTextPipeline = (
     }
 
     if (prepared.length === 0 && protectedContent.length === 0) {
-      return finish(text);
+      return finish === undefined ? text : finish(text);
     }
 
-    let candidates: (CandidateSpan & { preserved: boolean })[] | null = null;
-    const candidateAt = (position: number) => {
-      candidates ??= scanCandidates(text).map((span) => ({
-        ...span,
-        preserved: preservesCandidate(text.slice(span.start, span.end)),
-      }));
+    let candidates: CandidateSpan[] | null = null;
+    let preservedCandidates: Map<CandidateSpan, boolean> | null = null;
+    const preservesBoundary = (position: number, boundary: number) => {
+      candidates ??= scanCandidates(text);
+      const candidate = spanAt(candidates, position);
 
-      return spanAt(candidates, position);
+      if (candidate === null || candidate.start >= boundary || candidate.end <= boundary) {
+        return false;
+      }
+
+      const cached = preservedCandidates?.get(candidate);
+
+      if (cached !== undefined) {
+        return cached;
+      }
+
+      const preserved = preservesCandidate(text.slice(candidate.start, candidate.end));
+      preservedCandidates ??= new Map();
+      preservedCandidates.set(candidate, preserved);
+
+      return preserved;
     };
     let tokens: CandidateSpan[] | null = null;
     const tokenAt = (position: number) => {
@@ -210,7 +226,7 @@ export const prepareTextPipeline = (
     }
 
     if (spans.length === 0) {
-      return transform(text, 0, text, tokenAt, candidateAt);
+      return transform(text, 0, text, tokenAt, preservesBoundary);
     }
 
     spans.sort((left, right) => left.start - right.start);
@@ -219,7 +235,7 @@ export const prepareTextPipeline = (
 
     for (const span of spans) {
       if (span.start > copied) {
-        parts.push(transform(text.slice(copied, span.start), copied, text, tokenAt, candidateAt));
+        parts.push(transform(text.slice(copied, span.start), copied, text, tokenAt, preservesBoundary));
       }
 
       if (span.end > copied) {
@@ -228,7 +244,7 @@ export const prepareTextPipeline = (
       }
     }
 
-    parts.push(transform(text.slice(copied), copied, text, tokenAt, candidateAt));
+    parts.push(transform(text.slice(copied), copied, text, tokenAt, preservesBoundary));
 
     return parts.join('');
   };

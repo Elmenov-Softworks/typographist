@@ -1,5 +1,11 @@
 # Typography benchmark results
 
+The current symbolic formatter is covered by the [profiling and optimization report](symbolic-optimization.md),
+[Typograf comparison charts](typograf-optimized.html) and [raw measurements](typograf-optimized.json).
+That comparison runs baseline and optimized implementations in one process; symbolic profiles exclude hyphenation.
+The separate [profile record](symbolic-profile.json) contains category timings and sampled functions.
+The preceding baseline-only comparison is preserved in [typograf-current.html](typograf-current.html).
+
 Historical evidence: this full-feature run predates the owner scope reduction of 2026-10-09. It includes removed cleanup capabilities and earlier quotation defaults. These timings do not describe the revised symbol formatter; the raw report remains unchanged for provenance.
 
 Measured with Node v24.21.0, ICU 78.3, 13th Gen Intel(R) Core(TM) i5-13420H, on linux 6.18.33.2-microsoft-standard-WSL2. Source commit: `0ee270b797d89c6a83c9eeac1db6329d86440b76`; the working tree was clean when the build and measurements ran. The core was freshly built before this run.
