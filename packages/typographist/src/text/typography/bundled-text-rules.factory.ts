@@ -9,7 +9,6 @@ const referenceOrder = [
   'common/dash/minus',
   'ru/space/year',
   'ru/space/afterHellip',
-  'common/space/delBetweenExclamationMarks',
   'common/space/delBeforePunctuation',
   'common/space/bracket',
   'common/space/beforeBracket',

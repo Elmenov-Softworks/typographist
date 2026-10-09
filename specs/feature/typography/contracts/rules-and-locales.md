@@ -138,3 +138,16 @@ TP-R019 (`common/space/squareBracket`) and its settings are removed by the
 owner correction of 2026-10-09. Preserve spaces, tabs, line endings and existing
 NBSPs inside square brackets. Public-service regressions cover both locales,
 algorithms and cache modes, protection, repeated formatting and invalid settings.
+
+TP-R022 (`common/space/delBetweenExclamationMarks`) and its settings are removed
+by the owner correction of 2026-10-09. Preserve repeated exclamation and question
+marks and their single intervening spaces, tabs, line endings and existing NBSPs.
+Public-service regressions cover both locales, algorithms and cache modes,
+protection, repeated formatting and invalid settings. Earlier cleanup audits and
+benchmark timings predate this correction. Remaining spacing removals and default
+quotation spacing are pending.
+
+The still-pending `common/space/delBeforePunctuation` can delete an ordinary
+space before a repeated sign, including one from a multiple-space gap. This
+slice does not claim complete boundary-whitespace preservation until that rule
+is removed.
