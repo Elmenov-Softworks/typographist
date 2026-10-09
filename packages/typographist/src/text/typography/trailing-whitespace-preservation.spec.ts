@@ -10,6 +10,59 @@ describe.each(['en', 'ru'] as const)('trailing-whitespace preservation for %s', 
         expect(service.format(service.format(input))).toBe(input);
       });
 
+      it('preserves trailing separators after short words and abbreviation labels', () => {
+        const service = new Typographist({ locale, useFast, cacheSize });
+        const bindingOnly = new Typographist({ locale, categories: ['nonbreakingSpacing'] });
+        const words = locale === 'en' ? ['a', 'the', 'I'] : ['я', 'и', 'если', 'ООО', 'мкр.', 'мк-н', 'литер'];
+
+        for (const word of words) {
+          for (const suffix of [
+            ' ',
+            '   ',
+            ' \r',
+            ' \n',
+            '  \r\n',
+            ' \t',
+            '  \t\n',
+            ' \tcat',
+            '  \r\ncat',
+            '\u00a0',
+            '\u202f',
+          ]) {
+            const input = `${word}${suffix}`;
+            const expected = new Typographist({ locale, useFast, cacheSize, categories: ['hyphenation'] }).format(
+              input,
+            );
+
+            expect(bindingOnly.format(input)).toBe(input);
+            expect(service.format(input)).toBe(expected);
+            expect(service.format(expected)).toBe(expected);
+          }
+        }
+      });
+
+      it('binds same-line content while retaining extra ordinary spaces', () => {
+        const service = new Typographist({ locale, useFast, cacheSize, categories: ['nonbreakingSpacing'] });
+        const fixtures: [string, string][] =
+          locale === 'en'
+            ? [
+                ['a   cat', 'a\u00a0  cat'],
+                ['the  cat', 'the\u00a0 cat'],
+              ]
+            : [
+                ['я   тут', 'я\u00a0  тут'],
+                ['если  тут', 'если\u00a0 тут'],
+                ['ООО   Дом', 'ООО\u00a0  Дом'],
+                ['мкр.   Центр', 'мкр.\u00a0  Центр'],
+                ['литер   А', 'литер\u00a0  А'],
+              ];
+
+        for (const [input, expected] of fixtures) {
+          expect(service.format(input)).toBe(expected);
+          expect(service.format(service.format(input))).toBe(expected);
+        }
+      });
+
       it('preserves trailing whitespace around protected fragments before hyphenation', () => {
         const configuration = { locale, useFast, cacheSize, protectedContent: ['keep \nthis'] };
         const service = new Typographist({ ...configuration, categories: ['spacing', 'hyphenation'] });

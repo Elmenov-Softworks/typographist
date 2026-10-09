@@ -19,6 +19,12 @@ spacing defaults to narrow NBSP with an explicit `spacing: false` override.
 Declarative hyphenation data requires both standard and fast datasets;
 subclass compilation and typography-only locales remain supported.
 
+Short-word and listed-word bindings (TP-R081–TP-R082), organization labels
+(TP-R068), and microdistrict/liter address labels (TP-R074) require following
+same-line content. They replace only the first ordinary boundary space and retain
+additional spaces. Trailing spaces, tabs and CR/LF remain unchanged. This target
+requirement intentionally differs from the reference's trailing-space matching.
+
 Earlier audit sections and their passing reference comparisons are historical.
 They describe the implementation at the time of each slice, including subsequently
 removed behavior. Earlier benchmark timings and owner-reported browser evidence

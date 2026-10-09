@@ -62,7 +62,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
           locale === 'ru'
             ? 'а|без|в|во|если|да|до|для|за|и|или|из|к|ко|как|ли|на|но|не|ни|о|об|обо|от|по|про|при|под|с|со|то|у'
             : 'a|an|and|as|at|bar|but|by|for|if|in|nor|not|of|off|on|or|out|per|pro|so|the|to|up|via|yet';
-        const listedWord = new RegExp(`(^|[ \\u00a0(«‹»›„“‟”"])(${words}) `, 'gim');
+        const listedWord = new RegExp(`(^|[ \\u00a0(«‹»›„“‟”"])(${words}) (?= *\\S)`, 'gim');
 
         return (text) => text.replace(listedWord, '$1$2\u00a0').replace(listedWord, '$1$2\u00a0');
       },
@@ -78,7 +78,10 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
         }
 
         const letters = locale === 'ru' ? 'а-яё' : 'a-z';
-        const shortWord = new RegExp(`(^|[ \\u00a0(«‹»›„“‟”"])([${letters}]{1,${String(lengthShortWord)}}) `, 'gim');
+        const shortWord = new RegExp(
+          `(^|[ \\u00a0(«‹»›„“‟”"])([${letters}]{1,${String(lengthShortWord)}}) (?= *\\S)`,
+          'gim',
+        );
 
         return (text) => text.replace(shortWord, '$1$2\u00a0').replace(shortWord, '$1$2\u00a0');
       },
@@ -172,7 +175,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       category: 'nonbreakingSpacing',
       order: 510,
       defaults: {},
-      prepare: () => (text) => text.replace(/(^|[^a-яёA-ЯЁ])(ООО|ОАО|ЗАО|НИИ|ПБОЮЛ) /g, '$1$2\u00a0'),
+      prepare: () => (text) => text.replace(/(^|[^a-яёA-ЯЁ])(ООО|ОАО|ЗАО|НИИ|ПБОЮЛ) (?= *\S)/g, '$1$2\u00a0'),
     });
 
     rules.push({
@@ -234,10 +237,10 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       prepare: () => (text) =>
         text
           .replace(/(\s|^)(дом|д\.|кв\.|под\.|п-д) ?( *)(\d+)/gi, '$1$2\u00a0$3$4')
-          .replace(/(\s|^)(мкр-н|мк-н|мкр\.|мкрн) /gi, '$1$2\u00a0')
+          .replace(/(\s|^)(мкр-н|мк-н|мкр\.|мкрн) (?= *\S)/gi, '$1$2\u00a0')
           .replace(/(\s|^)(эт\.) ?( *)(-?\d+)/gi, '$1$2\u00a0$3$4')
           .replace(/(\s|^)(\d+) ( *)(этаж)([^а-яё]|$)/gi, '$1$2\u00a0$3$4$5')
-          .replace(/(\s|^)(литер) ([А-Я]|$)/gi, '$1$2\u00a0$3')
+          .replace(/(\s|^)(литер) (?= *[А-Я])/gi, '$1$2\u00a0')
           .replace(
             /(\s|^)(обл|кр|ст|пос|с|д|ул|пер|пр|пр-т|просп|пл|бул|б-р|наб|ш|туп|оф|комн?|уч|вл|влад|стр|кор)\. ?( *)([а-яёa-z\d]+)/gi,
             '$1$2.\u00a0$3$4',

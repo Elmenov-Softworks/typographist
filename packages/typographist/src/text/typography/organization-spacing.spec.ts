@@ -16,7 +16,7 @@ describe('Russian organization-abbreviation spacing', () => {
     ['(ООО Название)', '(ООО Название)'],
     ['1ООО 12345', '1ООО 12345'],
     ['ООО  Компания', 'ООО  Компания'],
-    ['ООО ', 'ООО '],
+    ['ООО ', 'ООО '],
     ['😀 ООО Название\r\nе́ НИИ Науки\n', '😀 ООО Название\r\nе́ НИИ Науки\n'],
   ])('changes only whitespace in %j', (text, expected) => {
     expect(format(text)).toBe(expected);
