@@ -48,3 +48,26 @@ describe('bundled quotation preparation', () => {
     expect(createBundledQuotes('custom')).toEqual([]);
   });
 });
+
+describe('long quotation runs', () => {
+  const format = prepareTextPipeline(createBundledQuotes('ru'), 'ru', { categories: ['quotes'] });
+  const count = 50_000;
+
+  it('binds every repeated opening quote to content', () => {
+    expect(format('"'.repeat(count) + 'cat')).toBe('«\u202f' + '„\u202f'.repeat(count - 1) + 'cat');
+  });
+
+  it('binds every repeated closing quote to content', () => {
+    expect(format('cat' + '"'.repeat(count))).toBe('cat' + '\u202f»'.repeat(count));
+  });
+
+  it('preserves long custom runs across line boundaries', () => {
+    const custom = prepareTextPipeline(createBundledQuotes('ru'), 'ru', {
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { left: '「', right: '」' } },
+    });
+
+    expect(custom('「'.repeat(count) + ' \r\ncat')).toBe('「'.repeat(count) + ' \r\ncat');
+    expect(custom('cat\r\n ' + '」'.repeat(count))).toBe('cat\r\n ' + '」'.repeat(count));
+  });
+});

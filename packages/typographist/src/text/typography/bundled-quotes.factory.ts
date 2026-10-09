@@ -37,7 +37,7 @@ export const createBundledQuotes = (locale: string) => {
           'gim',
         );
         const closing = new RegExp(
-          String.raw`([^\s${quoteGlyphs}][ \t\u00a0\u202f]+|\S)([${closingGlyphs}]+)(?=[ \r\n\t\u00a0!?.:;#*,…)\]\\]|$)`,
+          String.raw`([^\s${quoteGlyphs}][ \t\u00a0\u202f]+|[^\s${quoteGlyphs}]|(?<![${closingGlyphs}])[${closingGlyphs}])([${closingGlyphs}]+)(?=[ \r\n\t\u00a0!?.:;#*,…)\]\\]|$)`,
           'gim',
         );
 
@@ -62,6 +62,29 @@ export const createBundledQuotes = (locale: string) => {
           for (let depth = 0; depth < left.length; depth++) {
             for (const direction of ['opening', 'closing'] as const) {
               const spaced: typeof characters = [];
+              const contentTargets = new Uint8Array(characters.length);
+              const step = direction === 'opening' ? -1 : 1;
+              const inwardGlyphs = direction === 'opening' ? left : right;
+              const quotationGlyphs = left + right + '«‹»›„“‟”"';
+              let hasContentTarget = false;
+
+              for (
+                let index = direction === 'opening' ? characters.length - 1 : 0;
+                index >= 0 && index < characters.length;
+                index += step
+              ) {
+                const character = characters[index];
+
+                if (character === undefined) {
+                  continue;
+                }
+
+                if (!/[\t \u00a0\u202f]/u.test(character.character) && !inwardGlyphs.includes(character.character)) {
+                  hasContentTarget = !/\s/u.test(character.character) && !quotationGlyphs.includes(character.character);
+                }
+
+                contentTargets[index] = hasContentTarget ? 1 : 0;
+              }
 
               for (let index = 0; index < characters.length; index++) {
                 const before = characters[index];
@@ -89,24 +112,9 @@ export const createBundledQuotes = (locale: string) => {
                   continue;
                 }
 
-                const step = direction === 'opening' ? 1 : -1;
-                const inwardGlyphs = direction === 'opening' ? left : right;
-                let targetIndex = direction === 'opening' ? index + 1 : index;
-                let target = characters[targetIndex];
+                const targetIndex = direction === 'opening' ? index + 1 : index;
 
-                while (
-                  target !== undefined &&
-                  (/[\t \u00a0\u202f]/u.test(target.character) || inwardGlyphs.includes(target.character))
-                ) {
-                  targetIndex += step;
-                  target = characters[targetIndex];
-                }
-
-                if (
-                  target === undefined ||
-                  /\s/u.test(target.character) ||
-                  (left + right + '«‹»›„“‟”"').includes(target.character)
-                ) {
+                if (contentTargets[targetIndex] !== 1) {
                   continue;
                 }
 

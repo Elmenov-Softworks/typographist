@@ -20,3 +20,13 @@ Validation runs outside timed sections. It checks lexical/digit preservation, de
 The JSON records runtime, ICU, OS, CPU, inputs, repetitions and all results. Supply `--source-commit <full-SHA>` and `--working-tree clean|dirty` to record source provenance; omitted metadata is recorded as `null`. These values describe the build being measured and are supplied by the caller; the tool does not invoke Git or other subprocesses.
 
 Heap snapshots are process-wide observations without forced garbage collection. They include temporary objects and cannot establish retained cache memory, peak allocations or compliance with the approximate memory budget. Fixed profile order, JIT, GC and machine load affect timings; compare runs on the same machine. No numerical performance target is asserted.
+
+For the repeated-quotation scaling regression, build the core and run:
+
+```sh
+node tools/benchmarks/typography/quote-scaling.ts > /tmp/quote-scaling.json
+```
+
+The fixed inputs contain 5,000, 10,000, 20,000 and 50,000 ASCII quotation marks followed by `cat`, using Russian quotes only. Setup is measured separately; each input has three warmups and seven measured calls, with exact output assertions outside timing. No timing threshold is imposed. The saved `specs/feature/typography/benchmarks/quote-scaling.json` records Node v24.19.0 results from this correction's working tree: median times were 5.62, 9.88, 16.58 and 40.33 ms. Machine load, JIT and garbage collection affect these observations; memory was not measured.
+
+Spacing eligibility uses one directional sweep per depth and direction, followed by one spacing pass. At most three configured quotation depths bound the number of passes; each pass visits each character once. Closing-quote recognition only attempts a quotation run from its first glyph, retaining the existing unmatched-first-glyph behavior without retrying every suffix of the run.
