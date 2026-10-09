@@ -3,7 +3,7 @@ import { createBundledRules } from '@/rules/bundled/bundled-rules.js';
 import { patterns as ruPatterns, exceptions as ruExceptions } from '@/languages/bundled/ru-data.constants.js';
 import { patterns as enPatterns, exceptions as enExceptions } from '@/languages/bundled/en-us-data.constants.js';
 
-const typographist = new Typographist();
+const typographist = new Typographist({ categories: ['hyphenation'] });
 
 describe('pinned bundled language data', () => {
   it('matches representative words using the pinned patterns', () => {

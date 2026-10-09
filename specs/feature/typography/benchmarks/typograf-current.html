@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><title>Typographist vs Typograf</title
+  ><style>
+    body {
+      font: 16px system-ui;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #172033;
+      background: #f8fafc;
+    }
+    section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    h2 {
+      font-size: 18px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 270px 1fr 100px;
+      gap: 12px;
+      align-items: center;
+      margin: 12px 0;
+    }
+    .track {
+      background: #eef2f7;
+      height: 18px;
+    }
+    .track div {
+      height: 100%;
+    }
+    b {
+      text-align: right;
+      font-size: 14px;
+    }
+  </style>
+  <h1>Typographist vs Typograf 7.8.0</h1>
+  <p>
+    Node v24.21.0; 13th Gen Intel(R) Core(TM) i5-13420H. Nine batches after ten warmups; medians per call. Lower is
+    faster. Bars share a scale within each workload.
+  </p>
+  <p>
+    Selected rules are close in scope, but outputs differ. Typograf defaults perform extra cleanup; full Typographist
+    adds hyphenation. Quote spacing is disabled only for our symbolic profile. Construction is excluded.
+  </p>
+  <section>
+    <h2>long-en (15400 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 50.8923936476656%; background: #2563eb"></div></div>
+      <b>2.750 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 14.252885111330194%; background: #16a34a"></div></div>
+      <b>0.770 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 15.44235158180071%; background: #d97706"></div></div>
+      <b>0.834 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>5.403 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>repeated-en (16800 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 34.84934554366393%; background: #2563eb"></div></div>
+      <b>0.218 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 45.43614458822896%; background: #16a34a"></div></div>
+      <b>0.284 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 70.05965417676532%; background: #d97706"></div></div>
+      <b>0.438 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>0.625 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>mostly-unique-en (15599 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 29.682790331496932%; background: #2563eb"></div></div>
+      <b>0.209 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 44.03633952769795%; background: #16a34a"></div></div>
+      <b>0.310 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 68.0867727678522%; background: #d97706"></div></div>
+      <b>0.480 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>0.704 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>long-ru (16300 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 61.843896736247494%; background: #2563eb"></div></div>
+      <b>5.762 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 11.96768577845745%; background: #16a34a"></div></div>
+      <b>1.115 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 19.155609169397966%; background: #d97706"></div></div>
+      <b>1.785 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>9.317 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>repeated-ru (14400 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 45.67843696504008%; background: #2563eb"></div></div>
+      <b>0.996 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 26.346293168505586%; background: #16a34a"></div></div>
+      <b>0.575 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 53.22517587546458%; background: #d97706"></div></div>
+      <b>1.161 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>2.181 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>mostly-unique-ru (15599 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 48.10127923379513%; background: #2563eb"></div></div>
+      <b>1.285 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 33.47602575330137%; background: #16a34a"></div></div>
+      <b>0.895 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 72.2523708560672%; background: #d97706"></div></div>
+      <b>1.931 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>2.672 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>prose-20-en (1900 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 20.353543332893366%; background: #2563eb"></div></div>
+      <b>0.097 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 21.104081805874976%; background: #16a34a"></div></div>
+      <b>0.100 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 27.327636122525305%; background: #d97706"></div></div>
+      <b>0.130 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>0.476 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>prose-160-en (15200 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 20.10513756100063%; background: #2563eb"></div></div>
+      <b>0.731 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 18.53992475063724%; background: #16a34a"></div></div>
+      <b>0.674 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 23.237396528859925%; background: #d97706"></div></div>
+      <b>0.845 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>3.637 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>prose-640-en (60800 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 19.863897819992264%; background: #2563eb"></div></div>
+      <b>2.909 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 17.300189454136568%; background: #16a34a"></div></div>
+      <b>2.534 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 22.32613655241353%; background: #d97706"></div></div>
+      <b>3.270 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>14.646 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>prose-20-ru (2040 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 34.49140130803625%; background: #2563eb"></div></div>
+      <b>0.276 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 23.767088458472085%; background: #16a34a"></div></div>
+      <b>0.190 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 37.688458166810435%; background: #d97706"></div></div>
+      <b>0.301 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>0.800 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>prose-160-ru (16320 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 32.49389211626987%; background: #2563eb"></div></div>
+      <b>1.976 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 19.832403704367835%; background: #16a34a"></div></div>
+      <b>1.206 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 30.073480954408016%; background: #d97706"></div></div>
+      <b>1.829 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>6.082 ms</b>
+    </div>
+  </section>
+  <section>
+    <h2>prose-640-ru (65280 UTF-16 units)</h2>
+    <div class="row">
+      <span>Ours: symbolic</span>
+      <div class="track"><div style="width: 31.859944446114664%; background: #2563eb"></div></div>
+      <b>7.765 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: selected rules</span>
+      <div class="track"><div style="width: 20.582442719328423%; background: #16a34a"></div></div>
+      <b>5.017 ms</b>
+    </div>
+    <div class="row">
+      <span>Typograf: defaults</span>
+      <div class="track"><div style="width: 28.860959905596694%; background: #d97706"></div></div>
+      <b>7.034 ms</b>
+    </div>
+    <div class="row">
+      <span>Ours: full + Khristov + cache</span>
+      <div class="track"><div style="width: 100%; background: #9333ea"></div></div>
+      <b>24.374 ms</b>
+    </div>
+  </section>
+  <p><a href="typograf-current.json">Raw inputs, settings and timing samples</a></p>
+</html>

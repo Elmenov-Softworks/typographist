@@ -1,8 +1,14 @@
+import type { TextPipelineOptions, TextRule } from '@/text/typography/text-rule.types.js';
+import type { TextLocale } from '@/text/typography/text-locale.types.js';
 import type { Locale } from '@/rules/locale.types.js';
 import type { TypographistRules } from '@/rules/typographist-rules.js';
 
 /** Locale selection, rule plugins, and exclusions used to create a Typographist instance. */
-export type TypographistConfig<TCustomLocale extends string = never> = {
+export type TypographistConfig<TCustomLocale extends string = never> = TextPipelineOptions & {
+  /** Additional typography-only locales; defaults apply available text capabilities. */
+  readonly textLocales?: readonly TextLocale<Locale | TCustomLocale>[];
+  /** Symbolic text rules prepared once per locale, independently of hyphenation data. */
+  readonly textRules?: readonly TextRule[];
   /** Default locale for calls without an override; defaults to 'en' and requires registered rules. */
   readonly locale?: Locale | NoInfer<TCustomLocale>;
   /** Replaces the bundled English and Russian plugins when supplied; each locale must be unique. */

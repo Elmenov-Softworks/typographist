@@ -1,0 +1,272 @@
+{
+  "runtime": "v24.21.0",
+  "baseline": "6469d88c0ccb8aa9c97037a070d9b569c21c7b8c",
+  "comparison": "current working tree",
+  "method": "Complete default format calls; construction excluded; 10 warmups, 9 alternating samples of 10 calls; median per call; exact outputs and second passes compared outside timing. Timings include glyphs, bindings, protection and hyphenation, using the same algorithm/cache settings. Results vary with runtime, GC and system load.",
+  "comparisons": 48,
+  "results": [
+    {
+      "locale": "en",
+      "useFast": false,
+      "cacheSize": 0,
+      "name": "plain",
+      "inputUtf16": 10200,
+      "beforeMs": 2.181960799999996,
+      "afterMs": 1.542849000000001,
+      "speedup": 1.4142413159032379
+    },
+    {
+      "locale": "en",
+      "useFast": false,
+      "cacheSize": 0,
+      "name": "quotes",
+      "inputUtf16": 12900,
+      "beforeMs": 6.232251300000007,
+      "afterMs": 3.5924819000000072,
+      "speedup": 1.7348038134861568
+    },
+    {
+      "locale": "en",
+      "useFast": false,
+      "cacheSize": 0,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 4.888341899999977,
+      "afterMs": 4.222868000000017,
+      "speedup": 1.1575881367828589
+    },
+    {
+      "locale": "en",
+      "useFast": false,
+      "cacheSize": 64,
+      "name": "plain",
+      "inputUtf16": 10200,
+      "beforeMs": 1.2433014000000184,
+      "afterMs": 0.5157087999999931,
+      "speedup": 2.4108593842106925
+    },
+    {
+      "locale": "en",
+      "useFast": false,
+      "cacheSize": 64,
+      "name": "quotes",
+      "inputUtf16": 12900,
+      "beforeMs": 6.493863499999998,
+      "afterMs": 3.6168155999999727,
+      "speedup": 1.7954643582050593
+    },
+    {
+      "locale": "en",
+      "useFast": false,
+      "cacheSize": 64,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 4.852259099999992,
+      "afterMs": 3.9356305999999677,
+      "speedup": 1.2329051156376394
+    },
+    {
+      "locale": "en",
+      "useFast": true,
+      "cacheSize": 0,
+      "name": "plain",
+      "inputUtf16": 10200,
+      "beforeMs": 1.9642930999999408,
+      "afterMs": 1.2200078999999278,
+      "speedup": 1.610065885638984
+    },
+    {
+      "locale": "en",
+      "useFast": true,
+      "cacheSize": 0,
+      "name": "quotes",
+      "inputUtf16": 12900,
+      "beforeMs": 6.650689199999943,
+      "afterMs": 3.6830172999999378,
+      "speedup": 1.805771914240005
+    },
+    {
+      "locale": "en",
+      "useFast": true,
+      "cacheSize": 0,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 4.407640399999946,
+      "afterMs": 3.65389610000002,
+      "speedup": 1.206285093875527
+    },
+    {
+      "locale": "en",
+      "useFast": true,
+      "cacheSize": 64,
+      "name": "plain",
+      "inputUtf16": 10200,
+      "beforeMs": 1.2870216999999684,
+      "afterMs": 0.5197142999999415,
+      "speedup": 2.4764023233536454
+    },
+    {
+      "locale": "en",
+      "useFast": true,
+      "cacheSize": 64,
+      "name": "quotes",
+      "inputUtf16": 12900,
+      "beforeMs": 6.517741999999998,
+      "afterMs": 3.547790400000122,
+      "speedup": 1.8371271312983355
+    },
+    {
+      "locale": "en",
+      "useFast": true,
+      "cacheSize": 64,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 4.5841217000001055,
+      "afterMs": 3.8852700999999796,
+      "speedup": 1.1798720763326416
+    },
+    {
+      "locale": "ru",
+      "useFast": false,
+      "cacheSize": 0,
+      "name": "plain",
+      "inputUtf16": 11100,
+      "beforeMs": 3.808280999999988,
+      "afterMs": 3.0649067000000287,
+      "speedup": 1.2425438594916942
+    },
+    {
+      "locale": "ru",
+      "useFast": false,
+      "cacheSize": 0,
+      "name": "quotes",
+      "inputUtf16": 12600,
+      "beforeMs": 10.15794760000008,
+      "afterMs": 5.749827300000106,
+      "speedup": 1.7666526436367735
+    },
+    {
+      "locale": "ru",
+      "useFast": false,
+      "cacheSize": 0,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 7.719156099999964,
+      "afterMs": 6.610884900000019,
+      "speedup": 1.167643396725897
+    },
+    {
+      "locale": "ru",
+      "useFast": false,
+      "cacheSize": 64,
+      "name": "plain",
+      "inputUtf16": 11100,
+      "beforeMs": 2.547305299999971,
+      "afterMs": 1.8541616000000432,
+      "speedup": 1.3738313316379283
+    },
+    {
+      "locale": "ru",
+      "useFast": false,
+      "cacheSize": 64,
+      "name": "quotes",
+      "inputUtf16": 12600,
+      "beforeMs": 9.230015600000115,
+      "afterMs": 4.926536300000043,
+      "speedup": 1.8735304152737156
+    },
+    {
+      "locale": "ru",
+      "useFast": false,
+      "cacheSize": 64,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 7.8883798999999275,
+      "afterMs": 6.532238599999983,
+      "speedup": 1.2076074349151833
+    },
+    {
+      "locale": "ru",
+      "useFast": true,
+      "cacheSize": 0,
+      "name": "plain",
+      "inputUtf16": 11100,
+      "beforeMs": 3.7861865999999282,
+      "afterMs": 3.025941000000239,
+      "speedup": 1.2512427043354875
+    },
+    {
+      "locale": "ru",
+      "useFast": true,
+      "cacheSize": 0,
+      "name": "quotes",
+      "inputUtf16": 12600,
+      "beforeMs": 10.120173299999806,
+      "afterMs": 5.809190099999978,
+      "speedup": 1.7420971126422329
+    },
+    {
+      "locale": "ru",
+      "useFast": true,
+      "cacheSize": 0,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 7.836371700000018,
+      "afterMs": 6.289320600000065,
+      "speedup": 1.2459806389898358
+    },
+    {
+      "locale": "ru",
+      "useFast": true,
+      "cacheSize": 64,
+      "name": "plain",
+      "inputUtf16": 11100,
+      "beforeMs": 2.563232400000197,
+      "afterMs": 1.8041174000001774,
+      "speedup": 1.4207680719669047
+    },
+    {
+      "locale": "ru",
+      "useFast": true,
+      "cacheSize": 64,
+      "name": "quotes",
+      "inputUtf16": 12600,
+      "beforeMs": 9.255412600000273,
+      "afterMs": 4.965648000000146,
+      "speedup": 1.8638881773335525
+    },
+    {
+      "locale": "ru",
+      "useFast": true,
+      "cacheSize": 64,
+      "name": "addresses",
+      "inputUtf16": 12400,
+      "beforeMs": 7.91932850000012,
+      "afterMs": 6.493205000000307,
+      "speedup": 1.2196332165702062
+    }
+  ],
+  "workloads": {
+    "plain": {
+      "en": "Typography displays text clearly. ",
+      "ru": "Типографика показывает текст хорошо. ",
+      "repeat": 300
+    },
+    "quotes": {
+      "en": "\"The text has \"nested\" quotes\" and \"more\". ",
+      "ru": "\"Текст с \"кавычками\" внутри\" и \"снаружи\". ",
+      "repeat": 300
+    },
+    "addresses": {
+      "en": "\"cat\" https://example.com/a-b?q=1.25 user@example.com — text. ",
+      "ru": "\"cat\" https://example.com/a-b?q=1.25 user@example.com — text. ",
+      "repeat": 200
+    }
+  },
+  "sourceSha256": {
+    "packages/typographist/src/text/scanning/scan-addresses.util.ts": "d00d683e0304982e1a7f5813d546160c7ba1bdb1f7f0c6df3dba0e90e25445d3",
+    "packages/typographist/src/text/typography/bundled-quotes.factory.ts": "cceff818dc8b127979df8911b384423cc3cef2208ee7965b51384a995f57b08d",
+    "packages/typographist/src/text/typography/prepare-text-pipeline.util.ts": "fed1ead0ae0e988535f7f28b0f34388995c26c3b2ae0ad376f3cb93090b38f62",
+    "packages/typographist/src/text/typography/bundled-nonbreaking-spacing.factory.ts": "bfd1cb834169f14f57fba35554b383b931d7a95ed753ad7d5456941f7848b921"
+  }
+}

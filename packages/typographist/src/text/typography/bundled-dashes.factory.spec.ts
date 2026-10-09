@@ -1,0 +1,246 @@
+import { createBundledDashes } from '@/text/typography/bundled-dashes.factory.js';
+import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
+import { Typographist } from '@/typographist/typographist.js';
+
+describe('bundled prose dashes', () => {
+  it('matches Russian century reference fixtures while protecting words and identifiers', () => {
+    const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/centuries');
+    const format = prepareTextPipeline(rules, 'ru');
+    const fixtures = [
+      ['X-XI вв.', 'X–XI вв.'],
+      ['XV -- XVI', 'XV – XVI'],
+      ['I\u00a0-\u00a0V', 'I\u00a0–\u00a0V'],
+      ['XV‒XX', 'XV–XX'],
+      ['x-xi', 'x-xi'],
+      ['X−V', 'X−V'],
+      ['X\t-V', 'X\t-V'],
+    ] as const;
+
+    for (const [input, output] of fixtures) {
+      expect(format(input)).toBe(output);
+      expect(format(output)).toBe(output);
+    }
+    const unchanged = 'MIX-V X-VIDEO _X-V X-V1 X-V-X X\u0301-V 2026-10-08 +7-999-123-45-67';
+
+    expect(format(unchanged)).toBe(unchanged);
+    expect(format('')).toBe('');
+    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
+    expect(createBundledDashes('en').some((rule) => rule.id === 'ru/dash/centuries')).toBe(false);
+
+    for (const dash of ['-', '--', '‒', '–', '—', '−']) {
+      expect(prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/centuries': { dash } } })('X-XI')).toBe(
+        `X${dash}XI`,
+      );
+    }
+    for (const dash of ['', 'word', '1', '$&', '——']) {
+      expect(() => prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/centuries': { dash } } })).toThrow(
+        'dash must be',
+      );
+    }
+  });
+
+  it('combines century ranges with prose dashes, protections and both hyphenation algorithms', () => {
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content} X-XI XV - XVI https://example.com/X-XI X-XI@example.com I-V`;
+    const output = `${content} X–XI XV\u00a0– XVI https://example.com/X-XI X-XI@example.com I-V`;
+    const service = new Typographist({ locale: 'ru', categories: ['dashes'], protectedContent: ['I-V'] });
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
+
+    for (const useFast of [false, true]) {
+      const combined = new Typographist({ locale: 'ru', useFast });
+      const hyphenation = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+
+      expect(combined.format('X-XI')).toBe(hyphenation.format('X–XI'));
+    }
+  });
+
+  it('matches Russian month reference fixtures with symbolic settings and identifier protection', () => {
+    const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/month');
+    const format = prepareTextPipeline(rules, 'ru');
+    const fixtures = [
+      ['январь-март', 'январь–март'],
+      ['В МАЕ -- Июне', 'В МАЕ – Июне'],
+      ['май ‒июнь', 'май –июнь'],
+      ['июль—август', 'июль–август'],
+      ['января-марта', 'января-марта'],
+      ['январь-феврале', 'январь-феврале'],
+    ] as const;
+
+    for (const [input, output] of fixtures) {
+      expect(format(input)).toBe(output);
+      expect(format(output)).toBe(output);
+    }
+    const unchanged =
+      'xмай-июнь май-июньX _май-июнь май-июнь1 май\u0301-июнь май-июнь-июль май−июнь май\t-июнь май  -июнь май\u00a0-июнь';
+
+    expect(format(unchanged)).toBe(unchanged);
+    expect(format('')).toBe('');
+    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
+    expect(createBundledDashes('en').some((rule) => rule.id === 'ru/dash/month')).toBe(false);
+
+    for (const dash of ['-', '--', '‒', '–', '—', '−']) {
+      const configured = prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/month': { dash } } });
+
+      expect(configured('май-июнь')).toBe(`май${dash}июнь`);
+    }
+    for (const dash of ['', 'word', '1', '$&', '——']) {
+      expect(() => prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/month': { dash } } })).toThrow(
+        'dash must be',
+      );
+    }
+  });
+
+  it('combines Russian month ranges with protections and both hyphenation algorithms', () => {
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content} май-июнь май - июнь https://example.com/май-июнь user-name@example.com июль-август`;
+    const output = `${content} май–июнь май\u00a0— июнь https://example.com/май-июнь user-name@example.com июль-август`;
+    const service = new Typographist({ locale: 'ru', categories: ['dashes'], protectedContent: ['июль-август'] });
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
+
+    for (const useFast of [false, true]) {
+      const combined = new Typographist({ locale: 'ru', useFast });
+      const hyphenation = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+
+      expect(combined.format('май-июнь')).toBe(hyphenation.format('май–июнь'));
+    }
+  });
+
+  it('matches isolated Russian weekday reference fixtures and preserves identifier boundaries', () => {
+    const rules = createBundledDashes('ru').filter((rule) => rule.id === 'ru/dash/weekday');
+    const format = prepareTextPipeline(rules, 'ru');
+    const fixtures = [
+      ['понедельник-пятница', 'понедельник–пятница'],
+      ['ВТОРНИК -- Суббота', 'ВТОРНИК – Суббота'],
+      ['среда ‒четверг', 'среда –четверг'],
+      ['пятница–воскресенье', 'пятница–воскресенье'],
+      ['суббота — понедельник', 'суббота – понедельник'],
+    ] as const;
+
+    for (const [input, output] of fixtures) {
+      expect(format(input)).toBe(output);
+      expect(format(output)).toBe(output);
+    }
+    const unchanged =
+      'среда−четверг среда\t-четверг среда  -четверг среда\u00a0-четверг среда-пятница-воскресенье ' +
+      'xсреда-пятница среда-пятницаX _среда-пятница среда-пятница1 среда\u0301-пятница monday-friday';
+
+    expect(format(unchanged)).toBe(unchanged);
+    expect(format('')).toBe('');
+    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
+    expect(createBundledDashes('en').some((rule) => rule.id === 'ru/dash/weekday')).toBe(false);
+
+    for (const dash of ['-', '--', '‒', '–', '—', '−']) {
+      const configured = prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/weekday': { dash } } });
+
+      expect(configured('среда-пятница')).toBe(`среда${dash}пятница`);
+    }
+    for (const dash of ['', 'word', '1', '$&', '——']) {
+      expect(() => prepareTextPipeline(rules, 'ru', { settings: { 'ru/dash/weekday': { dash } } })).toThrow(
+        'dash must be',
+      );
+    }
+  });
+
+  it('combines Russian weekday ranges with protections, prose dashes and hyphenation', () => {
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content} среда-пятница среда - пятница https://example.com/среда-пятница user-name@example.com вторник-суббота`;
+    const output = `${content} среда–пятница среда\u00a0— пятница https://example.com/среда-пятница user-name@example.com вторник-суббота`;
+    const service = new Typographist({ locale: 'ru', categories: ['dashes'], protectedContent: ['вторник-суббота'] });
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale: 'ru', categories: [] }).format(input)).toBe(input);
+
+    for (const useFast of [false, true]) {
+      const combined = new Typographist({ locale: 'ru', useFast });
+      const hyphenation = new Typographist({ locale: 'ru', useFast, categories: ['hyphenation'] });
+
+      expect(combined.format('среда-пятница')).toBe(hyphenation.format('среда–пятница'));
+    }
+  });
+
+  it.each(['en', 'ru'] as const)('matches reference glyph and whitespace cases for %s', (locale) => {
+    const rules = createBundledDashes(locale);
+    const format = prepareTextPipeline(rules, locale);
+
+    for (const dash of ['-', '--', '‒', '–', '—']) {
+      for (const before of [' ', '\u00a0']) {
+        for (const after of [' ', '\u00a0', '\n']) {
+          expect(format(`word${before}${dash}${after}next`)).toBe(`word\u00a0—${after}next`);
+        }
+      }
+    }
+    const unchanged = '- start a-b 1-2 -3 2026-10-08 +7-999-123-45-67 a --- b a\t- b a -\tb a − b';
+    const normalized = unchanged.replace(' -3 ', ' −3 ');
+
+    expect(format(unchanged)).toBe(locale === 'ru' ? normalized.replace(/^- /, '—\u00a0') : normalized);
+    expect(format('end -')).toBe('end -');
+    expect(format('')).toBe('');
+    expect(format(' \r\n\t ')).toBe(' \r\n\t ');
+
+    for (const rule of rules) {
+      expect(() => prepareTextPipeline(rules, locale, { settings: { [rule.id]: { unknown: true } } })).toThrow(
+        'Invalid setting',
+      );
+    }
+  });
+
+  it.each(['en', 'ru'] as const)('preserves composition, protections and category selection for %s', (locale) => {
+    const service = new Typographist({ locale, categories: ['dashes'], protectedContent: ['Keep - this'] });
+    const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+    const input = `${content} word - next https://example.com/a-b user-name@example.com Keep - this`;
+    const output = `${content} word\u00a0— next https://example.com/a-b user-name@example.com Keep - this`;
+
+    expect(service.format(input)).toBe(output);
+    expect(service.format(output)).toBe(output);
+    expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    expect(new Typographist({ locale, categories: ['punctuation'] }).format(input)).toBe(input);
+  });
+
+  it.each([false, true])('runs after spacing and before hyphenation with useFast=%s', (useFast) => {
+    const service = new Typographist({ useFast });
+    const legacy = new Typographist({ useFast, categories: ['hyphenation'] });
+
+    expect(service.format('table - table')).toBe(legacy.format('table\u00a0— table'));
+    expect(legacy.format('table - table')).toBe(`${legacy.format('table')} - ${legacy.format('table')}`);
+  });
+
+  it('does not bundle dashes for consumer locales', () => {
+    expect(createBundledDashes('custom')).toEqual([]);
+  });
+
+  describe.each(['en', 'ru'] as const)('spacing and dash interactions for %s', (locale) => {
+    it.each([0, 64])('preserves protected content and hyphenation with cache=%s MiB', (cacheSize) => {
+      const protectedText = 'Keep\t -  this';
+      const content = '$100 100 руб. 12345 1.25 1/2 2026-10-08 +7-999-123-45-67 word word MiXeD мiкс e\u0301 😀';
+      const addresses = 'https://example.com/a-b user-name@example.com';
+      const inputRanges = locale === 'ru' ? 'среда-пятница\tмай-июнь X-XI' : 'monday-friday\tMay-June X-XI';
+      const outputRanges = locale === 'ru' ? 'среда–пятница\tмай–июнь X–XI' : 'monday-friday\tMay-June X-XI';
+      const input = `  ${inputRanges} table - table ${content} ${addresses} ${protectedText}  `;
+      const cleaned = `  ${outputRanges} table\u00a0— table ${content} ${addresses} ${protectedText}  `;
+      const service = new Typographist({
+        locale,
+        cacheSize,
+        categories: ['spacing', 'dashes', 'hyphenation'],
+        protectedContent: [protectedText],
+      });
+      const hyphenation = new Typographist({
+        locale,
+        cacheSize,
+        categories: ['hyphenation'],
+        protectedContent: [protectedText],
+      });
+      const expected = hyphenation.format(cleaned);
+
+      expect(service.format(input)).toBe(expected);
+      expect(service.format(expected)).toBe(expected);
+      expect(new Typographist({ locale, categories: [] }).format(input)).toBe(input);
+    });
+  });
+});

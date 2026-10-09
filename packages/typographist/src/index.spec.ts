@@ -103,10 +103,11 @@ describe('public package API', () => {
     expect(typographist.removeRules('de')).toBe(true);
   });
 
-  it('exposes two runtime classes and three Typographist methods', () => {
+  it('exposes two runtime classes and four Typographist methods', () => {
     expect(Object.keys(api).sort()).toEqual(['Typographist', 'TypographistRules']);
     expect(Object.getOwnPropertyNames(Typographist.prototype).sort()).toEqual([
       'addRules',
+      'addTextLocale',
       'constructor',
       'format',
       'removeRules',
@@ -204,10 +205,43 @@ describe('public package API', () => {
     const missing = new TypographistRules({ standard, fast });
     Reflect.set(missing, 'compile', () => standard);
     expect(() => new Typographist({ rules: [missing], useFast: true })).toThrow('requires Khristov');
-    const incomplete: unknown = Reflect.construct(TypographistRules, [{ standard }]);
-    if (!(incomplete instanceof TypographistRules)) throw new Error('Missing rules instance');
-    expect(() => new Typographist({ rules: [incomplete], useFast: true })).toThrow('Supply data');
     expect(() => new Typographist({ rules: [new TypographistRules()] })).toThrow('Supply rule sets');
+  });
+
+  it('requires both declarative datasets at the public boundary', () => {
+    const standard: CompiledRules = { locale: 'en', alphabet: 'ab', leftMin: 1, rightMin: 1, patterns: [] };
+    const fast: KhristovRules = {
+      locale: 'en',
+      alphabet: 'ab',
+      leftMin: 1,
+      rightMin: 1,
+      vowels: 'a',
+      consonants: 'b',
+      specialLetters: '',
+    };
+
+    expect(() => {
+      // @ts-expect-error Declarative rules require fast data too.
+      new TypographistRules({ standard });
+    }).toThrow('Supply both standard and fast');
+    expect(() => {
+      // @ts-expect-error Declarative rules require standard data too.
+      new TypographistRules({ fast });
+    }).toThrow('Supply both standard and fast');
+    expect(() => {
+      // @ts-expect-error Empty declarative data is invalid.
+      new TypographistRules({});
+    }).toThrow('Supply both standard and fast');
+  });
+
+  it.each([false, true])('retains registered rules when subclass compilation fails with useFast=%s', (useFast) => {
+    const instance = new Typographist({ useFast });
+    const before = instance.format('hyphenation');
+
+    expect(() => {
+      instance.addRules(new TypographistRules());
+    }).toThrow('Supply rule sets');
+    expect(instance.format('hyphenation')).toBe(before);
   });
 
   it.each([false, true])('retains registration when selected data is incompatible with useFast=%s', (useFast) => {

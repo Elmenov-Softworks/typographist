@@ -1,7 +1,8 @@
 # Typographist
 
 Typography libraries for JavaScript and components for Vue, React, and Solid.
-The core package inserts soft hyphens without changing original characters.
+The core package applies symbolic typography and inserts soft hyphens.
+Letters, case, word order and numeric notation are preserved by bundled rules.
 The framework packages are currently placeholders.
 
 ```ts
@@ -9,6 +10,7 @@ import { Typographist } from '@elmenov-softworks/typographist';
 
 const typographist = new Typographist({
   locale: 'en',
+  categories: ['hyphenation'],
   excludedWords: ['Typographist'],
   useFast: false,
 });
@@ -16,6 +18,56 @@ const typographist = new Typographist({
 typographist.format('table'); // 'ta\u00adble'
 typographist.format('асбест', 'ru'); // 'ас\u00adбест'
 ```
+
+Quotation spacing defaults to narrow NBSP (U+202F) immediately inside Russian
+and English quotation pairs. It replaces one ordinary boundary space or inserts
+a gap when none exists, preserving additional whitespace and existing NBSPs.
+Tabs, line endings and protected bytes remain unchanged. Use
+`settings: { 'common/punctuation/quote': { spacing: false } }` to disable it.
+
+Omitting `categories` selects `quotes`, `dashes`, `punctuation`,
+`nonbreakingSpacing`, and `hyphenation`. Consumer `spacing` rules require explicit
+category selection. This changes the previous
+hyphenation-only default: punctuation and whitespace can now change before soft
+hyphens are inserted. To retain the previous behavior, use
+`categories: ['hyphenation']` as above. `useFast` changes only the hyphenation
+algorithm, independently of selected text categories.
+
+| Category             | Behavior                                                           |
+| -------------------- | ------------------------------------------------------------------ |
+| `quotes`             | Russian and English quotation pairs, nesting and boundary NBSPs.   |
+| `dashes`             | Supported prose and range separators, and clear unary minus signs. |
+| `punctuation`        | Apostrophe and ellipsis glyph conversion; repeated signs stay.     |
+| `spacing`            | Consumer-supplied spacing rules; no bundled rules.                 |
+| `nonbreakingSpacing` | Supported word, abbreviation, number-label and unit bindings.      |
+| `hyphenation`        | Soft hyphens from the selected existing algorithm.                 |
+
+```ts
+const punctuation = new Typographist({ categories: ['punctuation'] });
+punctuation.format('Wait...'); // 'Wait…', without soft hyphens
+
+const unchanged = new Typographist({ categories: [] });
+unchanged.format('  Wait...  '); // '  Wait...  '
+```
+
+Explicit category lists replace the default selection; an empty list disables
+formatting but still validates text and requires a registered locale. Settings
+override the selected rule's defaults; they do not select categories. Unknown
+rule IDs, undeclared setting names and mismatched primitive types are rejected.
+Bundled rule settings apply only where that rule supports the registered locale;
+Russian settings can coexist with English and consumer typography-only locales.
+They do not add bundled capabilities to consumer locales.
+Enabled rules also validate setting ranges during preparation. Bundled rules do not
+clean whitespace or correct repeated punctuation. Removed cleanup settings are invalid. See the
+[rule catalogue](specs/feature/typography/typograf-rule-inventory.md) for individual
+defaults, settings, ordering, reference IDs and deviations.
+
+`rules` continues to supply hyphenation datasets; it does not select formatting
+categories. `textRules` supplies shared symbolic rules and `textLocales` registers
+locales with symbolic rules but no hyphenation data. No Typograf runtime dependency
+is required. Bundled typography covers `en` and `ru` only. The `en` typography
+currently shares the implemented behavior of reference `en-US` and `en-GB`; neither
+regional identifier is registered automatically. There is no region fallback.
 
 Configuration defaults to `locale: 'en'`, English and Russian rules, no excluded
 words, and `useFast: false`. Standard mode uses Knuth–Liang patterns. Set
@@ -43,10 +95,11 @@ limit: physical memory varies by runtime. Prepared rules and temporary
 formatting allocations are outside the budget. The budget allocates nothing
 up front; entries larger than it are formatted without retention.
 
-An instance has three public methods:
+An instance has four public methods:
 
 - `format(text, locale?)` selects the call's locale or the configured default.
 - `addRules(rules)` compiles and adds or replaces the plugin's locale atomically.
+- `addTextLocale(definition)` adds or atomically replaces a typography-only locale.
 - `removeRules(locale)` removes the locale and returns whether it was registered.
 
 Unknown locales throw. The default locale must be registered at construction;
@@ -54,10 +107,82 @@ removing it makes formatting without an override fail until rules are added
 again. Duplicate locales in the constructor are rejected. Configuration arrays
 and rule data are snapshotted during preparation. Excluded words use exact,
 case-sensitive matches. Existing soft hyphens, identifiers, addresses and
-unsupported complete words retain the existing preservation behavior.
+unsupported complete words retain the existing hyphenation preservation behavior.
+`excludedWords` excludes only hyphenation; surrounding typography still runs.
+Recognized URLs, emails and nonempty `protectedContent` literals bypass both text
+rules and hyphenation. Identifier filters belong to hyphenation and do not disable
+surrounding whitespace or punctuation rules. Plain-text formatting does not sanitize
+HTML or generate markup.
 
-Custom plugins extend `TypographistRules`. Its constructor requires both
-algorithm datasets; subclasses can instead override the synchronous `compile`
+Text handlers run on unprotected segments in ascending `order`, followed by
+hyphenation. Equal priorities preserve registration order: bundled rules, shared
+`textRules`, then locale-owned rules. Protection can split a sentence or quotation
+across segments; custom handlers must not assume they receive the entire input.
+Their optional context identifies original line and complete-text boundaries.
+Preparation runs once per locale registration. Handlers must synchronously return
+a string; promises and other result types throw. Custom handlers own their
+content-preservation and repeated-formatting behavior.
+
+Bundled rules no longer convert CRLF or lone CR to LF. The removed
+`common/space/normalizeLineEndings` builtin ID is rejected in settings.
+
+Existing NBSPs are preserved instead of being converted to ordinary spaces before
+nonbreaking bindings. The removed `common/nbsp/replaceNbsp` builtin ID is rejected
+in settings.
+
+A typography-only locale needs no fabricated patterns or letter classifications:
+
+```ts
+import type { TextLocale } from '@elmenov-softworks/typographist';
+
+const exampleLocale: TextLocale<'example'> = {
+  locale: 'example',
+  textRules: [
+    {
+      id: 'example/quotes',
+      category: 'quotes',
+      order: 410,
+      defaults: {},
+      prepare: () => (text) => text.replace(/"([^"\n]+)"/g, '‹$1›'),
+    },
+    {
+      id: 'example/spacing',
+      category: 'spacing',
+      order: 210,
+      defaults: {},
+      prepare: () => (text) => text.replace(/ {2,}/g, ' '),
+    },
+  ],
+};
+
+const customText = new Typographist<'example'>({
+  locale: 'example',
+  rules: [],
+  textLocales: [exampleLocale],
+  categories: ['quotes', 'spacing'],
+});
+customText.format('"hello"  world'); // '‹hello› world'
+```
+
+This small consumer rule handles paired straight quotes only; it does not provide
+nested or unmatched quotation handling. Consumer locales receive no implicit
+bundled rules. Omitting categories uses their available text capabilities;
+explicitly selecting `hyphenation` for a typography-only locale throws. Successful
+replacement clears the shared word cache; failed registration preserves prior
+state. Supply algorithm data through `TypographistRules` when hyphenation is needed.
+
+Built-in repeated-formatting scenarios are tested. Russian day–month range bindings
+remain stable after removal of NBSP normalization. Some nonglobal bindings require
+additional passes when several matches occur in one segment. See the
+[catalogue's repeated-formatting notes](specs/feature/typography/typograf-rule-inventory.md#repeated-formatting-regressions).
+Bundled quotation handling, reference coverage and completed-feature benchmarks
+are implemented and recorded. Complete independent review and final owner acceptance
+remain open; no publication is authorized. See the
+[verification record](specs/feature/typography/checklists/requirements.md).
+
+Custom plugins extend `TypographistRules`. Its declarative constructor requires both
+standard and fast algorithm datasets. Subclasses
+can instead override the synchronous `compile`
 operation when they own the storage. No runtime algorithm or normalization
 internals are needed:
 
@@ -105,16 +230,16 @@ not promise language coverage for externally supplied rules.
 
 Supplying `rules` in the constructor replaces the bundled list. `compile` runs
 once per registration and receives the configured `useFast` value. The base
-class accepts `{ standard, fast }`: `standard` is `CompiledRules` with
+class requires `{ standard, fast }`: `standard` is `CompiledRules` with
 Knuth–Liang patterns, and `fast` is `KhristovRules` with `vowels`, `consonants`,
 and `specialLetters`. Both share `LanguageRules`: locale, alphabet, break minima
 and optional explicit exceptions. Subclasses can inherit this compiler or
 override it with a normal method or function property. An override must return
 Khristov data for `compile(true)` and Knuth–Liang data for `compile(false)`.
 
-Migration is required for custom rules that previously supplied only patterns
-or relied on an omitted `fast` dataset. Supply both datasets, including a
-complete classification of the supported alphabet for Khristov. Missing or
+The example above supplies both datasets. `useFast` selects the algorithm; it
+does not make either declarative dataset optional. Subclass overrides remain
+responsible for returning data compatible with the selected algorithm. Missing or
 incompatible selected data fails registration; there is no fallback to another
 algorithm. Invalid replacement data leaves the previous registration usable.
 

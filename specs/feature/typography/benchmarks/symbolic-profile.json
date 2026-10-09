@@ -1,0 +1,841 @@
+{
+  "node": "v24.21.0",
+  "baselineCommit": "9cbda8622f7fa26a206865f578151b933db7fa00",
+  "sourceFileSha256": {
+    "rules/rules-registry.ts": "5686519885e1e1c58c8f03e212dbeb493c3452d56b41d8092d62b810e46308bb",
+    "text/scanning/scan-addresses.util.ts": "b2eb244a65f6c35de4c2f2e5d31fc7a3227005a9d2e05df2f4e6f22ec5216b46",
+    "text/typography/bundled-dashes.factory.ts": "e834cbabf861285db973020c12ac6c8a59328ce455f5ba5b1a1d7de2b0565713",
+    "text/typography/bundled-quotes.factory.ts": "d735daec3b03b756edc181f768503f8711c35c08281d9a87c3c1658647d14509",
+    "text/typography/prepare-text-pipeline.util.ts": "374969f23c17d53d92c1f630082289c4c726b6e5de010e3ee891a2bf7e0af5e0"
+  },
+  "procedure": "Node --cpu-prof over four workloads and six category selections, with hyphenation disabled. Profile collection includes imports, setup, warmups, formatting and result I/O. Category timings use twenty warmups and nine batches of twenty calls in fixed order. CPU sampling adds overhead; diagnostic times are not the unprofiled competitor benchmark. Self-sample fractions describe this run and are not general CPU utilization or retained memory.",
+  "before": {
+    "cpu": {
+      "sampleCount": 6737,
+      "topSelfSamples": [
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/languages/analysis/alphabet-normalizer.factory.js",
+          "line": 5,
+          "samples": 664,
+          "fraction": 0.09856018999554698
+        },
+        {
+          "function": "scanAddresses",
+          "source": "file://dist/text/scanning/scan-addresses.util.js",
+          "line": 41,
+          "samples": 658,
+          "fraction": 0.0976695858690812
+        },
+        {
+          "function": "transform",
+          "source": "file://dist/text/typography/prepare-text-pipeline.util.js",
+          "line": 76,
+          "samples": 646,
+          "fraction": 0.09588837761614963
+        },
+        {
+          "function": "(garbage collector)",
+          "source": "",
+          "line": 0,
+          "samples": 436,
+          "fraction": 0.06471723318984711
+        },
+        {
+          "function": "scanCandidates",
+          "source": "file://dist/text/scanning/scan-candidates.util.js",
+          "line": 2,
+          "samples": 398,
+          "fraction": 0.05907674038889713
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-quotes.factory.js",
+          "line": 80,
+          "samples": 351,
+          "fraction": 0.05210034139824848
+        },
+        {
+          "function": "preserves",
+          "source": "file://dist/text/exclusions/prepare-exclusions.util.js",
+          "line": 20,
+          "samples": 293,
+          "fraction": 0.04349116817574588
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-dashes.factory.js",
+          "line": 130,
+          "samples": 234,
+          "fraction": 0.034733560932165654
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/prepare-text-pipeline.util.js",
+          "line": 109,
+          "samples": 165,
+          "fraction": 0.024491613477809114
+        },
+        {
+          "function": "RegExp: [A-Za-z0-9+.-]",
+          "source": "",
+          "line": 0,
+          "samples": 157,
+          "fraction": 0.023304141309188064
+        },
+        {
+          "function": "RegExp: [A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]",
+          "source": "",
+          "line": 0,
+          "samples": 155,
+          "fraction": 0.023007273267032804
+        },
+        {
+          "function": "RegExp: [\\p{L}\\p{M}\\p{N}_\\u00ad]+(?:['\\u2019\\u2011][\\p{L}\\p{M}\\p{N}_\\u00ad]+|[\\u200c\\u200d\\p{Cs}]+[\\p{L}\\p{M}\\p{N}_\\u00ad]+)*",
+          "source": "",
+          "line": 0,
+          "samples": 154,
+          "fraction": 0.022858839245955172
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/prepare-text-pipeline.util.js",
+          "line": 118,
+          "samples": 148,
+          "fraction": 0.021968235119489386
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-dashes.factory.js",
+          "line": 113,
+          "samples": 125,
+          "fraction": 0.018554252634703873
+        },
+        {
+          "function": "RegExp: (?<![\\p{L}\\p{M}\\p{N}_-])(понедельник|вторник|среда|четверг|пятница|суббота|воскресенье)( ?)(?:--?|‒|–|—)( ?)(понедельник|вторник|среда|четверг|пятница|суббота|воскресенье)(?![\\p{L}\\p{M}\\p{N}_-])",
+          "source": "",
+          "line": 0,
+          "samples": 84,
+          "fraction": 0.012468457770521003
+        },
+        {
+          "function": "candidateAt",
+          "source": "file://dist/text/typography/prepare-text-pipeline.util.js",
+          "line": 117,
+          "samples": 82,
+          "fraction": 0.012171589728365741
+        },
+        {
+          "function": "RegExp: (?<![\\p{L}\\p{M}\\p{N}_-])(январь|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь)( ?)(?:--?|‒|–|—)( ?)(январь|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь)(?![\\p{L}\\p{M}\\p{N}_-])",
+          "source": "",
+          "line": 0,
+          "samples": 78,
+          "fraction": 0.011577853644055218
+        },
+        {
+          "function": "preservesCandidate",
+          "source": "file://dist/text/create-hyphenator.factory.js",
+          "line": 13,
+          "samples": 72,
+          "fraction": 0.01068724951758943
+        },
+        {
+          "function": "custom",
+          "source": "file://dist/text/create-hyphenator.factory.js",
+          "line": 6,
+          "samples": 70,
+          "fraction": 0.01039038147543417
+        },
+        {
+          "function": "RegExp: (?<![\\p{L}\\p{M}\\p{N}_-])(январе|феврале|марте|апреле|мае|июне|июле|августе|сентябре|октябре|ноябре|декабре)( ?)(?:--?|‒|–|—)( ?)(январе|феврале|марте|апреле|мае|июне|июле|августе|сентябре|октябре|ноябре|декабре)(?![\\p{L}\\p{M}\\p{N}_-])",
+          "source": "",
+          "line": 0,
+          "samples": 68,
+          "fraction": 0.010093513433278908
+        },
+        {
+          "function": "RegExp: \\p{N}",
+          "source": "",
+          "line": 0,
+          "samples": 56,
+          "fraction": 0.008312305180347335
+        },
+        {
+          "function": "RegExp: ([^\\s«‹»›„“‟”\"«‹»›„“‟”\"][ \\t\\u00a0\\u202f]+|[^\\s«‹»›„“‟”\"«‹»›„“‟”\"]|(?<![«‹»›„“‟”\"])[«‹»›„“‟”\"])([«‹»›„“‟”\"]+)(?=[ \\r\\n\\t\\u00a0!?.:;#*,…)\\]\\\\]|$)",
+          "source": "",
+          "line": 0,
+          "samples": 53,
+          "fraction": 0.007867003117114442
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/prepare-minus.util.js",
+          "line": 2,
+          "samples": 50,
+          "fraction": 0.0074217010538815496
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-dashes.factory.js",
+          "line": 19,
+          "samples": 44,
+          "fraction": 0.006531096927415764
+        },
+        {
+          "function": "RegExp: \\p{Ll}\\p{Lu}",
+          "source": "",
+          "line": 0,
+          "samples": 43,
+          "fraction": 0.006382662906338133
+        }
+      ]
+    },
+    "categories": [
+      {
+        "workload": "long-en",
+        "categories": [],
+        "medianMs": 0.00033214999999984227,
+        "samplesMs": [
+          0.0003382000000001995, 0.00033214999999984227, 0.0017139500000006081, 0.0004523499999997682,
+          0.00030709999999984917, 0.0003142999999994345, 0.0011315500000002032, 0.0002758499999998776,
+          0.00019759999999990896
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["quotes"],
+        "medianMs": 2.746968850000002,
+        "samplesMs": [
+          3.02130525, 2.608973499999999, 3.4963547500000005, 2.319004749999999, 2.2769391500000014, 3.4916470000000004,
+          3.7688917500000003, 2.746968850000002, 2.213021250000003
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["dashes"],
+        "medianMs": 1.957996300000002,
+        "samplesMs": [
+          1.9332296999999983, 2.0694954499999993, 1.8910896999999978, 1.957996300000002, 1.9310812, 1.9256024500000024,
+          2.0054024000000026, 2.070285000000001, 2.0968171499999926
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["punctuation"],
+        "medianMs": 1.9759435999999937,
+        "samplesMs": [
+          2.016003499999999, 2.034592799999996, 1.9777057499999955, 1.9602913499999999, 1.9402586499999983,
+          1.9745129500000076, 1.9759435999999937, 1.5963554000000044, 1.977479249999999
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 2.1307699500000012,
+        "samplesMs": [
+          2.042744349999998, 2.3725716000000032, 2.2262654500000054, 2.246440949999999, 2.1069691499999976,
+          2.135484550000001, 1.8158742500000016, 2.1307699500000012, 2.052716099999998
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 2.829970000000003,
+        "samplesMs": [
+          3.1499964999999976, 2.9862206499999955, 2.829970000000003, 2.791788600000018, 2.786314149999998,
+          2.9841730999999982, 2.803765500000009, 2.8097787499999867, 3.105120800000009
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": [],
+        "medianMs": 8.829999999306892e-5,
+        "samplesMs": [
+          0.0002020500000071479, 9.724999999889405e-5, 9.310000000368745e-5, 8.705000000190921e-5, 8.829999999306892e-5,
+          8.665000000291911e-5, 9.064999999282008e-5, 8.579999998801214e-5, 8.524999998371641e-5
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["quotes"],
+        "medianMs": 2.672596849999991,
+        "samplesMs": [
+          2.6659933499999853, 2.672596849999991, 2.898989850000021, 2.667511400000012, 2.6715012500000057,
+          2.697430150000014, 2.791780349999999, 2.6317687500000146, 2.728056349999997
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["dashes"],
+        "medianMs": 3.8680269499999893,
+        "samplesMs": [
+          3.909679600000004, 4.111359249999987, 3.8418944499999954, 3.797163599999999, 3.8037135000000033,
+          3.7914571499999967, 3.8680269499999893, 4.175318000000016, 3.992625649999991
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["punctuation"],
+        "medianMs": 2.346955349999962,
+        "samplesMs": [
+          2.03486869999997, 2.402349950000007, 2.328121850000025, 2.3334309999999734, 2.346955349999962,
+          2.3658237499999815, 2.367636749999974, 2.3675835000000007, 1.9961574499999641
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 3.4905529000000115,
+        "samplesMs": [
+          3.509857150000016, 3.4905529000000115, 3.511650899999995, 3.3830052499999965, 3.4075124499999676,
+          3.494892250000021, 3.6936267999999925, 3.2684095999999956, 3.4240111999999954
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 5.838142199999993,
+        "samplesMs": [
+          5.801846049999995, 5.9302000000000135, 5.838142199999993, 5.894730299999992, 5.662659150000036,
+          6.311777200000006, 5.773151550000011, 5.883684850000009, 5.680504550000023
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": [],
+        "medianMs": 6.499999999505235e-5,
+        "samplesMs": [
+          0.0001999000000068918, 7.040000000415602e-5, 6.594999999833817e-5, 6.499999999505235e-5, 6.53500000225904e-5,
+          6.410000000869331e-5, 6.45500000246102e-5, 6.379999999808205e-5, 6.45500000246102e-5
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["quotes"],
+        "medianMs": 0.41158195000002706,
+        "samplesMs": [
+          0.41158195000002706, 0.40973159999998643, 0.4023935000000165, 0.4392864500000087, 0.4069822999999815,
+          0.4225738999999976, 0.4011899000000085, 0.4298980000000029, 0.4435447999999724
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["dashes"],
+        "medianMs": 0.04027059999998528,
+        "samplesMs": [
+          0.041321099999959185, 0.0413624499999969, 0.03961104999998497, 0.03873845000002803, 0.0425300999999763,
+          0.039236549999986894, 0.040374200000042035, 0.04027059999998528, 0.040049199999975825
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["punctuation"],
+        "medianMs": 0.029679900000019188,
+        "samplesMs": [
+          0.02802910000000338, 0.030059049999999844, 0.029679900000019188, 0.03864825000000564, 0.03780834999997751,
+          0.026546049999979004, 0.029519050000044445, 0.028136899999981323, 0.03205575000001772
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 0.200234300000011,
+        "samplesMs": [
+          0.20542154999998274, 0.1929945499999576, 0.22469670000000405, 0.19812754999998106, 0.19726924999999937,
+          0.2199746999999661, 0.2013032999999723, 0.200234300000011, 0.19307550000003176
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 0.7436114999999972,
+        "samplesMs": [
+          0.7229049999999916, 0.7257493999999951, 0.7838594499999999, 0.7626976999999897, 0.733687800000007,
+          0.7436114999999972, 0.7524335499999779, 0.7372780000000148, 0.7526541999999609
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": [],
+        "medianMs": 6.840000000920554e-5,
+        "samplesMs": [
+          0.00012400000000525324, 7.124999997358828e-5, 6.674999999631837e-5, 6.865000000289001e-5,
+          6.840000000920554e-5, 6.709999997838168e-5, 6.625000000894942e-5, 7.095000000845175e-5, 6.53000000056636e-5
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["quotes"],
+        "medianMs": 0.4584167499999694,
+        "samplesMs": [
+          0.44977279999998243, 0.46203974999998537, 0.4934235499999886, 0.4584167499999694, 0.45071079999997893,
+          0.4857167500000287, 0.5020697999999811, 0.44999480000001313, 0.4498317500000212
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["dashes"],
+        "medianMs": 0.9374375000000328,
+        "samplesMs": [
+          0.9582001500000388, 0.9888104999999996, 0.9353783999999905, 0.9160221999999976, 0.9374375000000328,
+          0.9360151500000029, 0.9605833000000075, 0.9486069000000044, 0.9352785499999754
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["punctuation"],
+        "medianMs": 0.026637350000009975,
+        "samplesMs": [
+          0.027339800000027024, 0.029894999999987702, 0.026637350000009975, 0.026549750000003768, 0.029526749999968162,
+          0.025120449999985795, 0.024714949999997772, 0.025405700000010255, 0.027564299999994546
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 0.48663149999997585,
+        "samplesMs": [
+          0.48992075000001023, 0.48966880000002677, 0.4752903499999775, 0.5420835000000352, 0.4791747999999643,
+          0.49099975000003726, 0.4718956000000162, 0.48663149999997585, 0.47543265000003887
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 1.982908449999968,
+        "samplesMs": [
+          1.97411404999998, 1.9364502999999786, 1.982908449999968, 1.9563566499999978, 1.992151100000001,
+          2.024612550000029, 2.0245900500000062, 2.0419403500000044, 1.9461033000000043
+        ]
+      }
+    ]
+  },
+  "after": {
+    "cpu": {
+      "sampleCount": 2307,
+      "topSelfSamples": [
+        {
+          "function": "transform",
+          "source": "file://dist/text/typography/prepare-text-pipeline.util.js",
+          "line": 76,
+          "samples": 349,
+          "fraction": 0.15127871694841785
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-quotes.factory.js",
+          "line": 108,
+          "samples": 169,
+          "fraction": 0.07325530992631123
+        },
+        {
+          "function": "(garbage collector)",
+          "source": "",
+          "line": 0,
+          "samples": 96,
+          "fraction": 0.04161248374512354
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/prepare-text-pipeline.util.js",
+          "line": 112,
+          "samples": 83,
+          "fraction": 0.035977459904638055
+        },
+        {
+          "function": "scanAddresses",
+          "source": "file://dist/text/scanning/scan-addresses.util.js",
+          "line": 41,
+          "samples": 82,
+          "fraction": 0.035543996532293023
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-dashes.factory.js",
+          "line": 20,
+          "samples": 59,
+          "fraction": 0.025574338968357174
+        },
+        {
+          "function": "RegExp: ([^\\s«‹»›„“‟”\"«‹»›„“‟”\"][ \\t\\u00a0\\u202f]+|[^\\s«‹»›„“‟”\"«‹»›„“‟”\"]|(?<![«‹»›„“‟”\"])[«‹»›„“‟”\"])([«‹»›„“‟”\"]+)(?=[ \\r\\n\\t\\u00a0!?.:;#*,…)\\]\\\\]|$)",
+          "source": "",
+          "line": 0,
+          "samples": 53,
+          "fraction": 0.022973558734286952
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-nonbreaking-spacing.factory.js",
+          "line": 186,
+          "samples": 50,
+          "fraction": 0.021673168617251843
+        },
+        {
+          "function": "RegExp: www\\.|:\\/\\/|@",
+          "source": "",
+          "line": 0,
+          "samples": 42,
+          "fraction": 0.018205461638491547
+        },
+        {
+          "function": "RegExp: (^|[ \\u00a0(«‹»›„“‟”\"])([a-z]{1,2}) (?= *\\S)",
+          "source": "",
+          "line": 0,
+          "samples": 42,
+          "fraction": 0.018205461638491547
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-nonbreaking-spacing.factory.js",
+          "line": 52,
+          "samples": 41,
+          "fraction": 0.017771998266146512
+        },
+        {
+          "function": "RegExp: (^|[ \\u00a0(«‹»›„“‟”\"])(a|an|and|as|at|bar|but|by|for|if|in|nor|not|of|off|on|or|out|per|pro|so|the|to|up|via|yet) (?= *\\S)",
+          "source": "",
+          "line": 0,
+          "samples": 41,
+          "fraction": 0.017771998266146512
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-dashes.factory.js",
+          "line": 70,
+          "samples": 38,
+          "fraction": 0.0164716081491114
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-dashes.factory.js",
+          "line": 169,
+          "samples": 36,
+          "fraction": 0.015604681404421327
+        },
+        {
+          "function": "RegExp: (^|\\s)([а-яё]{1,3})\\. ?([а-яё]{1,3})\\.",
+          "source": "",
+          "line": 0,
+          "samples": 35,
+          "fraction": 0.01517121803207629
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/prepare-minus.util.js",
+          "line": 2,
+          "samples": 34,
+          "fraction": 0.014737754659731253
+        },
+        {
+          "function": "RegExp: (январе|феврале|марте|апреле|мае|июне|июле|августе|сентябре|октябре|ноябре|декабре)( ?)(?:--?|‒|–|—)( ?)(январе|феврале|марте|апреле|мае|июне|июле|августе|сентябре|октябре|ноябре|декабре)",
+          "source": "",
+          "line": 0,
+          "samples": 26,
+          "fraction": 0.011270047680970958
+        },
+        {
+          "function": "RegExp: (январь|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь)( ?)(?:--?|‒|–|—)( ?)(январь|февраль|март|апрель|май|июнь|июль|август|сентябрь|октябрь|ноябрь|декабрь)",
+          "source": "",
+          "line": 0,
+          "samples": 23,
+          "fraction": 0.009969657563935847
+        },
+        {
+          "function": "RegExp: (^|[ \\u00a0(«‹»›„“‟”\"])(а|без|в|во|если|да|до|для|за|и|или|из|к|ко|как|ли|на|но|не|ни|о|об|обо|от|по|про|при|под|с|со|то|у) (?= *\\S)",
+          "source": "",
+          "line": 0,
+          "samples": 23,
+          "fraction": 0.009969657563935847
+        },
+        {
+          "function": "RegExp: (^|[ \\u00a0(«‹»›„“‟”\"])([а-яё]{1,2}) (?= *\\S)",
+          "source": "",
+          "line": 0,
+          "samples": 22,
+          "fraction": 0.00953619419159081
+        },
+        {
+          "function": "RegExp: (^|[ \\r\\n\\t\\u00a0[(])([«‹»›„“‟”\"]+)(?=[ \\t\\u00a0\\u202f]*[^\\s«‹»›„“‟”\"«‹»›„“‟”\"])",
+          "source": "",
+          "line": 0,
+          "samples": 21,
+          "fraction": 0.009102730819245773
+        },
+        {
+          "function": "(anonymous)",
+          "source": "file://dist/text/typography/bundled-punctuation.factory.js",
+          "line": 21,
+          "samples": 21,
+          "fraction": 0.009102730819245773
+        },
+        {
+          "function": "RegExp: (^|[)\\s])(стр|гл|рис|илл?|ст|п|c)\\. ?( *)(\\d+)([\\s.,?!;:]|$)",
+          "source": "",
+          "line": 0,
+          "samples": 21,
+          "fraction": 0.009102730819245773
+        },
+        {
+          "function": "RegExp: (\\s|^)(обл|кр|ст|пос|с|д|ул|пер|пр|пр-т|просп|пл|бул|б-р|наб|ш|туп|оф|комн?|уч|вл|влад|стр|кор)\\. ?( *)([а-яёa-z\\d]+)",
+          "source": "",
+          "line": 0,
+          "samples": 21,
+          "fraction": 0.009102730819245773
+        },
+        {
+          "function": "RegExp: (\\d) ?(?=(руб|коп)\\.)",
+          "source": "",
+          "line": 0,
+          "samples": 20,
+          "fraction": 0.008669267446900737
+        }
+      ]
+    },
+    "categories": [
+      {
+        "workload": "long-en",
+        "categories": [],
+        "medianMs": 0.00029095000000012305,
+        "samplesMs": [
+          0.00032745000000033997, 0.0002589499999999134, 0.002154499999999615, 0.0002608500000000902,
+          0.00029095000000012305, 0.00030070000000037567, 0.0011855000000004167, 0.0002041499999997143,
+          0.0001948999999996204
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["quotes"],
+        "medianMs": 0.803384299999999,
+        "samplesMs": [
+          1.4045504999999998, 1.2185384499999998, 1.762575600000001, 1.6921530000000005, 0.803384299999999,
+          0.5102910500000007, 0.5367634500000008, 0.4828738000000016, 0.5566331500000018
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["dashes"],
+        "medianMs": 0.4688321999999999,
+        "samplesMs": [
+          0.7177804000000009, 0.697187150000002, 0.37791594999999917, 0.45944120000000055, 0.4688321999999999,
+          0.4748663499999992, 0.37593875000000027, 0.4935181, 0.4272458499999999
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["punctuation"],
+        "medianMs": 0.42134029999999995,
+        "samplesMs": [
+          0.29503229999999975, 0.44260150000000065, 0.29728695000000016, 0.3324495499999983, 0.4279818000000006,
+          0.46949275000000057, 0.42134029999999995, 0.29966619999999866, 0.47994779999999937
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 0.5447181000000001,
+        "samplesMs": [
+          0.6607865999999973, 0.543699799999996, 0.531250250000005, 0.5159897999999998, 0.6511097500000005,
+          0.5617079500000045, 0.5447181000000001, 0.5316969500000027, 0.704386599999998
+        ]
+      },
+      {
+        "workload": "long-en",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 1.1099482000000023,
+        "samplesMs": [
+          1.2184001500000021, 1.0468965000000026, 1.1026899500000014, 0.9976574000000028, 1.1441165000000013,
+          1.1099482000000023, 0.9922158499999967, 1.1669123500000012, 1.2420545000000005
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": [],
+        "medianMs": 7.965000000353939e-5,
+        "samplesMs": [
+          0.00018370000000231813, 8.234999999672255e-5, 7.965000000353939e-5, 7.889999999974862e-5,
+          0.00013780000000451764, 7.969999999772881e-5, 7.769999999709398e-5, 7.76000000030308e-5, 7.76000000030308e-5
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["quotes"],
+        "medianMs": 0.4123700500000041,
+        "samplesMs": [
+          0.5440076500000032, 0.5985920000000021, 0.5862906500000008, 0.8034842499999968, 0.3898211500000002,
+          0.38864374999999995, 0.3846300000000042, 0.3994410500000015, 0.4123700500000041
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["dashes"],
+        "medianMs": 1.099724649999996,
+        "samplesMs": [
+          1.0294662000000017, 1.2275616500000013, 0.9949197000000026, 1.0160021000000028, 1.1113430999999991,
+          1.1071241999999983, 1.031834249999997, 1.1311116500000025, 1.099724649999996
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["punctuation"],
+        "medianMs": 0.29175835000000916,
+        "samplesMs": [
+          0.29576845000000274, 0.2892757500000016, 0.2790622999999982, 0.2863758500000017, 0.5030640500000004,
+          0.29197844999999917, 0.3227861000000075, 0.29175835000000916, 0.27369774999999663
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 1.478180950000001,
+        "samplesMs": [
+          1.6460755999999948, 1.5992619499999932, 1.3216587500000059, 1.3036589999999932, 1.3548960000000079,
+          1.5408470500000022, 1.5324088500000017, 1.4033420999999975, 1.478180950000001
+        ]
+      },
+      {
+        "workload": "long-ru",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 2.6055418500000087,
+        "samplesMs": [
+          2.8895512499999993, 2.9734496000000035, 2.593835649999994, 2.606870500000002, 2.5704095499999995,
+          2.6055418500000087, 2.638467550000007, 2.4080718999999933, 2.5162355500000104
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": [],
+        "medianMs": 6.324999999378633e-5,
+        "samplesMs": [
+          0.00017799999998260318, 7.069999999202992e-5, 6.324999999378633e-5, 6.324999999378633e-5,
+          6.599999999252759e-5, 6.045000000085565e-5, 6.1000000005151375e-5, 6.114999998771964e-5, 5.989999999655993e-5
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["quotes"],
+        "medianMs": 0.1427300999999943,
+        "samplesMs": [
+          0.13688690000001316, 0.13598790000000918, 0.13789025000000948, 0.1427300999999943, 0.14376945000001343,
+          0.1430902999999944, 0.1351944499999945, 0.17854440000000976, 0.14705400000000282
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["dashes"],
+        "medianMs": 0.04256829999999354,
+        "samplesMs": [
+          0.052614949999997405, 0.04240664999999808, 0.04256829999999354, 0.043869599999993625, 0.04243639999999686,
+          0.041921750000005885, 0.041433600000004844, 0.047482700000000475, 0.05102719999999863
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["punctuation"],
+        "medianMs": 0.030064549999997324,
+        "samplesMs": [
+          0.034756949999996324, 0.028536750000012035, 0.03371429999999691, 0.02767914999999448, 0.028162699999984397,
+          0.0374887999999828, 0.030064549999997324, 0.027218649999986154, 0.04064800000001014
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 0.19095339999998942,
+        "samplesMs": [
+          0.19238420000001497, 0.1883288499999935, 0.19593640000000506, 0.19583190000000741, 0.18799950000000082,
+          0.1885289999999941, 0.19082100000000538, 0.20028409999999894, 0.19095339999998942
+        ]
+      },
+      {
+        "workload": "prose-en",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 0.4002619999999979,
+        "samplesMs": [
+          0.3934105999999929, 0.4177544000000125, 0.4136741999999913, 0.4332252500000095, 0.3968355499999916,
+          0.4604261500000121, 0.3990013500000032, 0.4002619999999979, 0.3918098999999984
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": [],
+        "medianMs": 6.254999998418498e-5,
+        "samplesMs": [
+          0.00012174999999388092, 6.639999999151769e-5, 6.329999998797576e-5, 6.329999998797576e-5,
+          6.254999998418498e-5, 6.15500000094471e-5, 6.204999999681604e-5, 6.244999999580614e-5, 6.15500000094471e-5
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["quotes"],
+        "medianMs": 0.1449246500000072,
+        "samplesMs": [
+          0.13922970000000987, 0.1416394500000024, 0.1449246500000072, 0.16395669999999427, 0.15315089999999146,
+          0.16640670000001592, 0.14001755000001595, 0.13594355000000177, 0.37748830000000455
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["dashes"],
+        "medianMs": 0.22051289999999427,
+        "samplesMs": [
+          0.2370422999999846, 0.2408392000000049, 0.22051289999999427, 0.2263924999999972, 0.21559104999998907,
+          0.21245985000000472, 0.21655849999999646, 0.21233529999999518, 0.22420069999998304
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["punctuation"],
+        "medianMs": 0.026403549999986353,
+        "samplesMs": [
+          0.025175050000007103, 0.030804649999981847, 0.02554614999999103, 0.030201800000008917, 0.026316300000007686,
+          0.027377999999998792, 0.026403549999986353, 0.0258782999999994, 0.02714054999999007
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["nonbreakingSpacing"],
+        "medianMs": 0.4843088999999964,
+        "samplesMs": [
+          0.45803395000000363, 0.5009890000000041, 0.4868845000000192, 0.4667835999999852, 0.4912715500000104,
+          0.4843088999999964, 0.4733154999999897, 0.501488449999988, 0.4764456500000051
+        ]
+      },
+      {
+        "workload": "prose-ru",
+        "categories": ["quotes", "dashes", "punctuation", "nonbreakingSpacing"],
+        "medianMs": 0.867231700000002,
+        "samplesMs": [
+          0.8764770499999941, 0.8365978999999925, 0.9071236999999883, 0.8688241000000062, 0.8550566000000117,
+          0.867231700000002, 0.8328401999999869, 0.8825085999999829, 0.8407582000000048
+        ]
+      }
+    ]
+  },
+  "profileHarnessSource": "import { performance } from 'node:perf_hooks';\nimport { writeFile } from 'node:fs/promises';\nimport { Typographist } from './baseline-dist/index.js';\nimport { scanAddresses } from './baseline-dist/text/scanning/scan-addresses.util.js';\nimport { createTypographyWorkloads } from '/home/alex/projects/elmenov-softworks/typographist/tools/benchmarks/typography/workloads.factory.ts';\n\nconst workloads = createTypographyWorkloads().filter(({ name }) => name.startsWith('long-'));\nfor (const locale of ['en', 'ru']) workloads.push({\n  locale, name: 'prose-' + locale, text: (locale === 'ru'\n    ? 'Читатель видит \"типографику\" - простое предложение... В понедельник см. стр. 12. Это помогает читать. '\n    : 'The \"reader\" can enjoy typography - a simple sentence... On Monday, see page 12. It\\'s helpful. ').repeat(160),\n});\nconst profiles = [[], ['quotes'], ['dashes'], ['punctuation'], ['nonbreakingSpacing'], ['quotes', 'dashes', 'punctuation', 'nonbreakingSpacing']];\nconst median = samples => [...samples].sort((a,b)=>a-b)[Math.floor(samples.length / 2)];\nconst results = [];\nlet consumed = 0;\nfor (const workload of workloads) {\n  for (const categories of profiles) {\n    const service = new Typographist({ categories, useFast: true, cacheSize: 0,\n      settings: { 'common/punctuation/quote': { spacing: false } } });\n    for (let i = 0; i < 20; i++) consumed += service.format(workload.text, workload.locale).length;\n    const samples = [];\n    for (let sample = 0; sample < 9; sample++) {\n      const start = performance.now();\n      for (let i = 0; i < 20; i++) consumed += service.format(workload.text, workload.locale).length;\n      samples.push((performance.now() - start) / 20);\n    }\n    const result = { workload: workload.name, categories, medianMs: median(samples), samplesMs: samples };\n    results.push(result);\n    console.log(JSON.stringify(result));\n  }\n  const start = performance.now();\n  for (let i = 0; i < 500; i++) consumed += scanAddresses(workload.text).length;\n  console.log('scanner',workload.name,(performance.now()-start)/500);\n}\nawait writeFile('/tmp/typographist-symbolic-profile/categories-before.json', JSON.stringify({results, consumed}, null, 2));\n",
+  "exactDifferentialChecks": {
+    "quoteOutputs": 210112,
+    "addressSpans": 250007,
+    "rangeAndServiceOutputs": 324000
+  },
+  "validation": {
+    "passedTests": 2124,
+    "testFiles": 76,
+    "addedTests": 1
+  },
+  "uniqueEnglishRepeat": {
+    "procedure": "Full default formatting, Khristov, 64 MiB cache, mostly-unique-en input from main report. Two instances, 200 alternating warmups, 15 alternating batches of 100 calls. Longer warmup did not reproduce the slower optimized median in the six-profile run.",
+    "baselineMedianMs": 0.6848528099999975,
+    "optimizedMedianMs": 0.6809236199999986,
+    "baselineSamplesMs": [
+      0.6582877000000008, 0.6476070600000002, 0.6848528099999975, 0.6898199999999997, 0.65673992, 0.655535319999999,
+      0.6965442200000007, 0.7037508200000002, 0.7746785300000011, 0.6631550100000004, 0.6824155400000018,
+      0.7199697699999978, 0.6598757999999998, 0.7066930499999989, 0.6858337699999992
+    ],
+    "optimizedSamplesMs": [
+      0.6397143000000005, 0.6556171399999994, 0.6534833299999991, 0.6809236199999986, 0.6661439800000016,
+      0.6750388199999997, 0.6806649500000003, 0.677695349999999, 0.7121108999999979, 0.7005517499999996,
+      0.6971246599999995, 0.7097708299999976, 0.69394182, 0.6839304700000003, 0.7038451400000031
+    ],
+    "harnessSource": "import { performance } from 'node:perf_hooks';\nimport { Typographist as Before } from './baseline-dist/index.js';\nimport { Typographist as After } from '/home/alex/projects/elmenov-softworks/typographist/packages/typographist/dist/index.js';\nimport { createTypographyWorkloads } from '/home/alex/projects/elmenov-softworks/typographist/tools/benchmarks/typography/workloads.factory.ts';\nconst text = createTypographyWorkloads().find(workload => workload.name === 'mostly-unique-en').text;\nlet consumed=0;\nfor(const categories of [['hyphenation'],undefined,['quotes','dashes','punctuation','nonbreakingSpacing']]) {\n  const runners=[Before,After].map(Type=>({service:new Type({useFast:true,cacheSize:64,...(categories===undefined?{}:{categories})}), samples:[]}));\n  for(let i=0;i<200;i++) for(const runner of runners) consumed+=runner.service.format(text,'en').length;\n  for(let sample=0;sample<15;sample++) for(let offset=0;offset<2;offset++) {\n    const runner=runners[(sample+offset)%2];\n    const start=performance.now();\n    for(let i=0;i<100;i++) consumed+=runner.service.format(text,'en').length;\n    runner.samples.push((performance.now()-start)/100);\n  }\n  console.log(JSON.stringify({categories:categories??'all',results:runners.map(runner=>({medianMs:[...runner.samples].sort((a,b)=>a-b)[7],samplesMs:runner.samples}))}));\n}\nconsole.log(consumed);\n"
+  }
+}
