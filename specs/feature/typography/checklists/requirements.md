@@ -596,3 +596,16 @@ Local validation of this correction passed 3,564 tests, workspace build, typeche
 lint, formatting and diff checks under Node v24.21.0. Browser and benchmark evidence remains historical. Changes
 are uncommitted because the coordinator owns Git mutations. Owner review remains
 required before publication; publication is not authorized.
+
+## Quotation contract alignment — 2026-10-09
+
+The owner's second-review correction removes the accidental promise of a
+configurable quotation-space glyph. The specification and locale contract now
+match the retained implementation: fixed narrow NBSP (U+202F), default-on spacing
+for ru/en, and supported settings `left`, `right` and `spacing`, including
+`spacing: false`. No API setting or runtime behavior was added.
+
+This documentation slice was checked with targeted Prettier and `git diff --check`;
+runtime checks were not rerun. The preceding implementation slice recorded 3,584
+passing tests, typecheck, lint, formatting and build. Full independent re-review
+of the second-review corrections remains pending with the coordinator.

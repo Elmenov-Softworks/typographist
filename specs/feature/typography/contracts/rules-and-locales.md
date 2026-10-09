@@ -42,7 +42,7 @@ The [approved specification](../spec.md#owner-scope-correction--2026-10-09) defi
 
 Declarative `RuleSets` and `TypographistRules` require standard and fast datasets together. Subclass `compile(useFast)` remains supported without algorithm fallback. Typography-only locales require neither dataset.
 
-Quotation spacing defaults to enabled for ru/en and uses the configured nonbreaking space (narrow NBSP by default). Replace the nearest existing ordinary boundary space, or insert one when there is no gap. Preserve additional whitespace and existing NBSPs; do not insert gaps beside tabs or line endings, across lines or across protected boundaries. `spacing: false` disables quote-boundary spacing. Glyph replacement preserves quotation multiplicity; `removeDuplicateQuotes` is invalid. Keep locale pairs, nesting, custom pairs and symbolic unmatched-quote handling.
+Quotation spacing defaults to enabled for ru/en and uses narrow NBSP (U+202F). The spacing glyph is fixed; the supported quotation settings are `left`, `right` and `spacing`. Replace the nearest existing ordinary boundary space, or insert one when there is no gap. Preserve additional whitespace and existing NBSPs; do not insert gaps beside tabs or line endings, across lines or across protected boundaries. `spacing: false` disables quote-boundary spacing. Glyph replacement preserves quotation multiplicity; `removeDuplicateQuotes` is invalid. Keep locale pairs, nesting, custom pairs and symbolic unmatched-quote handling.
 
 Retained range handlers change separator glyphs without consuming existing boundary whitespace. Prose-dash bindings must preserve additional spaces, tabs, line endings and existing NBSPs. There is no builtin whitespace cleanup pass before or after symbolic formatting.
 
