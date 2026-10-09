@@ -58,3 +58,12 @@ Historical duplicate-removal audit evidence predates this correction. Builtin
 spacing removal and the Q6 quote-boundary spacing correction remain pending.
 
 Owner correction, 2026-10-09: bundled range handlers preserve existing whitespace around matched separators. The year, century, weekday and month handlers change the separator glyph only. Existing prose-dash nonbreaking bindings still apply before range formatting; additional spaces, tabs and line endings are not consumed by these dash handlers.
+
+### Line-ending preservation correction (2026-10-09)
+
+The bundled CRLF/lone-CR normalization handler and obsolete cleanup tests are
+removed. The former `common/space/normalizeLineEndings` setting is invalid.
+Public-service regressions cover exact CR/LF sequences with both algorithms,
+cache enabled and disabled, protected content and repeated formatting.
+Earlier normalization evidence is historical and does not validate the reduced
+scope. Remaining bundled spacing removal and default quotation spacing are pending.

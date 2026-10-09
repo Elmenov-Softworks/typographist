@@ -124,11 +124,8 @@ Preparation runs once per locale registration. Handlers must synchronously retur
 a string; promises and other result types throw. Custom handlers own their
 content-preservation and repeated-formatting behavior.
 
-Bundled English and Russian spacing starts with CRLF and lone CR normalization
-to LF (`common/space/normalizeLineEndings`, order 0, no settings), before whitespace
-cleanup. Protected literals retain their original line endings. Disabling
-`spacing`, including the hyphenation-only profile, preserves line endings. Consumer
-locales receive this preparation only if they supply it themselves.
+Bundled rules no longer convert CRLF or lone CR to LF. The removed
+`common/space/normalizeLineEndings` builtin ID is rejected in settings.
 
 Existing NBSPs are preserved instead of being converted to ordinary spaces before
 nonbreaking bindings. The removed `common/nbsp/replaceNbsp` builtin ID is rejected

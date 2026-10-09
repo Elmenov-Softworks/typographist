@@ -287,3 +287,12 @@ Validation for this correction under Node v24.21.0: all 2,169 tests, workspace b
 Direct-speech preservation correction, 2026-10-09: TP-R048 no longer treats literal pipes as whitespace or converts existing NBSPs to ordinary spaces. It preserves the following gap after quote/comma dashes and the preceding gap after sentence punctuation. Public-service regressions cover additional spaces, tabs, CR/LF, protected content and repeat formatting across both algorithms and cache modes. Builtin spacing removal, Q6 quotation spacing and full independent review remain pending. Historical full-feature measurements predate this correction.
 
 Direct-speech slice validation under Node v24.21.0: all 2,205 tests, workspace typecheck, lint, formatting, build and diff checks passed. Nx reused one of six typecheck tasks and two of five build tasks. Changes remain uncommitted for the coordinator; publication is not authorized.
+
+### Line-ending preservation correction (2026-10-09)
+
+The bundled CRLF/lone-CR normalization handler and obsolete cleanup tests are
+removed. The former `common/space/normalizeLineEndings` setting is invalid.
+Public-service regressions cover exact CR/LF sequences with both algorithms,
+cache enabled and disabled, protected content and repeated formatting.
+Earlier normalization evidence is historical and does not validate the reduced
+scope. Remaining bundled spacing removal and default quotation spacing are pending.

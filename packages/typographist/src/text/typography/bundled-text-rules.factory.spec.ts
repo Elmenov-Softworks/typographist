@@ -16,13 +16,9 @@ const referenceIds = [
 describe('complete bundled reference ordering', () => {
   it.each(['en', 'ru'] as const)('audits every assembled equal-priority group for %s', (locale) => {
     const rules = createBundledTextRules(locale);
-    const extensions = ['common/space/normalizeLineEndings', 'common/dash/minus'];
+    const extensions = ['common/dash/minus'];
 
     expect(rules.filter((rule) => !referenceIds.includes(rule.id)).map((rule) => rule.id)).toEqual(extensions);
-
-    expect(rules.filter((rule) => rule.order === 0).map((rule) => rule.id)).toEqual([
-      'common/space/normalizeLineEndings',
-    ]);
 
     for (const priority of new Set(rules.map((rule) => rule.order))) {
       const ids = rules

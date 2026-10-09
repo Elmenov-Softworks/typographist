@@ -647,15 +647,12 @@ quotation deletion and do not establish acceptance of the revised Q6 scope.
 
 ### Reference line-ending preparation (outside the 107-rule inventory)
 
-Typograf 7.8.0 calls `removeCR` before running its public rules and emits LF by
-default. Bundled Russian and English implement this whitespace preparation as
-`common/space/normalizeLineEndings` in `spacing`, at order 0 with no settings.
-CRLF and lone CR become LF; existing LF and Unicode line separators remain
-unchanged. This lets trailing-blank and repeated-newline rules operate consistently.
-The handler runs on unprotected segments; protected content retains its original
-bytes. It is inactive when spacing is disabled, preserving the hyphenation-only
-and all-disabled contracts. Custom locales receive no implicit preparation.
-Upstream's optional CR/CRLF output mode is outside this API's scope.
+Typograf 7.8.0 calls `removeCR` before its public rules and emits LF by
+default. This reference preparation is removed under the 2026-10-09 owner
+correction. CRLF and lone CR must remain as supplied. The former
+`common/space/normalizeLineEndings` ID is rejected in builtin settings.
+Earlier line-ending comparisons and benchmarks predate this reduced scope.
+Removal of the remaining bundled spacing cleanup is still pending.
 
 ### Protected range endpoint audit
 

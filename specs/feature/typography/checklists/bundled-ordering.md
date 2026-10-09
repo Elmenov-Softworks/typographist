@@ -12,17 +12,17 @@ bundled entry, across factory boundaries. The executable audit reads the invento
 and checks every assembled priority group for both locales; it also rejects
 unrecorded bundled IDs.
 
-The complete union contains 66 IDs. Locale applicability filters the union;
-`en` uses `en-US/dash/main`, as documented. The excluded `en-GB/dash/main`
-alternative is not an additional English rule. The two non-inventory extensions
-are line-ending normalization (priority 0) and unary minus (priority 300).
-NBSP replacement moves from the reference `utf` queue to priority 0, after
-line-ending normalization. Final-newline insertion moves from the reference
-`end` queue to priority 1300. All other priorities match the inventory.
+The original audit covered 66 IDs before the owner scope reduction. Locale
+applicability filters the union; `en` uses `en-US/dash/main`, as documented.
+The excluded `en-GB/dash/main` alternative is not an additional English rule.
+Unary minus remains the non-inventory extension at priority 300. Line-ending
+normalization and NBSP replacement are removed. Final-newline insertion remains
+at priority 1300 pending removal of the rest of the bundled spacing factory.
+The table below reflects removal of line-ending normalization; other historical
+scope corrections are recorded above.
 
 | Effective priority | Complete assembled union in execution order                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0                  | `common/space/normalizeLineEndings`                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 205                | `common/space/replaceTab`                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | 206                | `common/space/trimLeft`                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | 207                | `common/space/trimRight`, `common/space/delTrailingBlanks`                                                                                                                                                                                                                                                                                                                                                                                                                                        |

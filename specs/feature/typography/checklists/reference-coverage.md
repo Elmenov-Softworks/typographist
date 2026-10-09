@@ -522,3 +522,12 @@ verification and final acceptance review remain open. Workspace-wide type
 checking, lint and builds were not rerun for this slice.
 
 NBSP scope correction (2026-10-09): TP-R076 is removed. Historical audits above predate its removal. Existing NBSP preservation replaces normalization acceptance; see `existing-nbsp-preservation.spec.ts`.
+
+### Line-ending preservation correction (2026-10-09)
+
+The bundled CRLF/lone-CR normalization handler and obsolete cleanup tests are
+removed. The former `common/space/normalizeLineEndings` setting is invalid.
+Public-service regressions cover exact CR/LF sequences with both algorithms,
+cache enabled and disabled, protected content and repeated formatting.
+Earlier normalization evidence is historical and does not validate the reduced
+scope. Remaining bundled spacing removal and default quotation spacing are pending.

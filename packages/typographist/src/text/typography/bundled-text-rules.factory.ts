@@ -6,7 +6,6 @@ import { createBundledQuotes } from '@/text/typography/bundled-quotes.factory.js
 import { createBundledSpacing } from '@/text/typography/bundled-spacing.factory.js';
 
 const referenceOrder = [
-  'common/space/normalizeLineEndings',
   'common/dash/minus',
   'common/space/replaceTab',
   'common/space/trimLeft',
