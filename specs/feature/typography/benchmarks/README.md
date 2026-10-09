@@ -1,5 +1,7 @@
 # Typography benchmark results
 
+Historical evidence: this full-feature run predates the owner scope reduction of 2026-10-09. It includes removed cleanup capabilities and earlier quotation defaults. These timings do not describe the revised symbol formatter; the raw report remains unchanged for provenance.
+
 Measured with Node v24.21.0, ICU 78.3, 13th Gen Intel(R) Core(TM) i5-13420H, on linux 6.18.33.2-microsoft-standard-WSL2. Source commit: `0ee270b797d89c6a83c9eeac1db6329d86440b76`; the working tree was clean when the build and measurements ran. The core was freshly built before this run.
 
 This run includes completed bundled quotation support and CR/LF normalization. Inputs are unchanged from the preceding run; they contain no CR/LF, so this measures the preparation pass on those inputs rather than line-ending-heavy text. It refreshes performance evidence but does not establish final feature acceptance. [Raw results](typography.json) contain full inputs, hashes, samples, environment and procedure. See the [harness documentation](../../../../tools/benchmarks/typography/README.md) for reproduction and limitations.

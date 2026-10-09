@@ -1,32 +1,26 @@
 # Text typography
 
-Owner correction — 2026-10-09: punctuation formatting retains apostrophe and ellipsis
-glyph conversion only. TP-R053, TP-R054, TP-R058 and TP-R060 are removed from
-the bundle; repeated signs and their order remain as supplied. Earlier audit,
-benchmark and acceptance evidence predates this reduced scope. Other owner
-scope corrections remain pending implementation in subsequent slices.
-
 **Branch:** `feature/typography`
 
 **Date:** 2026-10-08
 
-**Status:** Approved — owner confirmed on 2026-10-08
+**Status:** Approved — corrected by the owner on 2026-10-09
 
 ## Goal and current behavior
 
-Extend Typographist from a hyphenation service into a text typography service. Use Typograf 7.8.0 as the capability reference and implement the behavior in this repository. Typograf must not become a runtime dependency.
+Typographist is a fast language-aware symbol formatter with hyphenation. It preserves user mistakes; it does not clean text, proofread it or prepare it for publication. Use Typograf 7.8.0 as the capability reference and implement the behavior in this repository. Typograf must not become a runtime dependency.
 
 The current synchronous `format(text, locale)` inserts soft hyphens. `useFast` selects Khristov instead of Knuth–Liang. The service supports bundled and custom rule data, exclusions, locale registration, and a shared bounded LRU word cache. The baseline is commit `bb71204`.
 
-The owner approved standard language typography on text, with all formatting categories enabled by default. The main service configuration selects which categories run, including hyphenation, nonbreaking spacing, and quotation marks. Only rules inside the symbolic-formatting scope may run. Content-changing reference rules are excluded even when every supported category is enabled.
+The owner approved standard language typography on text, with all retained builtin categories enabled by default. The main service configuration selects which categories run, including hyphenation, nonbreaking spacing, and quotation marks. Only rules inside the symbolic-formatting scope may run. Content-changing reference rules are excluded even when every supported category is enabled.
 
 ## Scope
 
-Implement symbolic typography from [the revised reference inventory](typograf-rule-inventory.md): quotation marks and apostrophes, dashes, existing lexical hyphen/minus glyph normalization, ellipses, punctuation cleanup, ordinary and nonbreaking spacing, and the existing soft hyphenation algorithms. Preserve the composition of the text: letters, case, word order, digit sequences, numeric notation, currency labels, dates, and unit labels must not be rewritten.
+Implement symbolic typography from [the revised reference inventory](typograf-rule-inventory.md): quotation marks and apostrophes, dashes, existing lexical hyphen/minus glyph normalization, ellipsis glyph conversion, retained language nonbreaking bindings, and the existing soft hyphenation algorithms. Preserve the composition of the text: letters, case, word order, digit sequences, numeric notation, currency labels, dates, and unit labels must not be rewritten.
 
 Do not convert currencies or numeric representations, group numbers, change decimal separators, turn digit fractions into single glyphs, rewrite dates or phone numbers, correct spelling or keyboard layouts, add accents, delete repeated words, expand abbreviations, or join words by inferred spelling rules. Number formatting may be addressed separately in the future; it is not part of this task. Pure spacing around unchanged numbers or currency labels remains whitespace formatting, not conversion.
 
-Punctuation and whitespace may change under enabled rules. Range separators and minus glyphs may change without modifying digits or numeric notation. Do not infer missing grammatical punctuation from words. Ship bundled Russian and English typography only; keep contracts open to consumer-supplied locales.
+Selected glyphs and nonbreaking bindings may change under enabled retained rules. Preserve repeated punctuation and quotes, extra spaces, tabs, indentation, trailing whitespace, CR/LF and empty lines. Existing NBSPs remain intact. Ordinary whitespace cleanup is excluded. Range separators and minus glyphs may change without modifying digits or numeric notation. Do not infer missing grammatical punctuation from words. Ship bundled Russian and English typography only; keep contracts open to consumer-supplied locales.
 Existing hyphenation becomes part of the same rule execution mechanism. Locale and rule contracts support adding any language without changing the core implementation. This does not promise linguistic data for every language.
 
 Exclude the 13 reference rules that generate, inspect, or transform HTML, including markup-based optical alignment. Do not clone the Typograf editor, plugins, complete constructor API, HTML entity modes, or framework adapters. Plain-text formatting is not HTML sanitization.
@@ -54,7 +48,7 @@ A consumer supplies language data and rules using public contracts.
 
 A caller uses one formatting pipeline and can select either existing hyphenation algorithm.
 
-- Given punctuation and spacing are normalized, when hyphenation runs, then it analyzes the unchanged lexical content and uses the existing word cache.
+- Given selected glyphs and nonbreaking bindings are formatted, when hyphenation runs, then it analyzes the unchanged lexical content and uses the existing word cache.
 - Given identical category selection, when `useFast` changes, then only hyphenation algorithm selection changes.
 - Given only hyphenation selected, when exclusions, URLs, email addresses, identifiers, existing soft hyphens, Unicode graphemes, or exceptions occur, then current protections remain effective.
 
@@ -71,12 +65,12 @@ A maintainer can trace implemented behavior to the pinned reference and verify p
 - **FR-002:** Implement the included and explicitly adapted reference capabilities without a Typograf runtime dependency. Preserve exact reference IDs in the traceability catalogue; internal naming need not clone upstream.
 - **FR-003:** Select categories in the main service configuration. Quotation marks, nonbreaking spacing, and hyphenation must be independently selectable. Document the remaining category mapping and individual rule settings.
 - **FR-004:** Distinguish category selection from the existing `rules` property supplying hyphenation data. Document API changes and migration examples without silently changing the meaning of existing data.
-- **FR-005:** Default to all applicable formatting categories. Exclude every content-changing transformation regardless of category selection. Document individual defaults for the supported symbolic rules; do not add broader rules through an “all” profile.
+- **FR-005:** Default to quotes, dashes, punctuation, nonbreaking spacing and hyphenation. Keep the spacing category available only for explicitly selected consumer rules; no builtin spacing factory remains. Exclude every content-changing transformation regardless of category selection. Document individual defaults for the supported symbolic rules; do not add broader rules through an “all” profile.
 - **FR-006:** Support shared rules and locale-specific rules through universal public contracts. A locale may support text typography without either hyphenation algorithm.
 - **FR-007:** Supply bundled Russian and English typography only. Preserve current `en` and `ru` compatibility; document how reference `en-US` and `en-GB` relate to the existing `en` identifier. Do not add undocumented locale fallback or automatic language detection.
 - **FR-008:** Execute rules in a deterministic order that preserves reference interactions. Run applicable symbolic typography before hyphenation without introducing word-changing transformations. Document ordering and protection behavior for custom rules.
 - **FR-009:** Keep `useFast`, both algorithms, minima, exceptions, and custom rule compilation available. Do not silently fall back between algorithms when selected hyphenation data is missing.
-- **FR-010:** Preserve the hyphenation-only profile's existing behavior. Full typography may change punctuation, whitespace and soft hyphen positions only as prescribed by enabled rules; lexical and numeric content must remain unchanged.
+- **FR-010:** Preserve the hyphenation-only profile's existing behavior. Full typography may replace selected glyphs, insert or replace nonbreaking bindings and insert soft hyphens only as prescribed by retained rules; preserve source repetitions and whitespace sequences; lexical and numeric content must remain unchanged.
 - **FR-011:** Preserve URLs, email addresses, and configured protected content as defined by the text rule contract. Existing `excludedWords` semantics remain hyphenation exclusions; they do not automatically disable all typography. Identifier filters must not prevent supported spacing or punctuation formatting; numeric and mixed-script conversion remains excluded.
 - **FR-012:** Keep word caching shared across languages, bounded by the existing configurable approximate memory limit, and managed by LRU. Preserve zero-size disabling and atomic locale mutation/invalidation. Do not add persistent or whole-text caching.
 - **FR-013:** Validate configuration and rule data at public boundaries. Failed registration must leave the previous service state usable. Custom text handlers must obey the synchronous string result contract; invalid results must not be silently accepted.
@@ -115,9 +109,9 @@ These are domain contracts, not a mandate to introduce particular classes. See [
 
 ## Verification
 
-Research already completed: inspected the current service and rule contracts; downloaded Typograf 7.8.0 without lifecycle scripts; extracted its public rule metadata; reviewed its rule handlers and documentation; inspected GitHub Spec Kit templates at the pinned revision. No implementation validation has been performed for this feature.
+Research already completed: inspected the current service and rule contracts; downloaded Typograf 7.8.0 without lifecycle scripts; extracted its public rule metadata; reviewed its rule handlers and documentation; inspected GitHub Spec Kit templates at the pinned revision. Implementation validation is recorded in the acceptance checklist. Evidence predating the owner correction is historical and does not validate removed capabilities or describe current performance.
 
-Future implementation checks, using the repository's required Node version:
+Required implementation checks, using the repository's required Node version:
 
 ```sh
 npm test
@@ -140,201 +134,22 @@ This specification adapts GitHub Spec Kit's specification structure to the repos
 - Typograf is a capability reference; implementation is local and optimized.
 - Only symbolic typography is in scope. Lexical content and numeric representations remain unchanged.
 - Bundle Russian and English only; retain universal locale contracts.
-- All supported categories are enabled by default and independently selectable through the main service configuration.
+- All retained builtin categories are enabled by default and independently selectable through the main service configuration. Consumer spacing requires explicit selection.
 
-No blocking scope questions remain. The owner explicitly approved this version on 2026-10-08 and separately authorized its documentation commit. Implementation and orchestrator execution have not been requested for this specification.
+No blocking scope questions remain. The owner approved the original specification on 2026-10-08 and explicitly superseded its cleanup scope on 2026-10-09. Local corrections and checks are authorized. The coordinator owns Git mutations and independent review; publication requires separate owner approval after review.
 
-Owner scope correction (2026-10-09), N1: bundled `common/nbsp/replaceNbsp` is removed, including its settings and standalone tests. Existing NBSPs must remain instead of being normalized to ordinary spaces before retained language bindings. Historical verification and timings predate this correction. Other approved scope corrections are tracked in subsequent implementation slices.
+## Owner scope correction — 2026-10-09
 
-Owner scope correction (2026-10-09), A8: declarative `RuleSets` and
-`TypographistRules` require both standard and fast datasets. Independent
-single-dataset construction is removed. Subclass `compile(useFast)` remains
-available, both algorithms remain supported without fallback, and typography-only
-locales still require no hyphenation data. Historical audit and benchmark evidence
-predates this correction; spacing and quotation corrections remain pending.
+Remove P3–P6 (`common/punctuation/delDoublePunctuation`, `ru/punctuation/hellipQuestion`, `ru/punctuation/exclamation`, `ru/punctuation/exclamationQuestion`). Retain P1 apostrophes and P2 ellipsis glyph conversion. Preserve duplicate signs and their order.
 
-Owner scope correction (2026-10-09), quotation multiplicity: remove duplicate-quote
-deletion and reject the removed `removeDuplicateQuotes` setting. Preserve source
-quote counts during locale glyph replacement, nesting and unmatched-quote handling.
-Historical duplicate-removal audit evidence predates this correction. Builtin
-spacing removal and the Q6 quote-boundary spacing correction remain pending.
+Remove all 23 spacing capabilities and their obsolete settings and standalone tests: `normalizeLineEndings`, `insertFinalNewline`, `replaceTab`, `trimLeft`, `trimRight`, `delTrailingBlanks`, `delRepeatSpace`, `delRepeatN`, `delLeadingBlanks`, `squareBracket`, `delBetweenExclamationMarks`, `delBeforePunctuation`, `delBeforePercent`, `delBeforeDot`, `bracket`, `beforeBracket`, `afterSemicolon`, `afterExclamationMark`, `afterQuestionMark`, `afterComma`, `afterColon`, `ru/space/year` and `ru/space/afterHellip`. Remove the entire bundled spacing factory. Retain the public consumer spacing contract.
 
-Owner correction, 2026-10-09: retained range glyph rules must preserve existing whitespace rather than deleting gaps. Russian year, century, weekday and month handlers now retain their matched boundary spaces, including existing NBSPs. Their existing recognition boundaries, separator settings and protection contracts remain in force. Builtin spacing removal and quotation-boundary corrections remain pending.
+Remove N1 (`common/nbsp/replaceNbsp`); preserve existing NBSPs. Retain N2–N25 and D1–D10 without whitespace cleanup before prose or range dashes. Preserve letters, case, digit sequences, numeric notation, currency labels, dates and repetition.
 
-### Line-ending preservation correction (2026-10-09)
+Remove A8 independent algorithm datasets: declarative `RuleSets` and `TypographistRules` require both standard and fast datasets. Keep subclass `compile(useFast)`, both algorithms without fallback, and typography-only locales without fabricated hyphenation data. Retain H1–H4 exclusions, minima, exceptions and the shared configurable LRU cache, and A1–A7 public rule, protection and locale contracts.
 
-The bundled CRLF/lone-CR normalization handler and obsolete cleanup tests are
-removed. The former `common/space/normalizeLineEndings` setting is invalid.
-Public-service regressions cover exact CR/LF sequences with both algorithms,
-cache enabled and disabled, protected content and repeated formatting.
-Earlier normalization evidence is historical and does not validate the reduced
-scope. Remaining bundled spacing removal and default quotation spacing are pending.
+Q6 enables nonbreaking quote/content boundary spacing by default for ru/en, using the configured nonbreaking space (narrow NBSP by default). Replace the nearest ordinary boundary space, or insert a gap when none exists. Preserve additional spaces, tabs, line endings and existing NBSPs; never insert a gap across a line or transform protected bytes. Retain explicit `spacing: false`, locale pairs, nesting, custom pairs and symbolic unmatched-quote handling. Remove duplicate-quote deletion and reject `removeDuplicateQuotes`; glyph replacement preserves source quote multiplicity.
 
-### Final-newline preservation correction (2026-10-09)
+Public-service acceptance covers exact preservation of repeated signs, extra whitespace, CR/LF, tabs and existing NBSPs; quote spacing defaults and overrides; both algorithms and cache modes; protection, Unicode, ordering, registration and invalid removed settings. Delete only tests obsolete under the reduced scope and adapt remaining interactions. Check supported repeat-formatting stability without promising it for arbitrary consumer handlers.
 
-TP-R020 (`common/space/insertFinalNewline`) is removed from the bundle and its
-settings are rejected. Formatting never appends a final newline implicitly.
-The reference metadata remains for provenance; earlier final-newline audit and
-benchmark evidence predates this correction. Remaining spacing removal and
-default quotation spacing are pending.
-
-### Tab preservation correction (2026-10-09)
-
-TP-R011 (`common/space/replaceTab`) is removed from the bundle and its settings
-are rejected. Tabs are no longer expanded into four ordinary spaces. Other
-bundled whitespace cleanup remains pending removal, so this slice tests interior
-single tabs independently of those rules. Earlier tab-expansion audits and
-benchmarks predate the reduced scope and do not validate this behavior.
-
-### Outer-whitespace preservation correction (2026-10-09)
-
-TP-R012 (`common/space/trimLeft`) and TP-R013 (`common/space/trimRight`)
-are removed, including their settings. The bundle no longer trims whole-text
-boundaries. Other spacing cleanup remains pending removal; preservation tests
-isolate it where needed. Earlier trimming audits and benchmarks predate this
-correction and do not validate the reduced scope.
-
-### Empty-line preservation correction (2026-10-09)
-
-TP-R016 (`common/space/delRepeatN`) and its settings are removed. Repeated
-empty lines and mixed CR/LF sequences remain intact. Public-service tests cover
-both locales, algorithms, cache modes, protected content and repeat formatting.
-Earlier cleanup audits and benchmarks predate this correction. Remaining builtin
-spacing removal and default quotation spacing are pending.
-
-### Trailing-whitespace preservation correction (2026-10-09)
-
-TP-R014 (`common/space/delTrailingBlanks`) and its settings are removed.
-Trailing ordinary spaces, tabs and existing NBSPs remain before line endings.
-Earlier cleanup audits and benchmarks predate this correction. Remaining spacing
-removal and default quotation spacing are pending. Reference metadata is retained
-for provenance; historical handler and ordering rows do not describe this rule
-as an active capability.
-
-### Repeated-space preservation correction (2026-10-09)
-
-TP-R015 (`common/space/delRepeatSpace`) and its settings are removed.
-Repeated ordinary spaces and tabs remain between content characters. The
-public-service preservation matrix covers both locales, both algorithms, cache
-modes, protected content and repeated formatting. Earlier cleanup audits and
-benchmarks predate this correction. Remaining spacing removal and default
-quotation spacing are pending.
-
-### Indentation preservation correction (2026-10-09)
-
-TP-R021 (`common/space/delLeadingBlanks`) and its settings are removed.
-Line-leading ordinary spaces and tabs remain intact, including after CR, LF,
-CR/LF and Unicode line separators. Public-service tests cover both locales,
-algorithms, cache modes, protected boundaries and repeated formatting. Earlier
-cleanup audits and benchmarks predate this correction. Remaining spacing removal
-and default quotation spacing are pending.
-
-TP-R024 (`common/space/delBeforePercent`) and its settings are removed by the
-owner correction of 2026-10-09. Ordinary spaces, existing NBSPs, tabs and line
-endings before `%`, `‰` and `‱` remain intact. Public-service preservation tests
-cover both locales, algorithms and cache modes. Earlier cleanup audits and
-benchmark timings predate this reduced scope.
-
-TP-R025 (`common/space/delBeforeDot`) and its settings are removed by the
-owner correction of 2026-10-09. Preserve whitespace before dots; retained
-ellipsis conversion changes only the glyphs. Public-service regressions cover
-Russian, English, both algorithms, cache modes, protection and repeat formatting.
-Earlier audit and benchmark evidence predates this correction.
-
-TP-R019 (`common/space/squareBracket`) and its settings are removed by the
-owner correction of 2026-10-09. Preserve spaces, tabs, line endings and existing
-NBSPs inside square brackets. Public-service regressions cover both locales,
-algorithms and cache modes, protection, repeated formatting and invalid settings.
-
-TP-R022 (`common/space/delBetweenExclamationMarks`) and its settings are removed
-by the owner correction of 2026-10-09. Preserve repeated exclamation and question
-marks and their single intervening spaces, tabs, line endings and existing NBSPs.
-Public-service regressions cover both locales, algorithms and cache modes,
-protection, repeated formatting and invalid settings. Earlier cleanup audits and
-benchmark timings predate this correction. Remaining spacing removals and default
-quotation spacing are pending.
-
-TP-R023 (`common/space/delBeforePunctuation`) and its settings are removed by
-the owner correction of 2026-10-09. Preserve ordinary spaces, tabs, line endings
-and existing NBSPs before punctuation, including repeated signs. Public-service
-regressions cover both locales, algorithms, cache modes, protected content and
-repeat formatting. Earlier cleanup audits and benchmarks predate this correction.
-Remaining spacing removals and default quotation spacing are pending.
-
-Owner correction, 2026-10-09: TP-R026 (`common/space/bracket`) and its
-settings are removed. Round-bracket interior spaces, tabs, line endings and
-existing NBSPs are preserved. Public-service regressions cover both locales,
-algorithms, cache modes, protected content, repeat formatting and invalid removed
-settings. Earlier bracket cleanup audits and benchmarks predate this removal.
-Remaining spacing removals and default quotation spacing are pending.
-
-Owner correction, 2026-10-09: TP-R027 (`common/space/beforeBracket`) and its
-settings are removed. Opening parentheses preserve the supplied boundary gap,
-including no gap, repeated spaces, tabs, line endings and existing NBSPs.
-Custom spacing rules remain supported. Historical audits and timings predate
-this removal.
-
-Owner correction, 2026-10-09: TP-R028 (`common/space/afterSemicolon`) and its
-settings are removed. Semicolons preserve the supplied boundary gap, including
-no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
-protected bytes remain unchanged. Custom spacing rules remain supported.
-Historical audits and timings predate this removal. Remaining spacing removals
-and default quotation spacing are pending.
-
-Owner correction, 2026-10-09: TP-R029 (`common/space/afterExclamationMark`)
-and its settings are removed. Exclamation marks preserve the supplied boundary
-gap, including no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated
-signs and protected bytes remain unchanged. Custom spacing rules remain supported.
-Historical audits and timings predate this removal. Remaining spacing removals
-and default quotation spacing are pending.
-
-Owner correction, 2026-10-09: TP-R030 (`common/space/afterQuestionMark`)
-and its settings are removed. Question marks preserve supplied boundary gaps,
-including no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs
-and protected bytes remain unchanged. Custom spacing rules remain supported.
-Historical audits and timings predate this removal. Remaining spacing removals
-and default quotation spacing are pending.
-
-Owner correction, 2026-10-09: TP-R031 (`common/space/afterComma`)
-and its settings are removed. Commas preserve supplied boundary gaps, including
-no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
-protected bytes remain unchanged. Custom spacing rules remain supported.
-Historical audits and timings predate this removal. Remaining spacing removals
-and default quotation spacing are pending.
-
-Owner correction, 2026-10-09: TP-R032 (`common/space/afterColon`)
-and its settings are removed. Colons preserve supplied boundary gaps, including
-no gap, repeated spaces, tabs, CR/LF and existing NBSPs. Repeated signs and
-protected bytes remain unchanged. Custom spacing rules remain supported.
-Historical audits and timings predate this removal. Russian year and ellipsis
-spacing removal and default quotation spacing remain pending.
-
-Owner correction, 2026-10-09: TP-R017 (`ru/space/year`) and its settings
-are removed. Joined year labels such as `2027год` retain their supplied gap;
-existing spaces, tabs, CR/LF and NBSPs are preserved by this removal. Retained
-nonbreaking bindings still apply where their own boundaries match. Custom spacing
-rules remain supported. Historical audits and timings predate this removal.
-Russian ellipsis spacing removal and default quotation spacing remain pending.
-
-Owner correction, 2026-10-09: TP-R018 (`ru/space/afterHellip`) and its
-settings are removed. All 23 bundled spacing capabilities and the bundled
-spacing factory are now removed. Custom spacing rules remain supported.
-Ellipsis conversion preserves boundary gaps, repeated signs, tabs, CR/LF and
-existing NBSPs. Historical audits and benchmark timings predate this reduction.
-Default quotation spacing and independent review remain pending.
-
-Category-default correction: omitted categories now select quotes, dashes,
-punctuation, nonbreaking spacing and hyphenation. The `spacing` category remains
-available for explicitly selected consumer rules, but is excluded from defaults.
-Public-service regressions cover shared rules, typography-only locales and locale
-replacement. Default quotation spacing and independent review remain pending.
-Historical checks and benchmark timings predate this correction.
-
-Default quotation spacing correction — 2026-10-09: Q6 now enables narrow NBSP
-at quote/content boundaries for Russian and English. The explicit `spacing: false`
-override remains supported. Public-service tests cover both algorithms and cache
-modes, extra spaces, tabs, CR/LF, empty lines, repeated punctuation, existing NBSPs,
-protected literals and repeated formatting. Glyph-only fixtures explicitly disable
-spacing. This supersedes earlier pending-default statements; historical full-feature
-benchmarks and audits predate the reduced scope. Consolidated scope documentation
-and full independent review remain pending.
+The full 107-rule inventory and pinned metadata remain provenance, with removed capabilities distinguished from retained ones. Historical full-feature benchmarks and audit results predate this scope reduction and must not be presented as measurements or acceptance of the revised implementation. Full independent review of the corrected scope remains required.
