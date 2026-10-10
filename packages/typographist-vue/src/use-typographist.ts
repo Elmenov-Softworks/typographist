@@ -10,5 +10,8 @@ export const useTypographist = (text: MaybeRefOrGetter<string>, locale?: MaybeRe
     throw new Error('useTypographist requires a TypographistProvider');
   }
 
-  return computed(() => formatter.value.format(toValue(text), toValue(locale)));
+  const effectiveText = computed(() => toValue(text));
+  const effectiveLocale = computed(() => toValue(locale));
+
+  return computed(() => formatter.value.format(effectiveText.value, effectiveLocale.value));
 };

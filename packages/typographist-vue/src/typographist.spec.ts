@@ -56,6 +56,60 @@ it('keeps unchanged derivations and DOM stable across equivalent config and pare
   }
 });
 
+it('skips formatting for getter containers with unchanged text and locale', async () => {
+  const record = ref<{ text: string; locale: 'en' | 'ru'; metadata: number }>({
+    text: '"Hello"',
+    locale: 'en',
+    metadata: 0,
+  });
+  const HookText = defineComponent({
+    setup() {
+      const formatted = useTypographist(
+        () => record.value.text,
+        () => record.value.locale,
+      );
+      return () => h('span', { title: String(record.value.metadata) }, formatted.value);
+    },
+  });
+  const config = { categories: ['quotes'] as const };
+  const core = new Typographist(config);
+  const initialOutput = core.format(record.value.text, record.value.locale);
+  const app = createApp(() => h(TypographistProvider, { config }, { default: () => h(HookText) }));
+  const container = document.createElement('div');
+  const format = vi.spyOn(Typographist.prototype, 'format');
+  app.mount(container);
+  const calls = format.mock.calls.length;
+  const node = container.firstChild?.firstChild;
+  const mutations: MutationRecord[] = [];
+  const observer = new MutationObserver((records) => mutations.push(...records));
+  observer.observe(container, { subtree: true, characterData: true, childList: true });
+
+  try {
+    for (let metadata = 1; metadata <= 2; metadata++) {
+      record.value = { ...record.value, metadata };
+      await nextTick();
+      expect(container.textContent).toBe(initialOutput);
+      expect(format).toHaveBeenCalledTimes(calls);
+    }
+    expect(mutations).toHaveLength(0);
+    expect(container.firstChild?.firstChild).toBe(node);
+
+    record.value = { ...record.value, text: '"Changed"' };
+    await nextTick();
+    expect(format).toHaveBeenCalledTimes(calls + 1);
+    expect(container.textContent).toBe(core.format(record.value.text, record.value.locale));
+
+    const callsBeforeLocaleChange = format.mock.calls.length;
+    record.value = { ...record.value, locale: 'ru' };
+    await nextTick();
+    expect(format).toHaveBeenCalledTimes(callsBeforeLocaleChange + 1);
+    expect(container.textContent).toBe(core.format(record.value.text, record.value.locale));
+  } finally {
+    observer.disconnect();
+    app.unmount();
+  }
+});
+
 it('recomputes from source with locale overrides and isolated nested configuration', async () => {
   const source = '"Hello" -- машина';
   const config = shallowRef<TypographistConfig>({ categories: ['quotes'] });
