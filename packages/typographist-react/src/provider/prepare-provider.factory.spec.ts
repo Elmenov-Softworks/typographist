@@ -214,3 +214,41 @@ it('reuses custom-only rules sharing inactive bundled IDs in both directions', (
     expect(prepareProvider(initialConfig, initial)).toBe(initial);
   }
 });
+
+it.each([
+  { settings: null },
+  { settings: [] },
+  { settings: { 'ru/dash/years': null } },
+  { settings: { 'ru/dash/years': [] } },
+  { settings: { 'common/punctuation/quote': null } },
+  { settings: { 'common/punctuation/quote': [] } },
+])('rejects invalid replacement settings through the core and retains prepared state: %j', (replacement) => {
+  const configurations: TypographistConfig[] = [{}, { rules: [], textLocales: [{ locale: 'en', textRules: [] }] }];
+
+  for (const config of configurations) {
+    const initial = prepareProvider(config);
+    const expected = initial.formatter.format('"source"');
+    const invalidConfig = { ...config, ...replacement };
+    const corePreparation = () => {
+      Reflect.construct(Typographist, [invalidConfig]);
+    };
+
+    expect(corePreparation).toThrow(TypeError);
+
+    try {
+      corePreparation();
+    } catch (error) {
+      if (!(error instanceof TypeError)) {
+        throw error;
+      }
+
+      expect(() => {
+        Reflect.apply(prepareProvider, null, [invalidConfig, initial]);
+      }).toThrow(error.message);
+    }
+
+    expect(initial.formatter.format('"source"')).toBe(expected);
+    expect(prepareProvider(config, initial)).toBe(initial);
+    expect(initial.config).toBe(config);
+  }
+});

@@ -64,11 +64,29 @@ const equalSettings = (left: TextRuleSettings, right: TextRuleSettings) => {
   );
 };
 
+const settingsHaveComparableShape = (settings: unknown) => {
+  if (settings === undefined) {
+    return true;
+  }
+
+  if (typeof settings !== 'object' || settings === null || Array.isArray(settings)) {
+    return false;
+  }
+
+  return Object.values(settings).every(
+    (overrides: unknown) => typeof overrides === 'object' && overrides !== null && !Array.isArray(overrides),
+  );
+};
+
 export const configEquivalent = <TCustomLocale extends string>(
   left: TypographistConfig<TCustomLocale>,
   right: TypographistConfig<TCustomLocale>,
   registrationLocales: readonly string[],
 ) => {
+  if (!settingsHaveComparableShape(left.settings) || !settingsHaveComparableShape(right.settings)) {
+    return false;
+  }
+
   const leftSettings = left.settings ?? {};
   const rightSettings = right.settings ?? {};
   const settingIds = new Set([...Object.keys(leftSettings), ...Object.keys(rightSettings)]);
