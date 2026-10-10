@@ -1,44 +1,43 @@
-# Rules transformer
+# Benchmark tools
 
-`@elmenov-softworks/rules-transformer` converts UTF-8 TeX hyphenation tables to
-TypeScript locale rules. It is independent of the typography runtime and has
-no runtime dependencies.
+Two recorded comparisons are retained in [benchmarks](../../benchmarks/):
+[Typograf](../../benchmarks/typograf.html) and
+[hyphenation libraries](../../benchmarks/hyphenation.html).
+Their JSON files retain settings, versions, source revisions and raw samples.
+They are historical measurements, not automatically refreshed results.
 
-After globally installing the package, run its bin command directly:
-
-```sh
-transform-rules source.tex generated-rules.ts
-transform-rules --help
-```
-
-The package declares `"bin": { "transform-rules": "./dist/cli.js" }`.
-The emitted executable has a Node.js shebang; callers invoke the command without
-an explicit interpreter. For a local project installation, the same executable
-is available at `node_modules/.bin/transform-rules`.
-
-To install a locally built archive before publication, run from the workspace:
+Build the core before running a harness:
 
 ```sh
-npm run build --workspace=@elmenov-softworks/rules-transformer
-npm pack --workspace=@elmenov-softworks/rules-transformer
-npm install --global ./elmenov-softworks-rules-transformer-0.1.0.tgz
-transform-rules source.tex generated-rules.ts
+npm run build --workspace=@elmenov-softworks/typographist
+node tools/benchmarks/hyphenation.ts --output /tmp/typographist-benchmarks/latest
 ```
 
-Input must have one plain `\patterns{...}` block and an optional plain
-`\hyphenation{...}` block. This is a converter for pattern tables, not a general
-TeX interpreter. Invalid syntax fails before writing the destination. Input and
-output must be different files; an existing destination is replaced. Its parent
-directory must already exist.
+The hyphenation harness generates JSON and standalone HTML for both algorithms.
+Use the category matrix in [typography](typography/README.md) to measure symbolic
+formatting separately from hyphenation.
 
-Output exports frozen `patterns` and `exceptions` arrays for use in a
-`TypographistRules` plugin. Exception hyphens become UTF-16 offsets; an entry
-without hyphens prevents breaks. Source comments, including copyright and
-permission notices, are retained.
+For a fresh cache and external-library comparison, install pinned competitors
+outside the workspace:
 
-The package also exports `transformRulesFile` for the repository's regeneration
-helper. [Bundled table regeneration](../../tools/rules-transformer/README.md)
-verifies retained byte lengths and SHA-256 hashes before converting the sources.
+```sh
+npm install --prefix /tmp/typographist-competitors --ignore-scripts \
+  hyphen@1.14.1 hypher@0.2.5 hyphenopoly@6.1.0 \
+  hyphenation.en-us@0.2.1 hyphenation.ru@0.2.1
+node tools/benchmarks/cache-comparison.ts \
+  --modules /tmp/typographist-competitors/node_modules \
+  --output /tmp/typographist-benchmarks/cache-comparison
+```
 
-Build, typecheck, lint and test use the shared workspace tooling. Run them with
-`npm run <command> --workspace=@elmenov-softworks/rules-transformer`.
+This measures disabled, initially empty and warmed Typographist caches, plus
+fresh and warmed native external instances. Each sample constructs a new
+instance, with preparation and cache-populating time recorded separately.
+Three preliminary samples precede seven measured calls. Imports are excluded.
+Output checks run outside timing. Failed preservation checks remain visible
+but do not contribute to ratios; unsupported cases have no timing.
+
+Compare results on the same machine and runtime. Different dictionaries,
+protection policies and native cache behavior prevent a universal ranking.
+Khristov is heuristic; Hyphenopoly uses WASM. Browser rendering of an HTML
+report is not a browser performance measurement. Estimated cache budgets are
+not measured heap usage.

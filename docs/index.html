@@ -9,25 +9,16 @@
 <div class="tsd-page-title">
 <h1>Typographist</h1></div>
 <div class="tsd-panel tsd-typography"><h1 id="typographist" class="tsd-anchor-link">Typographist<a href="#typographist" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
-<p>Typography libraries for JavaScript and components for Vue, React, and Solid.
-The core package applies symbolic typography and inserts soft hyphens.
-Letters, case, word order and numeric notation are preserved by bundled rules.
-The framework packages are currently placeholders.</p>
-<pre><code class="ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">Typographist</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@elmenov-softworks/typographist&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">typographist</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;en&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">categories:</span><span class="hl-1"> [</span><span class="hl-3">&#39;hyphenation&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  </span><span class="hl-2">excludedWords:</span><span class="hl-1"> [</span><span class="hl-3">&#39;Typographist&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  </span><span class="hl-2">useFast:</span><span class="hl-1"> </span><span class="hl-4">false</span><span class="hl-1">,</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-2">typographist</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;table&#39;</span><span class="hl-1">); </span><span class="hl-7">// &#39;ta\u00adble&#39;</span><br/><span class="hl-2">typographist</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;асбест&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;ru&#39;</span><span class="hl-1">); </span><span class="hl-7">// &#39;ас\u00adбест&#39;</span>
+<p>Symbolic typography and soft hyphenation for JavaScript and TypeScript.
+The core is a standalone ESM package for Node.js and browsers, with built-in
+Russian and US English data and no runtime dependencies.</p>
+<pre><code class="ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">Typographist</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@elmenov-softworks/typographist&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">typographist</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;ru&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">useFast:</span><span class="hl-1"> </span><span class="hl-4">true</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">cacheSize:</span><span class="hl-1"> </span><span class="hl-7">16</span><span class="hl-1">,</span><br/><span class="hl-1">});</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">formatted</span><span class="hl-1"> = </span><span class="hl-2">typographist</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;Он сказал: &quot;Привет&quot;...&#39;</span><span class="hl-1">);</span><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">english</span><span class="hl-1"> = </span><span class="hl-2">typographist</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;The &quot;reader&quot; said...&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;en&#39;</span><span class="hl-1">);</span>
 </code><button type="button">Copy</button></pre>
 
-<p>Quotation spacing defaults to narrow NBSP (U+202F) immediately inside Russian
-and English quotation pairs. It replaces one ordinary boundary space or inserts
-a gap when none exists, preserving additional whitespace and existing NBSPs.
-Tabs, line endings and protected bytes remain unchanged. Use
-<code>settings: { 'common/punctuation/quote': { spacing: false } }</code> to disable it.</p>
-<p>Omitting <code>categories</code> selects <code>quotes</code>, <code>dashes</code>, <code>punctuation</code>,
-<code>nonbreakingSpacing</code>, and <code>hyphenation</code>. Consumer <code>spacing</code> rules require explicit
-category selection. This changes the previous
-hyphenation-only default: punctuation and whitespace can now change before soft
-hyphens are inserted. To retain the previous behavior, use
-<code>categories: ['hyphenation']</code> as above. <code>useFast</code> changes only the hyphenation
-algorithm, independently of selected text categories.</p>
+<p>Reuse the instance across calls. In a browser, assign the result to
+<code>element.textContent</code>; soft hyphens become visible when the browser wraps text.</p>
+<h2 id="formatting" class="tsd-anchor-link">Formatting<a href="#formatting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>By default, <code>format</code> applies all bundled categories:</p>
 <table>
 <thead>
 <tr>
@@ -38,192 +29,160 @@ algorithm, independently of selected text categories.</p>
 <tbody>
 <tr>
 <td><code>quotes</code></td>
-<td>Russian and English quotation pairs, nesting and boundary NBSPs.</td>
+<td>Locale-specific quotation marks, nesting and narrow nonbreaking spaces inside quotation pairs.</td>
 </tr>
 <tr>
 <td><code>dashes</code></td>
-<td>Supported prose and range separators, and clear unary minus signs.</td>
+<td>Prose dashes, supported range separators and unary minus signs.</td>
 </tr>
 <tr>
 <td><code>punctuation</code></td>
-<td>Apostrophe and ellipsis glyph conversion; repeated signs stay.</td>
-</tr>
-<tr>
-<td><code>spacing</code></td>
-<td>Consumer-supplied spacing rules; no bundled rules.</td>
+<td>Typographic apostrophes and ellipses.</td>
 </tr>
 <tr>
 <td><code>nonbreakingSpacing</code></td>
-<td>Supported word, abbreviation, number-label and unit bindings.</td>
+<td>Nonbreaking bindings for supported words, abbreviations, labels and units.</td>
 </tr>
 <tr>
 <td><code>hyphenation</code></td>
-<td>Soft hyphens from the selected existing algorithm.</td>
+<td>Soft hyphens from the selected algorithm.</td>
 </tr>
 </tbody>
 </table>
-<pre><code class="ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">punctuation</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">({ </span><span class="hl-2">categories:</span><span class="hl-1"> [</span><span class="hl-3">&#39;punctuation&#39;</span><span class="hl-1">] });</span><br/><span class="hl-2">punctuation</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;Wait...&#39;</span><span class="hl-1">); </span><span class="hl-7">// &#39;Wait…&#39;, without soft hyphens</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">unchanged</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">({ </span><span class="hl-2">categories:</span><span class="hl-1"> [] });</span><br/><span class="hl-2">unchanged</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;  Wait...  &#39;</span><span class="hl-1">); </span><span class="hl-7">// &#39;  Wait...  &#39;</span>
+<p>An explicit <code>categories</code> list replaces the defaults. To format symbols without
+hyphenation:</p>
+<pre><code class="ts"><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">symbols</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">({</span><br/><span class="hl-1">  </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;ru&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">categories:</span><span class="hl-1"> [</span><span class="hl-3">&#39;quotes&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;dashes&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;punctuation&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;nonbreakingSpacing&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">  </span><span class="hl-2">settings:</span><span class="hl-1"> { </span><span class="hl-3">&#39;common/punctuation/quote&#39;</span><span class="hl-2">:</span><span class="hl-1"> { </span><span class="hl-2">spacing:</span><span class="hl-1"> </span><span class="hl-4">false</span><span class="hl-1"> } },</span><br/><span class="hl-1">});</span>
 </code><button type="button">Copy</button></pre>
 
-<p>Explicit category lists replace the default selection; an empty list disables
-formatting but still validates text and requires a registered locale. Settings
-override the selected rule's defaults; they do not select categories. Unknown
-rule IDs, undeclared setting names and mismatched primitive types are rejected.
-Bundled rule settings apply only where that rule supports the registered locale;
-Russian settings can coexist with English and consumer typography-only locales.
-They do not add bundled capabilities to consumer locales.
-Enabled rules also validate setting ranges during preparation. Bundled rules do not
-clean whitespace or correct repeated punctuation. Removed cleanup settings are invalid. See the
-<a href="media/typograf-rule-inventory.md">rule catalogue</a> for individual
-defaults, settings, ordering, reference IDs and deviations.</p>
-<p><code>rules</code> continues to supply hyphenation datasets; it does not select formatting
-categories. <code>textRules</code> supplies shared symbolic rules and <code>textLocales</code> registers
-locales with symbolic rules but no hyphenation data. No Typograf runtime dependency
-is required. Bundled typography covers <code>en</code> and <code>ru</code> only. The <code>en</code> typography
-currently shares the implemented behavior of reference <code>en-US</code> and <code>en-GB</code>; neither
-regional identifier is registered automatically. There is no region fallback.</p>
-<p>Configuration defaults to <code>locale: 'en'</code>, English and Russian rules, no excluded
-words, and <code>useFast: false</code>. Standard mode uses Knuth–Liang patterns. Set
-<code>useFast: true</code> to select the Khristov heuristic in the modification by Dymchenko
-and Varsanofyev. For example, fast mode formats <code>hyphenation</code> as
-<code>hyp\u00adhe\u00adna\u00adtion</code>. <code>Locale</code> contains only the bundled locales, <code>'en' | 'ru'</code>. The bundled <code>en</code> rules use US English
-patterns. Selecting a locale does not automatically detect languages within
-text. Unsupported words remain unchanged.</p>
-<p>Only <code>Typographist</code> and <code>TypographistRules</code> are runtime exports. Configuration,
-locale, and declarative plugin output types are also available. Internal
-algorithms, matchers, normalization and prepared services are not public APIs.</p>
-<p><code>cacheSize</code> defaults to 64 MiB. Positive finite numbers, including fractions,
-set the estimated word-cache budget; zero disables caching. Negative,
-non-finite and non-number values throw during initialization. Each instance
-starts with an empty in-memory LRU cache shared across its locales. Successful
-rule additions, replacements and removals clear it. Failed changes and absent
-locale removals preserve it.</p>
-<p>The estimate is 96 bytes per entry plus two bytes per UTF-16 code unit in its
-JSON-encoded <code>[locale, originalWord]</code> key and formatted result. This accounts
-for identity, strings and entry overhead, but is not an exact JavaScript heap
-limit: physical memory varies by runtime. Prepared rules and temporary
-formatting allocations are outside the budget. The budget allocates nothing
-up front; entries larger than it are formatted without retention.</p>
-<p>An instance has four public methods:</p>
-<ul>
-<li><code>format(text, locale?)</code> selects the call's locale or the configured default.</li>
-<li><code>addRules(rules)</code> compiles and adds or replaces the plugin's locale atomically.</li>
-<li><code>addTextLocale(definition)</code> adds or atomically replaces a typography-only locale.</li>
-<li><code>removeRules(locale)</code> removes the locale and returns whether it was registered.</li>
-</ul>
-<p>Unknown locales throw. The default locale must be registered at construction;
-removing it makes formatting without an override fail until rules are added
-again. Duplicate locales in the constructor are rejected. Configuration arrays
-and rule data are snapshotted during preparation. Excluded words use exact,
-case-sensitive matches. Existing soft hyphens, identifiers, addresses and
-unsupported complete words retain the existing hyphenation preservation behavior.
-<code>excludedWords</code> excludes only hyphenation; surrounding typography still runs.
-Recognized URLs, emails and nonempty <code>protectedContent</code> literals bypass both text
-rules and hyphenation. Identifier filters belong to hyphenation and do not disable
-surrounding whitespace or punctuation rules. Plain-text formatting does not sanitize
-HTML or generate markup.</p>
-<p>Text handlers run on unprotected segments in ascending <code>order</code>, followed by
-hyphenation. Equal priorities preserve registration order: bundled rules, shared
-<code>textRules</code>, then locale-owned rules. Protection can split a sentence or quotation
-across segments; custom handlers must not assume they receive the entire input.
-Their optional context identifies original line and complete-text boundaries.
-Preparation runs once per locale registration. Handlers must synchronously return
-a string; promises and other result types throw. Custom handlers own their
-content-preservation and repeated-formatting behavior.</p>
-<p>Bundled rules no longer convert CRLF or lone CR to LF. The removed
-<code>common/space/normalizeLineEndings</code> builtin ID is rejected in settings.</p>
-<p>Existing NBSPs are preserved instead of being converted to ordinary spaces before
-nonbreaking bindings. The removed <code>common/nbsp/replaceNbsp</code> builtin ID is rejected
-in settings.</p>
-<p>A typography-only locale needs no fabricated patterns or letter classifications:</p>
-<pre><code class="ts"><span class="hl-0">import</span><span class="hl-1"> </span><span class="hl-0">type</span><span class="hl-1"> { </span><span class="hl-2">TextLocale</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@elmenov-softworks/typographist&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">exampleLocale</span><span class="hl-1">: </span><span class="hl-8">TextLocale</span><span class="hl-1">&lt;</span><span class="hl-3">&#39;example&#39;</span><span class="hl-1">&gt; = {</span><br/><span class="hl-1">  </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;example&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">textRules:</span><span class="hl-1"> [</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">      </span><span class="hl-2">id:</span><span class="hl-1"> </span><span class="hl-3">&#39;example/quotes&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">category:</span><span class="hl-1"> </span><span class="hl-3">&#39;quotes&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">order:</span><span class="hl-1"> </span><span class="hl-9">410</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">defaults:</span><span class="hl-1"> {},</span><br/><span class="hl-1">      </span><span class="hl-6">prepare</span><span class="hl-2">:</span><span class="hl-1"> () </span><span class="hl-4">=&gt;</span><span class="hl-1"> (</span><span class="hl-2">text</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-2">text</span><span class="hl-1">.</span><span class="hl-6">replace</span><span class="hl-1">(</span><span class="hl-10">/&quot;</span><span class="hl-11">([^</span><span class="hl-10">&quot;\n</span><span class="hl-11">]</span><span class="hl-12">+</span><span class="hl-11">)</span><span class="hl-10">&quot;/</span><span class="hl-4">g</span><span class="hl-1">, </span><span class="hl-3">&#39;‹$1›&#39;</span><span class="hl-1">),</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">      </span><span class="hl-2">id:</span><span class="hl-1"> </span><span class="hl-3">&#39;example/spacing&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">category:</span><span class="hl-1"> </span><span class="hl-3">&#39;spacing&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">order:</span><span class="hl-1"> </span><span class="hl-9">210</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">defaults:</span><span class="hl-1"> {},</span><br/><span class="hl-1">      </span><span class="hl-6">prepare</span><span class="hl-2">:</span><span class="hl-1"> () </span><span class="hl-4">=&gt;</span><span class="hl-1"> (</span><span class="hl-2">text</span><span class="hl-1">) </span><span class="hl-4">=&gt;</span><span class="hl-1"> </span><span class="hl-2">text</span><span class="hl-1">.</span><span class="hl-6">replace</span><span class="hl-1">(</span><span class="hl-10">/ </span><span class="hl-12">{2,}</span><span class="hl-10">/</span><span class="hl-4">g</span><span class="hl-1">, </span><span class="hl-3">&#39; &#39;</span><span class="hl-1">),</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">  ],</span><br/><span class="hl-1">};</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">customText</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">&lt;</span><span class="hl-3">&#39;example&#39;</span><span class="hl-1">&gt;({</span><br/><span class="hl-1">  </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;example&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-2">rules:</span><span class="hl-1"> [],</span><br/><span class="hl-1">  </span><span class="hl-2">textLocales:</span><span class="hl-1"> [</span><span class="hl-2">exampleLocale</span><span class="hl-1">],</span><br/><span class="hl-1">  </span><span class="hl-2">categories:</span><span class="hl-1"> [</span><span class="hl-3">&#39;quotes&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;spacing&#39;</span><span class="hl-1">],</span><br/><span class="hl-1">});</span><br/><span class="hl-2">customText</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;&quot;hello&quot;  world&#39;</span><span class="hl-1">); </span><span class="hl-7">// &#39;‹hello› world&#39;</span>
-</code><button type="button">Copy</button></pre>
-
-<p>This small consumer rule handles paired straight quotes only; it does not provide
-nested or unmatched quotation handling. Consumer locales receive no implicit
-bundled rules. Omitting categories uses their available text capabilities;
-explicitly selecting <code>hyphenation</code> for a typography-only locale throws. Successful
-replacement clears the shared word cache; failed registration preserves prior
-state. Supply algorithm data through <code>TypographistRules</code> when hyphenation is needed.</p>
-<p>Built-in repeated-formatting scenarios are tested. Russian day–month range bindings
-remain stable after removal of NBSP normalization. Some nonglobal bindings require
-additional passes when several matches occur in one segment. See the
-<a href="media/typograf-rule-inventory.md#repeated-formatting-regressions">catalogue's repeated-formatting notes</a>.
-Bundled quotation handling, reference coverage and completed-feature benchmarks
-are implemented and recorded. Complete independent review and final owner acceptance
-remain open; no publication is authorized. See the
-<a href="media/requirements.md">verification record</a>.</p>
-<p>Custom plugins extend <code>TypographistRules</code>. Its declarative constructor requires both
-standard and fast algorithm datasets. Subclasses
-can instead override the synchronous <code>compile</code>
-operation when they own the storage. No runtime algorithm or normalization
-internals are needed:</p>
-<pre><code class="ts"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">TypographistRules</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&#39;@elmenov-softworks/typographist&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-4">class</span><span class="hl-1"> </span><span class="hl-8">GermanRules</span><span class="hl-1"> </span><span class="hl-4">extends</span><span class="hl-1"> </span><span class="hl-8">TypographistRules</span><span class="hl-1">&lt;</span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">&gt; {</span><br/><span class="hl-1">  </span><span class="hl-4">constructor</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">shared</span><span class="hl-1"> = {</span><br/><span class="hl-1">      </span><span class="hl-2">locale:</span><span class="hl-1"> </span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">alphabet:</span><span class="hl-1"> </span><span class="hl-3">&#39;abcdefghijklmnopqrstuvwxyzäöüß&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">leftMin:</span><span class="hl-1"> </span><span class="hl-9">2</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">rightMin:</span><span class="hl-1"> </span><span class="hl-9">2</span><span class="hl-1">,</span><br/><span class="hl-1">    } </span><span class="hl-0">as</span><span class="hl-1"> </span><span class="hl-4">const</span><span class="hl-1">;</span><br/><br/><span class="hl-1">    </span><span class="hl-4">super</span><span class="hl-1">({</span><br/><span class="hl-1">      </span><span class="hl-2">standard:</span><span class="hl-1"> {</span><br/><span class="hl-1">        ...</span><span class="hl-2">shared</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-2">patterns:</span><span class="hl-1"> [</span><span class="hl-3">&#39;a1b&#39;</span><span class="hl-1">], </span><span class="hl-7">// Replace with complete language patterns.</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">      </span><span class="hl-2">fast:</span><span class="hl-1"> {</span><br/><span class="hl-1">        ...</span><span class="hl-2">shared</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-2">vowels:</span><span class="hl-1"> </span><span class="hl-3">&#39;aeiouyäöü&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-2">consonants:</span><span class="hl-1"> </span><span class="hl-3">&#39;bcdfghjklmnpqrstvwxzß&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-2">specialLetters:</span><span class="hl-1"> </span><span class="hl-3">&#39;&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">    });</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">const</span><span class="hl-1"> </span><span class="hl-5">custom</span><span class="hl-1"> = </span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">Typographist</span><span class="hl-1">&lt;</span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">&gt;();</span><br/><span class="hl-2">custom</span><span class="hl-1">.</span><span class="hl-6">addRules</span><span class="hl-1">(</span><span class="hl-4">new</span><span class="hl-1"> </span><span class="hl-6">GermanRules</span><span class="hl-1">());</span><br/><span class="hl-2">custom</span><span class="hl-1">.</span><span class="hl-6">format</span><span class="hl-1">(</span><span class="hl-3">&#39;abcd&#39;</span><span class="hl-1">, </span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">);</span><br/><span class="hl-2">custom</span><span class="hl-1">.</span><span class="hl-6">removeRules</span><span class="hl-1">(</span><span class="hl-3">&#39;de&#39;</span><span class="hl-1">);</span>
-</code><button type="button">Copy</button></pre>
-
-<p>Default instances accept only <code>en</code> and <code>ru</code> in configuration, formatting and
-removal. Custom locales are inferred from typed rules supplied to the
-constructor, for example <code>new Typographist({ locale: 'de', rules: [new GermanRules()] })</code>.
-For dynamic registration, declare additional locale strings on the instance
-as shown above. A union such as <code>new Typographist&lt;'de' | 'zu'&gt;()</code> permits both
-additional locales alongside <code>en</code> and <code>ru</code>; their rules still need registration.
-Unregistered locales still throw at runtime. The library does
-not promise language coverage for externally supplied rules.</p>
-<p>Supplying <code>rules</code> in the constructor replaces the bundled list. <code>compile</code> runs
-once per registration and receives the configured <code>useFast</code> value. The base
-class requires <code>{ standard, fast }</code>: <code>standard</code> is <code>CompiledRules</code> with
-Knuth–Liang patterns, and <code>fast</code> is <code>KhristovRules</code> with <code>vowels</code>, <code>consonants</code>,
-and <code>specialLetters</code>. Both share <code>LanguageRules</code>: locale, alphabet, break minima
-and optional explicit exceptions. Subclasses can inherit this compiler or
-override it with a normal method or function property. An override must return
-Khristov data for <code>compile(true)</code> and Knuth–Liang data for <code>compile(false)</code>.</p>
-<p>The example above supplies both datasets. <code>useFast</code> selects the algorithm; it
-does not make either declarative dataset optional. Subclass overrides remain
-responsible for returning data compatible with the selected algorithm. Missing or
-incompatible selected data fails registration; there is no fallback to another
-algorithm. Invalid replacement data leaves the previous registration usable.</p>
-<p>Patterns and classifications must match the alphabet's NFC lowercase form.
-The vowel, consonant and special-letter sets must partition that alphabet
-without duplicates or overlap; the special-letter set may be empty. Exception
-positions are increasing interior UTF-16 offsets at grapheme boundaries; an
-empty positions array prevents hyphenation. Exceptions replace all algorithm
-suggestions in both modes. Minima count original graphemes and apply to
-exceptions too. Matching normalizes words, while reconstruction preserves their
-original case, characters and Unicode representation.</p>
-<p>Bundled English uses vowels <code>aeiouy</code>, consonants <code>bcdfghjklmnpqrstvwxz</code>, and no
-special letters. <code>y</code> is always a vowel, including at the start of a word.
-Bundled Russian uses vowels <code>аеёиоуыэюя</code>, consonants <code>бвгджзклмнпрстфхцчшщ</code>,
-and special letters <code>йьъ</code>. The minima remain 2/3 for English and 2/2 for Russian.
-Both modes retain the existing explicit exceptions: <code>table</code> becomes
-<code>ta\u00adble</code>, and <code>present</code> remains unchanged.</p>
-<p>Khristov applies ordered character-class rules with each suggested break acting
-as a barrier for later matches. It can split vowel groups and consonant digraphs
-differently from dictionary hyphenation: <code>beautiful</code> becomes
-<code>be\u00adauti\u00adful</code>, and <code>вьюга</code> becomes <code>вь\u00adюга</code>. Use standard mode when
-these linguistic distinctions matter. Fast mode does not consult Knuth–Liang
-to repair ordinary words. No accuracy percentage or universal language coverage
-is promised; additional locales need suitable supplied data.</p>
-<p>The public class coordinates a locale registry and a selected algorithm
-strategy. Stateful registration stays in the registry; word analysis, pattern
-matching, exception resolution, scanning and reconstruction use separate
-functions. The formatting path has no unbounded word cache or shared scratch
-buffers.</p>
-<p><a href="media/README.md">Rules transformer</a> converts TeX tables to
-TypeScript and is installed independently as the <code>transform-rules</code> CLI.
-<a href="media/README-1.md">Benchmarks</a> produce JSON and a standalone HTML report
-for both algorithm modes, optionally comparing a previous emitted implementation.</p>
+<p><code>categories: []</code> leaves the input unchanged. The additional <code>spacing</code> category
+is available for consumer rules and has no bundled cleanup rules.</p>
+<p>The default locale is <code>en</code>. <code>useFast: false</code>, the default, selects Knuth–Liang
+pattern-based hyphenation. <code>useFast: true</code> selects the Khristov heuristic in the
+modification by Dymchenko and Varsanofyev. Fast mode uses character classes;
+it can produce linguistically different breaks from the pattern-based mode.</p>
+<p><code>cacheSize</code> sets an approximate shared word-cache budget in MiB, defaulting to 64. Zero disables caching. The per-instance LRU cache lives in memory, allocates
+nothing up front and has no persistence. Its budget is an estimate rather than
+an exact heap limit; prepared rules and temporary allocations are separate.
+Successful locale additions, replacements and removals clear the cache.</p>
+<h2 id="limits-and-extensions" class="tsd-anchor-link">Limits and extensions<a href="#limits-and-extensions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Bundled rules preserve letters, case, word order and numeric notation. They do
+not correct spelling, repeated punctuation, extra spaces, tabs or line endings,
+and do not reformat numbers or currencies. Quotation spacing is enabled by
+default; the setting above disables it.</p>
+<p>Formatting handles plain text and does not parse or sanitize HTML. Recognized
+URLs, emails and nonempty <code>protectedContent</code> literals bypass formatting.
+<code>excludedWords</code> excludes exact, case-sensitive words from hyphenation only.</p>
+<p>Locale selection is explicit: there is no language detection or regional
+fallback. Built-in locale identifiers are <code>ru</code> and <code>en</code>. Additional languages
+can supply <code>TypographistRules</code> for hyphenation and <code>TextLocale</code>/<code>TextRule</code>
+definitions for symbolic formatting. Declarative hyphenation rules supply both
+standard patterns and fast character classes. Typography-only locales need
+no hyphenation dataset. No linguistic accuracy guarantee applies to custom data
+or heuristic hyphenation.</p>
+<p>The public service methods are <code>format(text, locale?)</code>, <code>addRules(rules)</code>,
+<code>addTextLocale(definition)</code> and <code>removeRules(locale)</code>. Unknown locales throw.
+Some non-global bindings need another formatting pass when a segment contains
+several matching sequences. React, Vue and Solid packages are currently
+placeholders; use the core directly.</p>
+<h2 id="benchmarks" class="tsd-anchor-link">Benchmarks<a href="#benchmarks" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Typographist is faster than Typograf on the ordinary prose workloads below,
+with hyphenation and quotation spacing disabled and comparable symbolic rules
+selected in Typograf 7.8.0. These workloads produced identical outputs.</p>
+<p>Median milliseconds per call; lower is faster:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th style="text-align:right">Typographist</th>
+<th style="text-align:right">Typograf</th>
+<th style="text-align:right">Typographist speedup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>English, 15,200 UTF-16 units</td>
+<td style="text-align:right">0.407</td>
+<td style="text-align:right">0.638</td>
+<td style="text-align:right">1.57×</td>
+</tr>
+<tr>
+<td>English, 60,800 UTF-16 units</td>
+<td style="text-align:right">1.641</td>
+<td style="text-align:right">2.542</td>
+<td style="text-align:right">1.55×</td>
+</tr>
+<tr>
+<td>Russian, 16,320 UTF-16 units</td>
+<td style="text-align:right">0.848</td>
+<td style="text-align:right">1.223</td>
+<td style="text-align:right">1.44×</td>
+</tr>
+<tr>
+<td>Russian, 65,280 UTF-16 units</td>
+<td style="text-align:right">3.306</td>
+<td style="text-align:right">4.649</td>
+<td style="text-align:right">1.41×</td>
+</tr>
+</tbody>
+</table>
+<p><a href="media/typograf.html">Charts</a> · <a href="media/typograf.json">Inputs, settings and raw samples</a>.
+This is a symbolic-formatting comparison, not the default profile with soft
+hyphens. On the mixed URL/email workloads, Typograf was 1.5–2.2× faster and
+outputs differed. Default Typograf also performs cleanup outside our scope.</p>
+<p>For hyphenation, Typographist with a warmed 64 MiB cache was faster than
+hyphen and Hypher on shared passing workloads. Ratios below are the median of
+per-workload library/Typographist times; above one means Typographist is faster.</p>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th style="text-align:right">Knuth–Liang speedup</th>
+<th style="text-align:right">Khristov speedup</th>
+<th style="text-align:right">Included workloads</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hyphen 1.14.1</td>
+<td style="text-align:right">1.22×</td>
+<td style="text-align:right">1.30×</td>
+<td style="text-align:right">29/29</td>
+</tr>
+<tr>
+<td>Hypher 0.2.5</td>
+<td style="text-align:right">1.42×</td>
+<td style="text-align:right">1.54×</td>
+<td style="text-align:right">16/29</td>
+</tr>
+<tr>
+<td>Hyphenopoly 6.1.0 (WASM)</td>
+<td style="text-align:right">0.17×</td>
+<td style="text-align:right">0.18×</td>
+<td style="text-align:right">9/29</td>
+</tr>
+</tbody>
+</table>
+<p><a href="media/hyphenation.html">Charts</a> · <a href="media/hyphenation.json">Settings and raw samples</a>.
+Hyphenopoly was faster than Typographist on its nine passing workloads.
+Failed preservation checks and unsupported cases are excluded from ratios but
+remain in the report. Dictionaries, caches and word-protection policies differ;
+passing checks do not establish identical linguistic results. This hyphenation
+report measures the earlier cache implementation at the revision recorded in
+its JSON, rather than a fresh run of the current source.</p>
+<p>Both reports use Node.js 24.21.0 on an Intel Core i5-13420H under Linux/WSL.
+Construction and imports are excluded from formatting times. Typograf uses
+nine rotated-order batches after ten warm-up calls; the hyphenation comparison
+uses seven samples after three preliminary samples, with native external cache
+policies. Measurements include JIT, GC and machine-load noise. These are two
+recorded runs, not universal rankings or browser measurements.</p>
+<h2 id="development" class="tsd-anchor-link">Development<a href="#development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>Use the Node.js version in <code>.nvmrc</code>, then run <code>npm ci</code>.</p>
-<ul>
-<li><code>npm run build</code> builds all packages and declaration files.</li>
-<li><code>npm run typecheck</code> checks source and tool configurations.</li>
-<li><code>npm run lint</code> and <code>npm run format:check</code> check code and formatting.</li>
-<li><code>npm test</code> runs the Vitest projects, including release automation tests.</li>
-<li><code>npm run docs</code> generates TypeDoc after <code>npm run build</code>.</li>
-</ul>
-<p>Releases and documentation publication run in GitHub Actions after updates to
-<code>master</code>. All five packages share one version, with patch releases by default.
-For a minor or major release, add <code>.release/request.json</code> with <code>{&quot;type&quot;:&quot;minor&quot;}</code>
-or <code>{&quot;type&quot;:&quot;major&quot;}</code>. The release Action consumes the request once.</p>
+<pre><code class="sh"><span class="hl-6">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">build</span><br/><span class="hl-6">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">typecheck</span><br/><span class="hl-6">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">lint</span><br/><span class="hl-6">npm</span><span class="hl-1"> </span><span class="hl-3">run</span><span class="hl-1"> </span><span class="hl-3">format:check</span><br/><span class="hl-6">npm</span><span class="hl-1"> </span><span class="hl-3">test</span>
+</code><button type="button">Copy</button></pre>
+
+<p><a href="media/README.md">Benchmark tools</a> generate new measurements.
+<a href="media/README-1.md">Rules transformer</a> converts TeX tables
+into language data. <code>npm run docs</code> generates TypeDoc after a build.</p>
 </div></div>
 <div class="col-sidebar">
 <div class="page-menu">
@@ -239,7 +198,12 @@ or <code>{&quot;type&quot;:&quot;major&quot;}</code>. The release Action consume
 <div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
 <details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>
 <h3>On This Page</h3></summary>
-<div class="tsd-accordion-details"><a href="#typographist"><span>Typographist</span></a></div></details></div>
+<div class="tsd-accordion-details"><a href="#typographist"><span>Typographist</span></a>
+<ul>
+<li><a href="#formatting"><span>Formatting</span></a></li>
+<li><a href="#limits-and-extensions"><span>Limits and extensions</span></a></li>
+<li><a href="#benchmarks"><span>Benchmarks</span></a></li>
+<li><a href="#development"><span>Development</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="modules.html">Typographist</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
