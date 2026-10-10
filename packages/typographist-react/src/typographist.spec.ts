@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { Typographist } from '@elmenov-softworks/typographist';
-import type { TypographistConfig } from '@elmenov-softworks/typographist';
+import type { TextRule, TypographistConfig } from '@elmenov-softworks/typographist';
 import { act, createElement } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
@@ -141,4 +141,59 @@ describe('React integration', () => {
       });
     }
   });
+});
+
+it.each([
+  { direction: 'omitted-first', locale: 'custom-a' as const, override: 'custom-b' as const },
+  { direction: 'explicit-first', locale: 'custom-a' as const, override: 'custom-b' as const },
+  { direction: 'omitted-first', locale: 'custom-b' as const, override: 'custom-a' as const },
+  { direction: 'explicit-first', locale: 'custom-b' as const, override: 'custom-a' as const },
+])('updates distinct locale defaults ($direction, default $locale)', async ({ direction, locale, override }) => {
+  const createSuffixRule = (suffix: string) => {
+    const rule: TextRule = {
+      id: 'suffix',
+      category: 'spacing',
+      order: 0,
+      defaults: { suffix },
+      prepare: (settings) => (text) => text + String(settings.suffix),
+    };
+
+    return rule;
+  };
+  const omitted: TypographistConfig<'custom-a' | 'custom-b'> = {
+    locale,
+    categories: ['spacing'],
+    textLocales: [
+      { locale: 'custom-a', textRules: [createSuffixRule('!')] },
+      { locale: 'custom-b', textRules: [createSuffixRule('?')] },
+    ],
+  };
+  const explicit = { ...omitted, settings: { suffix: { suffix: '?' } } };
+  const replacements = direction === 'omitted-first' ? [omitted, explicit, omitted] : [explicit, omitted, explicit];
+  const container = document.createElement('div');
+  const root = createRoot(container);
+
+  try {
+    for (const replacement of replacements) {
+      await act(async () => {
+        root.render(
+          createElement(
+            TypographistProvider,
+            { config: replacement },
+            createElement('span', null, createElement(TypographistText, { text: 'source' })),
+            createElement('span', null, createElement(TypographistText, { text: 'source', locale: override })),
+          ),
+        );
+        await Promise.resolve();
+      });
+      const core = new Typographist(replacement);
+      expect(container.children[0]?.textContent).toBe(core.format('source'));
+      expect(container.children[1]?.textContent).toBe(core.format('source', override));
+    }
+  } finally {
+    await act(async () => {
+      root.unmount();
+      await Promise.resolve();
+    });
+  }
 });

@@ -27,12 +27,7 @@ export const configEquivalent = <TCustomLocale extends string>(
   const leftSettings = left.settings ?? {};
   const rightSettings = right.settings ?? {};
   const settingIds = new Set([...Object.keys(leftSettings), ...Object.keys(rightSettings)]);
-  const declaredDefaults = new Map(
-    [...(left.textRules ?? []), ...(left.textLocales ?? []).flatMap((locale) => locale.textRules)].map((rule) => [
-      rule.id,
-      rule.defaults,
-    ]),
-  );
+  const declaredRules = [...(left.textRules ?? []), ...(left.textLocales ?? []).flatMap((locale) => locale.textRules)];
   const hasTextLocales = (left.textLocales?.length ?? 0) > 0 || (right.textLocales?.length ?? 0) > 0;
 
   return (
@@ -48,15 +43,17 @@ export const configEquivalent = <TCustomLocale extends string>(
     (left.rules === right.rules ||
       (left.rules !== undefined && right.rules !== undefined && equalEntries(left.rules, right.rules))) &&
     [...settingIds].every((id) => {
-      const defaults = declaredDefaults.get(id);
+      const declarations = declaredRules.filter((rule) => rule.id === id);
       const leftRule = leftSettings[id];
       const rightRule = rightSettings[id];
 
-      if (defaults === undefined) {
+      if (declarations.length === 0) {
         return leftRule !== undefined && rightRule !== undefined && equalSettings(leftRule, rightRule);
       }
 
-      return equalSettings({ ...defaults, ...leftRule }, { ...defaults, ...rightRule });
+      return declarations.every(({ defaults }) =>
+        equalSettings({ ...defaults, ...leftRule }, { ...defaults, ...rightRule }),
+      );
     })
   );
 };

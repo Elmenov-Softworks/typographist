@@ -2,7 +2,7 @@
 import { Worker } from 'node:worker_threads';
 
 import { Typographist } from '@elmenov-softworks/typographist';
-import type { TypographistConfig } from '@elmenov-softworks/typographist';
+import type { TextRule, TypographistConfig } from '@elmenov-softworks/typographist';
 import { createSignal } from 'solid-js';
 import { hydrate, render } from 'solid-js/web';
 
@@ -177,5 +177,60 @@ it('hydrates parsed output from the built public server entry as literal text', 
   } finally {
     dispose();
     Reflect.deleteProperty(globalThis, '_$HY');
+  }
+});
+
+it.each([
+  { direction: 'omitted-first', locale: 'custom-a' as const, override: 'custom-b' as const },
+  { direction: 'explicit-first', locale: 'custom-a' as const, override: 'custom-b' as const },
+  { direction: 'omitted-first', locale: 'custom-b' as const, override: 'custom-a' as const },
+  { direction: 'explicit-first', locale: 'custom-b' as const, override: 'custom-a' as const },
+])('updates distinct locale defaults ($direction, default $locale)', ({ direction, locale, override }) => {
+  const createSuffixRule = (suffix: string) => {
+    const rule: TextRule = {
+      id: 'suffix',
+      category: 'spacing',
+      order: 0,
+      defaults: { suffix },
+      prepare: (settings) => (text) => text + String(settings.suffix),
+    };
+
+    return rule;
+  };
+  const omitted: TypographistConfig<'custom-a' | 'custom-b'> = {
+    locale,
+    categories: ['spacing'],
+    textLocales: [
+      { locale: 'custom-a', textRules: [createSuffixRule('!')] },
+      { locale: 'custom-b', textRules: [createSuffixRule('?')] },
+    ],
+  };
+  const explicit = { ...omitted, settings: { suffix: { suffix: '?' } } };
+  const replacements = direction === 'omitted-first' ? [omitted, explicit, omitted] : [explicit, omitted, explicit];
+  const container = document.createElement('div');
+  const [config, setConfig] = createSignal(direction === 'omitted-first' ? omitted : explicit);
+  const dispose = render(
+    () => (
+      <TypographistProvider config={config()}>
+        <span>
+          <TypographistText text="source" />
+        </span>
+        <span>
+          <TypographistText text="source" locale={override} />
+        </span>
+      </TypographistProvider>
+    ),
+    container,
+  );
+
+  try {
+    for (const replacement of replacements) {
+      setConfig(replacement);
+      const core = new Typographist(replacement);
+      expect(container.children[0]?.textContent).toBe(core.format('source'));
+      expect(container.children[1]?.textContent).toBe(core.format('source', override));
+    }
+  } finally {
+    dispose();
   }
 });

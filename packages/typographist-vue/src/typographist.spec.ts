@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { Typographist } from '@elmenov-softworks/typographist';
-import type { TypographistConfig } from '@elmenov-softworks/typographist';
+import type { TextRule, TypographistConfig } from '@elmenov-softworks/typographist';
 import { createApp, createSSRApp, defineComponent, h, nextTick, ref, shallowRef } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 
@@ -117,6 +117,62 @@ it('hydrates text literally without replacing the server text node', async () =>
     expect(container.textContent).toBe(source);
     expect(Array.from(container.childNodes)).toContain(textNode);
     expect(container.querySelector('b')).toBeNull();
+  } finally {
+    app.unmount();
+  }
+});
+
+it.each([
+  { direction: 'omitted-first', locale: 'custom-a' as const, override: 'custom-b' as const },
+  { direction: 'explicit-first', locale: 'custom-a' as const, override: 'custom-b' as const },
+  { direction: 'omitted-first', locale: 'custom-b' as const, override: 'custom-a' as const },
+  { direction: 'explicit-first', locale: 'custom-b' as const, override: 'custom-a' as const },
+])('updates distinct locale defaults ($direction, default $locale)', async ({ direction, locale, override }) => {
+  const createSuffixRule = (suffix: string) => {
+    const rule: TextRule = {
+      id: 'suffix',
+      category: 'spacing',
+      order: 0,
+      defaults: { suffix },
+      prepare: (settings) => (text) => text + String(settings.suffix),
+    };
+
+    return rule;
+  };
+  const omitted: TypographistConfig<'custom-a' | 'custom-b'> = {
+    locale,
+    categories: ['spacing'],
+    textLocales: [
+      { locale: 'custom-a', textRules: [createSuffixRule('!')] },
+      { locale: 'custom-b', textRules: [createSuffixRule('?')] },
+    ],
+  };
+  const explicit = { ...omitted, settings: { suffix: { suffix: '?' } } };
+  const replacements = direction === 'omitted-first' ? [omitted, explicit, omitted] : [explicit, omitted, explicit];
+  const container = document.createElement('div');
+  const config = shallowRef(direction === 'omitted-first' ? omitted : explicit);
+  const app = createApp(() =>
+    h(
+      TypographistProvider,
+      { config: config.value },
+      {
+        default: () => [
+          h('span', h(TypographistText, { text: 'source' })),
+          h('span', h(TypographistText, { text: 'source', locale: override })),
+        ],
+      },
+    ),
+  );
+  app.mount(container);
+
+  try {
+    for (const replacement of replacements) {
+      config.value = replacement;
+      await nextTick();
+      const core = new Typographist(replacement);
+      expect(container.children[0]?.textContent).toBe(core.format('source'));
+      expect(container.children[1]?.textContent).toBe(core.format('source', override));
+    }
   } finally {
     app.unmount();
   }
