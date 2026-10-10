@@ -256,6 +256,7 @@ it.each([
 it.each([
   ...[
     'cacheSize',
+    'useFast',
     'locale',
     'categories',
     'excludedWords',
@@ -323,20 +324,20 @@ it.each([
   expect(prepareProvider({}, initial)).toBe(initial);
 });
 
-it('does not reuse a core-accepted sparse exclusion array for an invalid element replacement', () => {
+it.each([null, undefined])('does not reuse sparse exclusions for an explicit %s element', (element) => {
   const excludedWords = ['source'];
   Reflect.deleteProperty(excludedWords, '0');
   const config = { excludedWords };
   const initial = prepareProvider(config);
-  const replacement = { excludedWords: [null] };
+  const replacement = { excludedWords: [element] };
   const expected = initial.formatter.format('configuration');
 
   expect(() => {
     Reflect.construct(Typographist, [replacement]);
-  }).toThrow('excludedWords must be an array of strings');
+  }).toThrow(new TypeError('excludedWords must be an array of strings'));
   expect(() => {
     Reflect.apply(prepareProvider, null, [replacement, initial]);
-  }).toThrow('excludedWords must be an array of strings');
+  }).toThrow(new TypeError('excludedWords must be an array of strings'));
   expect(initial.formatter.format('configuration')).toBe(expected);
   expect(prepareProvider(config, initial)).toBe(initial);
 });

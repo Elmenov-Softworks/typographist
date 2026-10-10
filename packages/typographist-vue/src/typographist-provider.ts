@@ -6,12 +6,12 @@ import { prepareProvider } from '@/provider/prepare-provider.factory.js';
 
 export const TypographistProvider = defineComponent(
   (props: { config?: TypographistConfig<string> }, { slots }) => {
-    let prepared = prepareProvider(props.config ?? {});
+    let prepared = prepareProvider(props.config === undefined ? {} : props.config);
     const formatter = shallowRef(prepared);
     provide(formatterKey, formatter);
 
     return () => {
-      const replacement = prepareProvider(props.config ?? {}, prepared);
+      const replacement = prepareProvider(props.config === undefined ? {} : props.config, prepared);
       prepared = replacement;
       formatter.value = replacement;
       return slots.default?.();

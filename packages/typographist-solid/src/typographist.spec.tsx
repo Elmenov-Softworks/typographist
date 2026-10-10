@@ -3,7 +3,7 @@ import { Worker } from 'node:worker_threads';
 
 import { Typographist, TypographistRules } from '@elmenov-softworks/typographist';
 import type { TextRule, TypographistConfig } from '@elmenov-softworks/typographist';
-import { createSignal } from 'solid-js';
+import { catchError, createSignal } from 'solid-js';
 import { hydrate, render } from 'solid-js/web';
 
 import { TypographistProvider, TypographistText, useTypographist } from '@/index.js';
@@ -348,3 +348,50 @@ it.each(['en', 'ru'] as const)(
     }
   },
 );
+
+it('rejects initial null configuration through the public provider', () => {
+  const error = new TypeError('Typographist config must be an object');
+  expect(() => {
+    Reflect.construct(Typographist, [null]);
+  }).toThrow(error);
+  const props = { config: {} };
+  Reflect.set(props, 'config', null);
+  expect(() => render(() => <TypographistProvider {...props} />, document.createElement('div'))).toThrow(error);
+});
+
+it('preserves valid provider state after a null configuration update', () => {
+  const initial: TypographistConfig = { categories: [], locale: 'ru' };
+  const [config, setConfig] = createSignal(initial);
+  const [text, setText] = createSignal('"source"');
+  const errors: unknown[] = [];
+  const container = document.createElement('div');
+  const format = vi.spyOn(Typographist.prototype, 'format');
+  const dispose = render(
+    () =>
+      catchError(
+        () => (
+          <TypographistProvider config={config()}>
+            <TypographistText text={text()} />
+          </TypographistProvider>
+        ),
+        (error) => errors.push(error),
+      ),
+    container,
+  );
+
+  const formatter = format.mock.contexts[0];
+
+  try {
+    Reflect.apply(setConfig, null, [null]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toBeInstanceOf(TypeError);
+    expect(errors[0]).toHaveProperty('message', 'Typographist config must be an object');
+    expect(container.textContent).toBe('"source"');
+    setConfig(initial);
+    setText('"changed"');
+    expect(format.mock.contexts.at(-1)).toBe(formatter);
+    expect(container.textContent).toBe(new Typographist(initial).format(text()));
+  } finally {
+    dispose();
+  }
+});

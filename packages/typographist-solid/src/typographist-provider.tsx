@@ -5,9 +5,9 @@ import { prepareProvider } from '@/provider/prepare-provider.factory.js';
 import type { TypographistProviderProps } from '@/typographist.types.js';
 
 export const TypographistProvider = (props: TypographistProviderProps) => {
-  let prepared = prepareProvider(props.config ?? {});
+  let prepared = prepareProvider(props.config === undefined ? {} : props.config);
   const formatter = createMemo(() => {
-    const replacement = prepareProvider(props.config ?? {}, prepared);
+    const replacement = prepareProvider(props.config === undefined ? {} : props.config, prepared);
     prepared = replacement;
     return replacement;
   });

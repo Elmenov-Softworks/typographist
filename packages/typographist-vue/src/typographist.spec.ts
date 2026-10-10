@@ -360,3 +360,55 @@ it.each(['en', 'ru'] as const)(
     }
   },
 );
+
+it('rejects initial null configuration through the public provider', () => {
+  const error = new TypeError('Typographist config must be an object');
+  expect(() => {
+    Reflect.construct(Typographist, [null]);
+  }).toThrow(error);
+  const props = { config: {} };
+  Reflect.set(props, 'config', null);
+  const app = createApp(() => h(TypographistProvider, props));
+  app.config.warnHandler = () => {};
+  app.config.errorHandler = (caught) => {
+    throw caught;
+  };
+
+  expect(() => app.mount(document.createElement('div'))).toThrow(error);
+});
+
+it('preserves valid provider state after a null configuration update', async () => {
+  const initial: TypographistConfig = { categories: [], locale: 'ru' };
+  const config = shallowRef(initial);
+  const text = ref('"source"');
+  const errors: unknown[] = [];
+  const app = createApp(() =>
+    h(
+      TypographistProvider,
+      { config: config.value },
+      {
+        default: () => h(TypographistText, { text: text.value }),
+      },
+    ),
+  );
+  app.config.errorHandler = (error) => errors.push(error);
+  const container = document.createElement('div');
+  const format = vi.spyOn(Typographist.prototype, 'format');
+  app.mount(container);
+  const formatter = format.mock.contexts[0];
+
+  try {
+    Reflect.set(config, 'value', null);
+    await nextTick();
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toBeInstanceOf(TypeError);
+    expect(errors[0]).toHaveProperty('message', 'Typographist config must be an object');
+    config.value = initial;
+    text.value = '"changed"';
+    await nextTick();
+    expect(format.mock.contexts.at(-1)).toBe(formatter);
+    expect(container.textContent).toBe(new Typographist(initial).format(text.value));
+  } finally {
+    app.unmount();
+  }
+});

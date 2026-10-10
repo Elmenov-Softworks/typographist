@@ -53,7 +53,8 @@ const bundledDefaults: Readonly<Record<string, readonly TextRuleSettings[]>> = {
 };
 
 const equalEntries = <TValue>(left: readonly TValue[], right: readonly TValue[]) =>
-  left.length === right.length && Array.from(left).every((value, index) => Object.is(value, right[index]));
+  left.length === right.length &&
+  Array.from(left).every((value, index) => index in left === index in right && Object.is(value, right[index]));
 
 const equalSettings = (left: TextRuleSettings, right: TextRuleSettings) => {
   const keys = Object.keys(left);
@@ -87,10 +88,12 @@ const configHasComparableShape = <TCustomLocale extends string>(config: Typograp
 
   const locale: unknown = config.locale;
   const cacheSize: unknown = config.cacheSize;
+  const useFast: unknown = config.useFast;
 
   return (
     locale !== null &&
     cacheSize !== null &&
+    useFast !== null &&
     [
       config.categories,
       config.excludedWords,
