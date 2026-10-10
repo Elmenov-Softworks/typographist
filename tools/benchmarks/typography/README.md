@@ -27,6 +27,6 @@ For the repeated-quotation scaling regression, build the core and run:
 node tools/benchmarks/typography/quote-scaling.ts > /tmp/quote-scaling.json
 ```
 
-The fixed inputs contain 5,000, 10,000, 20,000 and 50,000 ASCII quotation marks followed by `cat`, using Russian quotes only. Setup is measured separately; each input has three warmups and seven measured calls, with exact output assertions outside timing. No timing threshold is imposed. The saved `specs/feature/typography/benchmarks/quote-scaling.json` records Node v24.21.0 results from a fresh build of commit `4ae2bf9`: median times were 5.58, 12.63, 13.70 and 34.29 ms; setup took 39.77 ms. Machine load, JIT and garbage collection affect these observations; memory was not measured.
+The fixed inputs contain 5,000, 10,000, 20,000 and 50,000 ASCII quotation marks followed by `cat`, using Russian quotes only. Setup is measured separately; each input has three warmups and seven measured calls, with exact output assertions outside timing. No timing threshold is imposed.
 
 Spacing eligibility uses one directional sweep per depth and direction, followed by one spacing pass. At most three configured quotation depths bound the number of passes; each pass visits each character once. Closing-quote recognition only attempts a quotation run from its first glyph, retaining the existing unmatched-first-glyph behavior without retrying every suffix of the run.
