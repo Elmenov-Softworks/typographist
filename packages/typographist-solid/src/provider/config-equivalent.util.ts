@@ -26,12 +26,20 @@ export const configEquivalent = <TCustomLocale extends string>(
 ) => {
   const leftSettings = left.settings ?? {};
   const rightSettings = right.settings ?? {};
-  const settingIds = Object.keys(leftSettings);
+  const settingIds = new Set([...Object.keys(leftSettings), ...Object.keys(rightSettings)]);
+  const declaredDefaults = new Map(
+    [...(left.textRules ?? []), ...(left.textLocales ?? []).flatMap((locale) => locale.textRules)].map((rule) => [
+      rule.id,
+      rule.defaults,
+    ]),
+  );
+  const hasTextLocales = (left.textLocales?.length ?? 0) > 0 || (right.textLocales?.length ?? 0) > 0;
 
   return (
     (left.locale ?? 'en') === (right.locale ?? 'en') &&
     (left.useFast ?? false) === (right.useFast ?? false) &&
     Object.is(left.cacheSize ?? 64, right.cacheSize ?? 64) &&
+    (!hasTextLocales || (left.categories === undefined) === (right.categories === undefined)) &&
     equalEntries(left.categories ?? defaultCategories, right.categories ?? defaultCategories) &&
     equalEntries(left.excludedWords ?? [], right.excludedWords ?? []) &&
     equalEntries(left.protectedContent ?? [], right.protectedContent ?? []) &&
@@ -39,12 +47,16 @@ export const configEquivalent = <TCustomLocale extends string>(
     equalEntries(left.textRules ?? [], right.textRules ?? []) &&
     (left.rules === right.rules ||
       (left.rules !== undefined && right.rules !== undefined && equalEntries(left.rules, right.rules))) &&
-    settingIds.length === Object.keys(rightSettings).length &&
-    settingIds.every((id) => {
+    [...settingIds].every((id) => {
+      const defaults = declaredDefaults.get(id);
       const leftRule = leftSettings[id];
       const rightRule = rightSettings[id];
 
-      return leftRule !== undefined && rightRule !== undefined && equalSettings(leftRule, rightRule);
+      if (defaults === undefined) {
+        return leftRule !== undefined && rightRule !== undefined && equalSettings(leftRule, rightRule);
+      }
+
+      return equalSettings({ ...defaults, ...leftRule }, { ...defaults, ...rightRule });
     })
   );
 };
