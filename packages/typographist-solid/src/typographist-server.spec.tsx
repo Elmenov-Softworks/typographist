@@ -18,18 +18,25 @@ it('renders without browser globals and isolates server requests', () => {
   }
 });
 
-it.each(['', 'Unicode Ω', 'soft\u00adhyphen', 'https://example.com', '<b>literal</b>'])(
-  'preserves server text for %j',
-  (source) => {
-    const output = renderToString(() => (
-      <TypographistProvider>
-        <TypographistText text={source} />
-      </TypographistProvider>
-    ));
-    const formatted = new Typographist().format(source);
-    expect(output).toBe(renderToString(() => formatted));
-  },
-);
+it.each(['', 'Unicode Ω', 'soft\u00adhyphen', 'https://example.com'])('preserves server text for %j', (source) => {
+  const output = renderToString(() => (
+    <TypographistProvider>
+      <TypographistText text={source} />
+    </TypographistProvider>
+  ));
+  const formatted = new Typographist().format(source);
+  expect(output).toBe(formatted);
+});
+
+it('escapes markup and entity-like source through server text serialization', () => {
+  const output = renderToString(() => (
+    <TypographistProvider config={{ categories: [] }}>
+      <TypographistText text={'<b>literal</b> &amp; <img src=x onerror="alert(1)">'} />
+    </TypographistProvider>
+  ));
+
+  expect(output).toBe('&lt;b>literal&lt;/b> &amp;amp; &lt;img src=x onerror="alert(1)">');
+});
 
 it('preserves provider and locale errors', () => {
   expect(() => renderToString(() => <TypographistText text="" />)).toThrow('TypographistProvider');

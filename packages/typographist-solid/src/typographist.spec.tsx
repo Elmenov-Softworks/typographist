@@ -1,4 +1,6 @@
 // @vitest-environment jsdom
+import { Worker } from 'node:worker_threads';
+
 import { Typographist } from '@elmenov-softworks/typographist';
 import type { TypographistConfig } from '@elmenov-softworks/typographist';
 import { createSignal } from 'solid-js';
@@ -123,10 +125,36 @@ it('reports a missing provider', () => {
   expect(() => useTypographist(() => 'source')).toThrow('requires a TypographistProvider');
 });
 
-it('hydrates the server text node without interpreting HTML-like source', () => {
-  const source = '<b>Ω\u00ad</b>';
+it('hydrates parsed output from the built public server entry as literal text', async () => {
+  const source = '<b>Ω\u00ad</b> &amp; <img src=x onerror="alert(1)">';
+  const worker = new Worker(
+    `const { parentPort } = require('node:worker_threads');
+     (async () => {
+       const { createComponent } = await import('solid-js');
+       const { renderToString } = await import('solid-js/web');
+       const { TypographistProvider, TypographistText } = await import(${JSON.stringify(import.meta.resolve('@elmenov-softworks/typographist-solid'))});
+       if (typeof window !== 'undefined') throw new Error('Browser globals on server');
+       parentPort.postMessage(renderToString(() => createComponent(TypographistProvider, {
+         config: { categories: [] },
+         get children() { return createComponent(TypographistText, { text: ${JSON.stringify(source)} }); }
+       })));
+     })();`,
+    { eval: true, execArgv: [] },
+  );
+  const serverOutput = await new Promise<string>((resolve, reject) => {
+    worker.once('message', (output: unknown) => {
+      if (typeof output === 'string') resolve(output);
+      else reject(new Error('Expected server HTML'));
+    });
+    worker.once('error', reject);
+  });
+  await worker.terminate();
   const container = document.createElement('div');
-  container.textContent = new Typographist({ categories: [] }).format(source);
+  container.innerHTML = serverOutput;
+  expect(container.textContent).toBe(source);
+  expect(container.childNodes).toHaveLength(1);
+  expect(container.firstChild?.nodeType).toBe(Node.TEXT_NODE);
+  expect(container.children).toHaveLength(0);
   const serverNode = container.firstChild;
   Object.defineProperty(globalThis, '_$HY', {
     configurable: true,
@@ -145,6 +173,7 @@ it('hydrates the server text node without interpreting HTML-like source', () => 
     expect(container.textContent).toBe(source);
     expect(container.firstChild).toBe(serverNode);
     expect(container.querySelector('b')).toBeNull();
+    expect(container.children).toHaveLength(0);
   } finally {
     dispose();
     Reflect.deleteProperty(globalThis, '_$HY');
