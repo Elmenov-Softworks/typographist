@@ -182,3 +182,35 @@ it.each(['en', 'ru'] as const)('retains explicit %s plugin registration defaults
   expect(compile).toHaveBeenLastCalledWith(true);
   expect(config.rules?.[0]).toBe(plugin);
 });
+
+it('reuses custom-only rules sharing inactive bundled IDs in both directions', () => {
+  const rule: TextRule = {
+    id: 'ru/dash/years',
+    category: 'dashes',
+    order: 0,
+    defaults: { dash: '—' },
+    prepare: vi.fn((settings: TextRuleSettings) => (text: string) => text + String(settings.dash)),
+  };
+  const omitted: TypographistConfig<'custom'> = {
+    rules: [],
+    locale: 'custom',
+    textLocales: [{ locale: 'custom', textRules: [rule] }],
+  };
+  const explicit = { ...omitted, settings: { 'ru/dash/years': { dash: '—' } } };
+
+  for (const [initialConfig, replacement] of [
+    [omitted, explicit],
+    [explicit, omitted],
+  ] as const) {
+    const initial = prepareProvider(initialConfig);
+    const expected = new Typographist(replacement).format('source');
+    const preparationCount = vi.mocked(rule.prepare).mock.calls.length;
+
+    expect(prepareProvider(replacement, initial)).toBe(initial);
+    expect(rule.prepare).toHaveBeenCalledTimes(preparationCount);
+    expect(initial.formatter.format('source')).toBe(expected);
+    expect(() => prepareProvider({ ...omitted, settings: { 'ru/dash/years': { unknown: '—' } } }, initial)).toThrow();
+    expect(() => prepareProvider({ ...omitted, settings: { 'ru/dash/years': { dash: 1 } } }, initial)).toThrow();
+    expect(prepareProvider(initialConfig, initial)).toBe(initial);
+  }
+});

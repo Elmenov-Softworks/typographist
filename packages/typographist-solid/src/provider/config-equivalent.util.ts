@@ -73,6 +73,7 @@ export const configEquivalent = <TCustomLocale extends string>(
   const rightSettings = right.settings ?? {};
   const settingIds = new Set([...Object.keys(leftSettings), ...Object.keys(rightSettings)]);
   const declaredRules = [...(left.textRules ?? []), ...(left.textLocales ?? []).flatMap((locale) => locale.textRules)];
+  const registeredLocales = new Set(registrationLocales.map((locale) => locale.toLowerCase()));
   const quoteDefaults = bundledDefaults['common/punctuation/quote'] ?? [];
   const registeredQuoteDefaults = quoteDefaults.filter((_, index) =>
     registrationLocales.some((locale) => locale.toLowerCase() === (index === 0 ? 'en' : 'ru')),
@@ -93,7 +94,15 @@ export const configEquivalent = <TCustomLocale extends string>(
       (left.rules !== undefined && right.rules !== undefined && equalEntries(left.rules, right.rules))) &&
     [...settingIds].every((id) => {
       const defaults = [
-        ...(id === 'common/punctuation/quote' ? registeredQuoteDefaults : (bundledDefaults[id] ?? [])),
+        ...(id === 'common/punctuation/quote'
+          ? registeredQuoteDefaults
+          : (bundledDefaults[id] ?? []).filter(() =>
+              id.startsWith('ru/')
+                ? registeredLocales.has('ru')
+                : id.startsWith('en-US/')
+                  ? registeredLocales.has('en')
+                  : registeredLocales.has('en') || registeredLocales.has('ru'),
+            )),
         ...declaredRules.filter((rule) => rule.id === id).map((rule) => rule.defaults),
       ];
       const leftRule = leftSettings[id];
