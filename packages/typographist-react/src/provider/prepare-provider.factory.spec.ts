@@ -252,3 +252,91 @@ it.each([
     expect(initial.config).toBe(config);
   }
 });
+
+it.each([
+  ...[
+    'cacheSize',
+    'locale',
+    'categories',
+    'excludedWords',
+    'protectedContent',
+    'textLocales',
+    'textRules',
+    'rules',
+  ].map((field) => ({ [field]: null })),
+  ...['categories', 'excludedWords', 'protectedContent', 'textLocales', 'textRules', 'rules'].flatMap((field) =>
+    [false, 0, '', {}, { length: 0 }].map((value) => ({ [field]: value })),
+  ),
+  { cacheSize: '64' },
+  { cacheSize: Number.NaN },
+  { cacheSize: Infinity },
+  { cacheSize: -1 },
+  { locale: false },
+  { categories: ['unknown'] },
+  { excludedWords: [null] },
+  { protectedContent: [''] },
+  { protectedContent: [null] },
+  { textLocales: [null] },
+  { textLocales: [{ locale: 'custom', textRules: null }] },
+  { textRules: [null] },
+  { rules: [null] },
+  { settings: false },
+  { settings: { 'ru/dash/years': false } },
+  Object.assign([], { rules: null }),
+  Object.assign([], { rules: [] }),
+  Object.assign(() => null, { rules: [] }),
+  null,
+  [],
+  false,
+  0,
+  '',
+])('preserves core errors and previous state for invalid JavaScript configuration: %j', (replacement) => {
+  const config = {};
+  const initial = prepareProvider(config);
+  const expected = initial.formatter.format('"configuration"');
+  let coreError: unknown = null;
+
+  try {
+    Reflect.construct(Typographist, [replacement]);
+  } catch (error) {
+    coreError = error;
+  }
+
+  expect(coreError).toBeInstanceOf(Error);
+
+  if (!(coreError instanceof Error)) {
+    throw new Error('Expected core preparation to reject the fixture');
+  }
+
+  let providerError: unknown = null;
+
+  try {
+    Reflect.apply(prepareProvider, null, [replacement, initial]);
+  } catch (error) {
+    providerError = error;
+  }
+
+  expect(providerError).toBeInstanceOf(coreError.constructor);
+  expect(providerError).toHaveProperty('message', coreError.message);
+  expect(initial.formatter.format('"configuration"')).toBe(expected);
+  expect(initial.config).toBe(config);
+  expect(prepareProvider({}, initial)).toBe(initial);
+});
+
+it('does not reuse a core-accepted sparse exclusion array for an invalid element replacement', () => {
+  const excludedWords = ['source'];
+  Reflect.deleteProperty(excludedWords, '0');
+  const config = { excludedWords };
+  const initial = prepareProvider(config);
+  const replacement = { excludedWords: [null] };
+  const expected = initial.formatter.format('configuration');
+
+  expect(() => {
+    Reflect.construct(Typographist, [replacement]);
+  }).toThrow('excludedWords must be an array of strings');
+  expect(() => {
+    Reflect.apply(prepareProvider, null, [replacement, initial]);
+  }).toThrow('excludedWords must be an array of strings');
+  expect(initial.formatter.format('configuration')).toBe(expected);
+  expect(prepareProvider(config, initial)).toBe(initial);
+});

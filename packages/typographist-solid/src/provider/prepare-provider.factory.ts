@@ -16,21 +16,30 @@ export const prepareProvider = <TCustomLocale extends string = never>(
     return previous;
   }
 
+  const input: unknown = config;
+
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+    new Typographist<TCustomLocale>(config);
+  }
+
   const compiledRegistrations: ReturnType<TypographistRules['compile']>[] = [];
-  const rules = config.rules?.map((plugin) => {
-    if (!(plugin instanceof TypographistRules)) {
-      return plugin;
-    }
+  const configuredRules = config.rules;
+  const rules = Array.isArray(configuredRules)
+    ? configuredRules.map((plugin: TypographistRules<'en' | 'ru' | TCustomLocale>) => {
+        if (!(plugin instanceof TypographistRules)) {
+          return plugin;
+        }
 
-    return new (class extends TypographistRules {
-      override compile(useFast: boolean) {
-        const compiled = plugin.compile(useFast);
-        compiledRegistrations.push(compiled);
+        return new (class extends TypographistRules {
+          override compile(useFast: boolean) {
+            const compiled = plugin.compile(useFast);
+            compiledRegistrations.push(compiled);
 
-        return compiled;
-      }
-    })();
-  });
+            return compiled;
+          }
+        })();
+      })
+    : configuredRules;
   const formatter = new Typographist<TCustomLocale>(rules === undefined ? config : { ...config, rules });
 
   const registrationLocales = rules === undefined ? ['en', 'ru'] : compiledRegistrations.map(({ locale }) => locale);

@@ -53,7 +53,7 @@ const bundledDefaults: Readonly<Record<string, readonly TextRuleSettings[]>> = {
 };
 
 const equalEntries = <TValue>(left: readonly TValue[], right: readonly TValue[]) =>
-  left.length === right.length && left.every((value, index) => Object.is(value, right[index]));
+  left.length === right.length && Array.from(left).every((value, index) => Object.is(value, right[index]));
 
 const equalSettings = (left: TextRuleSettings, right: TextRuleSettings) => {
   const keys = Object.keys(left);
@@ -78,12 +78,37 @@ const settingsHaveComparableShape = (settings: unknown) => {
   );
 };
 
+const configHasComparableShape = <TCustomLocale extends string>(config: TypographistConfig<TCustomLocale>) => {
+  const input: unknown = config;
+
+  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
+    return false;
+  }
+
+  const locale: unknown = config.locale;
+  const cacheSize: unknown = config.cacheSize;
+
+  return (
+    locale !== null &&
+    cacheSize !== null &&
+    [
+      config.categories,
+      config.excludedWords,
+      config.protectedContent,
+      config.textLocales,
+      config.textRules,
+      config.rules,
+    ].every((collection) => collection === undefined || Array.isArray(collection)) &&
+    settingsHaveComparableShape(config.settings)
+  );
+};
+
 export const configEquivalent = <TCustomLocale extends string>(
   left: TypographistConfig<TCustomLocale>,
   right: TypographistConfig<TCustomLocale>,
   registrationLocales: readonly string[],
 ) => {
-  if (!settingsHaveComparableShape(left.settings) || !settingsHaveComparableShape(right.settings)) {
+  if (!configHasComparableShape(left) || !configHasComparableShape(right)) {
     return false;
   }
 
