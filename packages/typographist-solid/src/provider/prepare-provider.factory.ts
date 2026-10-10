@@ -9,6 +9,7 @@ export const prepareProvider = <TCustomLocale extends string = never>(
     config: TypographistConfig<TCustomLocale>;
     formatter: Typographist<TCustomLocale>;
     registrationLocales: readonly string[];
+    defaultLocale: string;
   } | null = null,
 ) => {
   if (previous !== null && configEquivalent(previous.config, config, previous.registrationLocales)) {
@@ -36,5 +37,5 @@ export const prepareProvider = <TCustomLocale extends string = never>(
 
   registrationLocales.push(...(config.textLocales ?? []).map(({ locale }) => locale));
 
-  return { config, formatter, registrationLocales };
+  return { config, formatter, registrationLocales, defaultLocale: config.locale ?? 'en' };
 };

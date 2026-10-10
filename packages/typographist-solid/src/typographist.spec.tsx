@@ -309,3 +309,42 @@ it.each(['en', 'ru'] as const)('preserves explicit %s plugin quote defaults with
     dispose();
   }
 });
+
+it.each(['en', 'ru'] as const)(
+  'reuses the result for omitted and explicit %s overrides in both directions',
+  async (locale) => {
+    const [override, setOverride] = createSignal<string>();
+    const source = '"source"';
+    const expected = new Typographist({ locale }).format(source);
+    const format = vi.spyOn(Typographist.prototype, 'format');
+    const container = document.createElement('div');
+    const dispose = render(
+      () => (
+        <TypographistProvider config={{ locale }}>
+          <TypographistText text={source} locale={override()} />
+        </TypographistProvider>
+      ),
+      container,
+    );
+    const calls = format.mock.calls.length;
+    const node = container.firstChild;
+    const mutations: MutationRecord[] = [];
+    const observer = new MutationObserver((records) => mutations.push(...records));
+    observer.observe(container, { subtree: true, characterData: true, childList: true });
+
+    try {
+      setOverride(locale);
+      setOverride(undefined);
+      await Promise.resolve();
+      expect(format).toHaveBeenCalledTimes(calls);
+      expect(container.textContent).toBe(expected);
+      expect(container.firstChild).toBe(node);
+      expect(mutations).toHaveLength(0);
+      setOverride(locale === 'en' ? 'ru' : 'en');
+      expect(format).toHaveBeenCalledTimes(calls + 1);
+    } finally {
+      observer.disconnect();
+      dispose();
+    }
+  },
+);

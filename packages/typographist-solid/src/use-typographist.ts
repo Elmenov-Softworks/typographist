@@ -11,7 +11,7 @@ export const useTypographist = (text: Accessor<string>, locale?: Accessor<string
   }
 
   const source = createMemo(text);
-  const effectiveLocale = createMemo(() => locale?.());
+  const effectiveLocale = createMemo(() => locale?.() ?? formatter().defaultLocale);
 
-  return createMemo(() => formatter().format(source(), effectiveLocale()));
+  return createMemo(() => formatter().formatter.format(source(), effectiveLocale()));
 };

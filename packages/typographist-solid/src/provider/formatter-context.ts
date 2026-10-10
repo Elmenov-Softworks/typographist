@@ -1,5 +1,6 @@
-import type { Typographist } from '@elmenov-softworks/typographist';
 import { createContext } from 'solid-js';
 import type { Accessor } from 'solid-js';
 
-export const FormatterContext = createContext<Accessor<Typographist<string>>>();
+import type { prepareProvider } from '@/provider/prepare-provider.factory.js';
+
+export const FormatterContext = createContext<Accessor<ReturnType<typeof prepareProvider<string>>>>();

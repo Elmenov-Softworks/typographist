@@ -9,7 +9,7 @@ export const TypographistProvider = (props: TypographistProviderProps) => {
   const formatter = createMemo(() => {
     const replacement = prepareProvider(props.config ?? {}, prepared);
     prepared = replacement;
-    return replacement.formatter;
+    return replacement;
   });
 
   return <FormatterContext.Provider value={formatter}>{props.children}</FormatterContext.Provider>;

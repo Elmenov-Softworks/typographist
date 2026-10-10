@@ -316,3 +316,47 @@ it.each(['en', 'ru'] as const)(
     }
   },
 );
+
+it.each(['en', 'ru'] as const)(
+  'reuses the result for omitted and explicit %s overrides in both directions',
+  async (locale) => {
+    const override = ref<string>();
+    const source = '"source"';
+    const expected = new Typographist({ locale }).format(source);
+    const format = vi.spyOn(Typographist.prototype, 'format');
+    const app = createApp(() =>
+      h(
+        TypographistProvider,
+        { config: { locale } },
+        {
+          default: () =>
+            h(TypographistText, { text: source, ...(override.value === undefined ? {} : { locale: override.value }) }),
+        },
+      ),
+    );
+    const container = document.createElement('div');
+    app.mount(container);
+    const calls = format.mock.calls.length;
+    const node = container.firstChild;
+    const mutations: MutationRecord[] = [];
+    const observer = new MutationObserver((records) => mutations.push(...records));
+    observer.observe(container, { subtree: true, characterData: true, childList: true });
+
+    try {
+      override.value = locale;
+      await nextTick();
+      override.value = undefined;
+      await nextTick();
+      expect(format).toHaveBeenCalledTimes(calls);
+      expect(container.textContent).toBe(expected);
+      expect(container.firstChild).toBe(node);
+      expect(mutations).toHaveLength(0);
+      override.value = locale === 'en' ? 'ru' : 'en';
+      await nextTick();
+      expect(format).toHaveBeenCalledTimes(calls + 1);
+    } finally {
+      observer.disconnect();
+      app.unmount();
+    }
+  },
+);
