@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { Typographist } from '@elmenov-softworks/typographist';
+import { Typographist, TypographistRules } from '@elmenov-softworks/typographist';
 import type { TextRule, TypographistConfig } from '@elmenov-softworks/typographist';
 import { createApp, createSSRApp, defineComponent, h, nextTick, ref, shallowRef } from 'vue';
 import { renderToString } from 'vue/server-renderer';
@@ -231,3 +231,88 @@ it.each([
     app.unmount();
   }
 });
+
+it.each([{}, { spacing: true }])(
+  'preserves bundled quote defaults and preparation in both directions (%j)',
+  async (settings) => {
+    const prepare = vi.fn(() => (text: string) => text);
+    const rule: TextRule = { id: 'preparation-probe', category: 'quotes', order: 0, defaults: {}, prepare };
+    const omitted: TypographistConfig = { textRules: [rule] };
+    const explicit: TypographistConfig = { ...omitted, settings: { 'common/punctuation/quote': settings } };
+    const container = document.createElement('div');
+    const format = vi.spyOn(Typographist.prototype, 'format');
+    const config = shallowRef(omitted);
+    const app = createApp(() =>
+      h(
+        TypographistProvider,
+        { config: config.value },
+        {
+          default: () => [
+            h(TypographistText, { text: '"source"' }),
+            h(TypographistText, { text: '"source"', locale: 'ru' }),
+          ],
+        },
+      ),
+    );
+    app.mount(container);
+    try {
+      const preparations = prepare.mock.calls.length;
+      const calls = format.mock.calls.length;
+      const output = container.textContent;
+      for (const replacement of [explicit, omitted, explicit]) {
+        config.value = replacement;
+        await nextTick();
+        expect(prepare).toHaveBeenCalledTimes(preparations);
+        expect(format).toHaveBeenCalledTimes(calls);
+        expect(container.textContent).toBe(output);
+      }
+    } finally {
+      app.unmount();
+    }
+  },
+);
+
+it.each(['en', 'ru'] as const)(
+  'preserves explicit %s plugin quote defaults without formatting again',
+  async (locale) => {
+    const prepare = vi.fn(() => (text: string) => text);
+    const rule: TextRule = { id: 'preparation-probe', category: 'quotes', order: 0, defaults: {}, prepare };
+    const plugin = new TypographistRules({
+      standard: { locale, alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
+      fast: { locale, alphabet: 'abcd', leftMin: 1, rightMin: 1, vowels: 'a', consonants: 'bcd', specialLetters: '' },
+    });
+    const compile = vi.spyOn(plugin, 'compile');
+    const settings = { left: locale === 'en' ? '“‘' : '«„‚', right: locale === 'en' ? '”’' : '»“‘', spacing: true };
+    const omitted: TypographistConfig = { locale, rules: [plugin], textRules: [rule] };
+    const explicit: TypographistConfig = { ...omitted, settings: { 'common/punctuation/quote': settings } };
+    const container = document.createElement('div');
+    const format = vi.spyOn(Typographist.prototype, 'format');
+    const config = shallowRef(omitted);
+    const app = createApp(() =>
+      h(
+        TypographistProvider,
+        { config: config.value },
+        {
+          default: () => [h(TypographistText, { text: '"source"' }), h(TypographistText, { text: '"source"', locale })],
+        },
+      ),
+    );
+    app.mount(container);
+    try {
+      const compilations = compile.mock.calls.length;
+      const preparations = prepare.mock.calls.length;
+      const calls = format.mock.calls.length;
+      const output = container.textContent;
+      for (const replacement of [explicit, omitted, explicit]) {
+        config.value = replacement;
+        await nextTick();
+        expect(compile).toHaveBeenCalledTimes(compilations);
+        expect(prepare).toHaveBeenCalledTimes(preparations);
+        expect(format).toHaveBeenCalledTimes(calls);
+        expect(container.textContent).toBe(output);
+      }
+    } finally {
+      app.unmount();
+    }
+  },
+);

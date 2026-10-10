@@ -1,4 +1,4 @@
-import { Typographist } from '@elmenov-softworks/typographist';
+import { Typographist, TypographistRules } from '@elmenov-softworks/typographist';
 import type { TextLocale, TextRule, TextRuleSettings, TypographistConfig } from '@elmenov-softworks/typographist';
 
 import { prepareProvider } from '@/provider/prepare-provider.factory.js';
@@ -130,4 +130,55 @@ describe('provider preparation', () => {
     expect(first.formatter.format('машина')).toBe(new Typographist(config).format('машина'));
     expect(first.formatter.format('table', 'en')).toBe(new Typographist(config).format('table', 'en'));
   });
+});
+
+it('compares quote glyph defaults for the registered typography-only locale', () => {
+  const config: TypographistConfig = { rules: [], locale: 'en', textLocales: [{ locale: 'en', textRules: [] }] };
+  const initial = prepareProvider(config);
+  const explicit = { ...config, settings: { 'common/punctuation/quote': { left: '“‘' } } };
+  expect(prepareProvider(explicit, initial)).toBe(initial);
+  const explicitInitial = prepareProvider(explicit);
+  expect(prepareProvider(config, explicitInitial)).toBe(explicitInitial);
+  expect(() =>
+    prepareProvider({ ...config, settings: { 'common/punctuation/quote': { unknown: true } } }, initial),
+  ).toThrow();
+});
+
+it.each(['en', 'ru'] as const)('retains explicit %s plugin registration defaults without recompilation', (locale) => {
+  const plugin = new TypographistRules({
+    standard: { locale, alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
+    fast: { locale, alphabet: 'abcd', leftMin: 1, rightMin: 1, vowels: 'a', consonants: 'bcd', specialLetters: '' },
+  });
+  const compile = vi.spyOn(plugin, 'compile');
+  const config: TypographistConfig = { locale, rules: [plugin] };
+  const explicit = {
+    ...config,
+    settings: {
+      'common/punctuation/quote': {
+        left: locale === 'en' ? '“‘' : '«„‚',
+        right: locale === 'en' ? '”’' : '»“‘',
+        spacing: true,
+      },
+    },
+  };
+  const initial = prepareProvider(config);
+  expect(compile).toHaveBeenCalledExactlyOnceWith(false);
+  expect(prepareProvider(explicit, initial)).toBe(initial);
+  expect(compile).toHaveBeenCalledTimes(1);
+  expect(initial.config.rules?.[0]).toBe(plugin);
+  expect(initial.formatter.format('"abcd"')).toBe(new Typographist(explicit).format('"abcd"'));
+
+  const explicitInitial = prepareProvider(explicit);
+  const count = compile.mock.calls.length;
+  expect(prepareProvider(config, explicitInitial)).toBe(explicitInitial);
+  expect(compile).toHaveBeenCalledTimes(count);
+  expect(() =>
+    prepareProvider({ ...config, settings: { 'common/punctuation/quote': { unknown: true } } }, initial),
+  ).toThrow();
+  expect(prepareProvider(config, initial)).toBe(initial);
+
+  const fast = prepareProvider({ ...config, useFast: true }, initial);
+  expect(fast).not.toBe(initial);
+  expect(compile).toHaveBeenLastCalledWith(true);
+  expect(config.rules?.[0]).toBe(plugin);
 });
