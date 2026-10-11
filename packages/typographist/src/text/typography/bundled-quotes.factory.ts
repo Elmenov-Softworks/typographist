@@ -1,3 +1,4 @@
+import { segmentBoundary, type SegmentBoundaryContext } from '#src/text/typography/segment-boundary.types.js';
 import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 export const createBundledQuotes = (locale: string) => {
@@ -152,7 +153,7 @@ export const createBundledQuotes = (locale: string) => {
           return parts.join('');
         };
 
-        return (text) => {
+        return (text, context: SegmentBoundaryContext = { startsLine: true }) => {
           if (!hasQuotes.test(text)) {
             return text;
           }
@@ -190,8 +191,9 @@ export const createBundledQuotes = (locale: string) => {
             ? [...directions.values()].filter((direction) => direction === 'opening').length
             : normalized.split(outerLeft).length - 1;
           const rightCount = identicalOuter ? directions.size - leftCount : normalized.split(outerRight).length - 1;
-          const maxLevel = leftCount === rightCount ? left.length : Math.min(left.length, 2);
-          let level = 0;
+          const quotation = context[segmentBoundary]?.quotation;
+          const maxLevel = quotation != null || leftCount === rightCount ? left.length : Math.min(left.length, 2);
+          let level = quotation?.level ?? 0;
           const result = normalized.replace(nestingQuotes, (character: string, offset: number) => {
             const direction = directions.get(offset);
 
@@ -212,6 +214,10 @@ export const createBundledQuotes = (locale: string) => {
 
             return character;
           });
+
+          if (quotation != null) {
+            quotation.level = level;
+          }
 
           return setSpacing(result, directions);
         };

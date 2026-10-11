@@ -44,8 +44,8 @@ describe('Russian metric-unit spacing', () => {
     expect(format('😀 (12м2), 1.25cm3!\r\n12мм\u00a0длина')).toBe(
       '😀 (12\u00a0м2), 1.25\u00a0cm3!\r\n12\u00a0мм\u00a0длина',
     );
-    expect(format('12м 13м')).toBe('12\u00a0м 13м');
-    expect(format(format('12м 13м'))).toBe('12\u00a0м 13м');
+    expect(format('12м 13м')).toBe('12\u00a0м 13\u00a0м');
+    expect(format(format('12м 13м'))).toBe('12\u00a0м 13\u00a0м');
     expect(rules).toHaveLength(1);
     expect(() => prepareTextPipeline(rules, 'ru', { settings: { [id]: { unknown: true } } })).toThrow(
       'Invalid setting',

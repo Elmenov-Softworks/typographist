@@ -77,6 +77,11 @@ jobs:
       - name: Generate TypeDoc
         if: steps.source.outputs.generate == 'true'
         run: npm run docs
+      - name: Include benchmark pages
+        if: steps.source.outputs.generate == 'true'
+        run: |
+          mkdir -p docs/benchmarks
+          cp benchmarks/typograf.html benchmarks/typograf.json benchmarks/hyphenation.html benchmarks/hyphenation.json docs/benchmarks/
       - name: Commit and push documentation
         if: steps.source.outputs.generate == 'true'
         run: |

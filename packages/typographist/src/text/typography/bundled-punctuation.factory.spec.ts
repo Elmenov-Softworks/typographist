@@ -17,7 +17,7 @@ const scenarios = [
     output: "Don't O'NEIL a'b'c д’Артаньян Ё’Ж",
     unchanged: "'word' 1'2 a'я e\u0301'a 😀'a a’b",
   },
-  { locale: 'ru', id: 'common/punctuation/hellip', input: '... ....', output: '… …', unchanged: '.. .....' },
+  { locale: 'ru', id: 'common/punctuation/hellip', input: '... ....', output: '… ….', unchanged: '.. .....' },
   { locale: 'en', id: 'common/punctuation/hellip', input: '... ....', output: '… ….', unchanged: '.. .....' },
 ];
 
@@ -70,14 +70,14 @@ describe('bundled punctuation reference scenarios', () => {
     const service = new Typographist({ locale: 'ru', categories: ['punctuation'] });
     const output = service.format('Что?... Да!! Нет!? ....');
 
-    expect(output).toBe('Что?… Да!! Нет!? …');
+    expect(output).toBe('Что?… Да!! Нет!? ….');
     expect(service.format(output)).toBe(output);
   });
 
   it.each(['en', 'ru'] as const)('converts ellipsis while preserving repeated punctuation for %s', (locale) => {
     const service = new Typographist({ locale, categories: ['punctuation'] });
     const input = 'word.... word.. word...,, word?? word:: word;;';
-    const output = `word${locale === 'ru' ? '…' : '….'} word.. word…,, word?? word:: word;;`;
+    const output = 'word…. word.. word…,, word?? word:: word;;';
 
     expect(service.format(input)).toBe(output);
     expect(service.format(output)).toBe(output);

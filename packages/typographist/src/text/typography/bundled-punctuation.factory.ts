@@ -13,10 +13,7 @@ export const createBundledPunctuation = (locale: string) => {
       category: 'punctuation',
       order: 410,
       defaults: {},
-      prepare: () =>
-        locale === 'ru'
-          ? (text) => text.replace(/(^|[^.])\.{3,4}(?=[^.]|$)/g, '$1…')
-          : (text) => text.replace(/(^|[^.])\.{3}(\.?)(?=[^.]|$)/g, '$1…$2'),
+      prepare: () => (text) => text.replace(/(^|[^.])\.{3}(\.?)(?=[^.]|$)/g, '$1…$2'),
     },
     {
       id: 'common/punctuation/apostrophe',

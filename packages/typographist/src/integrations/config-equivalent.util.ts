@@ -1,4 +1,6 @@
-import type { FormattingCategory, TextRuleSettings, TypographistConfig } from '@elmenov-softworks/typographist';
+import type { FormattingCategory, TextRuleSettings } from '#src/text/typography/text-rule.types.js';
+import type { TypographistConfig } from '#src/typographist/typographist-config.types.js';
+import { createBundledTextRules } from '#src/text/typography/bundled-text-rules.factory.js';
 
 const defaultCategories: readonly FormattingCategory[] = [
   'quotes',
@@ -8,49 +10,15 @@ const defaultCategories: readonly FormattingCategory[] = [
   'hyphenation',
 ];
 
-const bundledDefaults: Readonly<Record<string, readonly TextRuleSettings[]>> = {
-  'common/dash/minus': [{}],
-  'ru/dash/years': [{ dash: '–' }],
-  'ru/dash/time': [{ dash: '–' }],
-  'ru/dash/decade': [{ dash: '–' }],
-  'ru/dash/directSpeech': [{}],
-  'ru/dash/daysMonth': [{ dash: '–' }],
-  'ru/dash/centuries': [{ dash: '–' }],
-  'ru/dash/weekday': [{ dash: '–' }],
-  'ru/dash/month': [{ dash: '–' }],
-  'common/punctuation/hellip': [{}],
-  'common/punctuation/apostrophe': [{}],
-  'common/nbsp/beforeShortLastWord': [{ lengthLastWord: 3 }],
-  'common/nbsp/dpi': [{}],
-  'common/nbsp/beforeShortLastNumber': [{ lengthLastNumber: 2 }],
-  'common/nbsp/afterShortWordByList': [{}],
-  'common/nbsp/afterShortWord': [{ lengthShortWord: 2 }],
-  'common/nbsp/afterSectionMark': [{}],
-  'common/nbsp/afterNumber': [{}],
-  'common/nbsp/afterParagraphMark': [{}],
-  'ru/nbsp/ps': [{}],
-  'ru/nbsp/rubleKopek': [{}],
-  'ru/nbsp/year': [{}],
-  'ru/nbsp/see': [{}],
-  'ru/nbsp/page': [{}],
-  'ru/nbsp/ooo': [{}],
-  'ru/nbsp/mln': [{}],
-  'ru/nbsp/centuries': [{}],
-  'ru/nbsp/dayMonth': [{}],
-  'ru/nbsp/abbr': [{}],
-  'ru/nbsp/addr': [{}],
-  'ru/nbsp/afterNumberSign': [{}],
-  'ru/nbsp/initials': [{}],
-  'ru/nbsp/m': [{}],
-  'ru/nbsp/years': [{}],
-  'ru/nbsp/beforeParticle': [{}],
-  'ru/dash/main': [{}],
-  'en-US/dash/main': [{}],
-  'common/punctuation/quote': [
-    { left: '“‘', right: '”’', spacing: true },
-    { left: '«„‚', right: '»“‘', spacing: true },
-  ],
-};
+const bundledDefaults = new Map<string, { locale: string; settings: TextRuleSettings }[]>();
+
+for (const locale of ['en', 'ru']) {
+  for (const rule of createBundledTextRules(locale)) {
+    const defaults = bundledDefaults.get(rule.id) ?? [];
+    defaults.push({ locale, settings: rule.defaults });
+    bundledDefaults.set(rule.id, defaults);
+  }
+}
 
 const equalEntries = <TValue>(left: readonly TValue[], right: readonly TValue[]) => {
   if (left === right) {
@@ -167,28 +135,20 @@ export const configEquivalent = <TCustomLocale extends string>(
 
   const declaredRules = [...(left.textRules ?? []), ...(left.textLocales ?? []).flatMap((locale) => locale.textRules)];
   const registeredLocales = new Set(registrationLocales.map((locale) => locale.toLowerCase()));
-  const quoteDefaults = bundledDefaults['common/punctuation/quote'] ?? [];
-  const registeredQuoteDefaults = quoteDefaults.filter((_, index) => registeredLocales.has(index === 0 ? 'en' : 'ru'));
 
   return [...settingIds].every((id) => {
-    const bundledRuleDefaults = Object.hasOwn(bundledDefaults, id) ? bundledDefaults[id] : undefined;
+    const bundledRuleDefaults = bundledDefaults.get(id);
     const defaults = [
-      ...(id === 'common/punctuation/quote'
-        ? registeredQuoteDefaults
-        : (bundledRuleDefaults ?? []).filter(() =>
-            id.startsWith('ru/')
-              ? registeredLocales.has('ru')
-              : id.startsWith('en-US/')
-                ? registeredLocales.has('en')
-                : registeredLocales.has('en') || registeredLocales.has('ru'),
-          )),
+      ...(bundledRuleDefaults ?? [])
+        .filter(({ locale }) => registeredLocales.has(locale))
+        .map(({ settings }) => settings),
       ...declaredRules.filter((rule) => rule.id === id).map((rule) => rule.defaults),
     ];
     const leftRule = leftSettings[id];
     const rightRule = rightSettings[id];
 
     if (defaults.length === 0) {
-      const validationDefaults = bundledRuleDefaults?.at(-1);
+      const validationDefaults = bundledRuleDefaults?.at(-1)?.settings;
 
       if (validationDefaults === undefined) {
         return leftRule !== undefined && rightRule !== undefined && equalSettings(leftRule, rightRule);

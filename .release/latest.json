@@ -1,0 +1,33 @@
+{
+  "source": "840de37046fc1ad6ba78e2a8bc4ca537b1c8980d",
+  "previousVersion": null,
+  "version": "0.1.0",
+  "request": null,
+  "packages": [
+    {
+      "project": "typographist",
+      "name": "@elmenov-softworks/typographist",
+      "integrity": "sha512-/99ViRR2180Q341ViOkAokW6LpMPoBJX1yBdYYyhI8Q5KjCB4a4VM1Jzz9T7XKBvoXEsvdw07eq2tpijs3V5wA=="
+    },
+    {
+      "project": "typographist-vue",
+      "name": "@elmenov-softworks/typographist-vue",
+      "integrity": "sha512-Z5CgIcd6Cl1Lxc5t2zKNwKdEkCdJ3zsFt+6uhGX8jzGIJ8lWiS0jXTr+62PHEVVmtltq220FPfpVA8wKaAOB4A=="
+    },
+    {
+      "project": "typographist-react",
+      "name": "@elmenov-softworks/typographist-react",
+      "integrity": "sha512-1ea5nAd4F9QkLwSV7Rn5ixqBr1RfaClKgWuvi4KgA3/1utd7CJ4bQlmBaZQSKxkyaXMvx7WDoOOpTdAzdvhZsw=="
+    },
+    {
+      "project": "typographist-solid",
+      "name": "@elmenov-softworks/typographist-solid",
+      "integrity": "sha512-/u6KmKgXZCWyJaY7e4FSBoZUT3TWDVMMfl+npKjI+f/V2TlBGm7ToGVQ04Z8ESyFfb/WnQMNE/LSWtEf2V3rkg=="
+    },
+    {
+      "project": "rules-transformer",
+      "name": "@elmenov-softworks/rules-transformer",
+      "integrity": "sha512-l6PoSAhvTexxb9xhK53gbNtpRXWzk6iUVR2JjsnRUvB1YyJ8e7A6q4Sl+32xyEM/N9d8IClKKm5bYWJHI/Sdlg=="
+    }
+  ]
+}

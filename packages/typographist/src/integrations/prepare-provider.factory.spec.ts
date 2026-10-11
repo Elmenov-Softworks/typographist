@@ -1,7 +1,7 @@
-import { Typographist, TypographistRules } from '@elmenov-softworks/typographist';
-import type { TextLocale, TextRule, TextRuleSettings, TypographistConfig } from '@elmenov-softworks/typographist';
+import { Typographist, TypographistRules } from '#src/index.js';
+import type { TextLocale, TextRule, TextRuleSettings, TypographistConfig } from '#src/index.js';
 
-import { prepareProvider } from '@/provider/prepare-provider.factory.js';
+import { prepareProvider } from '#src/integrations/prepare-provider.factory.js';
 
 const createRule = () => {
   const rule: TextRule = {

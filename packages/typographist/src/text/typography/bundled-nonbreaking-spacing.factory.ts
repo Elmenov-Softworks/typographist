@@ -30,7 +30,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       category: 'nonbreakingSpacing',
       order: 510,
       defaults: {},
-      prepare: () => (text) => text.replace(/(\d) ?(lpi|dpi)(?!\w)/, '$1\u00a0$2'),
+      prepare: () => (text) => text.replace(/(\d) ?(lpi|dpi)(?!\w)/g, '$1\u00a0$2'),
     },
     {
       id: 'common/nbsp/beforeShortLastNumber',
@@ -155,9 +155,8 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       defaults: {},
       prepare: () => (text) =>
         text.replace(
-          /(^|\s|\()(см|им)\.[ \u00a0]?([а-яё0-9a-z]+)([\s.,?!]|$)/gi,
-          (_match, boundary: string, abbreviation: string, word: string, suffix: string) =>
-            `${boundary}${abbreviation}.\u00a0${word}${suffix}`,
+          /(^|\s|\()(см|им)\.[ \u00a0]?([а-яё0-9a-z]+)(?=[\s.,?!]|$)/gi,
+          (_match, boundary: string, abbreviation: string, word: string) => `${boundary}${abbreviation}.\u00a0${word}`,
         ),
     });
 
@@ -167,7 +166,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       order: 510,
       defaults: {},
       prepare: () => (text) =>
-        text.replace(/(^|[)\s])(стр|гл|рис|илл?|ст|п|c)\. ?( *)(\d+)([\s.,?!;:]|$)/gim, '$1$2.\u00a0$3$4$5'),
+        text.replace(/(^|[)\s])(стр|гл|рис|илл?|ст|п|c)\. ?( *)(\d+)(?=[\s.,?!;:]|$)/gim, '$1$2.\u00a0$3$4'),
     });
 
     rules.push({
@@ -284,9 +283,9 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
       defaults: {},
       prepare: () => (text) =>
         text.replace(
-          /(^|[\s,.(])(\d+)[ \u00a0]?(мм?|см|км|дм|гм|mm?|km|cm|dm)([23²³])?([\s).!?,;]|$)/gm,
-          (_match, boundary: string, number: string, unit: string, exponent: string | undefined, suffix: string) =>
-            `${boundary}${number}\u00a0${unit}${exponent ?? ''}${suffix}`,
+          /(^|[\s,.(])(\d+)[ \u00a0]?(мм?|см|км|дм|гм|mm?|km|cm|dm)([23²³])?(?=[\s).!?,;]|$)/gm,
+          (_match, boundary: string, number: string, unit: string, exponent: string | undefined) =>
+            `${boundary}${number}\u00a0${unit}${exponent ?? ''}`,
         ),
     });
 

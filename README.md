@@ -29,7 +29,7 @@ Median milliseconds per call; lower is faster:
 | Russian, 16,320 UTF-16 units |        0.848 |    1.223 |                1.44× |
 | Russian, 65,280 UTF-16 units |        3.306 |    4.649 |                1.41× |
 
-[Charts](benchmarks/typograf.html) · [Inputs, settings and raw samples](benchmarks/typograf.json).
+[Charts](https://elmenov-softworks.github.io/typographist/benchmarks/typograf.html) · [Inputs, settings and raw samples](benchmarks/typograf.json).
 This is a symbolic-formatting comparison, not the default profile with soft
 hyphens. On the mixed URL/email workloads, Typograf was 1.5–2.2× faster and
 outputs differed. Default Typograf also performs cleanup outside our scope.
@@ -44,7 +44,7 @@ per-workload library/Typographist times; above one means Typographist is faster.
 | Hypher 0.2.5             |               1.42× |            1.54× |              16/29 |
 | Hyphenopoly 6.1.0 (WASM) |               0.17× |            0.18× |               9/29 |
 
-[Charts](benchmarks/hyphenation.html) · [Settings and raw samples](benchmarks/hyphenation.json).
+[Charts](https://elmenov-softworks.github.io/typographist/benchmarks/hyphenation.html) · [Settings and raw samples](benchmarks/hyphenation.json).
 Hyphenopoly was faster than Typographist on its nine passing workloads.
 Failed preservation checks and unsupported cases are excluded from ratios but
 remain in the report. Dictionaries, caches and word-protection policies differ;
