@@ -1,4 +1,4 @@
-import { Typographist } from '@/typographist/typographist.js';
+import { Typographist } from '#src/typographist/typographist.js';
 
 describe('Common nonbreaking spacing interactions', () => {
   it.each(

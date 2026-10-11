@@ -1,4 +1,4 @@
-import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
+import { scanAddresses } from '#src/text/scanning/scan-addresses.util.js';
 
 const addresses = (text: string) => scanAddresses(text).map(({ start, end }) => text.slice(start, end));
 

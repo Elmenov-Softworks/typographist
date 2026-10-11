@@ -1,7 +1,7 @@
-import type { TextPipelineOptions, TextRule } from '@/text/typography/text-rule.types.js';
-import type { TextLocale } from '@/text/typography/text-locale.types.js';
-import type { Locale } from '@/rules/locale.types.js';
-import type { TypographistRules } from '@/rules/typographist-rules.js';
+import type { TextPipelineOptions, TextRule } from '#src/text/typography/text-rule.types.js';
+import type { TextLocale } from '#src/text/typography/text-locale.types.js';
+import type { Locale } from '#src/rules/locale.types.js';
+import type { TypographistRules } from '#src/rules/typographist-rules.js';
 
 /** Locale selection, rule plugins, and exclusions used to create a Typographist instance. */
 export type TypographistConfig<TCustomLocale extends string = never> = TextPipelineOptions & {

@@ -7,7 +7,7 @@ import { dirname, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { parseArgs } from 'node:util';
 
-import { Typographist } from '../../packages/typographist/dist/index.js';
+import { Typographist } from '@elmenov-softworks/typographist';
 import type { ExternalImplementation, TextFormatter } from './benchmark.types.ts';
 import type {
   CacheComparisonReport,

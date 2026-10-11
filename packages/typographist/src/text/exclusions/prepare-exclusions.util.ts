@@ -1,4 +1,4 @@
-import type { ExclusionOptions } from '@/text/exclusions/exclusion-options.types.js';
+import type { ExclusionOptions } from '#src/text/exclusions/exclusion-options.types.js';
 
 const readToggle = (name: string, value: unknown = true) => {
   if (typeof value !== 'boolean') {

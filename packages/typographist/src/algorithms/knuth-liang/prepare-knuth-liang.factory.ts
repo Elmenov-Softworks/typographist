@@ -1,7 +1,7 @@
-import { prepareLanguage } from '@/languages/prepare-language.factory.js';
-import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
-import type { CompiledRules } from '@/rules/compiled-rules.types.js';
-import { preparePatternMatcher } from '@/algorithms/knuth-liang/pattern-matcher.util.js';
+import { prepareLanguage } from '#src/languages/prepare-language.factory.js';
+import type { WordAnalysis } from '#src/languages/analysis/word-analysis.types.js';
+import type { CompiledRules } from '#src/rules/compiled-rules.types.js';
+import { preparePatternMatcher } from '#src/algorithms/knuth-liang/pattern-matcher.util.js';
 
 export const prepareKnuthLiang = (rules: CompiledRules) => {
   const language = prepareLanguage(rules);

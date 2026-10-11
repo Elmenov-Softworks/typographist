@@ -1,9 +1,9 @@
-import type { HyphenationBoundary } from '@/text/hyphenation-boundary.types.js';
-import type { WordCache } from '@/text/word-cache/word-cache.js';
-import { formatWord } from '@/text/word-breaks/format-word.util.js';
-import { formatText } from '@/text/format-text.util.js';
-import type { PreparedAlgorithm } from '@/algorithms/prepared-algorithm.types.js';
-import { prepareExclusions } from '@/text/exclusions/prepare-exclusions.util.js';
+import type { HyphenationBoundary } from '#src/text/hyphenation-boundary.types.js';
+import type { WordCache } from '#src/text/word-cache/word-cache.js';
+import { formatWord } from '#src/text/word-breaks/format-word.util.js';
+import { formatText } from '#src/text/format-text.util.js';
+import type { PreparedAlgorithm } from '#src/algorithms/prepared-algorithm.types.js';
+import { prepareExclusions } from '#src/text/exclusions/prepare-exclusions.util.js';
 
 export const createHyphenator = (
   options: {

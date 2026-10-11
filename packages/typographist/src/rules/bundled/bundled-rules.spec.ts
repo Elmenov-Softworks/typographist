@@ -1,4 +1,4 @@
-import { Typographist } from '@/index.js';
+import { Typographist } from '#src/index.js';
 
 const english = new Typographist({ useFast: true });
 const russian = new Typographist({ useFast: true, locale: 'ru' });

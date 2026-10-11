@@ -1,4 +1,4 @@
-import type { TextRuleContext } from '@/text/typography/text-rule.types.js';
+import type { TextRuleContext } from '#src/text/typography/text-rule.types.js';
 
 export const segmentBoundary = Symbol('segmentBoundary');
 

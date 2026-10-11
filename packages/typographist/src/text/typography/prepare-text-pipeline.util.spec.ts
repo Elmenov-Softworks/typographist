@@ -1,5 +1,5 @@
-import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
-import type { TextRule } from '@/text/typography/text-rule.types.js';
+import { prepareTextPipeline } from '#src/text/typography/prepare-text-pipeline.util.js';
+import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 const spacing: TextRule = {
   id: 'custom/spacing',

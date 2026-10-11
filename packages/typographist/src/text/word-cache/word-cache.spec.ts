@@ -1,4 +1,4 @@
-import { WordCache } from '@/text/word-cache/word-cache.js';
+import { WordCache } from '#src/text/word-cache/word-cache.js';
 
 it.each([-1, NaN, Infinity, -Infinity, '64', null])('rejects invalid cache size %j', (size) => {
   expect(() => {

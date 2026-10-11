@@ -6,7 +6,7 @@ import { dirname, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { parseArgs } from 'node:util';
 
-import { Typographist } from '../../packages/typographist/dist/index.js';
+import { Typographist } from '@elmenov-softworks/typographist';
 import { sampleCount, summarize, warmupIterations } from './measurement.util.ts';
 import { createWorkloads } from './workloads.constants.ts';
 

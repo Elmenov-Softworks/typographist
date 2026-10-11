@@ -1,5 +1,5 @@
-import { insertWordBreaks } from '@/text/word-breaks/insert-word-breaks.util.js';
-import type { TextFormattingContext } from '@/text/text-formatting-context.types.js';
+import { insertWordBreaks } from '#src/text/word-breaks/insert-word-breaks.util.js';
+import type { TextFormattingContext } from '#src/text/text-formatting-context.types.js';
 
 export const formatWord = (word: string, context: TextFormattingContext) => {
   const { algorithm } = context;

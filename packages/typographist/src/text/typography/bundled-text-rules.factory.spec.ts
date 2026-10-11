@@ -1,6 +1,6 @@
-import { Typographist } from '@/index.js';
-import { createBundledTextRules } from '@/text/typography/bundled-text-rules.factory.js';
-import type { TextRule } from '@/text/typography/text-rule.types.js';
+import { Typographist } from '#src/index.js';
+import { createBundledTextRules } from '#src/text/typography/bundled-text-rules.factory.js';
+import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 describe('bundled rule ordering', () => {
   it.each(['en', 'ru'] as const)('runs quotation settings before ellipsis conversion for %s', (locale) => {

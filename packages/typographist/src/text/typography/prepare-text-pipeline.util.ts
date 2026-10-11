@@ -1,14 +1,14 @@
-import { scanCandidates } from '@/text/scanning/scan-candidates.util.js';
-import type { HyphenationBoundary } from '@/text/hyphenation-boundary.types.js';
-import { segmentBoundary } from '@/text/typography/segment-boundary.types.js';
-import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
-import type { CandidateSpan } from '@/text/scanning/candidate-span.types.js';
+import { scanCandidates } from '#src/text/scanning/scan-candidates.util.js';
+import type { HyphenationBoundary } from '#src/text/hyphenation-boundary.types.js';
+import { segmentBoundary } from '#src/text/typography/segment-boundary.types.js';
+import { scanAddresses } from '#src/text/scanning/scan-addresses.util.js';
+import type { CandidateSpan } from '#src/text/scanning/candidate-span.types.js';
 import type {
   FormattingCategory,
   TextPipelineOptions,
   TextRule,
   TextRuleHandler,
-} from '@/text/typography/text-rule.types.js';
+} from '#src/text/typography/text-rule.types.js';
 
 const spanAt = <TSpan extends CandidateSpan>(spans: readonly TSpan[], position: number) => {
   let left = 0;

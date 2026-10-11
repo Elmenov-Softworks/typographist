@@ -1,6 +1,6 @@
-import { WordCache } from '@/text/word-cache/word-cache.js';
-import { prepareKnuthLiang } from '@/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
-import { createHyphenator } from '@/text/create-hyphenator.factory.js';
+import { WordCache } from '#src/text/word-cache/word-cache.js';
+import { prepareKnuthLiang } from '#src/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
+import { createHyphenator } from '#src/text/create-hyphenator.factory.js';
 
 const prepare = () =>
   prepareKnuthLiang({

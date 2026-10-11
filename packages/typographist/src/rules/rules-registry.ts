@@ -1,17 +1,17 @@
-import { createBundledTextRules } from '@/text/typography/bundled-text-rules.factory.js';
-import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
-import type { TextLocale } from '@/text/typography/text-locale.types.js';
+import { createBundledTextRules } from '#src/text/typography/bundled-text-rules.factory.js';
+import { prepareTextPipeline } from '#src/text/typography/prepare-text-pipeline.util.js';
+import type { TextLocale } from '#src/text/typography/text-locale.types.js';
 import type {
   TextPipelineOptions,
   TextRule,
   TextRuleHandler,
   TextRuleSettings,
-} from '@/text/typography/text-rule.types.js';
-import { WordCache } from '@/text/word-cache/word-cache.js';
-import { selectAlgorithm } from '@/algorithms/select-algorithm.factory.js';
-import { languageKey } from '@/languages/language-identifier.util.js';
-import { TypographistRules } from '@/rules/typographist-rules.js';
-import { createHyphenator } from '@/text/create-hyphenator.factory.js';
+} from '#src/text/typography/text-rule.types.js';
+import { WordCache } from '#src/text/word-cache/word-cache.js';
+import { selectAlgorithm } from '#src/algorithms/select-algorithm.factory.js';
+import { languageKey } from '#src/languages/language-identifier.util.js';
+import { TypographistRules } from '#src/rules/typographist-rules.js';
+import { createHyphenator } from '#src/text/create-hyphenator.factory.js';
 
 export class RulesRegistry {
   #textRules: readonly TextRule[];

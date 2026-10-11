@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
 
-import { transformRulesFile } from '@/rules-transformer.controller.js';
+import { transformRulesFile } from '#src/rules-transformer.controller.js';
 
 try {
   const { values, positionals } = parseArgs({

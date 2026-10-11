@@ -1,7 +1,7 @@
-import { prepareKnuthLiang } from '@/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
-import { prepareKhristov } from '@/algorithms/khristov/prepare-khristov.factory.js';
-import type { KhristovRules } from '@/algorithms/khristov/khristov-rules.types.js';
-import type { CompiledRules } from '@/rules/compiled-rules.types.js';
+import { prepareKnuthLiang } from '#src/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
+import { prepareKhristov } from '#src/algorithms/khristov/prepare-khristov.factory.js';
+import type { KhristovRules } from '#src/algorithms/khristov/khristov-rules.types.js';
+import type { CompiledRules } from '#src/rules/compiled-rules.types.js';
 
 export const selectAlgorithm = (useFast: boolean) => {
   if (typeof useFast !== 'boolean') {

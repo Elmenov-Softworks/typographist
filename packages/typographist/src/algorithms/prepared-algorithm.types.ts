@@ -1,5 +1,5 @@
-import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
-import type { WordNormalizer } from '@/languages/analysis/word-normalizer.types.js';
+import type { WordAnalysis } from '#src/languages/analysis/word-analysis.types.js';
+import type { WordNormalizer } from '#src/languages/analysis/word-normalizer.types.js';
 
 export type PreparedAlgorithm = {
   readonly normalize: WordNormalizer;

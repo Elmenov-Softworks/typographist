@@ -1,8 +1,8 @@
-import type { HyphenationBoundary } from '@/text/hyphenation-boundary.types.js';
-import { formatWord } from '@/text/word-breaks/format-word.util.js';
-import { scanAddresses } from '@/text/scanning/scan-addresses.util.js';
-import { scanCandidates } from '@/text/scanning/scan-candidates.util.js';
-import type { TextFormattingContext } from '@/text/text-formatting-context.types.js';
+import type { HyphenationBoundary } from '#src/text/hyphenation-boundary.types.js';
+import { formatWord } from '#src/text/word-breaks/format-word.util.js';
+import { scanAddresses } from '#src/text/scanning/scan-addresses.util.js';
+import { scanCandidates } from '#src/text/scanning/scan-candidates.util.js';
+import type { TextFormattingContext } from '#src/text/text-formatting-context.types.js';
 
 export const formatText = (
   text: string,

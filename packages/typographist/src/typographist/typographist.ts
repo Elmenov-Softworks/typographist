@@ -1,9 +1,9 @@
-import { createBundledRules } from '@/rules/bundled/bundled-rules.js';
-import type { Locale } from '@/rules/locale.types.js';
-import { RulesRegistry } from '@/rules/rules-registry.js';
-import type { TypographistRules } from '@/rules/typographist-rules.js';
-import type { TypographistConfig } from '@/typographist/typographist-config.types.js';
-import type { TextLocale } from '@/text/typography/text-locale.types.js';
+import { createBundledRules } from '#src/rules/bundled/bundled-rules.js';
+import type { Locale } from '#src/rules/locale.types.js';
+import { RulesRegistry } from '#src/rules/rules-registry.js';
+import type { TypographistRules } from '#src/rules/typographist-rules.js';
+import type { TypographistConfig } from '#src/typographist/typographist-config.types.js';
+import type { TextLocale } from '#src/text/typography/text-locale.types.js';
 
 /**
  * Applies selected symbolic text rules before soft hyphenation using registered locale data.

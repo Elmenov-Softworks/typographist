@@ -29,7 +29,10 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "typographist-source": "./src/index.ts",
+        "default": "./dist/index.d.ts"
+      },
       "import": "./dist/index.js"
     }
   },
@@ -44,5 +47,11 @@
   },
   "bin": {
     "transform-rules": "./dist/cli.js"
+  },
+  "imports": {
+    "#src/*.js": {
+      "typographist-source": "./src/*.ts",
+      "default": "./dist/*.js"
+    }
   }
 }
