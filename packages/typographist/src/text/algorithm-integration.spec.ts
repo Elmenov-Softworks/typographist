@@ -1,4 +1,4 @@
-import { Typographist, TypographistRules } from '@/index.js';
+import { Typographist, TypographistRules } from '#src/index.js';
 
 describe.each([
   { profile: 'default', config: {} },

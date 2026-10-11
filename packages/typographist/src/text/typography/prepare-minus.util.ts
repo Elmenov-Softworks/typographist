@@ -1,4 +1,4 @@
-import { segmentBoundary, type SegmentBoundaryContext } from '@/text/typography/segment-boundary.types.js';
+import { segmentBoundary, type SegmentBoundaryContext } from '#src/text/typography/segment-boundary.types.js';
 
 export const prepareMinus = () => (text: string, context?: SegmentBoundaryContext) => {
   const boundary = context?.[segmentBoundary];

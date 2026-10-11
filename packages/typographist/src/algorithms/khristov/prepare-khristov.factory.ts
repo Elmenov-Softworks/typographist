@@ -1,7 +1,7 @@
-import { matchKhristovClasses } from '@/algorithms/khristov/class-matcher.util.js';
-import type { KhristovRules } from '@/algorithms/khristov/khristov-rules.types.js';
-import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
-import { prepareLanguage } from '@/languages/prepare-language.factory.js';
+import { matchKhristovClasses } from '#src/algorithms/khristov/class-matcher.util.js';
+import type { KhristovRules } from '#src/algorithms/khristov/khristov-rules.types.js';
+import type { WordAnalysis } from '#src/languages/analysis/word-analysis.types.js';
+import { prepareLanguage } from '#src/languages/prepare-language.factory.js';
 
 export const prepareKhristov = (rules: KhristovRules) => {
   const language = prepareLanguage(rules);

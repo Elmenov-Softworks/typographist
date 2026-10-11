@@ -1,1 +1,1 @@
-export { transformRulesFile } from '@/rules-transformer.controller.js';
+export { transformRulesFile } from '#src/rules-transformer.controller.js';

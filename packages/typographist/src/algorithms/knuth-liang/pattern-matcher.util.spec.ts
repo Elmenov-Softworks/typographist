@@ -1,4 +1,4 @@
-import { preparePatternMatcher } from '@/algorithms/knuth-liang/pattern-matcher.util.js';
+import { preparePatternMatcher } from '#src/algorithms/knuth-liang/pattern-matcher.util.js';
 
 describe('Knuth–Liang pattern matching', () => {
   it('lets an even maximum suppress an odd suggestion for the same key', () => {

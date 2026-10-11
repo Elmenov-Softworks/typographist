@@ -1,4 +1,4 @@
-import { Typographist } from '@/typographist/typographist.js';
+import { Typographist } from '#src/typographist/typographist.js';
 
 describe('Russian number-sign, address and abbreviation spacing interactions', () => {
   it.each(

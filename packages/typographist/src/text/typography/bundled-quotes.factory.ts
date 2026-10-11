@@ -1,4 +1,4 @@
-import type { TextRule } from '@/text/typography/text-rule.types.js';
+import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 export const createBundledQuotes = (locale: string) => {
   if (locale !== 'en' && locale !== 'ru') {

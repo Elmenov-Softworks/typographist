@@ -1,4 +1,4 @@
-import { Typographist } from '@/index.js';
+import { Typographist } from '#src/index.js';
 
 const fixtures: [string, string[]][] = [
   [

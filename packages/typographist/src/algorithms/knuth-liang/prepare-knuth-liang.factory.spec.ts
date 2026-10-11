@@ -1,5 +1,5 @@
-import type { CompiledRules } from '@/rules/compiled-rules.types.js';
-import { prepareKnuthLiang } from '@/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
+import type { CompiledRules } from '#src/rules/compiled-rules.types.js';
+import { prepareKnuthLiang } from '#src/algorithms/knuth-liang/prepare-knuth-liang.factory.js';
 
 const rules: CompiledRules = {
   locale: 'en',

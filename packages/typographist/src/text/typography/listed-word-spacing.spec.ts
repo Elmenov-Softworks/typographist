@@ -1,6 +1,6 @@
-import { createBundledNonbreakingSpacing } from '@/text/typography/bundled-nonbreaking-spacing.factory.js';
-import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
-import { Typographist } from '@/typographist/typographist.js';
+import { createBundledNonbreakingSpacing } from '#src/text/typography/bundled-nonbreaking-spacing.factory.js';
+import { prepareTextPipeline } from '#src/text/typography/prepare-text-pipeline.util.js';
+import { Typographist } from '#src/typographist/typographist.js';
 
 describe('nonbreaking spacing after listed words', () => {
   const id = 'common/nbsp/afterShortWordByList';

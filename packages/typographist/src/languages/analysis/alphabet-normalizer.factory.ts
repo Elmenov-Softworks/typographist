@@ -1,4 +1,4 @@
-import { graphemeSegmenter } from '@/languages/analysis/grapheme-segmenter.constants.js';
+import { graphemeSegmenter } from '#src/languages/analysis/grapheme-segmenter.constants.js';
 
 const simpleLetters = /^[A-Za-zА-Яа-яЁё]+$/u;
 

@@ -1,6 +1,6 @@
-import { createBundledDashes } from '@/text/typography/bundled-dashes.factory.js';
-import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
-import { Typographist } from '@/typographist/typographist.js';
+import { createBundledDashes } from '#src/text/typography/bundled-dashes.factory.js';
+import { prepareTextPipeline } from '#src/text/typography/prepare-text-pipeline.util.js';
+import { Typographist } from '#src/typographist/typographist.js';
 
 const id = 'common/dash/minus';
 

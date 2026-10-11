@@ -1,6 +1,6 @@
-import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.factory.js';
-import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
-import { Typographist } from '@/typographist/typographist.js';
+import { createBundledPunctuation } from '#src/text/typography/bundled-punctuation.factory.js';
+import { prepareTextPipeline } from '#src/text/typography/prepare-text-pipeline.util.js';
+import { Typographist } from '#src/typographist/typographist.js';
 
 const scenarios = [
   {

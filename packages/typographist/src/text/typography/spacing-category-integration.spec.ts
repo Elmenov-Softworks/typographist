@@ -1,4 +1,4 @@
-import { Typographist } from '@/index.js';
+import { Typographist } from '#src/index.js';
 
 it('runs explicitly selected consumer spacing rules without builtin cleanup', () => {
   const rule = {

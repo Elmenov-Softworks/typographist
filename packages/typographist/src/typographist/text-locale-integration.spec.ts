@@ -1,5 +1,5 @@
-import { Typographist } from '@/typographist/typographist.js';
-import type { TextRule, TextRuleSettings } from '@/text/typography/text-rule.types.js';
+import { Typographist } from '#src/typographist/typographist.js';
+import type { TextRule, TextRuleSettings } from '#src/text/typography/text-rule.types.js';
 
 const spacing: TextRule = {
   id: 'custom/spacing',

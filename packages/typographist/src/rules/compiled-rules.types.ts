@@ -1,4 +1,4 @@
-import type { LanguageRules } from '@/rules/language-rules.types.js';
+import type { LanguageRules } from '#src/rules/language-rules.types.js';
 
 /** Knuth–Liang locale data returned by a rule plugin. */
 export type CompiledRules<TLocale extends string = string> = LanguageRules<TLocale> & {

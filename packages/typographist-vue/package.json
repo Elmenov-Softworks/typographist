@@ -37,7 +37,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "vue-tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js && vite build",
+    "build": "vue-tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && vite build",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run --config vitest.config.ts"

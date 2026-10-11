@@ -1,5 +1,5 @@
-import type { CompiledRules } from '@/rules/compiled-rules.types.js';
-import type { KhristovRules } from '@/algorithms/khristov/khristov-rules.types.js';
+import type { CompiledRules } from '#src/rules/compiled-rules.types.js';
+import type { KhristovRules } from '#src/algorithms/khristov/khristov-rules.types.js';
 
 /** Paired datasets for declarative hyphenation rules; both algorithms require their own data. */
 export type RuleSets<TLocale extends string = string> = {

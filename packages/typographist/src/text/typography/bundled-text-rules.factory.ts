@@ -1,8 +1,8 @@
-import type { TextRule } from '@/text/typography/text-rule.types.js';
-import { createBundledDashes } from '@/text/typography/bundled-dashes.factory.js';
-import { createBundledNonbreakingSpacing } from '@/text/typography/bundled-nonbreaking-spacing.factory.js';
-import { createBundledPunctuation } from '@/text/typography/bundled-punctuation.factory.js';
-import { createBundledQuotes } from '@/text/typography/bundled-quotes.factory.js';
+import type { TextRule } from '#src/text/typography/text-rule.types.js';
+import { createBundledDashes } from '#src/text/typography/bundled-dashes.factory.js';
+import { createBundledNonbreakingSpacing } from '#src/text/typography/bundled-nonbreaking-spacing.factory.js';
+import { createBundledPunctuation } from '#src/text/typography/bundled-punctuation.factory.js';
+import { createBundledQuotes } from '#src/text/typography/bundled-quotes.factory.js';
 
 const referenceOrder = [
   'common/dash/minus',
