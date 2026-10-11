@@ -1,44 +1,56 @@
-# Rules transformer
+# Typographist for React
 
-`@elmenov-softworks/rules-transformer` converts UTF-8 TeX hyphenation tables to
-TypeScript locale rules. It is independent of the typography runtime and has
-no runtime dependencies.
+```tsx
+import { TypographistProvider, TypographistText, useTypographist } from '@elmenov-softworks/typographist-react';
 
-After globally installing the package, run its bin command directly:
+function Label({ text }: { text: string }) {
+  const formatted = useTypographist(text, 'en');
+  return <span>{formatted}</span>;
+}
 
-```sh
-transform-rules source.tex generated-rules.ts
-transform-rules --help
+function App() {
+  return (
+    <TypographistProvider config={{ locale: 'en', categories: ['quotes', 'hyphenation'], cacheSize: 64 }}>
+      <TypographistText text={'"Hello world"'} />
+      <Label text="Another string" />
+    </TypographistProvider>
+  );
+}
 ```
 
-The package declares `"bin": { "transform-rules": "./dist/cli.js" }`.
-The emitted executable has a Node.js shebang; callers invoke the command without
-an explicit interpreter. For a local project installation, the same executable
-is available at `node_modules/.bin/transform-rules`.
+`TypographistProvider<TCustomLocale extends string = never>` accepts optional
+`config: TypographistConfig<TCustomLocale>` from the core package and optional
+`children: ReactNode`. Omitted settings use core defaults.
 
-To install a locally built archive before publication, run from the workspace:
+`TypographistText` accepts required `text: string` and optional `locale: string`.
+It renders text without a wrapper. `useTypographist(text: string, locale?: string)`
+returns a string. Both require a provider and use the nearest one. A locale
+override affects only that consumer. Custom locale names and definitions can be
+passed through the provider's core configuration type.
 
-```sh
-npm run build --workspace=@elmenov-softworks/rules-transformer
-npm pack --workspace=@elmenov-softworks/rules-transformer
-npm install --global ./elmenov-softworks-rules-transformer-0.1.0.tgz
-transform-rules source.tex generated-rules.ts
-```
+Each provider owns one prepared formatter and its bounded word cache. Nested
+providers use complete independent configuration; they do not merge with their
+parent. Separate application roots and server requests share no formatter state.
+The integration supports native React server rendering and hydration without
+browser globals. Use equal configuration and source text on server and client.
+Output is text, including soft hyphens and nonbreaking characters; HTML-like
+source is never interpreted as markup.
 
-Input must have one plain `\patterns{...}` block and an optional plain
-`\hyphenation{...}` block. This is a converter for pattern tables, not a general
-TeX interpreter. Invalid syntax fails before writing the destination. Input and
-output must be different files; an existing destination is replaced. Its parent
-directory must already exist.
+Replace configuration immutably to update it. Scalar values, primitive array
+contents, and primitive rule settings are compared by value. Fresh equivalent
+objects and arrays preserve the formatter and cache. Custom rules, locale
+definitions, callbacks, and handler-bearing objects are compared by identity.
+Replace those objects to request an update; mutations inside them are not tracked.
+Omitted and explicit core defaults are equivalent where the core contract allows.
+A meaningful change prepares a replacement formatter and resets its word cache.
+Preparation errors propagate before the replacement is published.
 
-Output exports frozen `patterns` and `exceptions` arrays for use in a
-`TypographistRules` plugin. Exception hyphens become UTF-16 offsets; an entry
-without hyphens prevents breaks. Source comments, including copyright and
-permission notices, are retained.
+Consumers memoize their current source, effective locale, and formatter derivation.
+Unrelated parent updates do not repeat formatting for an unchanged committed
+consumer derivation or schedule an extra render to derive text. A source change
+updates its consumer; a provider configuration change may update every consumer.
+Recomputation always uses the original source string. React may still execute
+consumer functions because of application updates or development Strict Mode.
 
-The package also exports `transformRulesFile` for the repository's regeneration
-helper. [Bundled table regeneration](../../tools/rules-transformer/README.md)
-verifies retained byte lengths and SHA-256 hashes before converting the sources.
-
-Build, typecheck, lint and test use the shared workspace tooling. Run them with
-`npm run <command> --workspace=@elmenov-softworks/rules-transformer`.
+See the [core documentation](../typographist/README.md) for formatting categories,
+configuration defaults and text-processing limits.
