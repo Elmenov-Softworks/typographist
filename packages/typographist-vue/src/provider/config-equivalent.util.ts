@@ -52,9 +52,23 @@ const bundledDefaults: Readonly<Record<string, readonly TextRuleSettings[]>> = {
   ],
 };
 
-const equalEntries = <TValue>(left: readonly TValue[], right: readonly TValue[]) =>
-  left.length === right.length &&
-  Array.from(left).every((value, index) => index in left === index in right && Object.is(value, right[index]));
+const equalEntries = <TValue>(left: readonly TValue[], right: readonly TValue[]) => {
+  if (left === right) {
+    return true;
+  }
+
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  for (let index = 0; index < left.length; index++) {
+    if (index in left !== index in right || !Object.is(left[index], right[index])) {
+      return false;
+    }
+  }
+
+  return true;
+};
 
 const equalSettings = (left: TextRuleSettings, right: TextRuleSettings) => {
   const keys = Object.keys(left);
@@ -111,64 +125,83 @@ export const configEquivalent = <TCustomLocale extends string>(
   right: TypographistConfig<TCustomLocale>,
   registrationLocales: readonly string[],
 ) => {
-  if (!configHasComparableShape(left) || !configHasComparableShape(right)) {
+  if (left === right) {
+    return true;
+  }
+
+  if (!configHasComparableShape(right)) {
     return false;
+  }
+
+  const hasTextLocales = (left.textLocales?.length ?? 0) > 0 || (right.textLocales?.length ?? 0) > 0;
+
+  if (
+    (left.locale ?? 'en') !== (right.locale ?? 'en') ||
+    (left.useFast ?? false) !== (right.useFast ?? false) ||
+    !Object.is(left.cacheSize ?? 64, right.cacheSize ?? 64) ||
+    (hasTextLocales && (left.categories === undefined) !== (right.categories === undefined)) ||
+    !equalEntries(left.categories ?? defaultCategories, right.categories ?? defaultCategories) ||
+    !equalEntries(left.excludedWords ?? [], right.excludedWords ?? []) ||
+    !equalEntries(left.protectedContent ?? [], right.protectedContent ?? []) ||
+    !equalEntries(left.textLocales ?? [], right.textLocales ?? []) ||
+    !equalEntries(left.textRules ?? [], right.textRules ?? []) ||
+    !(
+      left.rules === right.rules ||
+      (left.rules !== undefined && right.rules !== undefined && equalEntries(left.rules, right.rules))
+    )
+  ) {
+    return false;
+  }
+
+  if (left.settings === right.settings) {
+    return true;
   }
 
   const leftSettings = left.settings ?? {};
   const rightSettings = right.settings ?? {};
   const settingIds = new Set([...Object.keys(leftSettings), ...Object.keys(rightSettings)]);
+
+  if (settingIds.size === 0) {
+    return true;
+  }
+
   const declaredRules = [...(left.textRules ?? []), ...(left.textLocales ?? []).flatMap((locale) => locale.textRules)];
   const registeredLocales = new Set(registrationLocales.map((locale) => locale.toLowerCase()));
   const quoteDefaults = bundledDefaults['common/punctuation/quote'] ?? [];
-  const registeredQuoteDefaults = quoteDefaults.filter((_, index) =>
-    registrationLocales.some((locale) => locale.toLowerCase() === (index === 0 ? 'en' : 'ru')),
-  );
-  const hasTextLocales = (left.textLocales?.length ?? 0) > 0 || (right.textLocales?.length ?? 0) > 0;
+  const registeredQuoteDefaults = quoteDefaults.filter((_, index) => registeredLocales.has(index === 0 ? 'en' : 'ru'));
 
-  return (
-    (left.locale ?? 'en') === (right.locale ?? 'en') &&
-    (left.useFast ?? false) === (right.useFast ?? false) &&
-    Object.is(left.cacheSize ?? 64, right.cacheSize ?? 64) &&
-    (!hasTextLocales || (left.categories === undefined) === (right.categories === undefined)) &&
-    equalEntries(left.categories ?? defaultCategories, right.categories ?? defaultCategories) &&
-    equalEntries(left.excludedWords ?? [], right.excludedWords ?? []) &&
-    equalEntries(left.protectedContent ?? [], right.protectedContent ?? []) &&
-    equalEntries(left.textLocales ?? [], right.textLocales ?? []) &&
-    equalEntries(left.textRules ?? [], right.textRules ?? []) &&
-    (left.rules === right.rules ||
-      (left.rules !== undefined && right.rules !== undefined && equalEntries(left.rules, right.rules))) &&
-    [...settingIds].every((id) => {
-      const defaults = [
-        ...(id === 'common/punctuation/quote'
-          ? registeredQuoteDefaults
-          : (bundledDefaults[id] ?? []).filter(() =>
-              id.startsWith('ru/')
-                ? registeredLocales.has('ru')
-                : id.startsWith('en-US/')
-                  ? registeredLocales.has('en')
-                  : registeredLocales.has('en') || registeredLocales.has('ru'),
-            )),
-        ...declaredRules.filter((rule) => rule.id === id).map((rule) => rule.defaults),
-      ];
-      const leftRule = leftSettings[id];
-      const rightRule = rightSettings[id];
+  return [...settingIds].every((id) => {
+    const bundledRuleDefaults = Object.hasOwn(bundledDefaults, id) ? bundledDefaults[id] : undefined;
+    const defaults = [
+      ...(id === 'common/punctuation/quote'
+        ? registeredQuoteDefaults
+        : (bundledRuleDefaults ?? []).filter(() =>
+            id.startsWith('ru/')
+              ? registeredLocales.has('ru')
+              : id.startsWith('en-US/')
+                ? registeredLocales.has('en')
+                : registeredLocales.has('en') || registeredLocales.has('ru'),
+          )),
+      ...declaredRules.filter((rule) => rule.id === id).map((rule) => rule.defaults),
+    ];
+    const leftRule = leftSettings[id];
+    const rightRule = rightSettings[id];
 
-      if (id === 'common/punctuation/quote' && defaults.length === 0) {
-        const validationDefaults = quoteDefaults[0] ?? {};
-        return [leftRule, rightRule].every((settings) =>
-          Object.entries(settings ?? {}).every(
-            ([name, value]) =>
-              Object.hasOwn(validationDefaults, name) && typeof validationDefaults[name] === typeof value,
-          ),
-        );
-      }
+    if (defaults.length === 0) {
+      const validationDefaults = bundledRuleDefaults?.at(-1);
 
-      if (defaults.length === 0) {
+      if (validationDefaults === undefined) {
         return leftRule !== undefined && rightRule !== undefined && equalSettings(leftRule, rightRule);
       }
 
-      return defaults.every((defaults) => equalSettings({ ...defaults, ...leftRule }, { ...defaults, ...rightRule }));
-    })
-  );
+      return [leftRule, rightRule].every((settings) =>
+        Object.entries(settings ?? {}).every(
+          ([name, value]) =>
+            Object.hasOwn(validationDefaults, name) && typeof validationDefaults[name] === typeof value,
+        ),
+      );
+    }
+
+    return defaults.every((defaults) => equalSettings({ ...defaults, ...leftRule }, { ...defaults, ...rightRule }));
+  });
 };

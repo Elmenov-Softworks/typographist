@@ -280,7 +280,13 @@ it.each(['en', 'ru'] as const)('preserves explicit %s plugin quote defaults with
   const compile = vi.spyOn(plugin, 'compile');
   const settings = { left: locale === 'en' ? '“‘' : '«„‚', right: locale === 'en' ? '”’' : '»“‘', spacing: true };
   const omitted: TypographistConfig = { locale, rules: [plugin], textRules: [rule] };
-  const explicit: TypographistConfig = { ...omitted, settings: { 'common/punctuation/quote': settings } };
+  const explicit: TypographistConfig = {
+    ...omitted,
+    settings: {
+      'common/punctuation/quote': settings,
+      ...(locale === 'en' ? { 'ru/dash/years': { dash: '–' } } : {}),
+    },
+  };
   const container = document.createElement('div');
   const format = vi.spyOn(Typographist.prototype, 'format');
   const [config, setConfig] = createSignal(omitted);

@@ -341,3 +341,48 @@ it.each([null, undefined])('does not reuse sparse exclusions for an explicit %s 
   expect(initial.formatter.format('configuration')).toBe(expected);
   expect(prepareProvider(config, initial)).toBe(initial);
 });
+
+it('ignores valid inactive bundled settings without recompiling and preserves core rejection', () => {
+  const plugin = new TypographistRules({
+    standard: { locale: 'en', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
+    fast: {
+      locale: 'en',
+      alphabet: 'abcd',
+      leftMin: 1,
+      rightMin: 1,
+      vowels: 'a',
+      consonants: 'bcd',
+      specialLetters: '',
+    },
+  });
+  const compile = vi.spyOn(plugin, 'compile');
+  const omitted: TypographistConfig = { rules: [plugin] };
+  const explicit: TypographistConfig = { ...omitted, settings: { 'ru/dash/years': { dash: '–' } } };
+
+  for (const [config, replacement] of [
+    [omitted, explicit],
+    [explicit, omitted],
+  ] as const) {
+    const initial = prepareProvider(config);
+    const calls = compile.mock.calls.length;
+
+    expect(prepareProvider(replacement, initial)).toBe(initial);
+    expect(compile).toHaveBeenCalledTimes(calls);
+    expect(() => prepareProvider({ ...config, settings: { 'ru/dash/years': { dash: 1 } } }, initial)).toThrow();
+    expect(() => prepareProvider({ ...config, settings: { 'ru/dash/years': { unknown: '–' } } }, initial)).toThrow();
+    expect(prepareProvider(config, initial)).toBe(initial);
+  }
+});
+
+it('preserves custom defaults for rule IDs inherited by ordinary objects', () => {
+  const rule = { ...createRule(), id: 'constructor' };
+  const config: TypographistConfig = { categories: ['spacing'], textRules: [rule] };
+  const initial = prepareProvider(config);
+  const explicit = { ...config, settings: { constructor: { suffix: '!' } } };
+  const expected = new Typographist(explicit).format('source');
+  const preparations = vi.mocked(rule.prepare).mock.calls.length;
+
+  expect(prepareProvider(explicit, initial)).toBe(initial);
+  expect(rule.prepare).toHaveBeenCalledTimes(preparations);
+  expect(initial.formatter.format('source')).toBe(expected);
+});
