@@ -1,5 +1,7 @@
 # Typographist for Vue
 
+Components use Vue SFCs with `<script setup lang="ts">` and type-based props.
+
 Use the nearest provider to share a prepared core formatter and its bounded word
 cache. Each provider owns its own instance, including nested providers and
 separate server requests. Nested configuration is complete; it does not merge
