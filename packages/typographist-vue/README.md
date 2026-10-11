@@ -58,10 +58,10 @@ locales and invalid configuration preserve core errors. Soft hyphens, Unicode,
 protected content and empty strings retain core behavior.
 
 Replace configuration immutably. Use `shallowRef` for configuration to preserve
-plugin identity and class instances rather than deeply proxying them. Scalars, primitive array contents and primitive
-rule settings compare by value. New equivalent array containers do not require
-stable identity. Custom plugins, locale definitions, protected-content objects
-and callbacks compare by identity; replace their identity to request an update.
+plugin identity and class instances rather than deeply proxying them. Scalars,
+primitive array contents and primitive rule settings compare by value. New equivalent array containers do not require
+stable identity. Custom plugins, locale definitions and callbacks compare by
+identity; replace their identity to request an update.
 Mutating plugin internals is not tracked. Supported explicit defaults compare
 equally to omitted defaults.
 
@@ -75,3 +75,6 @@ consumers. Vue can still execute application renders for unrelated reasons.
 Native Vue server rendering and hydration need no browser globals during import
 or server rendering. Use equal source text and configuration on server and client
 for equal initial text. No mutable service is shared between roots.
+
+See the [core documentation](../typographist/README.md) for formatting categories,
+configuration defaults and text-processing limits.

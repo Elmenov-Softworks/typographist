@@ -45,9 +45,12 @@ Omitted and explicit core defaults are equivalent where the core contract allows
 A meaningful change prepares a replacement formatter and resets its word cache.
 Preparation errors propagate before the replacement is published.
 
-Consumers memoize their current source, locale override, and formatter derivation.
+Consumers memoize their current source, effective locale, and formatter derivation.
 Unrelated parent updates do not repeat formatting for an unchanged committed
 consumer derivation or schedule an extra render to derive text. A source change
 updates its consumer; a provider configuration change may update every consumer.
 Recomputation always uses the original source string. React may still execute
 consumer functions because of application updates or development Strict Mode.
+
+See the [core documentation](../typographist/README.md) for formatting categories,
+configuration defaults and text-processing limits.

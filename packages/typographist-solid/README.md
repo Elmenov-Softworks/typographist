@@ -56,9 +56,8 @@ soft hyphens and protected content retain core behavior.
 
 Replace configuration immutably. Scalars, primitive array contents and declared
 primitive rule settings compare by value. Fresh equivalent configuration and
-array containers preserve the formatter. Custom plugins, locale definitions,
-protected-content objects and callbacks compare by identity; replace their
-identity to request an update. Changes inside mutable plugin objects are not
+array containers preserve the formatter. Custom plugins, locale definitions and
+callbacks compare by identity; replace their identity to request an update. Changes inside mutable plugin objects are not
 tracked. Supported explicit defaults compare equally to omitted defaults.
 
 A meaningful configuration change prepares a replacement before publishing it
@@ -72,3 +71,6 @@ Use native Solid server rendering and hydration, compiling server JSX with
 Solid's SSR transform. Imports and server rendering need no browser globals.
 Equal source and configuration produce equal initial text. No formatter is
 shared globally across roots or server requests.
+
+See the [core documentation](../typographist/README.md) for formatting categories,
+configuration defaults and text-processing limits.
