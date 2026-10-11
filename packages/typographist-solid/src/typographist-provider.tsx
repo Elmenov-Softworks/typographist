@@ -1,7 +1,7 @@
 import { createMemo } from 'solid-js';
 
 import { FormatterContext } from '@/provider/formatter-context.js';
-import { prepareProvider } from '@/provider/prepare-provider.factory.js';
+import { prepareProvider } from '@elmenov-softworks/typographist/internal/provider';
 import type { TypographistProviderProps } from '@/typographist.types.js';
 
 export const TypographistProvider = (props: TypographistProviderProps) => {

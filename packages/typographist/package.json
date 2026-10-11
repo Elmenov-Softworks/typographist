@@ -34,6 +34,13 @@
         "default": "./dist/index.d.ts"
       },
       "import": "./dist/index.js"
+    },
+    "./internal/provider": {
+      "types": {
+        "typographist-source": "./src/integrations/prepare-provider.factory.ts",
+        "default": "./dist/integrations/prepare-provider.factory.d.ts"
+      },
+      "import": "./dist/integrations/prepare-provider.factory.js"
     }
   },
   "files": [

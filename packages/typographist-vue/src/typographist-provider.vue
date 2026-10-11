@@ -3,7 +3,7 @@ import type { TypographistConfig } from '@elmenov-softworks/typographist';
 import { provide, shallowRef, watch } from 'vue';
 
 import { formatterKey } from '@/provider/formatter-context.js';
-import { prepareProvider } from '@/provider/prepare-provider.factory.js';
+import { prepareProvider } from '@elmenov-softworks/typographist/internal/provider';
 
 const props = defineProps<{ config?: TypographistConfig<string> }>();
 const defaultConfig = {};
