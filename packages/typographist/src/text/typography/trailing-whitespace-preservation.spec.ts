@@ -1,4 +1,4 @@
-import { Typographist } from '@/index.js';
+import { Typographist } from '#src/index.js';
 
 describe.each(['en', 'ru'] as const)('short-word boundary spacing for %s', (locale) => {
   const service = new Typographist({

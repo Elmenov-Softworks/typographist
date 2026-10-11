@@ -1,5 +1,5 @@
-import { prepareMinus } from '@/text/typography/prepare-minus.util.js';
-import type { TextRule } from '@/text/typography/text-rule.types.js';
+import { prepareMinus } from '#src/text/typography/prepare-minus.util.js';
+import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 const identifierCharacter = /[\p{L}\p{M}\p{N}_-]/u;
 

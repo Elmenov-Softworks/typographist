@@ -1,4 +1,4 @@
-import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
+import { createAlphabetNormalizer } from '#src/languages/analysis/alphabet-normalizer.factory.js';
 
 const russian = createAlphabetNormalizer('абвгдеёжзийклмнопрстуфхцчшщъыьэюя');
 

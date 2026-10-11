@@ -1,7 +1,7 @@
-import { Typographist, TypographistRules } from '@/index.js';
-import { createBundledRules } from '@/rules/bundled/bundled-rules.js';
-import { patterns as ruPatterns, exceptions as ruExceptions } from '@/languages/bundled/ru-data.constants.js';
-import { patterns as enPatterns, exceptions as enExceptions } from '@/languages/bundled/en-us-data.constants.js';
+import { Typographist, TypographistRules } from '#src/index.js';
+import { createBundledRules } from '#src/rules/bundled/bundled-rules.js';
+import { patterns as ruPatterns, exceptions as ruExceptions } from '#src/languages/bundled/ru-data.constants.js';
+import { patterns as enPatterns, exceptions as enExceptions } from '#src/languages/bundled/en-us-data.constants.js';
 
 const typographist = new Typographist({ categories: ['hyphenation'] });
 

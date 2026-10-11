@@ -4,7 +4,7 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "#src/*": ["./src/*"]
     },
     "lib": ["ES2023"],
     "types": ["vitest/globals", "node"]

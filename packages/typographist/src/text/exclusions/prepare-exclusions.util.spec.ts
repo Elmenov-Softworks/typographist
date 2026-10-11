@@ -1,4 +1,4 @@
-import { prepareExclusions } from '@/text/exclusions/prepare-exclusions.util.js';
+import { prepareExclusions } from '#src/text/exclusions/prepare-exclusions.util.js';
 
 describe('prepared exclusions', () => {
   it.each([

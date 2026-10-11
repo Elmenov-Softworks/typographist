@@ -1,4 +1,4 @@
-import type { TextRule } from '@/text/typography/text-rule.types.js';
+import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 /** A consumer locale supporting symbolic typography without hyphenation data. */
 export type TextLocale<TLocale extends string = string> = {

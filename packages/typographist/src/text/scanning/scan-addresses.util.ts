@@ -1,4 +1,4 @@
-import type { CandidateSpan } from '@/text/scanning/candidate-span.types.js';
+import type { CandidateSpan } from '#src/text/scanning/candidate-span.types.js';
 
 const asciiLetter = /[A-Za-z]/;
 const schemeCharacter = /[A-Za-z0-9+.-]/;

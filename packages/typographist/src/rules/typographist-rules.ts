@@ -1,5 +1,5 @@
-import type { ITypographistRules } from '@/rules/typographist-rules.interfaces.js';
-import type { RuleSets } from '@/rules/rule-sets.types.js';
+import type { ITypographistRules } from '#src/rules/typographist-rules.interfaces.js';
+import type { RuleSets } from '#src/rules/rule-sets.types.js';
 
 /**
  * Supplies locale rules from paired Knuth–Liang and Khristov datasets, or a subclass's own storage.

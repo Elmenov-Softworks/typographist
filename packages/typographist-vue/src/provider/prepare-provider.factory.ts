@@ -30,7 +30,7 @@ export const prepareProvider = <TCustomLocale extends string = never>(
           return plugin;
         }
 
-        return new (class extends TypographistRules {
+        return new (class extends TypographistRules<'en' | 'ru' | TCustomLocale> {
           override compile(useFast: boolean) {
             const compiled = plugin.compile(useFast);
             compiledRegistrations.push(compiled);

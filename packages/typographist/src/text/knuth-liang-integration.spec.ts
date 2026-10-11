@@ -1,4 +1,4 @@
-import { Typographist, TypographistRules } from '@/index.js';
+import { Typographist, TypographistRules } from '#src/index.js';
 
 describe('Knuth–Liang text integration', () => {
   it.each([

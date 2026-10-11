@@ -2,8 +2,8 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { transformRulesFile } from '@/rules-transformer.controller.js';
-import { parseTexRules } from '@/tex/parse-tex-rules.util.js';
+import { transformRulesFile } from '#src/rules-transformer.controller.js';
+import { parseTexRules } from '#src/tex/parse-tex-rules.util.js';
 
 describe('rules transformer', () => {
   it('converts patterns and exceptions, preserving source notices and Unicode offsets', async () => {

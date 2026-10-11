@@ -1,4 +1,4 @@
-import { validatePatterns } from '@/tex/validate-patterns.util.js';
+import { validatePatterns } from '#src/tex/validate-patterns.util.js';
 
 const extractBlock = (source: string, command: string) => {
   const blocks = Array.from(source.matchAll(new RegExp(String.raw`\\${command}\s*\{([^{}]*)\}`, 'gu')));

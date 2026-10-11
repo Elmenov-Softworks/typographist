@@ -95,6 +95,12 @@ npm run format:check
 npm test
 ```
 
+Lint and type checks resolve workspace dependencies from source through the
+`typographist-source` TypeScript condition; they do not require `dist` or emit files.
+Package-local `#src` imports keep dependency aliases separate from consumer aliases.
+Runtime imports and benchmarks use built packages. Integration builds resolve the
+emitted declarations, so they also check the published package boundary.
+
 `npm run docs` generates TypeDoc after a build.
 The [rules transformer](../rules-transformer/README.md) converts TeX tables
 into hyphenation data.

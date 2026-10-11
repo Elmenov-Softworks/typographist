@@ -1,8 +1,8 @@
-import type { ITypographistRules } from '@/rules/typographist-rules.interfaces.js';
-import * as api from '@/index.js';
-import { Typographist, TypographistRules } from '@/index.js';
-import type { CompiledRules, KhristovRules } from '@/index.js';
-import { locales } from '@/rules/locale.constants.js';
+import type { ITypographistRules } from '#src/rules/typographist-rules.interfaces.js';
+import * as api from '#src/index.js';
+import { Typographist, TypographistRules } from '#src/index.js';
+import type { CompiledRules, KhristovRules } from '#src/index.js';
+import { locales } from '#src/rules/locale.constants.js';
 
 class TestRules extends TypographistRules implements ITypographistRules {
   #rules: CompiledRules;

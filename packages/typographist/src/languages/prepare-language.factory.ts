@@ -1,6 +1,6 @@
-import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
-import { prepareExceptionTable } from '@/languages/exceptions/exception-table.util.js';
-import type { LanguageRules } from '@/rules/language-rules.types.js';
+import { createAlphabetNormalizer } from '#src/languages/analysis/alphabet-normalizer.factory.js';
+import { prepareExceptionTable } from '#src/languages/exceptions/exception-table.util.js';
+import type { LanguageRules } from '#src/rules/language-rules.types.js';
 
 export const prepareLanguage = (rules: LanguageRules) => {
   if (typeof rules.alphabet !== 'string' || rules.alphabet.length === 0) {

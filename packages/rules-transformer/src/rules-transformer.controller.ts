@@ -1,8 +1,8 @@
 import { readFile, realpath, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { parseTexRules } from '@/tex/parse-tex-rules.util.js';
-import { renderRules } from '@/typescript/render-rules.util.js';
+import { parseTexRules } from '#src/tex/parse-tex-rules.util.js';
+import { renderRules } from '#src/typescript/render-rules.util.js';
 
 /**
  * Converts a UTF-8 TeX rules file into TypeScript arrays and resolves with pattern and exception counts.

@@ -1,4 +1,4 @@
-import { Typographist } from '@/index.js';
+import { Typographist } from '#src/index.js';
 
 describe('symbolic gaps require same-line content', () => {
   it.each(['en', 'ru'] as const)('preserves indentation before prose dashes in %s', (locale) => {

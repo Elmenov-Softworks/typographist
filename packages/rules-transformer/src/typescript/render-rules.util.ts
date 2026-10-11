@@ -1,4 +1,4 @@
-import type { parseTexRules } from '@/tex/parse-tex-rules.util.js';
+import type { parseTexRules } from '#src/tex/parse-tex-rules.util.js';
 
 const quote = (value: string) => `'${value.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}'`;
 

@@ -1,4 +1,4 @@
-import { Typographist } from '@/typographist/typographist.js';
+import { Typographist } from '#src/typographist/typographist.js';
 
 describe('retained nonbreaking bindings preserve boundary bytes', () => {
   it.each([false, true].flatMap((useFast) => [0, 64].map((cacheSize) => ({ useFast, cacheSize }))))(

@@ -1,4 +1,4 @@
-import type { LanguageRules } from '@/rules/language-rules.types.js';
+import type { LanguageRules } from '#src/rules/language-rules.types.js';
 
 /** Complete, disjoint character classifications for normalized supported symbols. */
 export type KhristovRules<TLocale extends string = string> = LanguageRules<TLocale> & {

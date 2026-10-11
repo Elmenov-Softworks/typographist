@@ -1,5 +1,5 @@
-import { prepareExceptionTable } from '@/languages/exceptions/exception-table.util.js';
-import { createAlphabetNormalizer } from '@/languages/analysis/alphabet-normalizer.factory.js';
+import { prepareExceptionTable } from '#src/languages/exceptions/exception-table.util.js';
+import { createAlphabetNormalizer } from '#src/languages/analysis/alphabet-normalizer.factory.js';
 
 const normalize = createAlphabetNormalizer('abcdefghijklmnopqrstuvwxyzёлка');
 

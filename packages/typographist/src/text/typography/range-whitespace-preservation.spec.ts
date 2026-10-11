@@ -1,4 +1,4 @@
-import { Typographist } from '@/index.js';
+import { Typographist } from '#src/index.js';
 
 describe('range separator whitespace preservation', () => {
   it.each([

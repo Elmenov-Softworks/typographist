@@ -29,7 +29,10 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "typographist-source": "./src/index.ts",
+        "default": "./dist/index.d.ts"
+      },
       "import": "./dist/index.js"
     }
   },
@@ -42,5 +45,11 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run --config vitest.config.ts"
+  },
+  "imports": {
+    "#src/*.js": {
+      "typographist-source": "./src/*.ts",
+      "default": "./dist/*.js"
+    }
   }
 }

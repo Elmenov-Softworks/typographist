@@ -1,6 +1,6 @@
-import type { HyphenationException } from '@/languages/exceptions/hyphenation-exception.types.js';
-import type { WordAnalysis } from '@/languages/analysis/word-analysis.types.js';
-import type { WordNormalizer } from '@/languages/analysis/word-normalizer.types.js';
+import type { HyphenationException } from '#src/languages/exceptions/hyphenation-exception.types.js';
+import type { WordAnalysis } from '#src/languages/analysis/word-analysis.types.js';
+import type { WordNormalizer } from '#src/languages/analysis/word-normalizer.types.js';
 
 export const prepareExceptionTable = (entries: readonly HyphenationException[], normalize: WordNormalizer) => {
   if (!Array.isArray(entries)) {

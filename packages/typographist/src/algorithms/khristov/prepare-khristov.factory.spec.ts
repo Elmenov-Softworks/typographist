@@ -1,7 +1,7 @@
-import type { KhristovRules } from '@/algorithms/khristov/khristov-rules.types.js';
-import { prepareKhristov } from '@/algorithms/khristov/prepare-khristov.factory.js';
-import { prepareExclusions } from '@/text/exclusions/prepare-exclusions.util.js';
-import { formatWord } from '@/text/word-breaks/format-word.util.js';
+import type { KhristovRules } from '#src/algorithms/khristov/khristov-rules.types.js';
+import { prepareKhristov } from '#src/algorithms/khristov/prepare-khristov.factory.js';
+import { prepareExclusions } from '#src/text/exclusions/prepare-exclusions.util.js';
+import { formatWord } from '#src/text/word-breaks/format-word.util.js';
 
 const rules: KhristovRules = {
   locale: 'custom',

@@ -1,4 +1,4 @@
-import { matchKhristovClasses } from '@/algorithms/khristov/class-matcher.util.js';
+import { matchKhristovClasses } from '#src/algorithms/khristov/class-matcher.util.js';
 
 describe('Khristov class matching', () => {
   it.each([

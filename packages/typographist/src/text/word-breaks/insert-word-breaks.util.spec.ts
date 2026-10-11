@@ -1,5 +1,5 @@
-import { graphemeSegmenter } from '@/languages/analysis/grapheme-segmenter.constants.js';
-import { insertWordBreaks } from '@/text/word-breaks/insert-word-breaks.util.js';
+import { graphemeSegmenter } from '#src/languages/analysis/grapheme-segmenter.constants.js';
+import { insertWordBreaks } from '#src/text/word-breaks/insert-word-breaks.util.js';
 
 const insert = (word: string, positions: unknown, leftMin = 1, rightMin = 1) =>
   insertWordBreaks(

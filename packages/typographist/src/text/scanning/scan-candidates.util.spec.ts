@@ -1,4 +1,4 @@
-import { scanCandidates } from '@/text/scanning/scan-candidates.util.js';
+import { scanCandidates } from '#src/text/scanning/scan-candidates.util.js';
 
 const words = (text: string) => scanCandidates(text).map(({ start, end }) => text.slice(start, end));
 

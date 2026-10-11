@@ -1,6 +1,6 @@
-import { Typographist, TypographistRules } from '@/index.js';
-import * as wordFormatting from '@/text/word-breaks/format-word.util.js';
-import type { TextRule } from '@/text/typography/text-rule.types.js';
+import { Typographist, TypographistRules } from '#src/index.js';
+import * as wordFormatting from '#src/text/word-breaks/format-word.util.js';
+import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 const rules = (locale = 'en', positions: readonly number[] = [2]) => {
   const common = {

@@ -1,6 +1,6 @@
-import type { CompiledRules } from '@/rules/compiled-rules.types.js';
+import type { CompiledRules } from '#src/rules/compiled-rules.types.js';
 
-import type { KhristovRules } from '@/algorithms/khristov/khristov-rules.types.js';
+import type { KhristovRules } from '#src/algorithms/khristov/khristov-rules.types.js';
 
 /** Contract for rule plugins that supply locale data for the selected hyphenation algorithm. */
 export interface ITypographistRules<TLocale extends string = string> {

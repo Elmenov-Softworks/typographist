@@ -1,7 +1,7 @@
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 
-import { Typographist } from '../../packages/typographist/dist/index.js';
+import { Typographist } from '@elmenov-softworks/typographist';
 import type { BenchmarkImplementation, TextFormatter } from './benchmark.types.ts';
 
 export const currentImplementations: readonly BenchmarkImplementation[] = [false, true].map((useFast) => ({

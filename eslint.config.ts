@@ -28,7 +28,10 @@ export default defineConfig(
     plugins: { 'import-x': importX },
     settings: {
       'import-x/resolver-next': [
-        createTypeScriptImportResolver({ project: ['tsconfig.json', 'packages/*/tsconfig.json'] }),
+        createTypeScriptImportResolver({
+          project: ['tsconfig.json', 'packages/*/tsconfig.json'],
+          conditionNames: ['types', 'typographist-source', 'import', 'node', 'default'],
+        }),
       ],
     },
     rules: {

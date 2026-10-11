@@ -1,4 +1,4 @@
-import { parseTexRules } from '@/tex/parse-tex-rules.util.js';
+import { parseTexRules } from '#src/tex/parse-tex-rules.util.js';
 
 describe('TeX pattern validation', () => {
   it.each(['12a', '.', '.1.', 'a..b', 'ab.c', 'a\u0000b', 'a\\macro'])('rejects invalid pattern %j', (pattern) => {

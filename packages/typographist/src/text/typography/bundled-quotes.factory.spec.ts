@@ -1,5 +1,5 @@
-import { createBundledQuotes } from '@/text/typography/bundled-quotes.factory.js';
-import { prepareTextPipeline } from '@/text/typography/prepare-text-pipeline.util.js';
+import { createBundledQuotes } from '#src/text/typography/bundled-quotes.factory.js';
+import { prepareTextPipeline } from '#src/text/typography/prepare-text-pipeline.util.js';
 
 const fixtures = [
   ['"hello"', '“hello”', '«hello»'],

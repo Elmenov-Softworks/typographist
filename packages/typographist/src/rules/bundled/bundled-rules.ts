@@ -1,11 +1,14 @@
-import type { Locale } from '@/rules/locale.types.js';
-import type { ITypographistRules } from '@/rules/typographist-rules.interfaces.js';
-import { TypographistRules } from '@/rules/typographist-rules.js';
+import type { Locale } from '#src/rules/locale.types.js';
+import type { ITypographistRules } from '#src/rules/typographist-rules.interfaces.js';
+import { TypographistRules } from '#src/rules/typographist-rules.js';
 import {
   patterns as englishPatterns,
   exceptions as englishExceptions,
-} from '@/languages/bundled/en-us-data.constants.js';
-import { patterns as russianPatterns, exceptions as russianExceptions } from '@/languages/bundled/ru-data.constants.js';
+} from '#src/languages/bundled/en-us-data.constants.js';
+import {
+  patterns as russianPatterns,
+  exceptions as russianExceptions,
+} from '#src/languages/bundled/ru-data.constants.js';
 
 class BundledRules extends TypographistRules<Locale> implements ITypographistRules<Locale> {}
 
