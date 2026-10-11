@@ -33,6 +33,21 @@ describe('quotation pipeline interactions', () => {
     expect(instance.format(expected)).toBe(expected);
   });
 
+  it.each([
+    ['en', '“outer https://example.com ‘inner’ end”'],
+    ['ru', '«outer https://example.com „inner“ end»'],
+  ] as const)('preserves quotation nesting across a protected URL for %s', (locale, expected) => {
+    const instance = new Typographist({
+      locale,
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { spacing: false } },
+    });
+
+    expect(instance.format('"outer https://example.com "inner" end"')).toBe(expected);
+    expect(instance.format('"next"')).toBe(locale === 'ru' ? '«next»' : '“next”');
+    expect(instance.format(expected)).toBe(expected);
+  });
+
   it('keeps apostrophe conversion independent of quotation selection', () => {
     const quotes = new Typographist({
       settings: { 'common/punctuation/quote': { spacing: false } },

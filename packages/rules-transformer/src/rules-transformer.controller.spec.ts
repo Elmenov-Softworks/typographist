@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { link, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -45,6 +45,24 @@ describe('rules transformer', () => {
 
       await expect(transformRulesFile(input, output)).rejects.toThrow();
       expect(await readFile(output, 'utf8')).toBe('previous output');
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  it('rejects a hard-linked destination without modifying the source', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'rules-transformer-'));
+    const input = join(directory, 'input.tex');
+    const output = join(directory, 'output.ts');
+    const source = '\\patterns{a1b}';
+
+    try {
+      await writeFile(input, source);
+      await link(input, output);
+
+      await expect(transformRulesFile(input, output)).rejects.toThrow('different files');
+      expect(await readFile(input, 'utf8')).toBe(source);
+      expect(await readFile(output, 'utf8')).toBe(source);
     } finally {
       await rm(directory, { recursive: true, force: true });
     }

@@ -44,10 +44,10 @@ describe('Russian see/name abbreviation spacing', () => {
     expect(format(text)).toBe(text);
   });
 
-  it('preserves reference matching for adjacent abbreviations', () => {
+  it('binds adjacent abbreviations', () => {
     const first = format('см. a см. b см. c');
 
-    expect(first).toBe('см. a см. b см. c');
+    expect(first).toBe('см. a см. b см. c');
     expect(format(first)).toBe(first);
   });
 

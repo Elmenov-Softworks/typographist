@@ -42,10 +42,10 @@ describe('Russian page-reference spacing', () => {
     expect(format(text)).toBe(text);
   });
 
-  it('preserves reference matching for adjacent references', () => {
+  it('binds adjacent references', () => {
     const first = format('стр. 1 стр. 2 стр. 3');
 
-    expect(first).toBe('стр. 1 стр. 2 стр. 3');
+    expect(first).toBe('стр. 1 стр. 2 стр. 3');
     expect(format(first)).toBe('стр. 1 стр. 2 стр. 3');
   });
 

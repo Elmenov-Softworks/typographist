@@ -53,6 +53,16 @@ const parsePattern = (pattern: unknown) => {
   return { symbols, weights };
 };
 
+export const validatePatterns = (patterns: readonly string[]) => {
+  if (!Array.isArray(patterns)) {
+    throw new TypeError('Knuth–Liang patterns must be an array');
+  }
+
+  for (const pattern of patterns) {
+    parsePattern(pattern);
+  }
+};
+
 export const preparePatternMatcher = (patterns: readonly string[]) => {
   if (!Array.isArray(patterns)) {
     throw new TypeError('Knuth–Liang patterns must be an array');

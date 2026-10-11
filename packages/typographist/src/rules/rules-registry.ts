@@ -8,7 +8,7 @@ import type {
   TextRuleSettings,
 } from '#src/text/typography/text-rule.types.js';
 import { WordCache } from '#src/text/word-cache/word-cache.js';
-import { selectAlgorithm } from '#src/algorithms/select-algorithm.factory.js';
+import { selectAlgorithm, validateAlgorithmRules } from '#src/algorithms/select-algorithm.factory.js';
 import { languageKey } from '#src/languages/language-identifier.util.js';
 import { TypographistRules } from '#src/rules/typographist-rules.js';
 import { createHyphenator } from '#src/text/create-hyphenator.factory.js';
@@ -198,23 +198,29 @@ export class RulesRegistry {
     }
 
     const key = languageKey(compiled.locale);
-    const algorithm = this.#prepare(compiled);
-    const service = createHyphenator({
-      algorithm,
-      cache: this.#cache,
-      locale: key,
-      excludedWords: this.#excludedWords,
-    });
-
     const hyphenationEnabled =
       this.#options.categories === undefined || this.#options.categories.includes('hyphenation');
+
+    if (!hyphenationEnabled) {
+      validateAlgorithmRules(compiled, this.#useFast);
+    }
+
+    const service = hyphenationEnabled
+      ? createHyphenator({
+          algorithm: this.#prepare(compiled),
+          cache: this.#cache,
+          locale: key,
+          excludedWords: this.#excludedWords,
+        })
+      : null;
+
     const format = prepareTextPipeline(
       createBundledTextRules(key, this.#textRules),
       key,
       this.#options,
-      hyphenationEnabled ? service.hyphenate : undefined,
+      service?.hyphenate,
       new Set(this.#declaredSettings.keys()),
-      service.preservesCandidate,
+      service?.preservesCandidate,
     );
 
     return { key, service: { hyphenate: format } };

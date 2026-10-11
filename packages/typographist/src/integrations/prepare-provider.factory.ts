@@ -1,7 +1,8 @@
-import { Typographist, TypographistRules } from '@elmenov-softworks/typographist';
-import type { TypographistConfig } from '@elmenov-softworks/typographist';
+import { Typographist } from '#src/typographist/typographist.js';
+import { TypographistRules } from '#src/rules/typographist-rules.js';
+import type { TypographistConfig } from '#src/typographist/typographist-config.types.js';
 
-import { configEquivalent } from '@/provider/config-equivalent.util.js';
+import { configEquivalent } from '#src/integrations/config-equivalent.util.js';
 
 export const prepareProvider = <TCustomLocale extends string = never>(
   config: TypographistConfig<TCustomLocale>,
