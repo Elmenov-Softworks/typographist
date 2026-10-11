@@ -117,12 +117,13 @@ export const prepareTextPipeline = (
     original: string,
     tokenAt: (position: number) => CandidateSpan | null,
     preservesBoundary: (position: number, boundary: number) => boolean,
+    quotation: { level: number } | null,
   ) => {
     const segmentEnd = start + text.length;
     const before = original.slice(Math.max(0, start - 2), start);
     const after = original.slice(segmentEnd, segmentEnd + 2);
     const context = {
-      [segmentBoundary]: { original, end: segmentEnd },
+      [segmentBoundary]: { original, end: segmentEnd, quotation },
       precedingCharacter: (before.codePointAt(0) ?? 0) > 0xffff ? before : before.slice(-1),
       followingCharacter: (after.codePointAt(0) ?? 0) > 0xffff ? after : after.charAt(0),
       get precedingToken() {
@@ -226,16 +227,17 @@ export const prepareTextPipeline = (
     }
 
     if (spans.length === 0) {
-      return transform(text, 0, text, tokenAt, preservesBoundary);
+      return transform(text, 0, text, tokenAt, preservesBoundary, null);
     }
 
     spans.sort((left, right) => left.start - right.start);
     const parts: string[] = [];
+    const quotation = { level: 0 };
     let copied = 0;
 
     for (const span of spans) {
       if (span.start > copied) {
-        parts.push(transform(text.slice(copied, span.start), copied, text, tokenAt, preservesBoundary));
+        parts.push(transform(text.slice(copied, span.start), copied, text, tokenAt, preservesBoundary, quotation));
       }
 
       if (span.end > copied) {
@@ -244,7 +246,7 @@ export const prepareTextPipeline = (
       }
     }
 
-    parts.push(transform(text.slice(copied), copied, text, tokenAt, preservesBoundary));
+    parts.push(transform(text.slice(copied), copied, text, tokenAt, preservesBoundary, quotation));
 
     return parts.join('');
   };

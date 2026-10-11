@@ -10,11 +10,11 @@ describe.each(['ru', 'en'] as const)('resolution-unit spacing for %s', (locale) 
   it.each([
     ['300dpi', '300 dpi'],
     ['150 lpi.', '150 lpi.'],
-    ['1.25dpi 1/2lpi', '1.25 dpi 1/2lpi'],
+    ['1.25dpi 1/2lpi', '1.25 dpi 1/2 lpi'],
     ['😀 12345dpí', '😀 12345 dpí'],
     ['MiXeD300dpiЖ', 'MiXeD300 dpiЖ'],
     ['2026-10-08dpi', '2026-10-08 dpi'],
-  ])('formats the first reference match in %j', (text, expected) => {
+  ])('formats every matching unit in %j', (text, expected) => {
     expect(format(text)).toBe(expected);
   });
 
@@ -35,10 +35,10 @@ describe.each(['ru', 'en'] as const)('resolution-unit spacing for %s', (locale) 
     expect(format(text)).toBe(text);
   });
 
-  it('preserves reference traversal on repeated formatting', () => {
+  it('binds every occurrence in one call and remains idempotent', () => {
     const once = format('300dpi 150lpi');
 
-    expect(once).toBe('300 dpi 150lpi');
+    expect(once).toBe('300 dpi 150 lpi');
     expect(format(once)).toBe('300 dpi 150 lpi');
     expect(format(format(once))).toBe('300 dpi 150 lpi');
   });
