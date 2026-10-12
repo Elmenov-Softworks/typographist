@@ -3,7 +3,11 @@ import type { Accessor } from 'solid-js';
 
 import { FormatterContext } from '@/provider/formatter-context.js';
 
-/** Returns reactive formatted text, or the current source while disabled. Requires a provider. */
+/**
+ * Returns reactive formatted text, using the nearest provider's default locale when no override is supplied.
+ * Disabled defaults to false; true preserves the current source without formatting or locale lookup.
+ * Throws when no provider is present, including when disabled.
+ */
 export const useTypographist = (
   text: Accessor<string>,
   locale?: Accessor<string | undefined>,

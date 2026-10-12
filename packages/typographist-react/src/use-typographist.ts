@@ -2,7 +2,11 @@ import { useContext, useMemo } from 'react';
 
 import { FormatterContext } from '@/provider/formatter-context.js';
 
-/** Formats source text with the nearest provider; disabled skips formatting and locale lookup. */
+/**
+ * Formats source text with the nearest provider, using its default locale when no override is supplied.
+ * Disabled defaults to false; true returns the exact source without formatting or locale lookup.
+ * Throws when no provider is present, including when disabled.
+ */
 export const useTypographist = (text: string, locale?: string, disabled = false) => {
   const provider = useContext(FormatterContext);
 
