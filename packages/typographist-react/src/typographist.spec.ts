@@ -16,9 +16,53 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-const HookText = ({ text }: { text: string }) => useTypographist(text);
+const HookText = ({ text, locale, disabled }: { text: string; locale?: string; disabled?: boolean }) =>
+  useTypographist(text, locale, disabled);
 
 describe('React integration', () => {
+  it('bypasses formatting while disabled and resumes with current source and configuration', async () => {
+    const container = document.createElement('div');
+    const root = createRoot(container);
+    const format = vi.spyOn(Typographist.prototype, 'format');
+    const update = async (text: string, locale: string, disabled: boolean, config: TypographistConfig) => {
+      await act(async () => {
+        root.render(
+          createElement(
+            TypographistProvider,
+            { config },
+            createElement('span', null, createElement(HookText, { text, locale, disabled })),
+            createElement('span', null, createElement(TypographistText, { text, locale, disabled })),
+          ),
+        );
+        await Promise.resolve();
+      });
+    };
+    const source = '"source"';
+    const config: TypographistConfig = { categories: ['quotes'] };
+
+    try {
+      await update(source, 'en', false, config);
+      expect(container.children[0]?.textContent).toBe('“\u202fsource\u202f”');
+      const calls = format.mock.calls.length;
+
+      await update(source, 'unknown', true, config);
+      expect(container.textContent).toBe(source + source);
+      await update('<b>new\u00ad source</b>', '', true, { locale: 'ru', categories: ['quotes'] });
+      expect(container.textContent).toBe('<b>new\u00ad source</b><b>new\u00ad source</b>');
+      expect(container.querySelector('b')).toBeNull();
+      expect(format).toHaveBeenCalledTimes(calls);
+
+      await update('"new"', 'ru', false, { locale: 'ru', categories: ['quotes'] });
+      expect(container.textContent).toBe('«\u202fnew\u202f»«\u202fnew\u202f»');
+      expect(format).toHaveBeenCalledTimes(calls + 2);
+    } finally {
+      await act(async () => {
+        root.unmount();
+        await Promise.resolve();
+      });
+    }
+  });
+
   it('preserves formatting and DOM nodes on parent updates and changes only the affected source', async () => {
     const container = document.createElement('div');
     const root = createRoot(container);
@@ -114,33 +158,36 @@ describe('React integration', () => {
     }
   });
 
-  it('hydrates deterministic text and renders HTML-like source literally', async () => {
-    const source = '<b>Unicode Ω\u00ad</b>';
-    const tree = createElement(
-      TypographistProvider,
-      { config: { categories: [] } },
-      createElement(TypographistText, { text: source }),
-    );
-    const container = document.createElement('div');
-    container.innerHTML = renderToString(tree);
-    const node = container.firstChild;
-    const onRecoverableError = vi.fn();
-    const root = hydrateRoot(container, tree, { onRecoverableError });
+  it.each([false, true])(
+    'hydrates deterministic text and renders HTML-like source literally (disabled %s)',
+    async (disabled) => {
+      const source = '<b>Unicode Ω\u00ad</b>';
+      const tree = createElement(
+        TypographistProvider,
+        { config: { categories: [] } },
+        createElement(TypographistText, { text: source, locale: disabled ? 'unknown' : 'en', disabled }),
+      );
+      const container = document.createElement('div');
+      container.innerHTML = renderToString(tree);
+      const node = container.firstChild;
+      const onRecoverableError = vi.fn();
+      const root = hydrateRoot(container, tree, { onRecoverableError });
 
-    try {
-      await act(async () => {});
+      try {
+        await act(async () => {});
 
-      expect(container.textContent).toBe(source);
-      expect(container.firstChild).toBe(node);
-      expect(container.querySelector('b')).toBeNull();
-      expect(onRecoverableError).not.toHaveBeenCalled();
-    } finally {
-      await act(async () => {
-        root.unmount();
-        await Promise.resolve();
-      });
-    }
-  });
+        expect(container.textContent).toBe(source);
+        expect(container.firstChild).toBe(node);
+        expect(container.querySelector('b')).toBeNull();
+        expect(onRecoverableError).not.toHaveBeenCalled();
+      } finally {
+        await act(async () => {
+          root.unmount();
+          await Promise.resolve();
+        });
+      }
+    },
+  );
 });
 
 it.each([

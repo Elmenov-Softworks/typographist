@@ -9,4 +9,6 @@ export type TypographistProviderProps<TCustomLocale extends string = never> = {
 export type TypographistTextProps<TCustomLocale extends string = never> = {
   text: string;
   locale?: Locale | TCustomLocale;
+  /** Skips formatting and locale lookup. Defaults to false; a provider is still required. */
+  disabled?: boolean;
 };
