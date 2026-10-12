@@ -48,6 +48,22 @@ describe('quotation pipeline interactions', () => {
     expect(instance.format(expected)).toBe(expected);
   });
 
+  it.each([
+    ['ru', '«outer https://example.org» "next"', '«outer https://example.org» «next»'],
+    ['ru', '«outer https://example.org» и "next"', '«outer https://example.org» и «next»'],
+    ['en', '“outer https://example.org” "next"', '“outer https://example.org” “next”'],
+    ['ru', '«outer „inner https://example.org“ end» "next"', '«outer „inner https://example.org“ end» «next»'],
+  ] as const)('closes a quotation after a protected URL for %s', (locale, source, expected) => {
+    const instance = new Typographist({
+      locale,
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { spacing: false } },
+    });
+
+    expect(instance.format(source)).toBe(expected);
+    expect(instance.format(expected)).toBe(expected);
+  });
+
   it('keeps apostrophe conversion independent of quotation selection', () => {
     const quotes = new Typographist({
       settings: { 'common/punctuation/quote': { spacing: false } },

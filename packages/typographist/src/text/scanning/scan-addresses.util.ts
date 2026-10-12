@@ -2,9 +2,9 @@ import type { CandidateSpan } from '#src/text/scanning/candidate-span.types.js';
 
 const asciiLetter = /[A-Za-z]/;
 const schemeCharacter = /[A-Za-z0-9+.-]/;
-const localCharacter = /[A-Za-z0-9!#$%&'*+/=?^_`{|}~.-]/;
-const hostnameCharacter = /[A-Za-z0-9-]/;
-const addressDelimiter = /[\s"'<>]/u;
+const localCharacter = /[\p{L}\p{M}\p{N}!#$%&'*+/=?^_`{|}~.-]$/u;
+const hostnameCharacter = /^[\p{L}\p{M}\p{N}-]/u;
+const addressDelimiter = /[\s"'<>«‹»›„“‟”‚‘’]/u;
 
 const urlEnd = (text: string, start: number) => {
   const delimiter = text.slice(start).search(addressDelimiter);
@@ -18,14 +18,14 @@ const hostnameEnd = (text: string, start: number) => {
   let dots = 0;
 
   while (offset < text.length) {
-    const character = text.charAt(offset);
+    const character = text.slice(offset, offset + 2).match(hostnameCharacter)?.[0] ?? text.charAt(offset);
 
     if (hostnameCharacter.test(character)) {
       if (offset === labelStart && character === '-') {
         return null;
       }
 
-      offset += 1;
+      offset += character.length;
       continue;
     }
 
@@ -37,7 +37,7 @@ const hostnameEnd = (text: string, start: number) => {
       return null;
     }
 
-    if (!hostnameCharacter.test(text.charAt(offset + 1))) {
+    if (!hostnameCharacter.test(text.slice(offset + 1, offset + 3))) {
       break;
     }
 
@@ -65,8 +65,14 @@ export const scanAddresses = (text: string) => {
     let end: number | null = null;
 
     if (marker[0] === '@') {
-      while (start > protectedEnd && localCharacter.test(text.charAt(start - 1))) {
-        start -= 1;
+      while (start > protectedEnd) {
+        const character = text.slice(Math.max(protectedEnd, start - 2), start).match(localCharacter)?.[0];
+
+        if (character === undefined) {
+          break;
+        }
+
+        start -= character.length;
       }
 
       const local = text.slice(start, offset);
