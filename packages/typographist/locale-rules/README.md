@@ -74,3 +74,12 @@ linguistic coverage. The English source documents the `democrat` limitation.
 Splitting visible-hyphen compounds into components is the library's text
 policy, not complete TeX paragraph behavior. The retained source exceptions
 are part of the language behavior, including deliberate no-break entries.
+
+The five additional Khristov datasets classify accented vowels as vowels and
+all remaining alphabet letters as consonants; `y` is a context-free vowel.
+They have no special-letter class and use the pattern datasets' minima and
+exceptions. These are inputs to the existing fast heuristic, not linguistic
+syllabification rules. It treats letters individually: digraphs, diphthongs,
+and consonant clusters can differ from pattern hyphenation. For example, the
+heuristic splits French `élép-hant`, German `übert-ra-gung`, and Spanish
+`cons-ti-tu-ci-ón`. Select pattern hyphenation for language-specific breaks.
