@@ -3,7 +3,12 @@ import type { Accessor } from 'solid-js';
 
 import { FormatterContext } from '@/provider/formatter-context.js';
 
-export const useTypographist = (text: Accessor<string>, locale?: Accessor<string | undefined>) => {
+/** Returns reactive formatted text, or the current source while disabled. Requires a provider. */
+export const useTypographist = (
+  text: Accessor<string>,
+  locale?: Accessor<string | undefined>,
+  disabled?: Accessor<boolean>,
+) => {
   const formatter = useContext(FormatterContext);
 
   if (formatter === undefined) {
@@ -11,7 +16,21 @@ export const useTypographist = (text: Accessor<string>, locale?: Accessor<string
   }
 
   const source = createMemo(text);
-  const effectiveLocale = createMemo(() => locale?.() ?? formatter().defaultLocale);
+  const effectiveDisabled = createMemo(() => disabled?.() ?? false);
+  const effectiveLocale = createMemo(() => {
+    if (effectiveDisabled()) {
+      return null;
+    }
 
-  return createMemo(() => formatter().formatter.format(source(), effectiveLocale()));
+    return locale?.() ?? formatter().defaultLocale;
+  });
+
+  return createMemo(() => {
+    const currentLocale = effectiveLocale();
+    if (currentLocale === null) {
+      return source();
+    }
+
+    return formatter().formatter.format(source(), currentLocale);
+  });
 };

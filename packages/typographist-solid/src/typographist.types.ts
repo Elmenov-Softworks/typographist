@@ -9,4 +9,6 @@ export type TypographistProviderProps = {
 export type TypographistTextProps = {
   text: string;
   locale?: string | undefined;
+  /** Skips formatting and locale lookup while retaining the provider requirement. Defaults to false. */
+  disabled?: boolean;
 };
