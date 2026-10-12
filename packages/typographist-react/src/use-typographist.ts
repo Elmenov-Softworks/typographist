@@ -2,7 +2,12 @@ import { useContext, useMemo } from 'react';
 
 import { FormatterContext } from '@/provider/formatter-context.js';
 
-export const useTypographist = (text: string, locale?: string) => {
+/**
+ * Formats source text with the nearest provider, using its default locale when no override is supplied.
+ * Disabled defaults to false; true returns the exact source without formatting or locale lookup.
+ * Throws when no provider is present, including when disabled.
+ */
+export const useTypographist = (text: string, locale?: string, disabled = false) => {
   const provider = useContext(FormatterContext);
 
   if (provider === null) {
@@ -10,7 +15,10 @@ export const useTypographist = (text: string, locale?: string) => {
   }
 
   const { formatter, defaultLocale } = provider;
-  const effectiveLocale = locale ?? defaultLocale;
+  const effectiveLocale = disabled ? null : (locale ?? defaultLocale);
 
-  return useMemo(() => formatter.format(text, effectiveLocale), [formatter, text, effectiveLocale]);
+  return useMemo(
+    () => (effectiveLocale === null ? text : formatter.format(text, effectiveLocale)),
+    [formatter, text, effectiveLocale],
+  );
 };

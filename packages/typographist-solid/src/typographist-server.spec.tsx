@@ -49,3 +49,21 @@ it('preserves provider and locale errors', () => {
     )),
   ).toThrow();
 });
+
+it.each(['', '  ', '"source"', '<b>Ω\u00ad</b> &amp;'])(
+  'serializes disabled source %j without formatting',
+  (source) => {
+    const format = vi.spyOn(Typographist.prototype, 'format');
+    try {
+      const output = renderToString(() => (
+        <TypographistProvider>
+          <TypographistText text={source} locale="unknown" disabled />
+        </TypographistProvider>
+      ));
+      expect(output).toBe(source.replaceAll('&', '&amp;').replaceAll('<', '&lt;'));
+      expect(format).not.toHaveBeenCalled();
+    } finally {
+      format.mockRestore();
+    }
+  },
+);

@@ -32,7 +32,7 @@ const source = ref('"Hello"');
 `TypographistProvider` accepts optional `config: TypographistConfig<string>` and
 a default slot. The public core configuration accepts custom locale definitions
 and their locale names. Omitted configuration uses core defaults.
-`TypographistText` accepts required `text: string` and optional `locale: string`.
+`TypographistText` accepts required `text: string` and optional `locale: string` and `disabled: boolean` (default `false`).
 It renders text without a wrapper and never interprets HTML-like strings.
 
 Inside a descendant's `setup`, the hook has this signature:
@@ -41,6 +41,7 @@ Inside a descendant's `setup`, the hook has this signature:
 useTypographist(
   text: MaybeRefOrGetter<string>,
   locale?: MaybeRefOrGetter<string | undefined>,
+  disabled?: MaybeRefOrGetter<boolean>,
 ): ComputedRef<string>
 ```
 
@@ -56,7 +57,10 @@ const formatted = useTypographist(
 ```
 
 A missing provider throws. Locale overrides apply only to that consumer. Unknown
-locales and invalid configuration preserve core errors. Soft hyphens, Unicode,
+locales throw by default. Set provider configuration `unsupportedLocale: 'preserve'`
+to keep text unchanged for unregistered explicit or default locales.
+The core `hasLocale(locale)` method reports whether rules are registered.
+Invalid configuration and malformed locales retain core errors. Soft hyphens, Unicode,
 protected content and empty strings retain core behavior.
 
 Replace configuration immutably. Use `shallowRef` for configuration to preserve
@@ -80,3 +84,16 @@ for equal initial text. No mutable service is shared between roots.
 
 See the [core documentation](../typographist/README.md) for formatting categories,
 configuration defaults and text-processing limits.
+
+Set `disabled` to render the current source unchanged and skip locale lookup.
+The provider is still required. Refs and getters support enable/disable transitions:
+
+```vue
+<TypographistText :text="source" :disabled="disabled" />
+```
+
+```ts
+const disabled = ref(false);
+const formatted = useTypographist(source, () => props.locale, disabled);
+const config = shallowRef({ locale: 'fr', unsupportedLocale: 'preserve' as const });
+```

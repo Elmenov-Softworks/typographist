@@ -418,3 +418,93 @@ it('preserves valid provider state after a null configuration update', async () 
     app.unmount();
   }
 });
+
+it('bypasses locale lookup while disabled and resumes with current reactive inputs', async () => {
+  const text = ref('"source"');
+  const locale = ref('en');
+  const disabled = ref(false);
+  const config = shallowRef<TypographistConfig<string>>({ categories: ['quotes'] });
+  const readLocale = vi.fn(() => locale.value);
+  const HookText = defineComponent({
+    setup() {
+      const formatted = useTypographist(text, readLocale, disabled);
+      return () => h('span', formatted.value);
+    },
+  });
+  const app = createApp(() =>
+    h(
+      TypographistProvider,
+      { config: config.value },
+      {
+        default: () => [
+          h(HookText),
+          h('span', h(TypographistText, { text: text.value, locale: locale.value, disabled: disabled.value })),
+        ],
+      },
+    ),
+  );
+  const container = document.createElement('div');
+  const format = vi.spyOn(Typographist.prototype, 'format');
+  app.mount(container);
+
+  try {
+    expect(container.textContent).toBe('“\u202fsource\u202f”“\u202fsource\u202f”');
+    disabled.value = true;
+    await nextTick();
+    expect(container.textContent).toBe('"source""source"');
+    const calls = format.mock.calls.length;
+    readLocale.mockClear();
+    locale.value = 'malformed_locale';
+    text.value = '<b>changed\u00ad</b>';
+    config.value = { categories: [], locale: 'ru' };
+    await nextTick();
+    expect(container.textContent).toBe(text.value.repeat(2));
+    expect(format).toHaveBeenCalledTimes(calls);
+    expect(readLocale).not.toHaveBeenCalled();
+
+    locale.value = 'fr';
+    config.value = { categories: ['quotes'], locale: 'fr', unsupportedLocale: 'preserve' };
+    await nextTick();
+    disabled.value = false;
+    await nextTick();
+    expect(container.textContent).toBe(text.value.repeat(2));
+    expect(format).toHaveBeenCalledTimes(calls + 2);
+
+    locale.value = 'ru';
+    text.value = '"current"';
+    await nextTick();
+    expect(container.textContent).toBe(new Typographist({ categories: ['quotes'] }).format(text.value, 'ru').repeat(2));
+    config.value = { categories: [] };
+    await nextTick();
+    expect(container.textContent).toBe('"current""current"');
+  } finally {
+    app.unmount();
+  }
+});
+
+it('hydrates disabled text literally with an unsupported locale', async () => {
+  const source = '<b>"Unicode Ω\u00ad"</b>';
+  const Root = () =>
+    h(
+      TypographistProvider,
+      {},
+      {
+        default: () => h(TypographistText, { text: source, locale: 'fr', disabled: true }),
+      },
+    );
+  const format = vi.spyOn(Typographist.prototype, 'format');
+  const container = document.createElement('div');
+  container.innerHTML = await renderToString(createSSRApp(Root));
+  const textNode = Array.from(container.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
+  const app = createSSRApp(Root);
+  app.mount(container);
+
+  try {
+    expect(container.textContent).toBe(source);
+    expect(Array.from(container.childNodes)).toContain(textNode);
+    expect(container.querySelector('b')).toBeNull();
+    expect(format).not.toHaveBeenCalled();
+  } finally {
+    app.unmount();
+  }
+});

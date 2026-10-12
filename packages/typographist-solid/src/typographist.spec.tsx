@@ -135,8 +135,8 @@ it('hydrates parsed output from the built public server entry as literal text', 
        const { TypographistProvider, TypographistText } = await import(${JSON.stringify(import.meta.resolve('@elmenov-softworks/typographist-solid'))});
        if (typeof window !== 'undefined') throw new Error('Browser globals on server');
        parentPort.postMessage(renderToString(() => createComponent(TypographistProvider, {
-         config: { categories: [] },
-         get children() { return createComponent(TypographistText, { text: ${JSON.stringify(source)} }); }
+         config: {},
+         get children() { return createComponent(TypographistText, { disabled: true, locale: 'unknown', text: ${JSON.stringify(source)} }); }
        })));
      })();`,
     { eval: true, execArgv: [] },
@@ -162,8 +162,8 @@ it('hydrates parsed output from the built public server entry as literal text', 
   });
   const dispose = hydrate(
     () => (
-      <TypographistProvider config={{ categories: [] }}>
-        <TypographistText text={source} />
+      <TypographistProvider>
+        <TypographistText text={source} locale="unknown" disabled />
       </TypographistProvider>
     ),
     container,
@@ -400,4 +400,74 @@ it('preserves valid provider state after a null configuration update', () => {
   } finally {
     dispose();
   }
+});
+
+it('bypasses formatting and locale lookup while disabled and resumes from current inputs', () => {
+  const [text, setText] = createSignal('"source"');
+  const [locale, setLocale] = createSignal('en');
+  const [disabled, setDisabled] = createSignal(true);
+  const [config, setConfig] = createSignal<TypographistConfig<string>>({ categories: ['quotes'] });
+  const lookup = vi.fn(locale);
+  const format = vi.spyOn(Typographist.prototype, 'format');
+  const HookText = () => {
+    const output = useTypographist(text, lookup, disabled);
+    return <span>{output()}</span>;
+  };
+  const container = document.createElement('div');
+  const dispose = render(
+    () => (
+      <TypographistProvider config={config()}>
+        <HookText />
+        <span>
+          <TypographistText text={text()} locale={locale()} disabled={disabled()} />
+        </span>
+      </TypographistProvider>
+    ),
+    container,
+  );
+  const expectText = (expected: string) => {
+    expect(container.children[0]?.textContent).toBe(expected);
+    expect(container.children[1]?.textContent).toBe(expected);
+  };
+
+  try {
+    expectText(text());
+    setText('<b>changed\u00ad</b>');
+    setLocale('unknown');
+    setConfig({ locale: 'ru', categories: ['quotes'] });
+    expectText(text());
+    expect(lookup).not.toHaveBeenCalled();
+    expect(format).not.toHaveBeenCalled();
+
+    setLocale('ru');
+    setText('"changed"');
+    setDisabled(false);
+    expectText(new Typographist({ categories: ['quotes'] }).format(text(), 'ru'));
+    setDisabled(true);
+    expectText(text());
+    const calls = format.mock.calls.length;
+    setLocale('unknown');
+    setConfig({ locale: 'unknown', unsupportedLocale: 'preserve' });
+    setText('"latest"');
+    expectText(text());
+    expect(format).toHaveBeenCalledTimes(calls);
+    setDisabled(false);
+    expectText(text());
+    setLocale('en');
+    expectText(new Typographist().format(text(), 'en'));
+    setConfig({ categories: [] });
+    expectText(text());
+  } finally {
+    dispose();
+  }
+});
+
+it('still requires a provider when disabled', () => {
+  expect(() =>
+    useTypographist(
+      () => 'source',
+      () => 'unknown',
+      () => true,
+    ),
+  ).toThrow('TypographistProvider');
 });

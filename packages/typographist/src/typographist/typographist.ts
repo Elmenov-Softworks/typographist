@@ -19,10 +19,12 @@ import type { TextLocale } from '#src/text/typography/text-locale.types.js';
 export class Typographist<TCustomLocale extends string = never> {
   #locale: Locale | TCustomLocale;
   #rules: RulesRegistry;
+  #unsupportedLocale: 'preserve' | 'throw';
 
   /**
    * Registers and prepares rules once, defaulting to English with bundled English and Russian rules.
-   * Copies excluded words. Invalid configuration, duplicate locales, or a missing default locale throw.
+   * Copies excluded words. Invalid configuration and duplicate locales throw.
+   * A missing default locale throws unless unsupportedLocale is preserve.
    */
   constructor(config: TypographistConfig<TCustomLocale> = {}) {
     const input: unknown = config;
@@ -32,6 +34,13 @@ export class Typographist<TCustomLocale extends string = never> {
     }
 
     const { locale = 'en', useFast = false, cacheSize = 64, excludedWords = [], rules = createBundledRules() } = config;
+    const unsupportedLocale: unknown = config.unsupportedLocale === undefined ? 'throw' : config.unsupportedLocale;
+
+    if (unsupportedLocale !== 'preserve' && unsupportedLocale !== 'throw') {
+      throw new TypeError('unsupportedLocale must be preserve or throw');
+    }
+
+    this.#unsupportedLocale = unsupportedLocale;
     this.#locale = locale;
     const { textLocales = [] } = config;
 
@@ -56,7 +65,11 @@ export class Typographist<TCustomLocale extends string = never> {
       this.#rules.addTextLocale(definition);
     }
 
-    this.#rules.require(this.#locale);
+    if (this.#unsupportedLocale === 'throw') {
+      this.#rules.require(this.#locale);
+    } else {
+      this.#rules.has(this.#locale);
+    }
   }
 
   /**
@@ -79,21 +92,35 @@ export class Typographist<TCustomLocale extends string = never> {
   /**
    * Removes registered rules and reports whether the locale was present.
    * Clears cached words for all locales only when rules were removed.
-   * Removing the default locale makes calls without an override fail until its rules are added again.
+   * Removing the default locale makes calls without an override follow unsupportedLocale.
    */
   removeRules(locale: Locale | TCustomLocale) {
     return this.#rules.remove(locale);
   }
 
+  /** Reports whether rules are registered; validates and normalizes the locale without regional fallback. */
+  hasLocale(locale: Locale | TCustomLocale) {
+    return this.#rules.has(locale);
+  }
+
   /**
    * Formats text synchronously using the requested locale or the configured default.
-   * An override affects only this call; selecting an unregistered locale throws even for empty text.
+   * An override affects only this call. Unregistered locales throw by default, even for empty text.
+   * With unsupportedLocale preserve, valid unregistered locales return the exact source string.
    * Preserves excluded words, recognized addresses, identifiers, unsupported words, and existing soft hyphens.
    * Bundled rules preserve extra whitespace and supplied nonbreaking spaces; bindings require same-line content.
    * Quote spacing uses narrow nonbreaking spaces by default for English and Russian.
    * Reuses cached results for the same locale and exact source word when caching is enabled.
    */
   format(text: string, locale: Locale | TCustomLocale = this.#locale) {
+    if (this.#unsupportedLocale === 'preserve' && !this.#rules.has(locale)) {
+      if (typeof text !== 'string') {
+        throw new TypeError('Text must be a string');
+      }
+
+      return text;
+    }
+
     return this.#rules.require(locale).hyphenate(text);
   }
 }
