@@ -27,6 +27,20 @@ describe('scanAddresses', () => {
     ]);
   });
 
+  it('protects internationalized local parts and hostnames at Unicode boundaries', () => {
+    const values = ['почта@example.com', 'alice@пример.рф', 'почта@пример.рф', 'e\u0301@café.fr', '𐐀@𐐀.example'];
+
+    expect(addresses(`😀 ${values.join(', ')}!`)).toEqual(values);
+  });
+
+  it('keeps typographic quotation marks outside URLs', () => {
+    expect(addresses('«https://пример.рф» “https://example.org” „www.example.org“')).toEqual([
+      'https://пример.рф',
+      'https://example.org',
+      'www.example.org',
+    ]);
+  });
+
   it('requires complete dot-atom local parts and valid dotted hostname labels', () => {
     expect(addresses('a..b@example.com .a@example.com a.@example.com a@localhost a@-host.com a@host-.com')).toEqual([]);
     expect(addresses('a@host..com a@host.com- a@host.-com')).toEqual([]);

@@ -55,7 +55,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
     {
       id: 'common/nbsp/afterShortWordByList',
       category: 'nonbreakingSpacing',
-      order: 510,
+      order: 520,
       defaults: {},
       prepare: () => {
         const words =
@@ -70,7 +70,7 @@ export const createBundledNonbreakingSpacing = (locale: string) => {
     {
       id: 'common/nbsp/afterShortWord',
       category: 'nonbreakingSpacing',
-      order: 510,
+      order: 520,
       defaults: { lengthShortWord: 2 },
       prepare: ({ lengthShortWord }) => {
         if (typeof lengthShortWord !== 'number' || !Number.isSafeInteger(lengthShortWord) || lengthShortWord < 1) {

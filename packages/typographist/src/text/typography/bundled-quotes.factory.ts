@@ -44,6 +44,11 @@ export const createBundledQuotes = (locale: string) => {
           'gim',
         );
 
+        const segmentClosing = new RegExp(
+          String.raw`^([${closingGlyphs.replaceAll('"', '')}${right.replaceAll('"', '').replace(/[\\\]\-^]/g, '\\$&')}]+)(?=[ \r\n\t\u00a0!?.:;#*,…)\]\\]|$)`,
+          'u',
+        );
+
         const quotationGlyphs = left + right + '«‹»›„“‟”"';
         const hasQuotes = new RegExp(`[${quotationGlyphs.replace(/[\\\]\-^]/g, '\\$&')}]`, 'u');
 
@@ -158,9 +163,28 @@ export const createBundledQuotes = (locale: string) => {
             return text;
           }
 
+          const quotation = context[segmentBoundary]?.quotation;
+          const precedingCharacter = context.precedingCharacter ?? '';
+          const followsContent = precedingCharacter !== '' && !/[ \r\n\t\u00a0[(]/u.test(precedingCharacter);
           const directions = new Map<number, 'opening' | 'closing'>();
-          const normalized = text
-            .replace(opening, (_match: string, before: string, quotes: string, offset: number) => {
+          const boundaryText =
+            quotation != null && quotation.level > 0 && followsContent
+              ? text.replace(segmentClosing, (_match, quotes: string) => {
+                  if (identicalOuter) {
+                    for (let index = 0; index < quotes.length; index++) {
+                      directions.set(index, 'closing');
+                    }
+                  }
+
+                  return outerRight.repeat(quotes.length);
+                })
+              : text;
+          const normalized = boundaryText
+            .replace(opening, (match: string, before: string, quotes: string, offset: number) => {
+              if (offset === 0 && before === '' && followsContent) {
+                return match;
+              }
+
               if (identicalOuter) {
                 for (let index = 0; index < quotes.length; index++) {
                   directions.set(offset + before.length + index, 'opening');
@@ -191,7 +215,6 @@ export const createBundledQuotes = (locale: string) => {
             ? [...directions.values()].filter((direction) => direction === 'opening').length
             : normalized.split(outerLeft).length - 1;
           const rightCount = identicalOuter ? directions.size - leftCount : normalized.split(outerRight).length - 1;
-          const quotation = context[segmentBoundary]?.quotation;
           const maxLevel = quotation != null || leftCount === rightCount ? left.length : Math.min(left.length, 2);
           let level = quotation?.level ?? 0;
           const result = normalized.replace(nestingQuotes, (character: string, offset: number) => {
