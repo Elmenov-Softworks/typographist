@@ -143,3 +143,9 @@ it recognizes an unambiguous number. Dates, identifiers, decimal ranges and phon
 numbers are left unchanged. These rules add no nonbreaking bindings and leave
 Chinese line breaking to the browser. A typography-only `TextLocale` for `zh`
 never inserts soft hyphens, including in fast mode and with default categories.
+
+Chinese is registered by default when both `rules` and `textLocales` are omitted.
+An explicit registration list retains its existing replacement semantics; supply
+`{ locale: 'zh', textRules: [] }` in `textLocales` when using such a list.
+Bundled Chinese ignores the hyphenation category even when explicitly selected.
+Consumer-supplied typography-only locales still reject explicit hyphenation.

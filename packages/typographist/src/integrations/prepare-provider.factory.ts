@@ -1,3 +1,4 @@
+import type { Locale } from '#src/rules/locale.types.js';
 import { Typographist } from '#src/typographist/typographist.js';
 import { TypographistRules } from '#src/rules/typographist-rules.js';
 import type { TypographistConfig } from '#src/typographist/typographist-config.types.js';
@@ -26,12 +27,12 @@ export const prepareProvider = <TCustomLocale extends string = never>(
   const compiledRegistrations: ReturnType<TypographistRules['compile']>[] = [];
   const configuredRules = config.rules;
   const rules = Array.isArray(configuredRules)
-    ? configuredRules.map((plugin: TypographistRules<'en' | 'ru' | TCustomLocale>) => {
+    ? configuredRules.map((plugin: TypographistRules<Locale | TCustomLocale>) => {
         if (!(plugin instanceof TypographistRules)) {
           return plugin;
         }
 
-        return new (class extends TypographistRules<'en' | 'ru' | TCustomLocale> {
+        return new (class extends TypographistRules<Locale | TCustomLocale> {
           override compile(useFast: boolean) {
             const compiled = plugin.compile(useFast);
             compiledRegistrations.push(compiled);
@@ -43,7 +44,10 @@ export const prepareProvider = <TCustomLocale extends string = never>(
     : configuredRules;
   const formatter = new Typographist<TCustomLocale>(rules === undefined ? config : { ...config, rules });
 
-  const registrationLocales = rules === undefined ? ['en', 'ru'] : compiledRegistrations.map(({ locale }) => locale);
+  const registrationLocales =
+    rules === undefined
+      ? ['en', 'ru', ...(config.textLocales === undefined ? ['zh'] : [])]
+      : compiledRegistrations.map(({ locale }) => locale);
 
   registrationLocales.push(...(config.textLocales ?? []).map(({ locale }) => locale));
 

@@ -1,3 +1,4 @@
+import { locales } from '#src/rules/locale.constants.js';
 import type { FormattingCategory, TextRuleSettings } from '#src/text/typography/text-rule.types.js';
 import type { TypographistConfig } from '#src/typographist/typographist-config.types.js';
 import { createBundledTextRules } from '#src/text/typography/bundled-text-rules.factory.js';
@@ -12,7 +13,7 @@ const defaultCategories: readonly FormattingCategory[] = [
 
 const bundledDefaults = new Map<string, { locale: string; settings: TextRuleSettings }[]>();
 
-for (const locale of ['en', 'ru']) {
+for (const locale of locales) {
   for (const rule of createBundledTextRules(locale)) {
     const defaults = bundledDefaults.get(rule.id) ?? [];
     defaults.push({ locale, settings: rule.defaults });

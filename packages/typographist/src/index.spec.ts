@@ -31,7 +31,8 @@ describe('public package API', () => {
   it('only offers bundled locales by default', () => {
     const typographist = new Typographist();
 
-    expect(locales).toEqual(['en', 'ru']);
+    expect(locales).toEqual(['en', 'ru', 'zh']);
+    expect(typographist.hasLocale('zh')).toBe(true);
     // @ts-expect-error German has no bundled rules.
     expect(() => typographist.format('abcd', 'de')).toThrow('Unregistered locale');
     // @ts-expect-error The locale alone must not widen the default configuration.

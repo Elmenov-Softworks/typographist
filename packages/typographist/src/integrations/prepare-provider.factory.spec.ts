@@ -399,3 +399,11 @@ it('prepares again when unsupported locale policy changes', () => {
   // @ts-expect-error Runtime policy validation must also apply during updates.
   expect(() => prepareProvider({ unsupportedLocale: null }, prepareProvider({}))).toThrow(TypeError);
 });
+
+it('selects bundled Chinese through the shared provider', () => {
+  const provider = prepareProvider({ locale: 'zh' });
+
+  expect(provider.registrationLocales).toContain('zh');
+  expect(provider.formatter.format('"中文" typography')).toBe('“中文” typography');
+  expect(prepareProvider({ locale: 'zh' }, provider)).toBe(provider);
+});

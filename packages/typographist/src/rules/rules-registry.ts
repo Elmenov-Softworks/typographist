@@ -57,6 +57,7 @@ export class RulesRegistry {
       [
         ...createBundledTextRules('en'),
         ...createBundledTextRules('ru'),
+        ...createBundledTextRules('zh'),
         ...sharedRules,
         ...textLocales.flatMap((definition) => definition.textRules),
       ].map((rule) => [rule.id, { ...rule.defaults }]),
@@ -136,14 +137,14 @@ export class RulesRegistry {
     this.#cache.clear();
   }
 
-  addTextLocale(definition: TextLocale, replace = false) {
+  addTextLocale(definition: TextLocale, replace = false, options: TextPipelineOptions = this.#options) {
     const key = languageKey(definition.locale);
 
     if (!Array.isArray(definition.textRules)) {
       throw new TypeError('Locale textRules must be an array');
     }
 
-    if (this.#options.categories?.includes('hyphenation')) {
+    if (options.categories?.includes('hyphenation')) {
       throw new TypeError(`Locale ${key} has no hyphenation data`);
     }
 
@@ -151,7 +152,7 @@ export class RulesRegistry {
     const format = prepareTextPipeline(
       createBundledTextRules(key, [...this.#textRules, ...localeRules]),
       key,
-      this.#options,
+      options,
       undefined,
       new Set([...this.#declaredSettings.keys(), ...localeRules.map((rule) => rule.id)]),
     );

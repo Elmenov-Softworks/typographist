@@ -5,7 +5,6 @@ describe('Simplified Chinese symbolic rules', () => {
     const service = new Typographist({
       locale: 'zh',
       useFast,
-      textLocales: [{ locale: 'zh', textRules: [] }],
       protectedContent: ['"保留" 1-3'],
     });
     const source = '"他说 "你好" 再见" 1-3 (-12) typography 中文，标点。';
@@ -20,7 +19,7 @@ describe('Simplified Chinese symbolic rules', () => {
   });
 
   it('preserves native punctuation, whitespace and ambiguous numeric notation', () => {
-    const service = new Typographist({ locale: 'zh', textLocales: [{ locale: 'zh', textRules: [] }] });
+    const service = new Typographist({ locale: 'zh' });
     const text = '“中文‘引语’。” 「已有」 中文  字\t词\r\n你好！ 2026-10-08 1.2-3.4 +7-999-123 a1-3 1-3b';
 
     expect(service.format(text)).toBe(text);
@@ -35,4 +34,26 @@ describe('Simplified Chinese symbolic rules', () => {
     expect(disabled.format('"中文" 1-3 -12')).toBe('"中文" 1-3 -12');
     expect(quotes.format('"中文" 1-3 -12')).toBe('“中文” 1-3 -12');
   });
+});
+
+it.each([false, true])('registers bundled Chinese with explicit hyphenation selection (useFast=%s)', (useFast) => {
+  const service = new Typographist({ locale: 'zh', useFast, categories: ['quotes', 'hyphenation'] });
+
+  expect(service.hasLocale('zh')).toBe(true);
+  expect(service.format('"中文" typography')).toBe('“中文” typography');
+  expect(service.removeRules('zh')).toBe(true);
+  expect(service.hasLocale('zh')).toBe(false);
+});
+
+it('preserves explicit registration configuration', () => {
+  expect(new Typographist({ rules: [], unsupportedLocale: 'preserve' }).hasLocale('zh')).toBe(false);
+  expect(new Typographist({ textLocales: [] }).hasLocale('zh')).toBe(false);
+  expect(
+    () =>
+      new Typographist({
+        locale: 'zh',
+        textLocales: [{ locale: 'zh', textRules: [] }],
+        categories: ['hyphenation'],
+      }),
+  ).toThrow('has no hyphenation data');
 });
