@@ -3,6 +3,7 @@ import { createBundledDashes } from '#src/text/typography/bundled-dashes.factory
 import { createBundledNonbreakingSpacing } from '#src/text/typography/bundled-nonbreaking-spacing.factory.js';
 import { createBundledPunctuation } from '#src/text/typography/bundled-punctuation.factory.js';
 import { createBundledQuotes } from '#src/text/typography/bundled-quotes.factory.js';
+import { createAlphabeticTypography } from '#src/text/typography/alphabetic-typography.factory.js';
 import { createChineseDashes } from '#src/text/typography/chinese-dashes.factory.js';
 
 const referenceOrder = [
@@ -52,6 +53,7 @@ const createLocaleRules = (locale: string) =>
     ...createBundledPunctuation(locale),
     ...createBundledQuotes(locale),
     ...createBundledNonbreakingSpacing(locale),
+    ...createAlphabeticTypography(locale),
   ].sort(
     (left, right) => left.order - right.order || referenceOrder.indexOf(left.id) - referenceOrder.indexOf(right.id),
   );

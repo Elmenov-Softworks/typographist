@@ -62,8 +62,8 @@ remain in the source tables; the existing whole-token policy still preserves
 words containing internal apostrophes. No pattern set guarantees every word's
 linguistic syllabification.
 
-The generated tables are frozen. `Typographist` registers English (`en`) and
-Russian (`ru`) rules by default; supplying a custom `rules` list replaces them.
+The generated tables are frozen. `Typographist` registers all seven alphabetic locales by default, alongside
+typography-only Chinese (`zh`); supplying a custom `rules` list replaces them.
 The tables and preparation functions remain internal to the library. Normalization requires `Intl.Segmenter` grapheme support and uses
 NFC plus locale-independent lowercasing. Russian retains `ё`; English supports
 ASCII letters. Unsupported marks, foreign letters, and internal apostrophes

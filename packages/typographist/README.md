@@ -68,7 +68,7 @@ URLs, emails and nonempty `protectedContent` literals bypass formatting.
 
 Locale selection is explicit: there is no language detection or regional
 fallback. Built-in locale identifiers are `en`, `ru`, `es`, `fr`, `de`, `pt`, `it` and `zh`.
-The five added alphabetic locales support both hyphenation algorithms; symbolic support for these locales is not yet bundled. Chinese supports symbolic typography only.
+The five added alphabetic locales support symbolic typography and both hyphenation algorithms. Chinese supports symbolic typography only.
 See [locale data](locale-rules/README.md) for baselines and source licenses. Additional languages
 can supply `TypographistRules` for hyphenation and `TextLocale`/`TextRule`
 definitions for symbolic formatting. Declarative hyphenation rules supply both
@@ -153,3 +153,27 @@ An explicit registration list retains its existing replacement semantics; supply
 `{ locale: 'zh', textRules: [] }` in `textLocales` when using such a list.
 Bundled Chinese ignores the hyphenation category even when explicitly selected.
 Consumer-supplied typography-only locales still reject explicit hyphenation.
+
+### Alphabetic symbolic rules
+
+Spanish (`es`) and Italian (`it`) use `«…»` with nested `“…”`. German (`de`)
+uses `„…“` with nested `‚…‘`. Brazilian Portuguese (`pt`) uses `“…”` with nested
+`‘…’`. French (`fr`) uses `«…»` with nested `‹…›`; the existing quote facility
+binds both levels with narrow nonbreaking spaces. This is a conservative
+supported nesting choice; alternate French nested quotation conventions are
+not inferred. Other added locales insert no quotation spacing.
+
+Each locale owns its `LOCALE/punctuation/quote` settings. The existing recognizer
+handles quotation boundaries; it does not infer dialogue structure or repair
+unmatched quotes. Internal letter apostrophes become `’`, including beside
+accented letters. Standalone integer ranges use `–`; unary minus uses `−`.
+Space-delimited prose hyphens and double hyphens become `—` (`–` in German),
+preserving their surrounding spaces. Spanish dash attachment and dialogue
+layout are left to the author. Dates, identifiers, decimal ranges and phone
+numbers are preserved rather than guessed.
+
+French binds an existing single space before `;`, `!` and `?` with a narrow
+nonbreaking space and before `:` with a nonbreaking space. Missing punctuation
+spaces, multiple spaces, tabs and line breaks are not corrected. No European
+short-word heuristics are added for these locales. Numeric, currency and native
+punctuation content is otherwise preserved.

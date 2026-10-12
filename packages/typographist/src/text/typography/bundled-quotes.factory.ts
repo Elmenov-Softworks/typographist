@@ -2,19 +2,25 @@ import { segmentBoundary, type SegmentBoundaryContext } from '#src/text/typograp
 import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 export const createBundledQuotes = (locale: string) => {
-  if (locale !== 'en' && locale !== 'ru' && locale !== 'zh') {
+  if (!['en', 'ru', 'zh', 'es', 'fr', 'de', 'pt', 'it'].includes(locale)) {
     return [];
   }
 
-  const left = locale === 'ru' ? '«„‚' : '“‘';
-  const right = locale === 'ru' ? '»“‘' : '”’';
+  const pairs: Record<string, readonly [string, string]> = {
+    ru: ['«„‚', '»“‘'],
+    es: ['«“', '»”'],
+    fr: ['«‹', '»›'],
+    de: ['„‚', '“‘'],
+    it: ['«“', '»”'],
+  };
+  const [left, right] = pairs[locale] ?? ['“‘', '”’'];
 
   const rules: TextRule[] = [
     {
-      id: locale === 'zh' ? 'zh/punctuation/quote' : 'common/punctuation/quote',
+      id: locale === 'en' || locale === 'ru' ? 'common/punctuation/quote' : `${locale}/punctuation/quote`,
       category: 'quotes',
       order: 410,
-      defaults: { left, right, spacing: locale !== 'zh' },
+      defaults: { left, right, spacing: locale === 'en' || locale === 'ru' || locale === 'fr' },
       prepare: (settings) => {
         if (
           typeof settings.left !== 'string' ||
