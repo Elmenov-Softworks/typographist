@@ -93,8 +93,11 @@ multilingual.format('"Bonjour"...'); // unchanged
 multilingual.format('"Hello"...', 'en'); // English formatting
 ```
 
-Some non-global bindings need another formatting pass when a segment contains
-several matching sequences.
+Built-in formatting is idempotent: applying the same locale and configuration
+to its output leaves the output unchanged. Consumer rules must establish their
+own idempotence. Keep the source for editing: formatted
+output contains real soft hyphens and nonbreaking characters. See the
+[usage examples](EXAMPLES.md) for display, multilingual, disabled and SSR scenarios.
 
 ## Performance and development
 
@@ -110,6 +113,7 @@ npm run typecheck
 npm run lint
 npm run format:check
 npm test
+npm run check:packages
 ```
 
 Lint and type checks resolve workspace dependencies from source through the
@@ -118,6 +122,9 @@ Package-local `#src` imports keep dependency aliases separate from consumer alia
 Runtime imports and benchmarks use built packages. Integration builds resolve the
 emitted declarations, so they also check the published package boundary.
 
+`npm run check:packages` installs all five archives in a temporary project outside
+the workspace. It verifies declarations, ESM imports, SSR, browser bundling and
+the transformer CLI. It needs registry access for existing peer and build tools.
 `npm run docs` generates TypeDoc after a build.
 The [rules transformer](../rules-transformer/README.md) converts TeX tables
 into hyphenation data.

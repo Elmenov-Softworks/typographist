@@ -19,7 +19,7 @@ const formatted = typographist.format('The "reader" said...');
 
 Reuse the instance across calls. Formatting operates on plain text; it does not
 parse or sanitize HTML. See the [core guide](packages/typographist/README.md)
-for configuration and limits, or the [API documentation](https://elmenov-softworks.github.io/typographist/).
+for configuration and limits, [usage examples](https://elmenov-softworks.github.io/typographist/documents/EXAMPLES.html), or the [API documentation](https://elmenov-softworks.github.io/typographist/).
 
 ## Packages
 

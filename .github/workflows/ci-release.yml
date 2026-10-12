@@ -45,6 +45,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - name: Check installed npm archives
+        run: npm run check:packages
       - run: npx vitest run --config tools/release/vitest.config.ts
       - run: npx nx run-many -t test --projects typographist,typographist-vue,typographist-react,typographist-solid,rules-transformer
 

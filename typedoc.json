@@ -9,5 +9,20 @@
   },
   "out": "docs",
   "readme": "README.md",
-  "cleanOutputDir": false
+  "cleanOutputDir": false,
+  "projectDocuments": ["packages/typographist/EXAMPLES.md"],
+  "highlightLanguages": [
+    "bash",
+    "console",
+    "css",
+    "html",
+    "javascript",
+    "json",
+    "jsonc",
+    "json5",
+    "yaml",
+    "tsx",
+    "typescript",
+    "vue"
+  ]
 }

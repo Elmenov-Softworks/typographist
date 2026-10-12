@@ -108,6 +108,7 @@ export class Typographist<TCustomLocale extends string = never> {
    * An override affects only this call. Unregistered locales throw by default, even for empty text.
    * With unsupportedLocale preserve, valid unregistered locales return the exact source string.
    * Preserves excluded words, recognized addresses, identifiers, unsupported words, and existing soft hyphens.
+   * With the same locale and configuration, bundled formatting leaves its own output unchanged; custom rules may not.
    * Bundled rules preserve extra whitespace and supplied nonbreaking spaces; bindings require same-line content.
    * Quote spacing uses narrow nonbreaking spaces by default for English and Russian.
    * Reuses cached results for the same locale and exact source word when caching is enabled.
