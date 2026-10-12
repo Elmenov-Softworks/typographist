@@ -3,7 +3,7 @@ description: Report a reproducible problem.
 body:
   - type: markdown
     attributes:
-      value: "For security vulnerabilities, use Security → Report a vulnerability."
+      value: 'For security vulnerabilities, use Security → Report a vulnerability.'
   - type: input
     id: version
     attributes:
