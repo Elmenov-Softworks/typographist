@@ -22,7 +22,8 @@
     "format:check": "prettier . --check",
     "test": "vitest run",
     "test:watch": "vitest",
-    "docs": "typedoc --options typedoc.json"
+    "docs": "typedoc --options typedoc.json",
+    "check:packages": "node tools/package-check/check-packages.ts"
   },
   "devDependencies": {
     "nx": "23.2.1",
