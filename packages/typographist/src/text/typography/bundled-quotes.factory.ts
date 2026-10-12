@@ -2,7 +2,7 @@ import { segmentBoundary, type SegmentBoundaryContext } from '#src/text/typograp
 import type { TextRule } from '#src/text/typography/text-rule.types.js';
 
 export const createBundledQuotes = (locale: string) => {
-  if (locale !== 'en' && locale !== 'ru') {
+  if (locale !== 'en' && locale !== 'ru' && locale !== 'zh') {
     return [];
   }
 
@@ -14,7 +14,7 @@ export const createBundledQuotes = (locale: string) => {
       id: 'common/punctuation/quote',
       category: 'quotes',
       order: 410,
-      defaults: { left, right, spacing: true },
+      defaults: { left, right, spacing: locale !== 'zh' },
       prepare: (settings) => {
         if (
           typeof settings.left !== 'string' ||

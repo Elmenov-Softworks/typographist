@@ -3,6 +3,7 @@ import { createBundledDashes } from '#src/text/typography/bundled-dashes.factory
 import { createBundledNonbreakingSpacing } from '#src/text/typography/bundled-nonbreaking-spacing.factory.js';
 import { createBundledPunctuation } from '#src/text/typography/bundled-punctuation.factory.js';
 import { createBundledQuotes } from '#src/text/typography/bundled-quotes.factory.js';
+import { createChineseDashes } from '#src/text/typography/chinese-dashes.factory.js';
 
 const referenceOrder = [
   'common/dash/minus',
@@ -47,7 +48,7 @@ const referenceOrder = [
 
 const createLocaleRules = (locale: string) =>
   [
-    ...createBundledDashes(locale),
+    ...(locale === 'zh' ? createChineseDashes() : createBundledDashes(locale)),
     ...createBundledPunctuation(locale),
     ...createBundledQuotes(locale),
     ...createBundledNonbreakingSpacing(locale),

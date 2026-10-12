@@ -128,3 +128,18 @@ the transformer CLI. It needs registry access for existing peer and build tools.
 `npm run docs` generates TypeDoc after a build.
 The [rules transformer](../rules-transformer/README.md) converts TeX tables
 into hyphenation data.
+
+### Chinese symbolic rules
+
+The `zh` symbolic rule set uses a Simplified Chinese mainland baseline. It uses
+`“…”` with nested `‘…’` and no added quotation spacing. The existing quotation
+recognizer handles ASCII quotes at whitespace and ASCII punctuation boundaries;
+quotes adjoining Han text or native Chinese punctuation are conservatively left
+unchanged when those boundaries are not recognized. Native quotation signs and
+punctuation remain intact.
+
+Standalone integer ranges use `—`; the existing unary-minus rule uses `−` where
+it recognizes an unambiguous number. Dates, identifiers, decimal ranges and phone
+numbers are left unchanged. These rules add no nonbreaking bindings and leave
+Chinese line breaking to the browser. A typography-only `TextLocale` for `zh`
+never inserts soft hyphens, including in fast mode and with default categories.
