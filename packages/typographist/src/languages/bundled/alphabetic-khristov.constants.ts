@@ -5,7 +5,7 @@ import { exceptions as deExceptions } from '#src/languages/bundled/de-1996-data.
 import { exceptions as ptExceptions } from '#src/languages/bundled/pt-data.constants.js';
 import { exceptions as itExceptions } from '#src/languages/bundled/it-data.constants.js';
 
-export const alphabeticKhristovRules: readonly KhristovRules[] = [
+export const alphabeticKhristovRules = [
   {
     locale: 'es',
     alphabet: 'abcdefghijklmnopqrstuvwxyzáéíóúüñ',
@@ -56,4 +56,4 @@ export const alphabeticKhristovRules: readonly KhristovRules[] = [
     rightMin: 2,
     exceptions: itExceptions,
   },
-];
+] as const satisfies readonly KhristovRules[];
