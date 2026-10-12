@@ -156,6 +156,7 @@ it('hydrates parsed output from the built public server entry as literal text', 
   expect(container.firstChild?.nodeType).toBe(Node.TEXT_NODE);
   expect(container.children).toHaveLength(0);
   const serverNode = container.firstChild;
+  document.body.append(container);
   Object.defineProperty(globalThis, '_$HY', {
     configurable: true,
     value: { done: false, events: [], r: {} },
@@ -176,6 +177,7 @@ it('hydrates parsed output from the built public server entry as literal text', 
     expect(container.children).toHaveLength(0);
   } finally {
     dispose();
+    container.remove();
     Reflect.deleteProperty(globalThis, '_$HY');
   }
 });
