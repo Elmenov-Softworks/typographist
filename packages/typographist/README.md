@@ -137,6 +137,8 @@ recognizer handles ASCII quotes at whitespace and ASCII punctuation boundaries;
 quotes adjoining Han text or native Chinese punctuation are conservatively left
 unchanged when those boundaries are not recognized. Native quotation signs and
 punctuation remain intact.
+Its `zh/punctuation/quote` settings are independent of the ru/en
+`common/punctuation/quote` settings.
 
 Standalone integer ranges use `—`; the existing unary-minus rule uses `−` where
 it recognizes an unambiguous number. Dates, identifiers, decimal ranges and phone

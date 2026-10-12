@@ -13,6 +13,36 @@
       "bytes": 34128,
       "sha256": "f4ffcd96c5cbc886bdad23f95dcae8edc3cd3620eae62f7946eceda97c4e68f8",
       "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-en-us.tex"
+    },
+    {
+      "file": "hyph-es.tex",
+      "bytes": 42602,
+      "sha256": "6a2e5f39a991a23d1cd8a23dbd0f6fe96a9f07561a6695f4f3320f47030e236c",
+      "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-es.tex"
+    },
+    {
+      "file": "hyph-fr.tex",
+      "bytes": 30353,
+      "sha256": "526cad6fe8f52fcd3caa3fcaf667cb1740cfc14bca198680e00dc343a84594de",
+      "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-fr.tex"
+    },
+    {
+      "file": "hyph-de-1996.tex",
+      "bytes": 274609,
+      "sha256": "374ad1ce3263f8a2791ec070ef9b516c532dae64456f3fb656e617e8ae53a9d3",
+      "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-de-1996.tex"
+    },
+    {
+      "file": "hyph-pt.tex",
+      "bytes": 5487,
+      "sha256": "c110a39e501db372d1d755e1c64464321a2efa7d8e9617f66001000389b941f2",
+      "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-pt.tex"
+    },
+    {
+      "file": "hyph-it.tex",
+      "bytes": 5011,
+      "sha256": "6ce56ed6ed2ca7c0688838e366e6595e0429f984f4fc6e96ec045cebb1e76a47",
+      "url": "https://raw.githubusercontent.com/hyphenation/tex-hyphen/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/tex/generic/hyph-utf8/patterns/tex/hyph-it.tex"
     }
   ]
 }

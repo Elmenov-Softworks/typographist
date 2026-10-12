@@ -1,5 +1,6 @@
 import { createBundledQuotes } from '#src/text/typography/bundled-quotes.factory.js';
 import { prepareTextPipeline } from '#src/text/typography/prepare-text-pipeline.util.js';
+import { Typographist } from '#src/typographist/typographist.js';
 
 const fixtures = [
   ['"hello"', '“hello”', '«hello»'],
@@ -23,6 +24,15 @@ const fixtures = [
 ];
 
 describe('bundled quotation preparation', () => {
+  it('keeps Chinese quote spacing independent of European quote settings', () => {
+    const formatter = new Typographist({
+      categories: ['quotes'],
+      settings: { 'common/punctuation/quote': { spacing: true } },
+    });
+
+    expect(formatter.format('"中文"', 'zh')).toBe('“中文”');
+  });
+
   describe.each(['en', 'ru'])('%s reference fixtures', (locale) => {
     const format = prepareTextPipeline(createBundledQuotes(locale), locale, {
       categories: ['quotes'],

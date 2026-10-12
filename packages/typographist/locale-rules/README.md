@@ -13,6 +13,22 @@ without royalty when the copyright and permission notices are preserved.
 Read the full retained notices in the source files. The package's MIT license
 does not replace either data license.
 
+Spanish, French, German and Italian tables use the MIT licenses retained in
+`hyph-es.tex`, `hyph-fr.tex`, `hyph-de-1996.tex` and `hyph-it.tex` respectively.
+Italian offers a choice of licenses; these tables use its MIT option.
+Portuguese tables use the BSD 3-Clause license retained in `hyph-pt.tex`,
+including its copyright, redistribution conditions and disclaimer. The
+unchanged source files contain the complete notices and are included in the
+distributed package; generated tables also retain the source comment notices.
+
+The selected pattern baselines are conventional Spanish and French, German
+reformed orthography (2006, upstream identifier `de-1996`), Brazilian Portuguese,
+and conventional Italian. The Portuguese source is shared with European
+Portuguese, rather than being exclusive to Brazil: upstream's
+[`hyph-utf8.tex`](https://github.com/hyphenation/tex-hyphen/blob/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/doc/generic/hyph-utf8/hyph-utf8.tex)
+lists `brazilian` and `brazil` as synonyms of `portuguese`. These upstream
+synonyms do not introduce aliases or fallback in Typographist.
+
 From the repository root, regenerate with:
 
 ```sh
@@ -27,10 +43,24 @@ It is not a general TeX interpreter. It preserves pattern order and every
 pattern, including literal compound characters. Exception hyphens become UTF-16
 offsets; entries without hyphens become explicit no-break exceptions.
 
-| Source           | Patterns | Exceptions | No-break exceptions | Default minima |
-| ---------------- | -------: | ---------: | ------------------: | -------------- |
-| `hyph-ru.tex`    |     7021 |        184 |                  25 | 2/2            |
-| `hyph-en-us.tex` |     4938 |         14 |                   4 | 2/3            |
+| Source             | Patterns | Exceptions | No-break exceptions | Default minima |
+| ------------------ | -------: | ---------: | ------------------: | -------------- |
+| `hyph-ru.tex`      |     7021 |        184 |                  25 | 2/2            |
+| `hyph-en-us.tex`   |     4938 |         14 |                   4 | 2/3            |
+| `hyph-es.tex`      |     4694 |          0 |                   0 | 2/2            |
+| `hyph-fr.tex`      |     1145 |          0 |                   0 | 2/2            |
+| `hyph-de-1996.tex` |    36709 |          0 |                   0 | 2/2            |
+| `hyph-pt.tex`      |      427 |          2 |                   0 | 2/3            |
+| `hyph-it.tex`      |      355 |          0 |                   0 | 2/2            |
+
+The additional five tables are pinned source data; default registration and
+locale-owned typography are separate from conversion. Italian's upstream
+patterns are ASCII and do not supply accented-letter patterns. Preserving an
+accented letter in the alphabet allows surrounding patterns to match, but does
+not imply complete accented-word coverage. French internal apostrophe patterns
+remain in the source tables; the existing whole-token policy still preserves
+words containing internal apostrophes. No pattern set guarantees every word's
+linguistic syllabification.
 
 The generated tables are frozen. `Typographist` registers English (`en`) and
 Russian (`ru`) rules by default; supplying a custom `rules` list replaces them.

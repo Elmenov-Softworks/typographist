@@ -11,7 +11,7 @@ export const createBundledQuotes = (locale: string) => {
 
   const rules: TextRule[] = [
     {
-      id: 'common/punctuation/quote',
+      id: locale === 'zh' ? 'zh/punctuation/quote' : 'common/punctuation/quote',
       category: 'quotes',
       order: 410,
       defaults: { left, right, spacing: locale !== 'zh' },
