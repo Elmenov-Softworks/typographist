@@ -22,11 +22,26 @@ function App() {
 `config: TypographistConfig<TCustomLocale>` from the core package and optional
 `children: ReactNode`. Omitted settings use core defaults.
 
-`TypographistText` accepts required `text: string` and optional `locale: string`.
-It renders text without a wrapper. `useTypographist(text: string, locale?: string)`
+`TypographistText` accepts required `text: string`, optional `locale: string`, and
+optional `disabled: boolean` (default `false`). It renders text without a wrapper.
+`useTypographist(text: string, locale?: string, disabled?: boolean)`
 returns a string. Both require a provider and use the nearest one. A locale
 override affects only that consumer. Custom locale names and definitions can be
 passed through the provider's core configuration type.
+
+Disabled consumers return the current source exactly and skip formatting and
+locale lookup. They still require a provider. Toggling disabled off formats the
+current source with the current configuration.
+
+```tsx
+<TypographistText text={source} locale="fr" disabled />;
+const original = useTypographist(source, 'fr', true);
+```
+
+For unsupported site languages, use `config={{ locale: 'fr', unsupportedLocale: 'preserve' }}`
+on the provider. Unknown locales then preserve source text; the default policy
+`'throw'` raises a `RangeError`. Known locales still format normally. The core
+formatter's `hasLocale(locale)` reports whether rules are registered.
 
 Each provider owns one prepared formatter and its bounded word cache. Nested
 providers use complete independent configuration; they do not merge with their

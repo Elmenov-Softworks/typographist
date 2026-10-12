@@ -174,6 +174,10 @@ export class RulesRegistry {
     return removed;
   }
 
+  has(locale: string) {
+    return this.#services.has(languageKey(locale));
+  }
+
   require(locale: string) {
     const service = this.#services.get(languageKey(locale));
 

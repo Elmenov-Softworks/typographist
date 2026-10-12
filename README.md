@@ -4,6 +4,23 @@ Symbolic typography and soft hyphenation for JavaScript and TypeScript.
 Built-in rules support Russian and US English. The standalone ESM core runs in
 Node.js and browsers without runtime dependencies.
 
+## Quick start
+
+```sh
+npm install @elmenov-softworks/typographist
+```
+
+```ts
+import { Typographist } from '@elmenov-softworks/typographist';
+
+const typographist = new Typographist({ locale: 'en' });
+const formatted = typographist.format('The "reader" said...');
+```
+
+Reuse the instance across calls. Formatting operates on plain text; it does not
+parse or sanitize HTML. See the [core guide](packages/typographist/README.md)
+for configuration and limits, or the [API documentation](https://elmenov-softworks.github.io/typographist/).
+
 ## Packages
 
 | Package                                 | Documentation                                                                 |
@@ -58,3 +75,10 @@ nine rotated-order batches after ten warm-up calls; the hyphenation comparison
 uses seven samples after three preliminary samples, with native external cache
 policies. Measurements include JIT, GC and machine-load noise. These are two
 recorded runs, not universal rankings or browser measurements.
+
+## Contributing and security
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and pull requests, and
+[SECURITY.md](SECURITY.md) for private vulnerability reports.
+
+MIT license. See [LICENSE](LICENSE).

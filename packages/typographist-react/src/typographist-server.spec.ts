@@ -2,9 +2,39 @@ import { Typographist } from '@elmenov-softworks/typographist';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { TypographistProvider, TypographistText } from '@/index.js';
+import { TypographistProvider, TypographistText, useTypographist } from '@/index.js';
 
 describe('React server rendering', () => {
+  it.each(['', '  ', '"source"', '<b>soft\u00adhyphen</b>'])(
+    'preserves disabled component and hook source for %j',
+    (text) => {
+      const HookText = () => useTypographist(text, '', true);
+      const format = vi.spyOn(Typographist.prototype, 'format');
+
+      try {
+        const output = renderToStaticMarkup(
+          createElement(
+            TypographistProvider,
+            null,
+            createElement('span', null, createElement(TypographistText, { text, locale: 'unknown', disabled: true })),
+            createElement('span', null, createElement(HookText)),
+          ),
+        );
+
+        expect(output).toBe(
+          renderToStaticMarkup(createElement('span', null, text)) +
+            renderToStaticMarkup(createElement('span', null, text)),
+        );
+        expect(format).not.toHaveBeenCalled();
+        expect(() => renderToStaticMarkup(createElement(TypographistText, { text, disabled: true }))).toThrow(
+          'TypographistProvider',
+        );
+      } finally {
+        format.mockRestore();
+      }
+    },
+  );
+
   it('renders without browser globals and isolates request configuration', () => {
     expect(typeof window).toBe('undefined');
     const render = (locale: 'en' | 'ru') =>

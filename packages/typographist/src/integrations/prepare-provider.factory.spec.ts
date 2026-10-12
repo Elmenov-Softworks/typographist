@@ -21,6 +21,7 @@ describe('provider preparation', () => {
     const next = prepareProvider(
       {
         locale: 'en',
+        unsupportedLocale: 'throw',
         useFast: false,
         cacheSize: 64,
         categories: ['quotes', 'dashes', 'punctuation', 'nonbreakingSpacing', 'hyphenation'],
@@ -385,4 +386,16 @@ it('preserves custom defaults for rule IDs inherited by ordinary objects', () =>
   expect(prepareProvider(explicit, initial)).toBe(initial);
   expect(rule.prepare).toHaveBeenCalledTimes(preparations);
   expect(initial.formatter.format('source')).toBe(expected);
+});
+
+it('prepares again when unsupported locale policy changes', () => {
+  const initial = prepareProvider<'fr'>({ unsupportedLocale: 'preserve', locale: 'fr' });
+  const equivalent = prepareProvider<'fr'>({ unsupportedLocale: 'preserve', locale: 'fr' }, initial);
+
+  expect(equivalent).toBe(initial);
+  expect(initial.formatter.format('source')).toBe('source');
+  expect(() => prepareProvider<'fr'>({ unsupportedLocale: 'throw', locale: 'fr' }, initial)).toThrow(RangeError);
+
+  // @ts-expect-error Runtime policy validation must also apply during updates.
+  expect(() => prepareProvider({ unsupportedLocale: null }, prepareProvider({}))).toThrow(TypeError);
 });

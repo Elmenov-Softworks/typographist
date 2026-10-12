@@ -9,7 +9,9 @@ export type TypographistConfig<TCustomLocale extends string = never> = TextPipel
   readonly textLocales?: readonly TextLocale<Locale | TCustomLocale>[];
   /** Symbolic text rules prepared once per locale, independently of hyphenation data. */
   readonly textRules?: readonly TextRule[];
-  /** Default locale for calls without an override; defaults to 'en' and requires registered rules. */
+  /** Unregistered locales throw by default; preserve returns the exact source text instead. */
+  readonly unsupportedLocale?: 'preserve' | 'throw';
+  /** Default locale for calls without an override; defaults to 'en' and follows unsupportedLocale. */
   readonly locale?: Locale | NoInfer<TCustomLocale>;
   /** Replaces the bundled English and Russian plugins when supplied; each locale must be unique. */
   readonly rules?: readonly TypographistRules<Locale | TCustomLocale>[];

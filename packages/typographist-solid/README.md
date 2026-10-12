@@ -44,6 +44,7 @@ Call the hook inside a descendant component or its reactive owner:
 useTypographist(
   text: Accessor<string>,
   locale?: Accessor<string | undefined>,
+  disabled?: Accessor<boolean>,
 ): Accessor<string>
 ```
 
@@ -51,7 +52,7 @@ The result is a read-only accessor. Pass signals or getters, including
 `() => props.text` and `() => props.locale`, to preserve reactivity.
 Use `() => 'fixed source'` for a constant. Keep the original source string for
 recomputation. Locale overrides affect only that consumer. A missing provider,
-unknown locale or invalid configuration throws. Empty strings, Unicode,
+unsupported locale under the default policy or invalid configuration throws. Empty strings, Unicode,
 soft hyphens and protected content retain core behavior.
 
 Replace configuration immutably. Scalars, primitive array contents and declared
@@ -74,3 +75,19 @@ shared globally across roots or server requests.
 
 See the [core documentation](../typographist/README.md) for formatting categories,
 configuration defaults and text-processing limits.
+
+Set `disabled` on a leaf component or pass a boolean accessor as the hook's third
+argument to return the current source and skip formatting and locale lookup.
+It defaults to false and still requires a provider.
+
+```tsx
+const [disabled, setDisabled] = createSignal(false);
+const formatted = useTypographist(source, () => 'en', disabled);
+<TypographistText text={source()} locale="unknown" disabled={disabled()} />;
+```
+
+Use `config={{ locale: 'unknown', unsupportedLocale: 'preserve' }}` when the site's
+active language has no registered rules. Unsupported languages retain their
+source text; registered languages still format normally. The default policy is
+`'throw'`. Core `hasLocale(locale)` reports registered rules without a regional
+fallback; see the [core API](../typographist/README.md).
