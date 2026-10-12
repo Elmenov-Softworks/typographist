@@ -71,8 +71,10 @@ const configHasComparableShape = <TCustomLocale extends string>(config: Typograp
   const locale: unknown = config.locale;
   const cacheSize: unknown = config.cacheSize;
   const useFast: unknown = config.useFast;
+  const unsupportedLocale: unknown = config.unsupportedLocale;
 
   return (
+    (unsupportedLocale === undefined || unsupportedLocale === 'throw' || unsupportedLocale === 'preserve') &&
     locale !== null &&
     cacheSize !== null &&
     useFast !== null &&
@@ -105,6 +107,7 @@ export const configEquivalent = <TCustomLocale extends string>(
 
   if (
     (left.locale ?? 'en') !== (right.locale ?? 'en') ||
+    (left.unsupportedLocale ?? 'throw') !== (right.unsupportedLocale ?? 'throw') ||
     (left.useFast ?? false) !== (right.useFast ?? false) ||
     !Object.is(left.cacheSize ?? 64, right.cacheSize ?? 64) ||
     (hasTextLocales && (left.categories === undefined) !== (right.categories === undefined)) ||
