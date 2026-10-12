@@ -45,6 +45,11 @@ export default defineConfig(
     },
   },
   {
+    files: ['tools/package-check/fixtures/*.ts'],
+    // check:packages checks these against installed archive declarations, which are absent before a build.
+    extends: [tseslint.configs.disableTypeChecked],
+  },
+  {
     files: ['**/*.vue'],
     languageOptions: {
       parser: vueParser,
