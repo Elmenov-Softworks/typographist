@@ -75,7 +75,24 @@ no hyphenation dataset. No linguistic accuracy guarantee applies to custom data
 or heuristic hyphenation.
 
 The public service methods are `format(text, locale?)`, `addRules(rules)`,
-`addTextLocale(definition)` and `removeRules(locale)`. Unknown locales throw.
+`addTextLocale(definition)`, `removeRules(locale)` and `hasLocale(locale)`.
+Unknown locales throw by default.
+Set `unsupportedLocale: 'preserve'` to return the exact source string for valid,
+unregistered locales, including an unsupported default locale. Registered locales
+still format normally. Invalid text, malformed locales and rule errors still throw.
+`hasLocale` reports actual registrations, normalizes case and reflects additions
+and removals without regional fallback.
+
+```ts
+const multilingual = new Typographist<'fr'>({
+  locale: 'fr',
+  unsupportedLocale: 'preserve',
+});
+multilingual.hasLocale('fr'); // false
+multilingual.format('"Bonjour"...'); // unchanged
+multilingual.format('"Hello"...', 'en'); // English formatting
+```
+
 Some non-global bindings need another formatting pass when a segment contains
 several matching sequences.
 
