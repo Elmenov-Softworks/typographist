@@ -25,9 +25,9 @@ import { renderToString as renderVue } from '@vue/server-renderer';
 import { createComponent } from 'solid-js';
 import { renderToString as renderSolid } from 'solid-js/web';
 
-const formatter = new Typographist<string>({ locale: 'fr', unsupportedLocale: 'preserve' });
-assert.equal(formatter.hasLocale('fr'), false);
-assert.equal(formatter.format('"Bonjour"...'), '"Bonjour"...');
+const formatter = new Typographist<string>({ locale: 'ja', unsupportedLocale: 'preserve' });
+assert.equal(formatter.hasLocale('ja'), false);
+assert.equal(formatter.format('"こんにちは"...'), '"こんにちは"...');
 assert.equal(new Typographist({ categories: ['punctuation'] }).format('wait...'), 'wait…');
 assert.ok(new Typographist({ locale: 'ru', categories: ['hyphenation'] }).format('машина').includes('\u00ad'));
 formatter.addRules(

@@ -1,7 +1,7 @@
 # Typographist core
 
 Standalone symbolic typography and soft hyphenation for Node.js and browsers.
-The ESM package has built-in Russian and US English data and no runtime dependencies.
+The ESM package bundles eight locales and has no runtime dependencies.
 
 ```ts
 import { Typographist } from '@elmenov-softworks/typographist';
@@ -67,7 +67,9 @@ URLs, emails and nonempty `protectedContent` literals bypass formatting.
 `excludedWords` excludes exact, case-sensitive words from hyphenation only.
 
 Locale selection is explicit: there is no language detection or regional
-fallback. Built-in locale identifiers are `ru` and `en`. Additional languages
+fallback. Built-in locale identifiers are `en`, `ru`, `es`, `fr`, `de`, `pt`, `it` and `zh`.
+The five added alphabetic locales support both hyphenation algorithms; symbolic support for these locales is not yet bundled. Chinese supports symbolic typography only.
+See [locale data](locale-rules/README.md) for baselines and source licenses. Additional languages
 can supply `TypographistRules` for hyphenation and `TextLocale`/`TextRule`
 definitions for symbolic formatting. Declarative hyphenation rules supply both
 standard patterns and fast character classes. Typography-only locales need
@@ -84,12 +86,12 @@ still format normally. Invalid text, malformed locales and rule errors still thr
 and removals without regional fallback.
 
 ```ts
-const multilingual = new Typographist<'fr'>({
-  locale: 'fr',
+const multilingual = new Typographist<'ja'>({
+  locale: 'ja',
   unsupportedLocale: 'preserve',
 });
-multilingual.hasLocale('fr'); // false
-multilingual.format('"Bonjour"...'); // unchanged
+multilingual.hasLocale('ja'); // false
+multilingual.format('"こんにちは"...'); // unchanged
 multilingual.format('"Hello"...', 'en'); // English formatting
 ```
 

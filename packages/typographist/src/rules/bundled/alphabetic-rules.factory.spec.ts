@@ -1,3 +1,4 @@
+import { prepareProvider } from '#src/integrations/prepare-provider.factory.js';
 import { Typographist } from '#src/typographist/typographist.js';
 import { createAlphabeticRules } from '#src/rules/bundled/alphabetic-rules.factory.js';
 
@@ -33,4 +34,26 @@ it.each([false, true])('registers paired alphabetic datasets with useFast=%s', (
   }
 
   expect(formatter.format('hardware software', 'pt')).toBe('hard\u00adware soft\u00adware');
+});
+
+it.each([false, true])('selects alphabetic locales without consumer registration with useFast=%s', (useFast) => {
+  const formatter = new Typographist<string>({ useFast, protectedContent: ['éléphant'] });
+
+  for (const { locale, word, standard, fast } of examples) {
+    const provider = prepareProvider({ locale, useFast });
+    const expected = (useFast ? fast : standard).replaceAll('|', '\u00ad');
+
+    expect(formatter.hasLocale(locale)).toBe(true);
+    expect(provider.formatter.format(word)).toBe(expected);
+    expect(prepareProvider({ locale, useFast }, provider)).toBe(provider);
+    expect(formatter.format(word, locale)).toBe(locale === 'fr' ? word : expected);
+    expect(formatter.hasLocale(`${locale}-XX`)).toBe(false);
+    expect(formatter.removeRules(locale)).toBe(true);
+    expect(formatter.hasLocale(locale)).toBe(false);
+    expect(() => formatter.format(word, locale)).toThrow('Unregistered locale');
+    expect(provider.formatter.format(word)).toBe(expected);
+  }
+
+  const custom = new Typographist({ rules: [], textLocales: [{ locale: 'en', textRules: [] }] });
+  expect(custom.hasLocale('es')).toBe(false);
 });

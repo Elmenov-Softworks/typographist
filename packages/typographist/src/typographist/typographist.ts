@@ -22,7 +22,7 @@ export class Typographist<TCustomLocale extends string = never> {
   #unsupportedLocale: 'preserve' | 'throw';
 
   /**
-   * Registers and prepares rules once, defaulting to English with bundled English, Russian and Chinese rules.
+   * Registers and prepares rules once, defaulting to English with all bundled locales.
    * Copies excluded words. Invalid configuration and duplicate locales throw.
    * A missing default locale throws unless unsupportedLocale is preserve.
    */
