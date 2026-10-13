@@ -1,3 +1,9 @@
+## 1.0.2 (2026-10-13)
+
+### Changes
+
+- Improve package discovery metadata and documentation links ([aafcd58](https://github.com/Elmenov-Softworks/typographist/commit/aafcd58))
+
 ## 1.0.1 (2026-10-13)
 
 ### Changes
