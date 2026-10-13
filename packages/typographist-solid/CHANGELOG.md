@@ -1,3 +1,28 @@
+# 1.0.0 (2026-10-13)
+
+### Changes
+
+- Reconcile manually published initial release archives ([7f48b70](https://github.com/Elmenov-Softworks/typographist/commit/7f48b70))
+- Request the shared 1.0.0 release ([9e90204](https://github.com/Elmenov-Softworks/typographist/commit/9e90204))
+- Add consumer agent guides and Markdown documentation ([b51afbc](https://github.com/Elmenov-Softworks/typographist/commit/b51afbc))
+- Register bundled alphabetic locales and correct unsupported-locale fixtures ([425f4b6](https://github.com/Elmenov-Softworks/typographist/commit/425f4b6))
+- Add pinned alphabetic locale patterns and isolate Chinese quote settings ([568409d](https://github.com/Elmenov-Softworks/typographist/commit/568409d))
+- Lint archive fixtures independently of build output ([c75226e](https://github.com/Elmenov-Softworks/typographist/commit/c75226e))
+- Separate archive fixtures from workspace type checking ([6f0438b](https://github.com/Elmenov-Softworks/typographist/commit/6f0438b))
+- Stop tracking local Codex rule symlinks ([db8ab7c](https://github.com/Elmenov-Softworks/typographist/commit/db8ab7c))
+- Add usage examples to package documentation and Pages ([a6097a3](https://github.com/Elmenov-Softworks/typographist/commit/a6097a3))
+- Verify installed package archives and browser bundling in CI ([c127605](https://github.com/Elmenov-Softworks/typographist/commit/c127605))
+- Fix hydration test setup and formatting checks for dependency update ([70378ad](https://github.com/Elmenov-Softworks/typographist/commit/70378ad))
+- Document changed public APIs ([a355892](https://github.com/Elmenov-Softworks/typographist/commit/a355892))
+- Add reactive formatting opt-out for Solid ([ec5d8eb](https://github.com/Elmenov-Softworks/typographist/commit/ec5d8eb))
+- Add analytics into nx ([69b4160](https://github.com/Elmenov-Softworks/typographist/commit/69b4160))
+- Apply repository formatting to contribution files [skip ci] ([d752c7a](https://github.com/Elmenov-Softworks/typographist/commit/d752c7a))
+- Bump seroval and solid-js ([969e527](https://github.com/Elmenov-Softworks/typographist/commit/969e527))
+- Document contribution and security reporting [skip ci] ([28a72d9](https://github.com/Elmenov-Softworks/typographist/commit/28a72d9))
+- Harden workflow permissions and pin actions [skip ci] ([9a21507](https://github.com/Elmenov-Softworks/typographist/commit/9a21507))
+- Publish benchmark pages with documentation and remove specifications ([890c4a0](https://github.com/Elmenov-Softworks/typographist/commit/890c4a0))
+- Share provider preparation and skip unused hyphenation tries ([b7bc3b3](https://github.com/Elmenov-Softworks/typographist/commit/b7bc3b3))
+
 ## 0.1.0 (2026-10-11)
 
 ### Changes
