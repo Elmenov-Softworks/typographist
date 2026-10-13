@@ -1,5 +1,8 @@
 # Rules transformer
 
+For package selection and application typography, see the
+[agent guide](https://elmenov-softworks.github.io/typographist/packages/typographist/AGENT_GUIDE.md).
+
 `@elmenov-softworks/rules-transformer` converts UTF-8 TeX hyphenation tables to
 TypeScript locale rules. It is independent of the typography runtime and has
 no runtime dependencies.
@@ -21,9 +24,10 @@ To install a locally built archive before publication, run from the workspace:
 ```sh
 npm run build --workspace=@elmenov-softworks/rules-transformer
 npm pack --workspace=@elmenov-softworks/rules-transformer
-npm install --global ./elmenov-softworks-rules-transformer-0.1.0.tgz
-transform-rules source.tex generated-rules.ts
 ```
+
+Pass the archive filename printed by `npm pack` to `npm install --global`, then
+run `transform-rules source.tex generated-rules.ts`.
 
 Input must have one plain `\patterns{...}` block and an optional plain
 `\hyphenation{...}` block. This is a converter for pattern tables, not a general

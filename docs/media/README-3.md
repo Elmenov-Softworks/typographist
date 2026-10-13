@@ -1,5 +1,8 @@
 # Typographist for Vue
 
+For package selection and display-text integration, see the
+[agent guide](../typographist/AGENT_GUIDE.md).
+
 Components use Vue SFCs with `<script setup lang="ts">` and type-based props.
 
 Use the nearest provider to share a prepared core formatter and its bounded word
@@ -95,5 +98,5 @@ The provider is still required. Refs and getters support enable/disable transiti
 ```ts
 const disabled = ref(false);
 const formatted = useTypographist(source, () => props.locale, disabled);
-const config = shallowRef({ locale: 'fr', unsupportedLocale: 'preserve' as const });
+const config = shallowRef({ locale: 'ja', unsupportedLocale: 'preserve' as const });
 ```
