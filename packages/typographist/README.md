@@ -3,6 +3,8 @@
 Standalone symbolic typography and soft hyphenation for Node.js and browsers.
 The ESM package bundles eight locales and has no runtime dependencies.
 
+For application integration, see the [agent guide](AGENT_GUIDE.md).
+
 ```ts
 import { Typographist } from '@elmenov-softworks/typographist';
 
@@ -60,7 +62,9 @@ Successful locale additions, replacements and removals clear the cache.
 Bundled rules preserve letters, case, word order and numeric notation. They do
 not correct spelling, repeated punctuation, extra spaces, tabs or line endings,
 and do not reformat numbers or currencies. Quotation spacing is enabled by
-default; the setting above disables it.
+default for `en`, `ru` and `fr`, and disabled for `es`, `de`, `pt`, `it` and `zh`.
+The setting above disables it for `en` and `ru`; other locales use their
+`LOCALE/punctuation/quote` settings, such as `fr/punctuation/quote`.
 
 Formatting handles plain text and does not parse or sanitize HTML. Recognized
 URLs, emails and nonempty `protectedContent` literals bypass formatting.

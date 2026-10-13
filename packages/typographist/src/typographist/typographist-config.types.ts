@@ -13,7 +13,7 @@ export type TypographistConfig<TCustomLocale extends string = never> = TextPipel
   readonly unsupportedLocale?: 'preserve' | 'throw';
   /** Default locale for calls without an override; defaults to 'en' and follows unsupportedLocale. */
   readonly locale?: Locale | NoInfer<TCustomLocale>;
-  /** Replaces the bundled English and Russian plugins when supplied; each locale must be unique. */
+  /** Replaces the bundled hyphenation plugins when supplied; each locale must be unique. */
   readonly rules?: readonly TypographistRules<Locale | TCustomLocale>[];
   /** Exact, case-sensitive words to preserve; copied at construction and empty by default. */
   readonly excludedWords?: readonly string[];

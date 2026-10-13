@@ -1,5 +1,8 @@
 # Typographist for Solid
 
+For package selection and display-text integration, see the
+[agent guide](../typographist/AGENT_GUIDE.md).
+
 Each provider shares one prepared core formatter and its bounded word cache
 among its consumers. Nested providers and separate application roots own isolated
 instances. Nested configuration is complete and does not merge with an outer

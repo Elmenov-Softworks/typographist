@@ -10,7 +10,7 @@
   "out": "docs",
   "readme": "README.md",
   "cleanOutputDir": false,
-  "projectDocuments": ["packages/typographist/EXAMPLES.md"],
+  "projectDocuments": ["packages/typographist/EXAMPLES.md", "packages/typographist/AGENT_GUIDE.md"],
   "highlightLanguages": [
     "bash",
     "console",

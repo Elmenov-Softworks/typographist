@@ -23,6 +23,11 @@ Reuse the instance across calls. Formatting operates on plain text; it does not
 parse or sanitize HTML. See the [core guide](packages/typographist/README.md)
 for configuration and limits, [usage examples](https://elmenov-softworks.github.io/typographist/documents/EXAMPLES.html), or the [API documentation](https://elmenov-softworks.github.io/typographist/).
 
+For coding agents integrating the library, start with the
+[agent guide](packages/typographist/AGENT_GUIDE.md).
+The documentation site's [llms.txt](https://elmenov-softworks.github.io/typographist/llms.txt)
+links directly to Markdown consumer guides.
+
 ## Packages
 
 | Package                                 | Documentation                                                                 |

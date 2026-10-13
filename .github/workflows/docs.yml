@@ -82,6 +82,19 @@ jobs:
         run: |
           mkdir -p docs/benchmarks
           cp benchmarks/typograf.html benchmarks/typograf.json benchmarks/hyphenation.html benchmarks/hyphenation.json docs/benchmarks/
+      - name: Include Markdown consumer guides
+        if: steps.source.outputs.generate == 'true'
+        run: |
+          cp llms.txt README.md CONTRIBUTING.md SECURITY.md LICENSE docs/
+          for package in packages/*; do
+            mkdir -p "docs/$package"
+            cp "$package/README.md" "docs/$package/README.md"
+          done
+          cp packages/typographist/AGENT_GUIDE.md packages/typographist/EXAMPLES.md docs/packages/typographist/
+          mkdir -p docs/packages/typographist/locale-rules docs/tools/benchmarks docs/tools/rules-transformer
+          cp packages/typographist/locale-rules/README.md docs/packages/typographist/locale-rules/
+          cp tools/benchmarks/README.md docs/tools/benchmarks/
+          cp tools/rules-transformer/README.md docs/tools/rules-transformer/
       - name: Commit and push documentation
         if: steps.source.outputs.generate == 'true'
         run: |
