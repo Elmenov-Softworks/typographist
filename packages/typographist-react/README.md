@@ -1,5 +1,8 @@
 # Typographist for React
 
+For package selection and display-text integration, see the
+[agent guide](../typographist/AGENT_GUIDE.md).
+
 ```tsx
 import { TypographistProvider, TypographistText, useTypographist } from '@elmenov-softworks/typographist-react';
 

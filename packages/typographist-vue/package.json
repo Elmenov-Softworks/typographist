@@ -1,10 +1,19 @@
 {
   "name": "@elmenov-softworks/typographist-vue",
   "version": "0.1.0",
-  "description": "Typography components for Vue.",
+  "description": "Vue Composition API provider, leaf text component and composable for typography and soft hyphenation.",
   "type": "module",
   "author": "Alex Elmenov",
   "license": "MIT",
+  "keywords": [
+    "typography",
+    "hyphenation",
+    "quotes",
+    "nonbreaking-spaces",
+    "i18n",
+    "vue",
+    "composition-api"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Elmenov-Softworks/typographist.git",
