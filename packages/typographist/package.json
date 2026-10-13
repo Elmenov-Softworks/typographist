@@ -1,6 +1,6 @@
 {
   "name": "@elmenov-softworks/typographist",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Locale-aware quotes, dashes, nonbreaking spaces and soft hyphenation for JavaScript and TypeScript.",
   "type": "module",
   "author": "Alex Elmenov",

@@ -1,6 +1,6 @@
 {
   "name": "@elmenov-softworks/typographist-vue",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vue Composition API provider, leaf text component and composable for typography and soft hyphenation.",
   "type": "module",
   "author": "Alex Elmenov",
@@ -65,7 +65,7 @@
     "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
-    "@elmenov-softworks/typographist": "1.0.0"
+    "@elmenov-softworks/typographist": "1.0.1"
   },
   "peerDependencies": {
     "vue": "^3.5.43"

@@ -1,6 +1,6 @@
 {
   "name": "@elmenov-softworks/typographist-react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React provider, leaf text component and hook for locale-aware typography and soft hyphenation.",
   "type": "module",
   "author": "Alex Elmenov",
@@ -64,7 +64,7 @@
     "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
-    "@elmenov-softworks/typographist": "1.0.0"
+    "@elmenov-softworks/typographist": "1.0.1"
   },
   "peerDependencies": {
     "react": "^19.3.0"

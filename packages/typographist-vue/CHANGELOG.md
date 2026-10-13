@@ -1,3 +1,9 @@
+## 1.0.1 (2026-10-13)
+
+### Changes
+
+- Allow npm validation after successful release submission ([1a1c76d](https://github.com/Elmenov-Softworks/typographist/commit/1a1c76d))
+
 # 1.0.0 (2026-10-13)
 
 ### Changes
