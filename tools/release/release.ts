@@ -1,9 +1,10 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
-import { ReleaseClient, releaseChangelog, releaseVersion } from 'nx/release';
+import { releaseChangelog, releaseVersion } from 'nx/release';
 
 import { runCommand, runGit } from './command.util.ts';
 import { buildPackages } from './release-packages.ts';
+import { publishRecord } from './release-publication.ts';
 import { parseRecord, parseRequest } from './release-record.util.ts';
 import { findUnpublishedProjects } from './release-registry.ts';
 import { chooseAction, needsLatestRun } from './release-state.util.ts';
@@ -12,42 +13,6 @@ import type { ReleaseRecord } from './release.types.ts';
 
 const recordPath = '.release/latest.json';
 const requestPath = '.release/request.json';
-
-const publishRecord = async (record: ReleaseRecord, missing: string[]) => {
-  const tagCommit = runGit('rev-parse', `v${record.version}^{commit}`);
-  const taggedRecord = parseRecord(JSON.parse(runGit('show', `${tagCommit}:${recordPath}`)));
-
-  if (
-    JSON.stringify(taggedRecord) !== JSON.stringify(record) ||
-    runGit('rev-parse', `${tagCommit}^`) !== record.source
-  ) {
-    throw new Error('Release tag, source parent, and durable record disagree.');
-  }
-
-  runGit('switch', '--detach', tagCommit);
-  console.log(runCommand('npm', ['ci']));
-
-  const built = buildPackages(record.version);
-
-  if (JSON.stringify(built) !== JSON.stringify(record.packages))
-    throw new Error('Rebuilt artifacts differ from the recorded release.');
-
-  for (const project of missing) {
-    const publisher = new ReleaseClient({
-      groups: { libraries: { projects: [project], projectsRelationship: 'fixed' } },
-    });
-    const result = await publisher.releasePublish({ access: 'public', firstRelease: true });
-
-    if (result[project]?.code !== 0)
-      throw new Error(`Publication failed for ${project}; rerun to resume this version.`);
-  }
-
-  const remaining = await findUnpublishedProjects(record);
-
-  if (remaining.length > 0) throw new Error(`Release ${record.version} is incomplete: ${remaining.join(', ')}.`);
-
-  console.log(`Confirmed all packages published at ${record.version}.`);
-};
 
 const main = async () => {
   if (
