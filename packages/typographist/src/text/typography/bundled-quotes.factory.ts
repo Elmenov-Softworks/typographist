@@ -73,7 +73,6 @@ export const createBundledQuotes = (locale: string) => {
           const whitespace = /\s/u;
           const gap = (character: string) =>
             character === ' ' || character === '\t' || character === '\u00a0' || character === '\u202f';
-          // Reuse skipped quote runs as boundaries advance, keeping nested spacing linear.
           let openingEnd = -1;
           let openingContent = false;
           let lastClosingOffset = -1;

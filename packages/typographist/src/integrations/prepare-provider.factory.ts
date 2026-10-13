@@ -5,12 +5,22 @@ import type { TypographistConfig } from '#src/typographist/typographist-config.t
 
 import { configEquivalent } from '#src/integrations/config-equivalent.util.js';
 
+/**
+ * Prepares a formatter and registration metadata for framework providers.
+ * Returns the previous provider unchanged when configuration has equivalent formatting behavior.
+ * With default rules, omitted textLocales registers Chinese typography; an explicit empty array does not.
+ * New providers compile configured plugins once. Constructor validation errors propagate.
+ */
 export const prepareProvider = <TCustomLocale extends string = never>(
   config: TypographistConfig<TCustomLocale>,
   previous: {
+    /** Configuration used to prepare the previous provider. */
     config: TypographistConfig<TCustomLocale>;
+    /** Formatter reused when the new configuration is equivalent. */
     formatter: Typographist<TCustomLocale>;
+    /** Registered locale identifiers used to compare effective rule settings. */
     registrationLocales: readonly string[];
+    /** Configured default locale, or English when omitted. */
     defaultLocale: string;
   } | null = null,
 ) => {
