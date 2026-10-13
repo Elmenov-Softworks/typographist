@@ -5,6 +5,13 @@
   "type": "module",
   "author": "Alex Elmenov",
   "license": "MIT",
+  "keywords": [
+    "hyphenation",
+    "tex",
+    "locale",
+    "typescript",
+    "cli"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Elmenov-Softworks/typographist.git",

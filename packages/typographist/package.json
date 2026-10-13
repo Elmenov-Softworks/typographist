@@ -1,10 +1,18 @@
 {
   "name": "@elmenov-softworks/typographist",
   "version": "0.1.0",
-  "description": "Typography utilities for JavaScript.",
+  "description": "Locale-aware quotes, dashes, nonbreaking spaces and soft hyphenation for JavaScript and TypeScript.",
   "type": "module",
   "author": "Alex Elmenov",
   "license": "MIT",
+  "keywords": [
+    "typography",
+    "hyphenation",
+    "quotes",
+    "nonbreaking-spaces",
+    "i18n",
+    "typescript"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Elmenov-Softworks/typographist.git",
@@ -46,7 +54,8 @@
   "files": [
     "dist",
     "locale-rules",
-    "EXAMPLES.md"
+    "EXAMPLES.md",
+    "AGENT_GUIDE.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js",

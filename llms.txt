@@ -1,0 +1,26 @@
+# Typographist
+
+> Symbolic typography and soft hyphenation for JavaScript and TypeScript, with a standalone ESM core and React, Vue and Solid integrations.
+
+Use this library to format plain display text with locale-specific signs and
+nonbreaking characters. It does not parse or sanitize HTML, correct user errors,
+or reformat numbers and currencies. Retain original text for editing and storage.
+
+Built-in profiles: en, ru, es, fr, de, pt (Brazilian baseline), it, and zh
+(Simplified Chinese symbols without soft hyphens). Language selection is explicit;
+regional fallback is not automatic. Reuse an instance or framework provider.
+
+## Application integration
+
+- [Agent guide](https://elmenov-softworks.github.io/typographist/packages/typographist/AGENT_GUIDE.md): Package selection, defaults, locale mapping, rendering and common mistakes. Start here.
+- [Core guide](https://elmenov-softworks.github.io/typographist/packages/typographist/README.md): Configuration, cache, protection, custom locales and limitations.
+- [Examples](https://elmenov-softworks.github.io/typographist/packages/typographist/EXAMPLES.md): Plain text, multilingual display, disabled consumers, SSR and copying.
+- [React guide](https://elmenov-softworks.github.io/typographist/packages/typographist-react/README.md): Provider, leaf component and string hook.
+- [Vue guide](https://elmenov-softworks.github.io/typographist/packages/typographist-vue/README.md): Composition API, provider, leaf component and computed ref.
+- [Solid guide](https://elmenov-softworks.github.io/typographist/packages/typographist-solid/README.md): Provider, leaf component and accessor hook.
+
+## Optional
+
+- [Locale baselines](https://elmenov-softworks.github.io/typographist/packages/typographist/locale-rules/README.md): Data provenance, licenses and linguistic limitations.
+- [Rules converter](https://elmenov-softworks.github.io/typographist/packages/rules-transformer/README.md): Convert TeX hyphenation data for a custom locale.
+- [API reference](https://elmenov-softworks.github.io/typographist/): Generated TypeDoc reference.

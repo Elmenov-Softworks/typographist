@@ -9,6 +9,7 @@ const config: Config = {
   arrowParens: 'always',
   printWidth: 120,
   endOfLine: 'lf',
+  overrides: [{ files: 'llms.txt', options: { parser: 'markdown' } }],
 };
 
 export default config;
