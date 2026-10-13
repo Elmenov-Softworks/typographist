@@ -37,13 +37,13 @@ const formatted = symbols.format('Он сказал: "Привет"...');
 import { Typographist } from '@elmenov-softworks/typographist';
 
 const formatter = new Typographist<string>({
-  locale: 'fr',
+  locale: 'ja',
   unsupportedLocale: 'preserve',
 });
 
-formatter.format('"Bonjour"...'); // Exactly the original text.
+formatter.format('"こんにちは"...'); // Exactly the original text.
 formatter.format('"Hello"...', 'en'); // Uses registered English rules.
-formatter.hasLocale('fr'); // false
+formatter.hasLocale('ja'); // false
 formatter.hasLocale('ru'); // true
 ```
 

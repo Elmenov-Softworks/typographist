@@ -5,7 +5,7 @@ The CLI implementation lives in
 Its installable bin command is `transform-rules source.tex generated-rules.ts`.
 This tools directory contains only the repository's pinned-source helper.
 
-From the repository root, regenerate English and Russian tables with:
+From the repository root, regenerate all pinned bundled tables with:
 
 ```sh
 npm run build --workspace=@elmenov-softworks/rules-transformer

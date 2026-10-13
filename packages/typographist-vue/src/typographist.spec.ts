@@ -462,8 +462,8 @@ it('bypasses locale lookup while disabled and resumes with current reactive inpu
     expect(format).toHaveBeenCalledTimes(calls);
     expect(readLocale).not.toHaveBeenCalled();
 
-    locale.value = 'fr';
-    config.value = { categories: ['quotes'], locale: 'fr', unsupportedLocale: 'preserve' };
+    locale.value = 'nl';
+    config.value = { categories: ['quotes'], locale: 'nl', unsupportedLocale: 'preserve' };
     await nextTick();
     disabled.value = false;
     await nextTick();
@@ -489,7 +489,7 @@ it('hydrates disabled text literally with an unsupported locale', async () => {
       TypographistProvider,
       {},
       {
-        default: () => h(TypographistText, { text: source, locale: 'fr', disabled: true }),
+        default: () => h(TypographistText, { text: source, locale: 'nl', disabled: true }),
       },
     );
   const format = vi.spyOn(Typographist.prototype, 'format');

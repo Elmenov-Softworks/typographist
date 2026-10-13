@@ -1,7 +1,9 @@
 # Typographist
 
 Symbolic typography and soft hyphenation for JavaScript and TypeScript.
-Built-in rules support Russian and US English. The standalone ESM core runs in
+Built-in hyphenation supports Russian, US English, Spanish, French, German,
+Brazilian Portuguese and Italian. Chinese supports symbolic typography only.
+See [locale baselines and sources](packages/typographist/locale-rules/README.md). The standalone ESM core runs in
 Node.js and browsers without runtime dependencies.
 
 ## Quick start

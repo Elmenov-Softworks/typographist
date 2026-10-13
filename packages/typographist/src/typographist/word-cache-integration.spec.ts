@@ -156,14 +156,14 @@ describe.each([false, true])('word cache with useFast=%s', (useFast) => {
     warm();
     expect(compute).toHaveBeenCalledTimes(2);
 
-    instance.addRules(rules('de'));
+    instance.addRules(rules('nl'));
     warm();
     expect(compute).toHaveBeenCalledTimes(4);
     instance.addRules(rules('en', [3]));
     expect(instance.format('bacaba')).toBe('bac\u00adaba');
     expect(instance.format('bacaba', 'ru')).toBe('ba\u00adcaba');
     expect(compute).toHaveBeenCalledTimes(6);
-    expect(instance.removeRules('de')).toBe(true);
+    expect(instance.removeRules('nl')).toBe(true);
     warm();
     expect(compute).toHaveBeenCalledTimes(8);
 
@@ -183,7 +183,7 @@ describe.each([false, true])('word cache with useFast=%s', (useFast) => {
       throw new Error('Compilation failed');
     });
 
-    expect(instance.removeRules('de')).toBe(false);
+    expect(instance.removeRules('nl')).toBe(false);
     expect(() => {
       instance.addRules(failing);
     }).toThrow('Compilation failed');
