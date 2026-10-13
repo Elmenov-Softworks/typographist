@@ -16,6 +16,33 @@ const createRule = () => {
 };
 
 describe('provider preparation', () => {
+  it.each(['es', 'fr', 'de', 'pt', 'it'] as const)(
+    'compares bundled %s quotation settings and retains equivalent defaults',
+    (locale) => {
+      const config: TypographistConfig = { locale, categories: ['quotes'] };
+      const initial = prepareProvider(config);
+      const id = `${locale}/punctuation/quote`;
+
+      expect(prepareProvider({ ...config, settings: { [id]: { spacing: locale === 'fr' } } }, initial)).toBe(initial);
+
+      const overrides = locale === 'fr' ? { spacing: false } : { left: '「', right: '」' };
+      const changedConfig = { ...config, settings: { [id]: overrides } };
+      const changed = prepareProvider(changedConfig, initial);
+
+      expect(changed).not.toBe(initial);
+      expect(changed.formatter.format('"Bonjour"')).toBe(new Typographist(changedConfig).format('"Bonjour"'));
+      expect(prepareProvider({ ...changedConfig, settings: { [id]: { ...overrides } } }, changed)).toBe(changed);
+      expect(prepareProvider(config, changed).formatter.format('"Bonjour"')).toBe(
+        initial.formatter.format('"Bonjour"'),
+      );
+
+      if (locale === 'fr') {
+        expect(initial.formatter.format('"Bonjour"')).toBe('«\u202fBonjour\u202f»');
+        expect(changed.formatter.format('"Bonjour"')).toBe('«Bonjour»');
+      }
+    },
+  );
+
   it('preserves prepared state for fresh equivalent containers and explicit core defaults', () => {
     const initial = prepareProvider({});
     const next = prepareProvider(

@@ -20,7 +20,8 @@ export const createChineseDashes = () => {
         const suffix = context?.followingCharacter ?? '';
         const result = (prefix + text + suffix).replace(
           /(?<![\p{L}\p{M}\p{N}_+.,/\u00ad-])(\d+)-(\d+)(?![\p{L}\p{M}\p{N}_+.,/\u00ad-])/gu,
-          '$1—$2',
+          (match: string, from: string, to: string, offset: number) =>
+            offset < prefix.length || offset + match.length > prefix.length + text.length ? match : `${from}—${to}`,
         );
 
         return result.slice(prefix.length, result.length - suffix.length);

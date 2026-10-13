@@ -46,7 +46,7 @@ export const prepareProvider = <TCustomLocale extends string = never>(
 
   const registrationLocales =
     rules === undefined
-      ? ['en', 'ru', ...(config.textLocales === undefined ? ['zh'] : [])]
+      ? ['en', 'ru', 'es', 'fr', 'de', 'pt', 'it', ...(config.textLocales === undefined ? ['zh'] : [])]
       : compiledRegistrations.map(({ locale }) => locale);
 
   registrationLocales.push(...(config.textLocales ?? []).map(({ locale }) => locale));

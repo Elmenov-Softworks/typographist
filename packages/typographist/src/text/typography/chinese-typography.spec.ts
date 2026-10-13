@@ -1,6 +1,16 @@
 import { Typographist } from '#src/typographist/typographist.js';
 
 describe('Simplified Chinese symbolic rules', () => {
+  it.each(['1-2', '2-3', '1-23-4', '12-3', '1-32'])(
+    'preserves numeric fragments crossing protected boundaries in %s',
+    (source) => {
+      const service = new Typographist({ locale: 'zh', categories: ['dashes'], protectedContent: ['2'] });
+
+      expect(service.format(source)).toBe(source);
+      expect(service.format(`${source} 5-7`)).toBe(`${source} 5—7`);
+    },
+  );
+
   it.each([false, true])('uses no hyphenation data (useFast=%s)', (useFast) => {
     const service = new Typographist({
       locale: 'zh',
