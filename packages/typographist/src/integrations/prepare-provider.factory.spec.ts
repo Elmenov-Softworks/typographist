@@ -54,7 +54,6 @@ describe('provider preparation', () => {
         categories: ['quotes', 'dashes', 'punctuation', 'nonbreakingSpacing', 'hyphenation'],
         excludedWords: [],
         protectedContent: [],
-        textLocales: [],
         textRules: [],
         settings: {},
       },
@@ -63,6 +62,54 @@ describe('provider preparation', () => {
 
     expect(next).toBe(initial);
   });
+
+  it.each(['throw', 'preserve'] as const)(
+    'removes implicit Chinese registration when textLocales becomes empty with %s policy',
+    (unsupportedLocale) => {
+      const config: TypographistConfig = { unsupportedLocale };
+      const initial = prepareProvider(config);
+      const nextConfig = { ...config, textLocales: [] };
+
+      const next = prepareProvider(nextConfig, initial);
+
+      expect(initial.formatter.hasLocale('zh')).toBe(true);
+      expect(initial.formatter.format('"中文"', 'zh')).toBe('“中文”');
+      expect(next).not.toBe(initial);
+      expect(next.formatter.hasLocale('zh')).toBe(false);
+      expect(prepareProvider({ ...nextConfig, textLocales: [] }, next)).toBe(next);
+
+      if (unsupportedLocale === 'throw') {
+        expect(() => next.formatter.format('"中文"', 'zh')).toThrow();
+      } else {
+        expect(next.formatter.format('"中文"', 'zh')).toBe('"中文"');
+      }
+
+      for (const locale of ['en', 'ru'] as const) {
+        expect(next.formatter.format('"text"', locale)).toBe(initial.formatter.format('"text"', locale));
+      }
+    },
+  );
+
+  it.each(['throw', 'preserve'] as const)(
+    'restores implicit Chinese registration when textLocales is omitted with %s policy',
+    (unsupportedLocale) => {
+      const initial = prepareProvider({ unsupportedLocale, textLocales: [] });
+      const nextConfig = { unsupportedLocale };
+
+      const next = prepareProvider(nextConfig, initial);
+
+      expect(initial.formatter.hasLocale('zh')).toBe(false);
+      expect(next).not.toBe(initial);
+      expect(next.formatter.hasLocale('zh')).toBe(true);
+      expect(next.formatter.format('"中文"', 'zh')).toBe('“中文”');
+      expect(next.formatter.format('"中文"', 'zh')).toBe(new Typographist(nextConfig).format('"中文"', 'zh'));
+      expect(prepareProvider({ ...nextConfig }, next)).toBe(next);
+
+      for (const locale of ['en', 'ru'] as const) {
+        expect(next.formatter.format('"text"', locale)).toBe(initial.formatter.format('"text"', locale));
+      }
+    },
+  );
 
   it('compares primitive settings by value and prepares again when effective settings change', () => {
     const rule = createRule();

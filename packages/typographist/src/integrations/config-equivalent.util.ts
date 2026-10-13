@@ -105,8 +105,11 @@ export const configEquivalent = <TCustomLocale extends string>(
   }
 
   const hasTextLocales = (left.textLocales?.length ?? 0) > 0 || (right.textLocales?.length ?? 0) > 0;
+  const leftHasImplicitChinese = left.rules === undefined && left.textLocales === undefined;
+  const rightHasImplicitChinese = right.rules === undefined && right.textLocales === undefined;
 
   if (
+    leftHasImplicitChinese !== rightHasImplicitChinese ||
     (left.locale ?? 'en') !== (right.locale ?? 'en') ||
     (left.unsupportedLocale ?? 'throw') !== (right.unsupportedLocale ?? 'throw') ||
     (left.useFast ?? false) !== (right.useFast ?? false) ||
