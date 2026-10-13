@@ -16,6 +16,33 @@ const createRule = () => {
 };
 
 describe('provider preparation', () => {
+  it.each(['es', 'fr', 'de', 'pt', 'it'] as const)(
+    'compares bundled %s quotation settings and retains equivalent defaults',
+    (locale) => {
+      const config: TypographistConfig = { locale, categories: ['quotes'] };
+      const initial = prepareProvider(config);
+      const id = `${locale}/punctuation/quote`;
+
+      expect(prepareProvider({ ...config, settings: { [id]: { spacing: locale === 'fr' } } }, initial)).toBe(initial);
+
+      const overrides = locale === 'fr' ? { spacing: false } : { left: '「', right: '」' };
+      const changedConfig = { ...config, settings: { [id]: overrides } };
+      const changed = prepareProvider(changedConfig, initial);
+
+      expect(changed).not.toBe(initial);
+      expect(changed.formatter.format('"Bonjour"')).toBe(new Typographist(changedConfig).format('"Bonjour"'));
+      expect(prepareProvider({ ...changedConfig, settings: { [id]: { ...overrides } } }, changed)).toBe(changed);
+      expect(prepareProvider(config, changed).formatter.format('"Bonjour"')).toBe(
+        initial.formatter.format('"Bonjour"'),
+      );
+
+      if (locale === 'fr') {
+        expect(initial.formatter.format('"Bonjour"')).toBe('«\u202fBonjour\u202f»');
+        expect(changed.formatter.format('"Bonjour"')).toBe('«Bonjour»');
+      }
+    },
+  );
+
   it('preserves prepared state for fresh equivalent containers and explicit core defaults', () => {
     const initial = prepareProvider({});
     const next = prepareProvider(
@@ -27,7 +54,6 @@ describe('provider preparation', () => {
         categories: ['quotes', 'dashes', 'punctuation', 'nonbreakingSpacing', 'hyphenation'],
         excludedWords: [],
         protectedContent: [],
-        textLocales: [],
         textRules: [],
         settings: {},
       },
@@ -36,6 +62,54 @@ describe('provider preparation', () => {
 
     expect(next).toBe(initial);
   });
+
+  it.each(['throw', 'preserve'] as const)(
+    'removes implicit Chinese registration when textLocales becomes empty with %s policy',
+    (unsupportedLocale) => {
+      const config: TypographistConfig = { unsupportedLocale };
+      const initial = prepareProvider(config);
+      const nextConfig = { ...config, textLocales: [] };
+
+      const next = prepareProvider(nextConfig, initial);
+
+      expect(initial.formatter.hasLocale('zh')).toBe(true);
+      expect(initial.formatter.format('"中文"', 'zh')).toBe('“中文”');
+      expect(next).not.toBe(initial);
+      expect(next.formatter.hasLocale('zh')).toBe(false);
+      expect(prepareProvider({ ...nextConfig, textLocales: [] }, next)).toBe(next);
+
+      if (unsupportedLocale === 'throw') {
+        expect(() => next.formatter.format('"中文"', 'zh')).toThrow();
+      } else {
+        expect(next.formatter.format('"中文"', 'zh')).toBe('"中文"');
+      }
+
+      for (const locale of ['en', 'ru'] as const) {
+        expect(next.formatter.format('"text"', locale)).toBe(initial.formatter.format('"text"', locale));
+      }
+    },
+  );
+
+  it.each(['throw', 'preserve'] as const)(
+    'restores implicit Chinese registration when textLocales is omitted with %s policy',
+    (unsupportedLocale) => {
+      const initial = prepareProvider({ unsupportedLocale, textLocales: [] });
+      const nextConfig = { unsupportedLocale };
+
+      const next = prepareProvider(nextConfig, initial);
+
+      expect(initial.formatter.hasLocale('zh')).toBe(false);
+      expect(next).not.toBe(initial);
+      expect(next.formatter.hasLocale('zh')).toBe(true);
+      expect(next.formatter.format('"中文"', 'zh')).toBe('“中文”');
+      expect(next.formatter.format('"中文"', 'zh')).toBe(new Typographist(nextConfig).format('"中文"', 'zh'));
+      expect(prepareProvider({ ...nextConfig }, next)).toBe(next);
+
+      for (const locale of ['en', 'ru'] as const) {
+        expect(next.formatter.format('"text"', locale)).toBe(initial.formatter.format('"text"', locale));
+      }
+    },
+  );
 
   it('compares primitive settings by value and prepares again when effective settings change', () => {
     const rule = createRule();
@@ -389,13 +463,21 @@ it('preserves custom defaults for rule IDs inherited by ordinary objects', () =>
 });
 
 it('prepares again when unsupported locale policy changes', () => {
-  const initial = prepareProvider<'fr'>({ unsupportedLocale: 'preserve', locale: 'fr' });
-  const equivalent = prepareProvider<'fr'>({ unsupportedLocale: 'preserve', locale: 'fr' }, initial);
+  const initial = prepareProvider<'nl'>({ unsupportedLocale: 'preserve', locale: 'nl' });
+  const equivalent = prepareProvider<'nl'>({ unsupportedLocale: 'preserve', locale: 'nl' }, initial);
 
   expect(equivalent).toBe(initial);
   expect(initial.formatter.format('source')).toBe('source');
-  expect(() => prepareProvider<'fr'>({ unsupportedLocale: 'throw', locale: 'fr' }, initial)).toThrow(RangeError);
+  expect(() => prepareProvider<'nl'>({ unsupportedLocale: 'throw', locale: 'nl' }, initial)).toThrow(RangeError);
 
   // @ts-expect-error Runtime policy validation must also apply during updates.
   expect(() => prepareProvider({ unsupportedLocale: null }, prepareProvider({}))).toThrow(TypeError);
+});
+
+it('selects bundled Chinese through the shared provider', () => {
+  const provider = prepareProvider({ locale: 'zh' });
+
+  expect(provider.registrationLocales).toContain('zh');
+  expect(provider.formatter.format('"中文" typography')).toBe('“中文” typography');
+  expect(prepareProvider({ locale: 'zh' }, provider)).toBe(provider);
 });

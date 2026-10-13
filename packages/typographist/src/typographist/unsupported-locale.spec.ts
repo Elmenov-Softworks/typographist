@@ -2,11 +2,11 @@ import { Typographist } from '#src/index.js';
 
 describe('unsupported locale policy', () => {
   it.each(['', ' \t\n ', '<b>"source"...</b>', 'soft\u00adhyphen'])('preserves exact source %j', (text) => {
-    const formatter = new Typographist<'fr'>({ locale: 'fr', unsupportedLocale: 'preserve' });
+    const formatter = new Typographist<'nl'>({ locale: 'nl', unsupportedLocale: 'preserve' });
 
     expect(formatter.format(text)).toBe(text);
-    expect(formatter.format(text, 'fr')).toBe(text);
-    expect(formatter.hasLocale('fr')).toBe(false);
+    expect(formatter.format(text, 'nl')).toBe(text);
+    expect(formatter.hasLocale('nl')).toBe(false);
   });
 
   it.each(['throw', 'preserve'] as const)('formats registered locales under %s', (unsupportedLocale) => {
@@ -19,25 +19,25 @@ describe('unsupported locale policy', () => {
 
   it('keeps strict defaults and explicit throw errors', () => {
     for (const config of [{}, { unsupportedLocale: 'throw' }] as const) {
-      const formatter = new Typographist<'fr'>(config);
+      const formatter = new Typographist<'nl'>(config);
 
-      expect(() => formatter.format('', 'fr')).toThrow(new RangeError('Unregistered locale: fr'));
-      expect(() => new Typographist<'fr'>({ ...config, locale: 'fr' })).toThrow(RangeError);
+      expect(() => formatter.format('', 'nl')).toThrow(new RangeError('Unregistered locale: nl'));
+      expect(() => new Typographist<'nl'>({ ...config, locale: 'nl' })).toThrow(RangeError);
     }
   });
 
   it('reflects registration, replacement and removal without regional fallback', () => {
-    const formatter = new Typographist<'fr' | 'FR' | 'en-US'>({ locale: 'fr', unsupportedLocale: 'preserve' });
+    const formatter = new Typographist<'nl' | 'NL' | 'en-US'>({ locale: 'nl', unsupportedLocale: 'preserve' });
 
-    formatter.addTextLocale({ locale: 'fr', textRules: [] });
-    expect(formatter.hasLocale('FR')).toBe(true);
+    formatter.addTextLocale({ locale: 'nl', textRules: [] });
+    expect(formatter.hasLocale('NL')).toBe(true);
     expect(formatter.hasLocale('en')).toBe(true);
     expect(formatter.hasLocale('en-US')).toBe(false);
 
-    formatter.addTextLocale({ locale: 'FR', textRules: [] });
-    expect(formatter.hasLocale('fr')).toBe(true);
-    expect(formatter.removeRules('fr')).toBe(true);
-    expect(formatter.hasLocale('FR')).toBe(false);
+    formatter.addTextLocale({ locale: 'NL', textRules: [] });
+    expect(formatter.hasLocale('nl')).toBe(true);
+    expect(formatter.removeRules('nl')).toBe(true);
+    expect(formatter.hasLocale('NL')).toBe(false);
     expect(formatter.format('"source"...')).toBe('"source"...');
 
     formatter.removeRules('en');
@@ -54,10 +54,10 @@ describe('unsupported locale policy', () => {
   });
 
   it('rejects invalid text for unregistered locales', () => {
-    const formatter = new Typographist<'fr'>({ unsupportedLocale: 'preserve' });
+    const formatter = new Typographist<'nl'>({ unsupportedLocale: 'preserve' });
 
     // @ts-expect-error Runtime callers must supply strings.
-    expect(() => formatter.format(null, 'fr')).toThrow(TypeError);
+    expect(() => formatter.format(null, 'nl')).toThrow(TypeError);
   });
 
   it.each(['fallback', null, false])('rejects invalid policy %j', (unsupportedLocale) => {
@@ -67,12 +67,12 @@ describe('unsupported locale policy', () => {
 
   it('propagates errors from registered rules under preserve', () => {
     const failure = new Error('Rule failed');
-    const formatter = new Typographist<'fr'>({
-      locale: 'fr',
+    const formatter = new Typographist<'nl'>({
+      locale: 'nl',
       unsupportedLocale: 'preserve',
       textLocales: [
         {
-          locale: 'fr',
+          locale: 'nl',
           textRules: [
             {
               id: 'failure',

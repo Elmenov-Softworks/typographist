@@ -22,7 +22,9 @@ export class Typographist<TCustomLocale extends string = never> {
   #unsupportedLocale: 'preserve' | 'throw';
 
   /**
-   * Registers and prepares rules once, defaulting to English with bundled English and Russian rules.
+   * Registers and prepares rules once, defaulting to English.
+   * Omitting rules registers bundled alphabetic locales; omitting textLocales as well adds Chinese typography.
+   * Explicit rules and textLocales supply their own registrations instead of the respective defaults.
    * Copies excluded words. Invalid configuration and duplicate locales throw.
    * A missing default locale throws unless unsupportedLocale is preserve.
    */
@@ -42,7 +44,8 @@ export class Typographist<TCustomLocale extends string = never> {
 
     this.#unsupportedLocale = unsupportedLocale;
     this.#locale = locale;
-    const { textLocales = [] } = config;
+    const bundledTextLocales = config.rules === undefined && config.textLocales === undefined;
+    const { textLocales = bundledTextLocales ? [{ locale: 'zh', textRules: [] }] : [] } = config;
 
     if (!Array.isArray(textLocales)) {
       throw new TypeError('textLocales must be an array');
@@ -62,7 +65,13 @@ export class Typographist<TCustomLocale extends string = never> {
     }
 
     for (const definition of locales) {
-      this.#rules.addTextLocale(definition);
+      this.#rules.addTextLocale(
+        definition,
+        false,
+        bundledTextLocales && config.categories !== undefined
+          ? { ...config, categories: config.categories.filter((category) => category !== 'hyphenation') }
+          : config,
+      );
     }
 
     if (this.#unsupportedLocale === 'throw') {

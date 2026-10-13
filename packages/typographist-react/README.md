@@ -38,7 +38,7 @@ current source with the current configuration.
 const original = useTypographist(source, 'fr', true);
 ```
 
-For unsupported site languages, use `config={{ locale: 'fr', unsupportedLocale: 'preserve' }}`
+For unsupported site languages, use `config={{ locale: 'ja', unsupportedLocale: 'preserve' }}`
 on the provider. Unknown locales then preserve source text; the default policy
 `'throw'` raises a `RangeError`. Known locales still format normally. The core
 formatter's `hasLocale(locale)` reports whether rules are registered.

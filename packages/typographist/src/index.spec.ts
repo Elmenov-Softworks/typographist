@@ -31,19 +31,20 @@ describe('public package API', () => {
   it('only offers bundled locales by default', () => {
     const typographist = new Typographist();
 
-    expect(locales).toEqual(['en', 'ru']);
-    // @ts-expect-error German has no bundled rules.
-    expect(() => typographist.format('abcd', 'de')).toThrow('Unregistered locale');
+    expect(locales).toEqual(['en', 'ru', 'zh', 'es', 'fr', 'de', 'pt', 'it']);
+    expect(typographist.hasLocale('zh')).toBe(true);
+    // @ts-expect-error Dutch has no bundled rules.
+    expect(() => typographist.format('abcd', 'nl')).toThrow('Unregistered locale');
     // @ts-expect-error The locale alone must not widen the default configuration.
-    expect(() => new Typographist({ locale: 'de' })).toThrow('Unregistered locale');
+    expect(() => new Typographist({ locale: 'nl' })).toThrow('Unregistered locale');
     // @ts-expect-error Only bundled locales are removable on the default instance.
-    expect(typographist.removeRules('de')).toBe(false);
+    expect(typographist.removeRules('nl')).toBe(false);
   });
 
   it('infers custom locales from supplied rules and supports declared dynamic locales', () => {
     const rules = new TypographistRules({
       fast: {
-        locale: 'de',
+        locale: 'nl',
         alphabet: 'abcd',
         leftMin: 1,
         rightMin: 1,
@@ -51,24 +52,24 @@ describe('public package API', () => {
         consonants: 'bcd',
         specialLetters: '',
       },
-      standard: { locale: 'de', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
+      standard: { locale: 'nl', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
     });
-    const configured = new Typographist({ locale: 'de', rules: [rules] });
-    const dynamic = new Typographist<'de'>();
+    const configured = new Typographist({ locale: 'nl', rules: [rules] });
+    const dynamic = new Typographist<'nl'>();
     dynamic.addRules(rules);
 
     expect(configured.format('abcd')).toBe('a\u00adbcd');
-    expect(dynamic.format('abcd', 'de')).toBe('a\u00adbcd');
-    // @ts-expect-error The supplied plugin does not declare French.
-    expect(() => configured.format('abcd', 'fr')).toThrow('Unregistered locale');
-    expect(dynamic.removeRules('de')).toBe(true);
+    expect(dynamic.format('abcd', 'nl')).toBe('a\u00adbcd');
+    // @ts-expect-error The supplied plugin does not declare Swedish.
+    expect(() => configured.format('abcd', 'sv')).toThrow('Unregistered locale');
+    expect(dynamic.removeRules('nl')).toBe(true);
   });
 
   it('extends a declared union with both custom locales alongside bundled locales', () => {
-    const typographist = new Typographist<'de' | 'zu'>();
-    const german = new TypographistRules({
+    const typographist = new Typographist<'nl' | 'zu'>();
+    const dutch = new TypographistRules({
       fast: {
-        locale: 'de',
+        locale: 'nl',
         alphabet: 'abcd',
         leftMin: 1,
         rightMin: 1,
@@ -76,7 +77,7 @@ describe('public package API', () => {
         consonants: 'bcd',
         specialLetters: '',
       },
-      standard: { locale: 'de', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
+      standard: { locale: 'nl', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['a1b'] },
     });
     const zulu = new TypographistRules({
       fast: {
@@ -90,17 +91,17 @@ describe('public package API', () => {
       },
       standard: { locale: 'zu', alphabet: 'abcd', leftMin: 1, rightMin: 1, patterns: ['b1c'] },
     });
-    typographist.addRules(german);
+    typographist.addRules(dutch);
     typographist.addRules(zulu);
 
-    expect(typographist.format('abcd', 'de')).toBe('a\u00adbcd');
+    expect(typographist.format('abcd', 'nl')).toBe('a\u00adbcd');
     expect(typographist.format('abcd', 'zu')).toBe('ab\u00adcd');
     expect(typographist.format('table', 'en')).toBe('ta\u00adble');
     expect(typographist.format('асбест', 'ru')).toBe('ас\u00adбест');
-    // @ts-expect-error The union does not declare French rules.
-    expect(() => typographist.format('abcd', 'fr')).toThrow('Unregistered locale');
+    // @ts-expect-error The union does not declare Swedish rules.
+    expect(() => typographist.format('abcd', 'sv')).toThrow('Unregistered locale');
     expect(typographist.removeRules('zu')).toBe(true);
-    expect(typographist.removeRules('de')).toBe(true);
+    expect(typographist.removeRules('nl')).toBe(true);
   });
 
   it('exposes two runtime classes and five Typographist methods', () => {
@@ -155,18 +156,18 @@ describe('public package API', () => {
   it('adds, replaces and removes locale rules without affecting other instances', () => {
     const first = new Typographist({ rules: [new TestRules()] });
     const second = new Typographist({ rules: [new TestRules()] });
-    first.addRules(new TestRules('de'));
+    first.addRules(new TestRules('nl'));
 
-    expect(first.format('abcd', 'de')).toBe('a\u00adbcd');
-    expect(() => second.format('abcd', 'de')).toThrow('Unregistered locale');
+    expect(first.format('abcd', 'nl')).toBe('a\u00adbcd');
+    expect(() => second.format('abcd', 'nl')).toThrow('Unregistered locale');
 
     first.addRules(new TestRules('en', ['b1c']));
 
     expect(first.format('abcd')).toBe('ab\u00adcd');
     expect(second.format('abcd')).toBe('a\u00adbcd');
-    expect(first.removeRules('de')).toBe(true);
-    expect(first.removeRules('de')).toBe(false);
-    expect(() => first.format('abcd', 'de')).toThrow('Unregistered locale');
+    expect(first.removeRules('nl')).toBe(true);
+    expect(first.removeRules('nl')).toBe(false);
+    expect(() => first.format('abcd', 'nl')).toThrow('Unregistered locale');
     expect(first.removeRules('en')).toBe(true);
     expect(() => first.format('abcd')).toThrow('Unregistered locale');
 
@@ -267,7 +268,7 @@ describe('public package API', () => {
 
   it('rejects duplicate or missing default locales in configuration', () => {
     expect(() => new Typographist({ rules: [new TestRules(), new TestRules()] })).toThrow('Duplicate locale');
-    expect(() => new Typographist<'de'>({ locale: 'de' })).toThrow('Unregistered locale');
+    expect(() => new Typographist<'nl'>({ locale: 'nl' })).toThrow('Unregistered locale');
     expect(() => new Typographist({ rules: [] })).toThrow('Unregistered locale');
   });
 

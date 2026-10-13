@@ -1,3 +1,4 @@
+import { createAlphabeticRules } from '#src/rules/bundled/alphabetic-rules.factory.js';
 import type { Locale } from '#src/rules/locale.types.js';
 import type { ITypographistRules } from '#src/rules/typographist-rules.interfaces.js';
 import { TypographistRules } from '#src/rules/typographist-rules.js';
@@ -53,4 +54,5 @@ export const createBundledRules = () => [
       exceptions: russianExceptions,
     },
   }),
+  ...createAlphabeticRules(),
 ];
