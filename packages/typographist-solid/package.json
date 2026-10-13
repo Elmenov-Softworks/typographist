@@ -1,22 +1,35 @@
 {
   "name": "@elmenov-softworks/typographist-solid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Solid provider, leaf text component and reactive hook for locale-aware typography and soft hyphenation.",
   "type": "module",
   "author": "Alex Elmenov",
   "license": "MIT",
   "keywords": [
+    "typographist",
     "typography",
+    "text-formatting",
     "hyphenation",
+    "soft-hyphen",
     "quotes",
+    "dashes",
     "nonbreaking-spaces",
+    "unicode",
     "i18n",
-    "solid-js"
+    "localization",
+    "javascript",
+    "typescript",
+    "solid-js",
+    "solidjs"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Elmenov-Softworks/typographist.git",
     "directory": "packages/typographist-solid"
+  },
+  "homepage": "https://elmenov-softworks.github.io/typographist/",
+  "bugs": {
+    "url": "https://github.com/Elmenov-Softworks/typographist/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -51,7 +64,7 @@
     "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
-    "@elmenov-softworks/typographist": "1.0.0"
+    "@elmenov-softworks/typographist": "1.0.1"
   },
   "peerDependencies": {
     "solid-js": "^1.9.15"

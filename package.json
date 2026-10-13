@@ -1,7 +1,7 @@
 {
   "name": "@elmenov-softworks/typographist-workspace",
   "version": "0.1.0",
-  "description": "Typography libraries for JavaScript, Vue, React, and Solid.",
+  "description": "Locale-aware typography and soft hyphenation for JavaScript and TypeScript, with React, Vue and Solid integrations.",
   "private": true,
   "type": "module",
   "author": "Alex Elmenov",
@@ -10,6 +10,28 @@
     "type": "git",
     "url": "git+https://github.com/Elmenov-Softworks/typographist.git"
   },
+  "homepage": "https://elmenov-softworks.github.io/typographist/",
+  "bugs": {
+    "url": "https://github.com/Elmenov-Softworks/typographist/issues"
+  },
+  "keywords": [
+    "typographist",
+    "typography",
+    "text-formatting",
+    "hyphenation",
+    "soft-hyphen",
+    "quotes",
+    "dashes",
+    "nonbreaking-spaces",
+    "unicode",
+    "i18n",
+    "localization",
+    "javascript",
+    "typescript",
+    "react",
+    "vue",
+    "solidjs"
+  ],
   "workspaces": [
     "packages/*"
   ],
