@@ -1,6 +1,6 @@
 {
   "name": "@elmenov-softworks/rules-transformer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI for converting TeX hyphenation tables to TypeScript locale rules.",
   "type": "module",
   "author": "Alex Elmenov",
