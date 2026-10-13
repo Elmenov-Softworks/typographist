@@ -1,99 +1,71 @@
-# Typographist for Vue
+# Typographist for React
 
-Components use Vue SFCs with `<script setup lang="ts">` and type-based props.
+```tsx
+import { TypographistProvider, TypographistText, useTypographist } from '@elmenov-softworks/typographist-react';
 
-Use the nearest provider to share a prepared core formatter and its bounded word
-cache. Each provider owns its own instance, including nested providers and
-separate server requests. Nested configuration is complete; it does not merge
-with an outer provider.
+function Label({ text }: { text: string }) {
+  const formatted = useTypographist(text, 'en');
+  return <span>{formatted}</span>;
+}
 
-```vue
-<script setup lang="ts">
-import { ref, shallowRef } from 'vue';
-import type { TypographistConfig } from '@elmenov-softworks/typographist';
-import { TypographistProvider, TypographistText } from '@elmenov-softworks/typographist-vue';
-
-const config = shallowRef<TypographistConfig>({
-  locale: 'en',
-  categories: ['quotes', 'nonbreakingSpacing'],
-  cacheSize: 64,
-});
-const source = ref('"Hello"');
-</script>
-
-<template>
-  <TypographistProvider :config="config">
-    <TypographistText :text="source" />
-    <TypographistText :text="source" locale="ru" />
-  </TypographistProvider>
-</template>
+function App() {
+  return (
+    <TypographistProvider config={{ locale: 'en', categories: ['quotes', 'hyphenation'], cacheSize: 64 }}>
+      <TypographistText text={'"Hello world"'} />
+      <Label text="Another string" />
+    </TypographistProvider>
+  );
+}
 ```
 
-`TypographistProvider` accepts optional `config: TypographistConfig<string>` and
-a default slot. The public core configuration accepts custom locale definitions
-and their locale names. Omitted configuration uses core defaults.
-`TypographistText` accepts required `text: string` and optional `locale: string` and `disabled: boolean` (default `false`).
-It renders text without a wrapper and never interprets HTML-like strings.
+`TypographistProvider<TCustomLocale extends string = never>` accepts optional
+`config: TypographistConfig<TCustomLocale>` from the core package and optional
+`children: ReactNode`. Omitted settings use core defaults.
 
-Inside a descendant's `setup`, the hook has this signature:
+`TypographistText` accepts required `text: string`, optional `locale: string`, and
+optional `disabled: boolean` (default `false`). It renders text without a wrapper.
+`useTypographist(text: string, locale?: string, disabled?: boolean)`
+returns a string. Both require a provider and use the nearest one. A locale
+override affects only that consumer. Custom locale names and definitions can be
+passed through the provider's core configuration type.
 
-```ts
-useTypographist(
-  text: MaybeRefOrGetter<string>,
-  locale?: MaybeRefOrGetter<string | undefined>,
-  disabled?: MaybeRefOrGetter<boolean>,
-): ComputedRef<string>
+Disabled consumers return the current source exactly and skip formatting and
+locale lookup. They still require a provider. Toggling disabled off formats the
+current source with the current configuration.
+
+```tsx
+<TypographistText text={source} locale="fr" disabled />;
+const original = useTypographist(source, 'fr', true);
 ```
 
-The returned computed ref is read-only. Pass a ref or getter for changing inputs;
-a plain string is a fixed input. Keep the original source text:
+For unsupported site languages, use `config={{ locale: 'ja', unsupportedLocale: 'preserve' }}`
+on the provider. Unknown locales then preserve source text; the default policy
+`'throw'` raises a `RangeError`. Known locales still format normally. The core
+formatter's `hasLocale(locale)` reports whether rules are registered.
 
-```ts
-const formatted = useTypographist(
-  () => props.text,
-  () => props.locale,
-);
-// Read formatted.value in script, or formatted in a template.
-```
+Each provider owns one prepared formatter and its bounded word cache. Nested
+providers use complete independent configuration; they do not merge with their
+parent. Separate application roots and server requests share no formatter state.
+The integration supports native React server rendering and hydration without
+browser globals. Use equal configuration and source text on server and client.
+Output is text, including soft hyphens and nonbreaking characters; HTML-like
+source is never interpreted as markup.
 
-A missing provider throws. Locale overrides apply only to that consumer. Unknown
-locales throw by default. Set provider configuration `unsupportedLocale: 'preserve'`
-to keep text unchanged for unregistered explicit or default locales.
-The core `hasLocale(locale)` method reports whether rules are registered.
-Invalid configuration and malformed locales retain core errors. Soft hyphens, Unicode,
-protected content and empty strings retain core behavior.
+Replace configuration immutably to update it. Scalar values, primitive array
+contents, and primitive rule settings are compared by value. Fresh equivalent
+objects and arrays preserve the formatter and cache. Custom rules, locale
+definitions, callbacks, and handler-bearing objects are compared by identity.
+Replace those objects to request an update; mutations inside them are not tracked.
+Omitted and explicit core defaults are equivalent where the core contract allows.
+A meaningful change prepares a replacement formatter and resets its word cache.
+Preparation errors propagate before the replacement is published.
 
-Replace configuration immutably. Use `shallowRef` for configuration to preserve
-plugin identity and class instances rather than deeply proxying them. Scalars,
-primitive array contents and primitive rule settings compare by value. New equivalent array containers do not require
-stable identity. Custom plugins, locale definitions and callbacks compare by
-identity; replace their identity to request an update.
-Mutating plugin internals is not tracked. Supported explicit defaults compare
-equally to omitted defaults.
-
-A meaningful configuration change prepares a replacement instance before
-publishing it and resets that provider's word cache. Failed preparation does not
-replace the previous valid instance. Ordinary parent updates retain the instance
-and cache. Each consumer memoizes its current derivation synchronously; unchanged
-inputs do not repeat formatting. A text change does not invalidate other
-consumers. Vue can still execute application renders for unrelated reasons.
-
-Native Vue server rendering and hydration need no browser globals during import
-or server rendering. Use equal source text and configuration on server and client
-for equal initial text. No mutable service is shared between roots.
+Consumers memoize their current source, effective locale, and formatter derivation.
+Unrelated parent updates do not repeat formatting for an unchanged committed
+consumer derivation or schedule an extra render to derive text. A source change
+updates its consumer; a provider configuration change may update every consumer.
+Recomputation always uses the original source string. React may still execute
+consumer functions because of application updates or development Strict Mode.
 
 See the [core documentation](../typographist/README.md) for formatting categories,
 configuration defaults and text-processing limits.
-
-Set `disabled` to render the current source unchanged and skip locale lookup.
-The provider is still required. Refs and getters support enable/disable transitions:
-
-```vue
-<TypographistText :text="source" :disabled="disabled" />
-```
-
-```ts
-const disabled = ref(false);
-const formatted = useTypographist(source, () => props.locale, disabled);
-const config = shallowRef({ locale: 'fr', unsupportedLocale: 'preserve' as const });
-```

@@ -1,130 +1,85 @@
-# Typographist core
+# Bundled hyphenation data
 
-Standalone symbolic typography and soft hyphenation for Node.js and browsers.
-The ESM package has built-in Russian and US English data and no runtime dependencies.
+The unchanged source files and `provenance.json` pin tex-hyphen revision
+`5684c0f51c0b81133db2efbe60a408b4155a3ff5`. The manifest records upstream URLs,
+byte lengths, and SHA-256 hashes. These inputs and their notices are shipped in
+the npm package alongside the generated JavaScript tables.
 
-```ts
-import { Typographist } from '@elmenov-softworks/typographist';
+Russian data is copyright 1999–2003 Alexander I. Lebedev and licensed under
+LPPL 1.2 or later, as stated in `hyph-ru.tex`: <https://latex-project.org/lppl/>.
+American English data is copyright 1990, 2004, 2005 Gerard D.C. Kuiken.
+Its source permits copying and distribution, with or without modification,
+without royalty when the copyright and permission notices are preserved.
+Read the full retained notices in the source files. The package's MIT license
+does not replace either data license.
 
-const typographist = new Typographist({
-  locale: 'ru',
-  useFast: true,
-  cacheSize: 16,
-});
+Spanish, French, German and Italian tables use the MIT licenses retained in
+`hyph-es.tex`, `hyph-fr.tex`, `hyph-de-1996.tex` and `hyph-it.tex` respectively.
+Italian offers a choice of licenses; these tables use its MIT option.
+Portuguese tables use the BSD 3-Clause license retained in `hyph-pt.tex`,
+including its copyright, redistribution conditions and disclaimer. The
+unchanged source files contain the complete notices and are included in the
+distributed package; generated tables also retain the source comment notices.
 
-const formatted = typographist.format('Он сказал: "Привет"...');
-const english = typographist.format('The "reader" said...', 'en');
-```
+The selected pattern baselines are conventional Spanish and French, German
+reformed orthography (2006, upstream identifier `de-1996`), Brazilian Portuguese,
+and conventional Italian. The Portuguese source is shared with European
+Portuguese, rather than being exclusive to Brazil: upstream's
+[`hyph-utf8.tex`](https://github.com/hyphenation/tex-hyphen/blob/5684c0f51c0b81133db2efbe60a408b4155a3ff5/hyph-utf8/doc/generic/hyph-utf8/hyph-utf8.tex)
+lists `brazilian` and `brazil` as synonyms of `portuguese`. These upstream
+synonyms do not introduce aliases or fallback in Typographist.
 
-Reuse the instance across calls. In a browser, assign the result to
-`element.textContent`; soft hyphens become visible when the browser wraps text.
-
-## Formatting
-
-By default, `format` applies all bundled categories:
-
-| Category             | Behavior                                                                                       |
-| -------------------- | ---------------------------------------------------------------------------------------------- |
-| `quotes`             | Locale-specific quotation marks, nesting and narrow nonbreaking spaces inside quotation pairs. |
-| `dashes`             | Prose dashes, supported range separators and unary minus signs.                                |
-| `punctuation`        | Typographic apostrophes and ellipses.                                                          |
-| `nonbreakingSpacing` | Nonbreaking bindings for supported words, abbreviations, labels and units.                     |
-| `hyphenation`        | Soft hyphens from the selected algorithm.                                                      |
-
-An explicit `categories` list replaces the defaults. To format symbols without
-hyphenation:
-
-```ts
-const symbols = new Typographist({
-  locale: 'ru',
-  categories: ['quotes', 'dashes', 'punctuation', 'nonbreakingSpacing'],
-  settings: { 'common/punctuation/quote': { spacing: false } },
-});
-```
-
-`categories: []` leaves the input unchanged. The additional `spacing` category
-is available for consumer rules and has no bundled cleanup rules.
-
-The default locale is `en`. `useFast: false`, the default, selects Knuth–Liang
-pattern-based hyphenation. `useFast: true` selects the Khristov heuristic in the
-modification by Dymchenko and Varsanofyev. Fast mode uses character classes;
-it can produce linguistically different breaks from the pattern-based mode.
-
-`cacheSize` sets an approximate shared word-cache budget in MiB, defaulting to 64. Zero disables caching. The per-instance LRU cache lives in memory, allocates
-nothing up front and has no persistence. Its budget is an estimate rather than
-an exact heap limit; prepared rules and temporary allocations are separate.
-Successful locale additions, replacements and removals clear the cache.
-
-## Limits and extensions
-
-Bundled rules preserve letters, case, word order and numeric notation. They do
-not correct spelling, repeated punctuation, extra spaces, tabs or line endings,
-and do not reformat numbers or currencies. Quotation spacing is enabled by
-default; the setting above disables it.
-
-Formatting handles plain text and does not parse or sanitize HTML. Recognized
-URLs, emails and nonempty `protectedContent` literals bypass formatting.
-`excludedWords` excludes exact, case-sensitive words from hyphenation only.
-
-Locale selection is explicit: there is no language detection or regional
-fallback. Built-in locale identifiers are `ru` and `en`. Additional languages
-can supply `TypographistRules` for hyphenation and `TextLocale`/`TextRule`
-definitions for symbolic formatting. Declarative hyphenation rules supply both
-standard patterns and fast character classes. Typography-only locales need
-no hyphenation dataset. No linguistic accuracy guarantee applies to custom data
-or heuristic hyphenation.
-
-The public service methods are `format(text, locale?)`, `addRules(rules)`,
-`addTextLocale(definition)`, `removeRules(locale)` and `hasLocale(locale)`.
-Unknown locales throw by default.
-Set `unsupportedLocale: 'preserve'` to return the exact source string for valid,
-unregistered locales, including an unsupported default locale. Registered locales
-still format normally. Invalid text, malformed locales and rule errors still throw.
-`hasLocale` reports actual registrations, normalizes case and reflects additions
-and removals without regional fallback.
-
-```ts
-const multilingual = new Typographist<'fr'>({
-  locale: 'fr',
-  unsupportedLocale: 'preserve',
-});
-multilingual.hasLocale('fr'); // false
-multilingual.format('"Bonjour"...'); // unchanged
-multilingual.format('"Hello"...', 'en'); // English formatting
-```
-
-Built-in formatting is idempotent: applying the same locale and configuration
-to its output leaves the output unchanged. Consumer rules must establish their
-own idempotence. Keep the source for editing: formatted
-output contains real soft hyphens and nonbreaking characters. See the
-[usage examples](EXAMPLES.md) for display, multilingual, disabled and SSR scenarios.
-
-## Performance and development
-
-See the [workspace benchmarks](../../README.md#benchmarks) for recorded timings,
-comparison settings and limitations. [Benchmark tools](../../tools/benchmarks/README.md)
-generate new measurements.
-
-From the workspace root, use the Node.js version in `.nvmrc`, run `npm ci`, then:
+From the repository root, regenerate with:
 
 ```sh
-npm run build
-npm run typecheck
-npm run lint
-npm run format:check
-npm test
-npm run check:packages
+npm run build --workspace=@elmenov-softworks/rules-transformer
+node tools/rules-transformer/regenerate-bundled.ts
 ```
 
-Lint and type checks resolve workspace dependencies from source through the
-`typographist-source` TypeScript condition; they do not require `dist` or emit files.
-Package-local `#src` imports keep dependency aliases separate from consumer aliases.
-Runtime imports and benchmarks use built packages. Integration builds resolve the
-emitted declarations, so they also check the published package boundary.
+The converter uses the existing development dependency Prettier. It checks the
+pinned byte lengths and hashes, decodes UTF-8 strictly, removes TeX comments,
+and extracts the single plain pattern and exception blocks in each known file.
+It is not a general TeX interpreter. It preserves pattern order and every
+pattern, including literal compound characters. Exception hyphens become UTF-16
+offsets; entries without hyphens become explicit no-break exceptions.
 
-`npm run check:packages` installs all five archives in a temporary project outside
-the workspace. It verifies declarations, ESM imports, SSR, browser bundling and
-the transformer CLI. It needs registry access for existing peer and build tools.
-`npm run docs` generates TypeDoc after a build.
-The [rules transformer](../rules-transformer/README.md) converts TeX tables
-into hyphenation data.
+| Source             | Patterns | Exceptions | No-break exceptions | Default minima |
+| ------------------ | -------: | ---------: | ------------------: | -------------- |
+| `hyph-ru.tex`      |     7021 |        184 |                  25 | 2/2            |
+| `hyph-en-us.tex`   |     4938 |         14 |                   4 | 2/3            |
+| `hyph-es.tex`      |     4694 |          0 |                   0 | 2/2            |
+| `hyph-fr.tex`      |     1145 |          0 |                   0 | 2/2            |
+| `hyph-de-1996.tex` |    36709 |          0 |                   0 | 2/2            |
+| `hyph-pt.tex`      |      427 |          2 |                   0 | 2/3            |
+| `hyph-it.tex`      |      355 |          0 |                   0 | 2/2            |
+
+The additional five tables are pinned source data; default registration and
+locale-owned typography are separate from conversion. Italian's upstream
+patterns are ASCII and do not supply accented-letter patterns. Preserving an
+accented letter in the alphabet allows surrounding patterns to match, but does
+not imply complete accented-word coverage. French internal apostrophe patterns
+remain in the source tables; the existing whole-token policy still preserves
+words containing internal apostrophes. No pattern set guarantees every word's
+linguistic syllabification.
+
+The generated tables are frozen. `Typographist` registers all seven alphabetic locales by default, alongside
+typography-only Chinese (`zh`); supplying a custom `rules` list replaces them.
+The tables and preparation functions remain internal to the library. Normalization requires `Intl.Segmenter` grapheme support and uses
+NFC plus locale-independent lowercasing. Russian retains `ё`; English supports
+ASCII letters. Unsupported marks, foreign letters, and internal apostrophes
+preserve the whole token.
+
+These tables are source-version spot checks rather than a guarantee of perfect
+linguistic coverage. The English source documents the `democrat` limitation.
+Splitting visible-hyphen compounds into components is the library's text
+policy, not complete TeX paragraph behavior. The retained source exceptions
+are part of the language behavior, including deliberate no-break entries.
+
+The five additional Khristov datasets classify accented vowels as vowels and
+all remaining alphabet letters as consonants; `y` is a context-free vowel.
+They have no special-letter class and use the pattern datasets' minima and
+exceptions. These are inputs to the existing fast heuristic, not linguistic
+syllabification rules. It treats letters individually: digraphs, diphthongs,
+and consonant clusters can differ from pattern hyphenation. For example, the
+heuristic splits French `élép-hant`, German `übert-ra-gung`, and Spanish
+`cons-ti-tu-ci-ón`. Select pattern hyphenation for language-specific breaks.

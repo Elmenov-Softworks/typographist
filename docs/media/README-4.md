@@ -1,44 +1,93 @@
-# Rules transformer
+# Typographist for Solid
 
-`@elmenov-softworks/rules-transformer` converts UTF-8 TeX hyphenation tables to
-TypeScript locale rules. It is independent of the typography runtime and has
-no runtime dependencies.
+Each provider shares one prepared core formatter and its bounded word cache
+among its consumers. Nested providers and separate application roots own isolated
+instances. Nested configuration is complete and does not merge with an outer
+provider.
 
-After globally installing the package, run its bin command directly:
+```tsx
+import { createSignal } from 'solid-js';
+import type { TypographistConfig } from '@elmenov-softworks/typographist';
+import { TypographistProvider, TypographistText, useTypographist } from '@elmenov-softworks/typographist-solid';
 
-```sh
-transform-rules source.tex generated-rules.ts
-transform-rules --help
+const Text = () => {
+  const [source, setSource] = createSignal('"Hello"');
+  const formatted = useTypographist(source);
+  return <span>{formatted()}</span>;
+};
+
+const App = () => {
+  const [config, setConfig] = createSignal<TypographistConfig>({
+    locale: 'en',
+    categories: ['quotes', 'nonbreakingSpacing'],
+    cacheSize: 64,
+  });
+
+  return (
+    <TypographistProvider config={config()}>
+      <Text />
+      <TypographistText text='"Hello"' locale="ru" />
+    </TypographistProvider>
+  );
+};
 ```
 
-The package declares `"bin": { "transform-rules": "./dist/cli.js" }`.
-The emitted executable has a Node.js shebang; callers invoke the command without
-an explicit interpreter. For a local project installation, the same executable
-is available at `node_modules/.bin/transform-rules`.
+The provider accepts optional `config: TypographistConfig<string>` and Solid
+`children`. The core configuration preserves custom locale definitions and names.
+Omitted fields use core defaults. The component accepts required `text: string`
+and optional `locale: string`, rendering a text node without a wrapper. HTML-like
+strings remain literal text.
 
-To install a locally built archive before publication, run from the workspace:
+Call the hook inside a descendant component or its reactive owner:
 
-```sh
-npm run build --workspace=@elmenov-softworks/rules-transformer
-npm pack --workspace=@elmenov-softworks/rules-transformer
-npm install --global ./elmenov-softworks-rules-transformer-0.1.0.tgz
-transform-rules source.tex generated-rules.ts
+```ts
+useTypographist(
+  text: Accessor<string>,
+  locale?: Accessor<string | undefined>,
+  disabled?: Accessor<boolean>,
+): Accessor<string>
 ```
 
-Input must have one plain `\patterns{...}` block and an optional plain
-`\hyphenation{...}` block. This is a converter for pattern tables, not a general
-TeX interpreter. Invalid syntax fails before writing the destination. Input and
-output must be different files; an existing destination is replaced. Its parent
-directory must already exist.
+The result is a read-only accessor. Pass signals or getters, including
+`() => props.text` and `() => props.locale`, to preserve reactivity.
+Use `() => 'fixed source'` for a constant. Keep the original source string for
+recomputation. Locale overrides affect only that consumer. A missing provider,
+unsupported locale under the default policy or invalid configuration throws. Empty strings, Unicode,
+soft hyphens and protected content retain core behavior.
 
-Output exports frozen `patterns` and `exceptions` arrays for use in a
-`TypographistRules` plugin. Exception hyphens become UTF-16 offsets; an entry
-without hyphens prevents breaks. Source comments, including copyright and
-permission notices, are retained.
+Replace configuration immutably. Scalars, primitive array contents and declared
+primitive rule settings compare by value. Fresh equivalent configuration and
+array containers preserve the formatter. Custom plugins, locale definitions and
+callbacks compare by identity; replace their identity to request an update. Changes inside mutable plugin objects are not
+tracked. Supported explicit defaults compare equally to omitted defaults.
 
-The package also exports `transformRulesFile` for the repository's regeneration
-helper. [Bundled table regeneration](../../tools/rules-transformer/README.md)
-verifies retained byte lengths and SHA-256 hashes before converting the sources.
+A meaningful configuration change prepares a replacement before publishing it
+and resets that provider's cache. Failed preparation leaves the previous valid
+service available if Solid retains or restores the consumer tree. Ordinary parent
+updates preserve prepared state and cache. Each consumer memoizes its current
+derivation synchronously. Unchanged inputs do not repeat formatting or schedule
+extra library updates; changing one consumer's text does not invalidate another.
 
-Build, typecheck, lint and test use the shared workspace tooling. Run them with
-`npm run <command> --workspace=@elmenov-softworks/rules-transformer`.
+Use native Solid server rendering and hydration, compiling server JSX with
+Solid's SSR transform. Imports and server rendering need no browser globals.
+Equal source and configuration produce equal initial text. No formatter is
+shared globally across roots or server requests.
+
+See the [core documentation](../typographist/README.md) for formatting categories,
+configuration defaults and text-processing limits.
+
+Set `disabled` on a leaf component or pass a boolean accessor as the hook's third
+argument to return the current source and skip formatting and locale lookup.
+It defaults to false and still requires a provider.
+
+```tsx
+const [disabled, setDisabled] = createSignal(false);
+const formatted = useTypographist(source, () => 'en', disabled);
+<TypographistText text={source()} locale="unknown" disabled={disabled()} />;
+```
+
+Use `config={{ locale: 'unknown', unsupportedLocale: 'preserve' }}` when the site's
+active language has no registered rules. Unsupported languages retain their
+source text; registered languages still format normally. The default policy is
+`'throw'`. Core `hasLocale(locale)` reports registered rules without a regional
+fallback; see the [core API](../typographist/README.md).
