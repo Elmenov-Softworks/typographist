@@ -1,3 +1,4 @@
+import { registryPackages } from './release-reconciliation.ts';
 import type { ReleaseRecord } from './release.types.ts';
 
 export const readRegistryIntegrity = (status: number, value: unknown) => {
@@ -21,7 +22,7 @@ export const readRegistryIntegrity = (status: number, value: unknown) => {
 
 export const findUnpublishedProjects = async (record: ReleaseRecord) => {
   const unpublishedProjects = await Promise.all(
-    record.packages.map(async (pkg) => {
+    registryPackages(record).map(async (pkg) => {
       const response = await fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg.name)}/${record.version}`);
       const body: unknown = response.status === 200 ? await response.json() : null;
       const integrity = readRegistryIntegrity(response.status, body);
