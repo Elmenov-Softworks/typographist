@@ -6,17 +6,30 @@
   "author": "Alex Elmenov",
   "license": "MIT",
   "keywords": [
+    "typographist",
     "typography",
+    "text-formatting",
     "hyphenation",
+    "soft-hyphen",
     "quotes",
+    "dashes",
     "nonbreaking-spaces",
+    "unicode",
     "i18n",
-    "typescript"
+    "localization",
+    "javascript",
+    "typescript",
+    "nodejs",
+    "browser"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Elmenov-Softworks/typographist.git",
     "directory": "packages/typographist"
+  },
+  "homepage": "https://elmenov-softworks.github.io/typographist/",
+  "bugs": {
+    "url": "https://github.com/Elmenov-Softworks/typographist/issues"
   },
   "publishConfig": {
     "access": "public"

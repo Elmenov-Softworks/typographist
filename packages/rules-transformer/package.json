@@ -6,16 +6,25 @@
   "author": "Alex Elmenov",
   "license": "MIT",
   "keywords": [
+    "typographist",
     "hyphenation",
+    "hyphenation-patterns",
+    "knuth-liang",
     "tex",
     "locale",
+    "i18n",
     "typescript",
-    "cli"
+    "cli",
+    "converter"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Elmenov-Softworks/typographist.git",
     "directory": "packages/rules-transformer"
+  },
+  "homepage": "https://elmenov-softworks.github.io/typographist/",
+  "bugs": {
+    "url": "https://github.com/Elmenov-Softworks/typographist/issues"
   },
   "publishConfig": {
     "access": "public"
