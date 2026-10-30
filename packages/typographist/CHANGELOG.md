@@ -1,3 +1,11 @@
+## 1.0.3 (2026-10-30)
+
+### Changes
+
+- Bump vite from 8.3.2 to 8.3.4 ([#14](https://github.com/Elmenov-Softworks/typographist/pull/14))
+- Bump markdown-it from 14.3.2 to 14.3.3 ([#15](https://github.com/Elmenov-Softworks/typographist/pull/15))
+- Bump undici from 8.11.2 to 8.12.3 ([#16](https://github.com/Elmenov-Softworks/typographist/pull/16))
+
 ## 1.0.2 (2026-10-13)
 
 ### Changes
