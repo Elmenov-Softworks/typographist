@@ -1,33 +1,33 @@
 {
-  "source": "1a1c76df202d0a2b44268c3c2035124f6549369e",
-  "previousVersion": "1.0.0",
-  "version": "1.0.1",
+  "source": "c38cc14f2a52acd5c2006a2a47d0b84076178427",
+  "previousVersion": "1.0.1",
+  "version": "1.0.2",
   "request": null,
   "packages": [
     {
       "project": "typographist",
       "name": "@elmenov-softworks/typographist",
-      "integrity": "sha512-MPZL/O6tUNsx2azIn5yazcwAvYYk5b9+otv8HCNLgmxNdD4m7qZ4hJDZncnHpOdmExOU31lr97BaGnkma0lqdg=="
+      "integrity": "sha512-ohLbdvXNtPTBLHNmSum4c4fwDmOed7SOr/TehhWDUtQkWw/74h19GaSWsREvRVjsJYQbN1r1kypJqfY8NaVYPA=="
     },
     {
       "project": "typographist-vue",
       "name": "@elmenov-softworks/typographist-vue",
-      "integrity": "sha512-3/eKvOLrDWsYveOKFGaZlrhH2tVJ0ZT8uAmmvPYo3D3UMsgjQnNJ6gYhpaWnCmq7nllecK5kZtcvNMdcToBiYQ=="
+      "integrity": "sha512-PBjCQyaF1C4d08OLjbmcYdNNDy6CZoPS3USSuOP5rP1ifBAmwZOWYQ5NgBOUfNHf73hfN14FZCgXfZ7T/haw2Q=="
     },
     {
       "project": "typographist-react",
       "name": "@elmenov-softworks/typographist-react",
-      "integrity": "sha512-kFgrq2D8G6OdrgKXcRL9K0/+hJ0sqBjtYB+AnB8waWRVUvl+BiZvH/raKbcfRRJ6hEpOTUrBlpVfIVfBkCIVZg=="
+      "integrity": "sha512-rdMVX/+V4mq3Hqyw2ss8L3BXjh9oc0GQ/Nglu2agoASdKhFUtXsYiGsmMyx6fACGk5HrxbDzR84PPQwJHJTb5Q=="
     },
     {
       "project": "typographist-solid",
       "name": "@elmenov-softworks/typographist-solid",
-      "integrity": "sha512-IX9Vgm16T0p5ekHLtnWCKs9vOg59PVMnZjc9B7thQ4sXLfMcZEgleP2ErMKVaDoIvadp6TNCM13KnTUkOHWzgw=="
+      "integrity": "sha512-B20e1KwkDredzTZ0KQDEXEsE5UOWRlwf6F/Tq0srY7fj9pSBddkS6X5P1UXNZtWvQFZf1udESOb7LTLRZKWEfQ=="
     },
     {
       "project": "rules-transformer",
       "name": "@elmenov-softworks/rules-transformer",
-      "integrity": "sha512-IkC4KwWcv23QGwfniLONLMSehDKh0uJfMs9eLaDRmdmdhal51s/Sqy9Ac4Kpk0g2DTDVbM4PnbyEiMAjmykFnA=="
+      "integrity": "sha512-pxZMx6rC0YiD1AqAYCAIFBiV+ktpqP/fx2KT9J0r1W8bciHI2l3YOKbVdzP0xBp3cqq8Ee1+kCKPysKTyGVzrA=="
     }
   ]
 }
