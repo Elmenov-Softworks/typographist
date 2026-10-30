@@ -62,7 +62,7 @@
     "prettier": "3.9.9",
     "eslint-config-prettier": "10.1.8",
     "vitest": "5.0.3",
-    "vite": "8.3.2",
+    "vite": "8.3.4",
     "@vitejs/plugin-vue": "6.0.9",
     "vue-tsc": "3.3.12",
     "eslint-plugin-vue": "10.11.1",
